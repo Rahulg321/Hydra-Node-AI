@@ -20,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx("", poppins.variable, manrope.variable)}>
+      <body
+        className={clsx("parent-container", poppins.variable, manrope.variable)}
+      >
         <Header />
         {children}
         <Footer />
