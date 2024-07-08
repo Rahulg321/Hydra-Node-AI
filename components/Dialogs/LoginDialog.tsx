@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,19 +10,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ReusbaleButton from "../ComponentButtons/ReusbaleButton";
+import LoginForm from "../forms/LoginForm";
 
 const LoginDialog = () => {
+  const [openDialog, setOpenDialog] = useState(false);
   return (
-    <Dialog>
-      <DialogTrigger>Login</DialogTrigger>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogTrigger asChild>
+        <ReusbaleButton
+          onClick={() => {
+            setOpenDialog(true);
+          }}
+        >
+          Login
+        </ReusbaleButton>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle>
+            <h3>Welcome Back!</h3>
+          </DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            Please login to continue to your Account
           </DialogDescription>
         </DialogHeader>
+        <div>
+          <LoginForm />
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -8,28 +8,27 @@ import { MdMenu, MdClose } from "react-icons/md";
 import ReusbaleButton from "./ComponentButtons/ReusbaleButton";
 import LoginDialog from "./Dialogs/LoginDialog";
 import SignUpDialog from "./Dialogs/SignUpDialog";
+import Image from "next/image";
+import Logo from "@/public/hydranode_logo.png";
 
 type HeaderProps = {
   classname?: string;
 };
 
 const mobileNav = [
-  { navlink: "/", navlabel: "Home" },
-  { navlink: "/practice-areas", navlabel: "Practice Areas" },
-  { navlink: "/our-firm", navlabel: "Our Firm" },
-  { navlink: "/team-members", navlabel: "Team" },
-  { navlink: "/news", navlabel: "News" },
-  { navlink: "/blogs", navlabel: "Blogs" },
-  { navlink: "/videos", navlabel: "Videos" },
-  { navlink: "/careers", navlabel: "Careers" },
-  { navlink: "/contact", navlabel: "Contact" },
+  { navlink: "/product", navlabel: "Product" },
+  { navlink: "/token", navlabel: "Token" },
+  { navlink: "/about-us", navlabel: "About Us" },
+  { navlink: "/pricing", navlabel: "Pricing" },
+  { navlink: "/reward", navlabel: "Reward" },
 ];
 
 const desktopNav = [
-  { navlink: "/team-members", navlabel: "Our Professionals" },
-  { navlink: "/transactions", navlabel: "Transactions" },
-  { navlink: "/careers", navlabel: "Careers" },
-  { navlink: "/contact", navlabel: "Contact" },
+  { navlink: "/product", navlabel: "Product" },
+  { navlink: "/token", navlabel: "Token" },
+  { navlink: "/about-us", navlabel: "About Us" },
+  { navlink: "/pricing", navlabel: "Pricing" },
+  { navlink: "/reward", navlabel: "Reward" },
 ];
 
 const Header = ({ classname }: HeaderProps) => {
@@ -100,12 +99,14 @@ export default Header;
 function NameLogo({}: {}) {
   return (
     <div className="">
-      <Link
-        href="/"
-        aria-label="Home page"
-        className="text-3xl md:text-4xl font-bold text-mainC"
-      >
-        Aigbe Law PLLC
+      <Link href="/" aria-label="Home page" className="">
+        <Image
+          src={Logo}
+          alt="hyranode Logo"
+          height={300}
+          width={200}
+          className="object-cover"
+        />
       </Link>
     </div>
   );

@@ -4,7 +4,10 @@ import Bounded from "@/components/Bounded";
 
 const HeroSection = () => {
   return (
-    <Bounded variant="wide" className="grid grid-cols-2 border-4">
+    <Bounded
+      variant="wide"
+      className="grid grid-cols-1 md:grid-cols-2 border-4"
+    >
       <div className="">
         <h1>
           Boost your Competitive Skills <br /> and Earn Rewards

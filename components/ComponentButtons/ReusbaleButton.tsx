@@ -1,13 +1,16 @@
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { Button } from "../ui/button";
 import clsx from "clsx";
 
-const ReusbaleButton = ({
-  children,
-  variant = "primary",
-}: {
+interface ReusableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: "primary" | "outline";
+}
+
+const ReusbaleButton: React.FC<ReusableButtonProps> = ({
+  children,
+  variant = "primary",
+  ...restProps
 }) => {
   return (
     <Button
@@ -16,6 +19,7 @@ const ReusbaleButton = ({
         variant === "primary" && "",
         variant === "outline" && ""
       )}
+      {...restProps}
     >
       {children}
     </Button>

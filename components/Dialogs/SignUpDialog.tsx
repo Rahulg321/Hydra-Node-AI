@@ -8,19 +8,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ReusbaleButton from "../ComponentButtons/ReusbaleButton";
+import SignupForm from "../forms/SignupForm";
 
 const SignUpDialog = () => {
   return (
     <Dialog>
-      <DialogTrigger>Sign Up</DialogTrigger>
+      <DialogTrigger asChild>
+        <ReusbaleButton>Sign Up</ReusbaleButton>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle>
+            <h3>Create an Account</h3>
+          </DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            Please sign up to create your account.
           </DialogDescription>
         </DialogHeader>
+        <SignupForm />
       </DialogContent>
     </Dialog>
   );
