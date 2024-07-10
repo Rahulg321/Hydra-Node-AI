@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --base: #5d5fef;
+
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
 
@@ -36,6 +38,8 @@
   }
 
   .dark {
+    --base: #5d5fef;
+
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
 
@@ -150,6 +154,30 @@ h6 {
   break-inside: avoid;
   margin-bottom: 1.5em;
 }
+/* 
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  gap: 4;
+  animation: marquee 15s linear infinite;
+} */
+
+/* .marquee > * {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+} */
+
+/* @keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+} */
 
 @media screen and (max-width: 1024px) {
   .blog-index {

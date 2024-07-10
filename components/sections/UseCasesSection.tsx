@@ -6,7 +6,7 @@ import SkillQualification from "@/public/skill_qualification.png";
 
 const UseCasesSection = () => {
   return (
-    <section>
+    <section className="block-space big-container">
       <h2>Here are Several Use Cases</h2>
       <span>
         {" "}
@@ -14,8 +14,8 @@ const UseCasesSection = () => {
         working professionals, anyone can get benefited by our platform.{" "}
       </span>
 
-      <div>
-        <div>
+      <div className="grid lg:grid-cols-5 gap-4">
+        <div className="col-span-2">
           <h2>Skill Development</h2>
           <span>
             Access real-time learning solutions for upskilling or reskilling,
@@ -23,16 +23,24 @@ const UseCasesSection = () => {
             practical environments.
           </span>
         </div>
-        <div>
-          <h2>Interactive Study Groups</h2>
-          <span>
-            Form AI-moderated study groups that enhance collaboration and
-            provide personalized insights and resources based on group dynamics
-            and individual contributions
-          </span>
-          <Image src={InteractiveStudyGroup} alt="study group" />
+        <div className="col-span-3 flex p-4 rounded-xl bg-[#F4F2FF]">
+          <div>
+            <h2>Interactive Study Groups</h2>
+            <span>
+              Form AI-moderated study groups that enhance collaboration and
+              provide personalized insights and resources based on group
+              dynamics and individual contributions
+            </span>
+          </div>
+          <Image
+            src={InteractiveStudyGroup}
+            height={300}
+            width={200}
+            alt="study group "
+            className=""
+          />
         </div>
-        <div>
+        <div className="col-span-3">
           <Image src={CirriculumDevelopment} alt="study group" />
           <h2>Cirriculum Development</h2>
           <span>
@@ -40,21 +48,21 @@ const UseCasesSection = () => {
             meet current industry standards and future trends.
           </span>
         </div>
-        <div>
+        <div className="col-span-2">
           <h2>Mentorship Matching</h2>
           <span>
             AI-driven matching of professionals with mentors in their field,
             fostering growth through personalized guidance and support.
           </span>
         </div>
-        <div>
+        <div className="col-span-2">
           <h2>Partnerships</h2>
           <span>
             Empower existing e-learning platforms with advanced AI and
             blockchain integration to enhance learning experiences.
           </span>
         </div>
-        <div>
+        <div className="col-span-3">
           <h2>Skill Competitions</h2>
           <span>
             Participate in AI-driven skill competitions to test and showcase
