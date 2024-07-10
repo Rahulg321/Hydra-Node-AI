@@ -37,14 +37,9 @@ const Header = ({ classname }: HeaderProps) => {
 
   return (
     <>
-      <header
-        className={clsx(
-          " px-2 md:px-4 lg:px-12 py-2 border-b sticky top-0 z-50 bg-background",
-          classname
-        )}
-      >
+      <header className={clsx("px-2 md:px-4 lg:px-12 py-2 ", classname)}>
         <nav aria-label="Main-navigation">
-          <ul className="flex flex-col  md:m-4 md:flex-row md:items-center justify-between md:rounded-xl">
+          <ul className="flex flex-col  md:m-4 md:flex-row md:items-center md:rounded-xl md:justify-between">
             <div className="flex items-center justify-between">
               <NameLogo />
               <button
@@ -87,6 +82,7 @@ const Header = ({ classname }: HeaderProps) => {
               })}
             </div>
             <DesktopMenu />
+            <AuthDialogNavs />
           </ul>
         </nav>
       </header>
@@ -132,7 +128,13 @@ function DesktopMenu() {
           </Link>
         );
       })}
+    </div>
+  );
+}
 
+function AuthDialogNavs() {
+  return (
+    <div className="space-x-2">
       <LoginDialog />
       <SignUpDialog />
     </div>

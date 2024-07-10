@@ -1,14 +1,19 @@
 import React from "react";
 import ReusbaleButton from "@/components/ComponentButtons/ReusbaleButton";
 import Bounded from "@/components/Bounded";
+import { FaBookOpen } from "react-icons/fa";
+import Image from "next/image";
+import HeroImage from "@/public/hero-image.png";
 
 const HeroSection = () => {
   return (
-    <Bounded
-      variant="wide"
-      className="grid grid-cols-1 md:grid-cols-2 border-4"
-    >
+    <section className="grid grid-cols-1 md:grid-cols-2">
       <div className="">
+        <span className="flex items-center font-bold">
+          {" "}
+          <FaBookOpen className="text-yellow-400 mr-2" />
+          AI-Powered Learning Platform
+        </span>
         <h1>
           Boost your Competitive Skills <br /> and Earn Rewards
         </h1>
@@ -22,8 +27,10 @@ const HeroSection = () => {
           <ReusbaleButton>Get Rewards</ReusbaleButton>
         </div>
       </div>
-      <div></div>
-    </Bounded>
+      <div>
+        <Image src={HeroImage} alt="Hero Image" />
+      </div>
+    </section>
   );
 };
 
