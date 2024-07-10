@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const LoginForm = () => {
   const form = useForm<LoginFormSchema>({
@@ -46,7 +47,6 @@ const LoginForm = () => {
               <FormControl>
                 <Input placeholder="johndoe@gmail.com" {...field} />
               </FormControl>
-              <FormDescription>Enter a valid email address.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -60,13 +60,20 @@ const LoginForm = () => {
               <FormControl>
                 <Input placeholder="shadcn" {...field} type="password" />
               </FormControl>
-              <FormDescription>Enter your secret password.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        <Button type="submit" className="w-full">
+        <div className="flex items-center space-x-2">
+          <Checkbox id="terms" />
+          <label
+            htmlFor="terms"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Keep me logged in
+          </label>
+        </div>
+        <Button type="submit" className="w-full bg-base">
           Sign in
         </Button>
       </form>

@@ -27,7 +27,10 @@ const SignupForm = () => {
   const form = useForm<SignUpFormSchema>({
     resolver: zodResolver(SignUpFormZodType),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
+      password: "",
     },
   });
   // 2. Define a submit handler.
@@ -38,7 +41,34 @@ const SignupForm = () => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+        <FormField
+          control={form.control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>FirstName</FormLabel>
+              <FormControl>
+                <Input placeholder="john" {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input placeholder="doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -46,16 +76,39 @@ const SignupForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="test@email.com" {...field} />
+                <Input placeholder="test@email.com" {...field} type="email" />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input placeholder="**********" {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <ul className="list-disc flex justify-between p-4 text-sm text-muted-foreground">
+          <div>
+            <li>Use 8 or more characters</li>
+            <li>Use a number(e.g. 1234)</li>
+          </div>
+          <div>
+            <li>Use upper and lower case letter</li>
+            <li>Use a symbol (e.g. !@#$)</li>
+          </div>
+        </ul>
+        <Button type="submit" className="w-full bg-base">
+          Sign in
+        </Button>
       </form>
     </Form>
   );
