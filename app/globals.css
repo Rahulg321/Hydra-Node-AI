@@ -121,6 +121,17 @@ h6 {
   font-family: var(--font-poppins);
 }
 
+.border-radial-gradient {
+  border-width: 1.2px;
+  border-style: solid;
+
+  /* Layer 1: Inner white border with opacity */
+  border-color: rgba(255, 255, 255, 0.2);
+
+  /* Layer 2: Transparent outer border to create the gradient effect */
+  box-shadow: inset 0 0 0 1.2px rgba(255, 255, 255, 0);
+}
+
 .bg-custom-gradient {
   background: radial-gradient(
     50% 50% at 50% 50%,

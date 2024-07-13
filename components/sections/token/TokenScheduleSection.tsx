@@ -100,25 +100,38 @@ const TokenScheduleSection = () => {
 
   return (
     <section className="block-space big-container">
-      <Table className="w-full bg-white border border-gray-200">
-        <TableCaption className="text-xl font-bold py-4 text-center">
+      <div className="mb-4 text-center lg:mb-12">
+        <h2>
+          Vesting{" "}
+          <span className="via-[#AF89EE]/80.89% ml-2 bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+            Schedule
+          </span>
+        </h2>
+        <p className="">
+          By participating in crypto staking, users can secure additional
+          benefits while <br /> contributing to the stability and security of
+          the HydraNode ecosystem.
+        </p>
+      </div>
+      <Table className="w-full border border-gray-200 bg-white">
+        <TableCaption className="py-4 text-center text-xl font-bold">
           Vesting Schedule
         </TableCaption>
         <TableHeader className="bg-blue-100 text-blue-800">
           <TableRow>
-            <TableHead className="py-2 px-4 border-b border-gray-200">
+            <TableHead className="border-b border-gray-200 px-4 py-2">
               Category
             </TableHead>
-            <TableHead className="py-2 px-4 border-b border-gray-200">
+            <TableHead className="border-b border-gray-200 px-4 py-2">
               Allocation
             </TableHead>
-            <TableHead className="py-2 px-4 border-b border-gray-200">
+            <TableHead className="border-b border-gray-200 px-4 py-2">
               Cliff
             </TableHead>
-            <TableHead className="py-2 px-4 border-b border-gray-200">
+            <TableHead className="border-b border-gray-200 px-4 py-2">
               Vesting
             </TableHead>
-            <TableHead className="py-2 px-4 border-b border-gray-200">
+            <TableHead className="border-b border-gray-200 px-4 py-2">
               Description
             </TableHead>
           </TableRow>
@@ -126,19 +139,19 @@ const TokenScheduleSection = () => {
         <TableBody>
           {data.map((item, index) => (
             <TableRow key={index} className="hover:bg-gray-100">
-              <TableCell className="py-2 px-4 border-b border-gray-200 font-medium">
+              <TableCell className="border-b border-gray-200 px-4 py-2 font-medium">
                 {item.category}
               </TableCell>
-              <TableCell className="py-2 px-4 border-b border-gray-200">
+              <TableCell className="border-b border-gray-200 px-4 py-2">
                 {item.allocation}
               </TableCell>
-              <TableCell className="py-2 px-4 border-b border-gray-200">
+              <TableCell className="border-b border-gray-200 px-4 py-2">
                 {item.cliff}
               </TableCell>
-              <TableCell className="py-2 px-4 border-b border-gray-200">
+              <TableCell className="border-b border-gray-200 px-4 py-2">
                 {item.vesting}
               </TableCell>
-              <TableCell className="py-2 px-4 border-b border-gray-200">
+              <TableCell className="border-b border-gray-200 px-4 py-2">
                 {item.description}
               </TableCell>
             </TableRow>

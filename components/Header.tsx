@@ -10,6 +10,7 @@ import LoginDialog from "./Dialogs/LoginDialog";
 import SignUpDialog from "./Dialogs/SignUpDialog";
 import Image from "next/image";
 import Logo from "@/public/hydranode_logo.png";
+import WhiteLogo from "@/public/hydranode_white_logo.png";
 
 type HeaderProps = {
   classname?: string;
@@ -37,9 +38,14 @@ const Header = ({ classname }: HeaderProps) => {
 
   return (
     <>
-      <header className={clsx("px-2 md:px-4 lg:px-12 py-2 ", classname)}>
+      <header
+        className={clsx(
+          "absolute w-full px-2 py-2 md:px-4 lg:px-12",
+          classname,
+        )}
+      >
         <nav aria-label="Main-navigation">
-          <ul className="flex flex-col  md:m-4 md:flex-row md:items-center md:rounded-xl md:justify-between">
+          <ul className="flex flex-col md:m-4 md:flex-row md:items-center md:justify-between md:rounded-xl">
             <div className="flex items-center justify-between">
               <NameLogo />
               <button
@@ -52,13 +58,13 @@ const Header = ({ classname }: HeaderProps) => {
             </div>
             <div
               className={clsx(
-                "fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-end gap-4 bg-black text-white pr-4 pt-14  transition-transform duration-300 ease-in-out md:hidden",
-                isOpen ? "translate-x-0" : "translate-x-[100%]"
+                "fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-end gap-4 bg-black pr-4 pt-14 text-white transition-transform duration-300 ease-in-out md:hidden",
+                isOpen ? "translate-x-0" : "translate-x-[100%]",
               )}
             >
               <button
                 aria-label="Close menu"
-                className="fixed right-4 top-3 block p-2 text-2xl text-white md:hidden "
+                className="fixed right-4 top-3 block p-2 text-2xl text-white md:hidden"
                 onClick={() => setIsOpen(false)}
               >
                 <MdClose />
@@ -73,7 +79,7 @@ const Header = ({ classname }: HeaderProps) => {
                     }}
                     className={clsx(
                       "",
-                      pathname === item.navlink ? "underline" : ""
+                      pathname === item.navlink ? "underline" : "",
                     )}
                   >
                     {item.navlabel}
@@ -93,16 +99,28 @@ const Header = ({ classname }: HeaderProps) => {
 export default Header;
 
 function NameLogo({}: {}) {
+  const pathname = usePathname();
+
   return (
     <div className="">
       <Link href="/" aria-label="Home page" className="">
-        <Image
-          src={Logo}
-          alt="hyranode Logo"
-          height={300}
-          width={200}
-          className="object-cover"
-        />
+        {pathname === "/token" ? (
+          <Image
+            src={WhiteLogo}
+            alt="hyranode Logo"
+            height={300}
+            width={200}
+            className="object-cover"
+          />
+        ) : (
+          <Image
+            src={Logo}
+            alt="hyranode Logo"
+            height={300}
+            width={200}
+            className="object-cover"
+          />
+        )}
       </Link>
     </div>
   );
@@ -118,10 +136,11 @@ function DesktopMenu() {
             href={item.navlink}
             key={index}
             className={clsx(
-              "font-bold hover:underline-offset-8 hover:text-mainC hover:underline  hover:decoration-4 hover:decoration-mainC transition",
+              "hover:text-mainC hover:decoration-mainC font-bold transition hover:underline hover:decoration-4 hover:underline-offset-8",
+              pathname === "/token" ? "text-white" : "",
               pathname === item.navlink
-                ? "text-mainC underline-offset-8 underline decoration-4"
-                : ""
+                ? "text-mainC underline decoration-4 underline-offset-8"
+                : "",
             )}
           >
             {item.navlabel}
@@ -134,7 +153,7 @@ function DesktopMenu() {
 
 function AuthDialogNavs() {
   return (
-    <div className="space-x-2">
+    <div className="space-x-4">
       <LoginDialog />
       <SignUpDialog />
     </div>

@@ -80,9 +80,9 @@ const Footer = () => {
         </div>
         <div>
           <h5 className="mb-2 font-bold">Join our Newsletter</h5>
-          <div className="flex gap-2">
+          <div className="flex items-center">
             <Input />
-            <Button>Subscribe</Button>
+            <Button className="ml-2 bg-base">Subscribe</Button>
           </div>
           <span className="mt-2 block text-sm text-gray-500">
             Will send you weekly updates

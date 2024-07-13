@@ -10,12 +10,15 @@ import {
 import ReusbaleButton from "../ComponentButtons/ReusbaleButton";
 import SignupForm from "../forms/SignupForm";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 const SignUpDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <ReusbaleButton>Sign Up</ReusbaleButton>
+        <Button className="rounded-full bg-base p-6 text-lg font-bold">
+          Sign Up
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -27,7 +30,7 @@ const SignUpDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <SignupForm />
-        <span className="text-muted-foreground text-sm">
+        <span className="text-sm text-muted-foreground">
           By creating an Account, you agree to the{" "}
           <Link href={"#"} className="underline">
             Terms of Use
