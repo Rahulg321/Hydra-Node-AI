@@ -104,7 +104,7 @@ function NameLogo({}: {}) {
   return (
     <div className="">
       <Link href="/" aria-label="Home page" className="">
-        {pathname === "/token" ? (
+        {pathname === "/token" || pathname === "/reward" ? (
           <Image
             src={WhiteLogo}
             alt="hyranode Logo"
@@ -137,7 +137,9 @@ function DesktopMenu() {
             key={index}
             className={clsx(
               "hover:text-mainC hover:decoration-mainC font-bold transition hover:underline hover:decoration-4 hover:underline-offset-8",
-              pathname === "/token" ? "text-white" : "",
+              pathname === "/token" || pathname === "/reward"
+                ? "text-white"
+                : "",
               pathname === item.navlink
                 ? "text-mainC underline decoration-4 underline-offset-8"
                 : "",

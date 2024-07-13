@@ -121,6 +121,10 @@ h6 {
   font-family: var(--font-poppins);
 }
 
+.bg-gradient-radial-sunset {
+  background-image: linear-gradient(to bottom, #ac0003 -2.94%, #ea2123 97.06%);
+}
+
 .border-radial-gradient {
   border-width: 1.2px;
   border-style: solid;
