@@ -10,11 +10,13 @@ import FAQSection from "@/components/sections/FAQSection";
 import HomeContactSection from "@/components/sections/HomeContactSection";
 import InnovativeFeaturesSection from "@/components/sections/InnovativeFeaturesSection";
 import VideoGuideSection from "@/components/sections/VideoGuideSection";
+import OurPartners from "@/components/sections/OurPartners";
 
 export default function Home() {
   return (
     <React.Fragment>
       <HeroSection />
+      <OurPartners />
       <VideoGuideSection />
       <InnovativeFeaturesSection />
       <VisionSection />

@@ -19,19 +19,26 @@ import { GiOpenBook } from "react-icons/gi";
 import { IoFunnel } from "react-icons/io5";
 import { SiSimpleanalytics } from "react-icons/si";
 import { AiFillThunderbolt } from "react-icons/ai";
+import clsx from "clsx";
 
 const TechnologyBehindSuccessSection = () => {
   return (
-    <section className="bg-[#040011] text-white block-space">
-      <h2 className="text-white">The Technology behind your Success</h2>
-      <span>
-        The cutting-age technology will help you to stay ahead from the rest of
-        your competitors.
-      </span>
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 ">
-        <div className="border border-[#A5A6F6] col-span-3">
-          <h3>User Interface</h3>
-          <div className="flex gap-4">
+    <section className="block-space bg-[#040011] text-white">
+      <div className="container">
+        <div className="mb-8 space-y-2 text-center md:mb-12">
+          <h2 className="text-white">
+            The Technology behind your{" "}
+            <span className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+              Success
+            </span>
+          </h2>
+          <span className="block text-white md:text-lg">
+            The cutting-age technology will help you to stay ahead from the rest
+            of your competitors.
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+          <GridContainer heading="User Interface" classname="col-span-3">
             <IconText icon={FaWallet} iconText="Wallet" />
             <IconText icon={FaRocket} iconText="Skills Marketplace" />
             <IconText
@@ -39,46 +46,36 @@ const TechnologyBehindSuccessSection = () => {
               iconText="Performance Dashboard"
             />
             <IconText icon={GrAnalytics} iconText="Insights & Analytics" />
-          </div>
-        </div>
-        <div className="border border-[#A5A6F6] col-span-2">
-          <h3>Developer Interface</h3>
-          <div className="flex gap-4">
+          </GridContainer>
+          <GridContainer classname="col-span-2" heading="Developer Interface">
             <IconText icon={BsStack} iconText="Developer API" />
             <IconText icon={PiGraphLight} iconText="Blockchain Solutions" />
-          </div>
-        </div>
-        <div className="border border-[#A5A6F6] col-span-3">
-          <h3>Personal Model</h3>
-          <div className="flex gap-4">
-            <IconText icon={CiGrid32} iconText="Adaptive Interactions" />
-            <IconText icon={TiDocumentAdd} iconText="Data Integration" />
-            <IconText icon={BsFillBoxFill} iconText="User Preferences" />
-            <IconText
-              icon={HiPencilAlt}
-              iconText="Customized Learning Pathways"
-            />
-            <IconText icon={GiOpenBook} iconText="Smart Content Delivery" />
-          </div>
-        </div>
-        <div className="border border-[#A5A6F6] col-span-2">
-          <h3>Training Model</h3>
-          <div className="flex gap-4">
+          </GridContainer>
+          <GridContainer heading="Training Model" classname="col-span-2">
             <IconText icon={IoFunnel} iconText="Marketing Strategies" />
             <IconText icon={SiSimpleanalytics} iconText="Financial Analytics" />
             <IconText
               icon={AiFillThunderbolt}
               iconText="Blockchain Verification"
             />
-          </div>
-        </div>
-        <div className="border border-[#A5A6F6] col-span-5">
-          <h3>AI Provider</h3>
-          <div className="flex gap-4">
-            <CompanyLogo img={OpenAiLogo} />
-            <CompanyLogo img={HuggingFace} />
-            <CompanyLogo img={GeminiLogo} />
-            <CompanyLogo img={WhiteHydraLogo} />
+          </GridContainer>
+          <GridContainer classname="col-span-3" heading="Personal Model">
+            <IconText icon={CiGrid32} iconText="Adaptive Interactions" />
+            <IconText icon={TiDocumentAdd} iconText="Data Integration" />
+            <IconText icon={BsFillBoxFill} iconText="User Preferences" />
+            <IconText icon={GiOpenBook} iconText="Smart Content Delivery" />
+          </GridContainer>
+
+          <div className="col-span-5 flex items-center gap-4 rounded-lg border border-[#A5A6F6] p-2">
+            <h3 className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+              AI Provider
+            </h3>
+            <div className="flex w-full justify-around">
+              <CompanyLogo img={OpenAiLogo} />
+              <CompanyLogo img={HuggingFace} />
+              <CompanyLogo img={GeminiLogo} />
+              <CompanyLogo img={WhiteHydraLogo} />
+            </div>
           </div>
         </div>
       </div>
@@ -88,9 +85,33 @@ const TechnologyBehindSuccessSection = () => {
 
 export default TechnologyBehindSuccessSection;
 
+function GridContainer({
+  heading,
+  classname,
+  children,
+}: {
+  classname?: string;
+  children: React.ReactNode;
+  heading: string;
+}) {
+  return (
+    <div
+      className={clsx(
+        "flex items-center gap-4 rounded-lg border border-[#A5A6F6] p-2",
+        classname,
+      )}
+    >
+      <h3 className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+        {heading}
+      </h3>
+      <div className="flex w-full justify-around">{children}</div>
+    </div>
+  );
+}
+
 function IconText({ icon, iconText }: { icon: IconType; iconText: string }) {
   return (
-    <div>
+    <div className="">
       <div className="text-2xl">{React.createElement(icon)}</div>
       <span className="text-xs">{iconText}</span>
     </div>

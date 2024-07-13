@@ -4,11 +4,18 @@ import FaqCard from "../FaqCard";
 const FAQSection = () => {
   return (
     <section className="block-space big-container">
-      <h2>Frequently Asked Questions</h2>
-      <span>
-        Below you&apos;ll find answers to the questions we get asked the most
-        about HydraNode
-      </span>
+      <div className="mb-4 text-center lg:mb-12">
+        <h2>
+          Frequently Asked{" "}
+          <span className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+            Questions
+          </span>
+        </h2>
+        <p>
+          Below you&apos;ll find answers to the questions we get <br /> asked
+          the most about HydraNode
+        </p>
+      </div>
       <div className="space-y-2">
         <FaqCard
           heading="What is HydraNode?"

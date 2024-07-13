@@ -21,17 +21,17 @@ const FaqCard = ({
   return (
     <div
       onClick={openChangeHandler}
-      className="bg-base text-white p-4 rounded-2xl"
+      className="cursor-pointer rounded-2xl bg-base p-4 text-white"
     >
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <h4>{heading}</h4>
         <div className="text-2xl">
           <MdOutlineKeyboardArrowDown />
         </div>
       </div>
       {open ? (
-        <div>
-          <span>{tagline}</span>
+        <div className="mt-4">
+          <p className="text-white">{tagline}</p>
         </div>
       ) : null}
     </div>

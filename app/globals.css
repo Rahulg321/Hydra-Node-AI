@@ -83,7 +83,7 @@
   }
 
   h2 {
-    @apply scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0;
+    @apply scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0;
   }
   h3 {
     @apply scroll-m-20 text-2xl font-semibold tracking-tight;
@@ -93,7 +93,7 @@
   }
 
   p {
-    @apply text-black;
+    @apply leading-7 text-black [&:not(:first-child)]:mt-6;
   }
 
   .lead {
@@ -121,6 +121,14 @@ h6 {
   font-family: var(--font-poppins);
 }
 
+.bg-custom-gradient {
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #5d5fef 0%,
+    rgba(93, 95, 239, 0) 100%
+  );
+}
+
 .parent-container {
   display: grid;
   min-height: 100dvh;
@@ -139,6 +147,10 @@ h6 {
 
 .block-space {
   padding-block: min(12vh, 17rem);
+}
+
+.block-space-large {
+  padding-block: min(14vh, 20rem);
 }
 
 .block-space-mini {

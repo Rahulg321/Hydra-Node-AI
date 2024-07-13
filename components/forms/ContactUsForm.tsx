@@ -49,7 +49,11 @@ const ContactUsForm = () => {
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input placeholder="johndoe@gmail.com" {...field} />
+                <Input
+                  placeholder="johndoe@gmail.com"
+                  {...field}
+                  className="border-none bg-gray-700 placeholder:text-gray-400"
+                />
               </FormControl>
               <FormDescription>Enter a valid email address.</FormDescription>
               <FormMessage />
@@ -61,9 +65,13 @@ const ContactUsForm = () => {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Message</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter your message here" {...field} />
+                <Textarea
+                  placeholder="Enter your message here"
+                  {...field}
+                  className="border-none bg-gray-700 placeholder:text-gray-400"
+                />
               </FormControl>
               <FormDescription>Send a message to the team.</FormDescription>
               <FormMessage />
@@ -71,7 +79,7 @@ const ContactUsForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full bg-base p-4 text-lg text-white">
           Get Started
         </Button>
       </form>

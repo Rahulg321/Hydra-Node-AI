@@ -4,11 +4,11 @@ import clsx from "clsx";
 
 interface ReusableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outlined";
   classname?: string;
 }
 
-const ReusbaleButton: React.FC<ReusableButtonProps> = ({
+const PrimaryButton: React.FC<ReusableButtonProps> = ({
   classname,
   children,
   variant = "primary",
@@ -17,10 +17,12 @@ const ReusbaleButton: React.FC<ReusableButtonProps> = ({
   return (
     <Button
       className={clsx(
-        "rounded-full p-6",
+        "",
+        variant === "primary" && "rounded-full bg-base p-6 text-lg font-bold",
+
+        variant === "outlined" &&
+          "rounded-full border-2 border-base p-6 text-lg font-bold text-[#5d5fef]",
         classname,
-        variant === "primary" && "",
-        variant === "outline" && "border-4 border-base bg-none",
       )}
       {...restProps}
     >
@@ -29,4 +31,4 @@ const ReusbaleButton: React.FC<ReusableButtonProps> = ({
   );
 };
 
-export default ReusbaleButton;
+export default PrimaryButton;
