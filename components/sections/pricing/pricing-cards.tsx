@@ -5,173 +5,140 @@
  */
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
+const pricingTiers = [
+  {
+    name: "Free Trial",
+    duration: "For 7 days",
+    price: 0,
+    description:
+      "Get a quick overview of our platform through the free trial and explore the potential of HydraNode.",
+    features: [
+      "Limited study materials access",
+      "Participation in basic contests",
+      "Limited personalized learning",
+      "Access to a community forum",
+    ],
+  },
+  {
+    name: "Quarterly Billing",
+    duration: "For 3 months",
+    price: 50,
+    description:
+      "Ideal for those who prefer short-term commitments with comprehensive features.",
+    features: [
+      "Full access to all study materials",
+      "Participation in all contests",
+      "Full use of personalized learning",
+      "Monthly prog. report & feedback",
+      "Base APY* of 10% for staking HydraNode tokens",
+      "for Additional 2% APY* each additional Associate certification completed",
+      "Access to exclusive webinars and workshops",
+    ],
+  },
+  {
+    name: "Yearly Billing",
+    duration: "For 1 year",
+    price: 100,
+    description:
+      "Perfect for committed learners and professionals aiming for continuous growth and development.",
+    features: [
+      "All features from Quarterly plan",
+      "Access to professional certification programs reward",
+      "Base APY* of 20% for staking HydraNode tokens",
+      "Additional 3% APY* for each additional Professional Certification completed",
+      "Priority support",
+      "Early access to new features and beta programs",
+      "Opportunities for early-stage EdTech investment",
+    ],
+  },
+  {
+    name: "Lifetime Billing",
+    duration: "For lifetime",
+    price: 200,
+    description:
+      "Gain unlimited access to HydraNode's platform and resources for life.",
+    features: [
+      "All features from the Yearly plan",
+      "Access to professional certification programs (Specialist level)",
+      "Base APY* of 30% for staking HydraNode tokens",
+      "Additional 4% APY* for each additional Specialist certification completed",
+      "Lifetime access to all updates and new content",
+      "Participation in exclusive collaboration projects and partnerships",
+      "Higher staking rewards and revenue sharing from the HydraNode marketplace",
+      "Exclusive access to invest in promising educational technology startups and GameFi opportunities",
+    ],
+  },
+];
 
 export default function PricingCardSection() {
   return (
-    <section className="block-space container w-full">
+    <section className="block-space-mini container w-full">
       <div className="grid gap-6 lg:grid-cols-4 lg:gap-8">
-        <div className="grid gap-6 rounded-lg border bg-background p-6 shadow-sm">
-          <div className="grid gap-2">
-            <h3 className="text-2xl font-bold">Starter</h3>
-            <span>
-              Get a quick overview of our platform through the free trial and
-              explore the potential of HydraNode.{" "}
-            </span>
-            <p className="text-4xl font-bold">$9</p>
-            <p className="text-muted-foreground">per month</p>
-          </div>
-          <ul className="grid gap-2 text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Limited Study Materials Access
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Participation in Basic Contests
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Limited Personalized Learning
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Access to a community Forum
-            </li>
-          </ul>
-          <Button size="lg">Get Started</Button>
-        </div>
-        <div className="grid gap-6 rounded-lg border bg-background p-6 shadow-sm">
-          <div className="grid gap-2">
-            <h3 className="text-2xl font-bold">Pro</h3>
-            <p className="text-4xl font-bold">$19</p>
-            <p className="text-muted-foreground">per month</p>
-          </div>
-          <ul className="grid gap-2 text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Full access to all study materials
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Participation in all contests
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Full use of personalized learning
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Monthly prog.report & feedback
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Base APY* of 10% for staking Hydranode tokens
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              For additional 2% APY* each additional Associate certification
-              completed
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Access to exclusive webinars and workshops
-            </li>
-          </ul>
-          <Button size="lg">Get Started</Button>
-        </div>
-        <div className="grid gap-6 rounded-lg bg-base p-6 text-primary-foreground shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="grid gap-2">
-              <h3 className="text-2xl font-bold">Enterprise</h3>
-              <p className="text-4xl font-bold">$49</p>
-              <p className="text-primary-foreground/80">per month</p>
-            </div>
-            <div className="rounded-full bg-primary-foreground/20 px-3 py-1 text-xs font-medium">
-              Featured
-            </div>
-          </div>
-          <ul className="grid gap-2 text-primary-foreground/80">
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              All faetures from Quarterly Plan
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Access to professional certification programs reward
-            </li>
-
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Base APY* of 20% for staking Hydranode tokens
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Additional 3% APY* for each additional Professional certification
-              completed
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Priority Support
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Early Access to new features and beta programs
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Opportunities for early stage EdTech Investment
-            </li>
-          </ul>
-          <Button size="lg" variant="secondary">
-            Get Started
-          </Button>
-        </div>
-        <div className="grid gap-6 rounded-lg border bg-background p-6 shadow-sm">
-          <div className="grid gap-2">
-            <h3 className="text-2xl font-bold">Enterprise Plus</h3>
-            <p className="text-4xl font-bold">$200</p>
-          </div>
-          <ul className="grid gap-2 text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              All features from The Yearly Plan
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Access to professional certification programs
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Base APY* of 30% for staking Hydranode tokens
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Additional 4% APY* for each additional Specialist certification
-              completed
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Lifetime access to all updates and new content
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Participation in exclusive collaboration projects and partnerships
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Higher staking rewards and revenue sharing from the Hydranode
-              marketplace
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCircleCheck className="h-4 w-4 fill-primary" />
-              Exclusive acceess to invest in promising educational technology
-              startups and GameFi opportunities
-            </li>
-          </ul>
-          <Button size="lg">Get Started</Button>
-        </div>
+        {pricingTiers.map((tier, index) => (
+          <PricingCard
+            key={index}
+            heading={tier.name}
+            content={tier.description}
+            trialLimit={tier.duration}
+            price={tier.price.toString()}
+            features={tier.features}
+          />
+        ))}
       </div>
     </section>
+  );
+}
+
+function PricingCard({
+  heading,
+  content,
+  trialLimit,
+  price,
+  features,
+}: {
+  heading: string;
+  content: string;
+  trialLimit: string;
+  price: string;
+  features: string[];
+}) {
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <div>
+        <span className="text-sm font-semibold">{trialLimit}</span>
+        <h4 className="text-baseC">{heading}</h4>
+        <span className="text-sm font-semibold text-muted-foreground">
+          {content}
+        </span>
+      </div>
+      <div className="my-4">
+        <h2 className="text-baseC">${price}</h2>
+        <span className="font-bold text-baseC">Whats Included</span>
+      </div>
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <FaCheckCircle className="h-6 w-6 basis-1/4 text-base" />{" "}
+          <span className="basis-3/4 text-sm">
+            for Additional 2% APY* each additional Associate certification
+            completed
+          </span>
+        </div>
+        <div>
+          {features.map((feature, index) => (
+            <div key={index} className="mb-2 flex items-center justify-between">
+              <FaCheckCircle className="h-6 w-6 basis-1/4 text-base" />
+              <span className="basis-3/4 text-sm">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-auto">
+        <Button className="mt-auto w-full rounded-full bg-base p-6 text-lg font-bold">
+          Get Started
+        </Button>
+      </div>
+    </div>
   );
 }

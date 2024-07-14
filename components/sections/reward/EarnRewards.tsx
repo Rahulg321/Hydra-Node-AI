@@ -17,7 +17,7 @@ const RewardStep = ({
   classname?: string;
 }) => (
   <div className={clsx(`rounded-lg p-6 ${color} h-full`, classname)}>
-    <h3
+    <h2
       className={clsx(
         "mb-4 font-bold",
         variant === "white" && "text-white",
@@ -25,10 +25,10 @@ const RewardStep = ({
       )}
     >
       {title}
-    </h3>
+    </h2>
     <p
       className={clsx(
-        "mb-4",
+        "mb-4 font-semibold",
         variant === "white" && "text-white",
         variant === "blue" && "text-base",
       )}
@@ -57,14 +57,14 @@ const HowToEarnRewards = () => {
             Rewards?
           </span>
         </h1>
-        <span className="mb-8 text-center text-[#64607D]">
+        <p className="mb-8 text-center font-semibold text-[#64607D]">
           Unlock the full potential of our platform with our step-by-step
           walkthrough video. Learn how to navigate <br /> seamlessly and make
           the most of our features for an enriched learning experience.
-        </span>
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
         <RewardStep
           step={1}
           title="Purchase a subscription plan"

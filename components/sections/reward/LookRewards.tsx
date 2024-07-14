@@ -1,5 +1,10 @@
 import clsx from "clsx";
+import Image from "next/image";
 import React from "react";
+import RewardGold from "@/public/RewardGold.png";
+import RewardSilver from "@/public/RewardGold.png";
+import RewardBronze from "@/public/RewardGold.png";
+import RewardGoldCircle from "@/public/RewardGoldCircle.png";
 
 const RewardCard = ({
   title,
@@ -18,13 +23,10 @@ const RewardCard = ({
 }) => {
   return (
     <div
-      className={clsx(
-        `relative h-48 w-64 overflow-hidden rounded-lg`,
-        color,
-        classname,
-      )}
+      className={clsx(`relative h-full w-full rounded-lg`, color, classname)}
     >
       <div className="absolute right-0 top-0 h-0 w-0 border-l-[64px] border-t-[48px] border-l-transparent border-t-white opacity-20"></div>
+      <Image src={RewardBronze} alt="" height={50} width={50} />
       <div className="flex h-full flex-col justify-between p-4">
         <div className="flex items-start justify-between">
           {/* <img src={icon} alt={title} className="w-8 h-8" /> */}
@@ -42,6 +44,9 @@ const RewardCard = ({
 const RewardCards = () => {
   return (
     <section className="block-space container">
+      <div className="mx-auto">
+        <Image src={RewardGoldCircle} alt="" className="mx-auto mb-12" />
+      </div>
       <div className="mb-12 text-center">
         <h1 className="mb-2 text-center text-3xl font-bold">
           Take a look at our
@@ -56,7 +61,7 @@ const RewardCards = () => {
           enriched learning experience.
         </span>
       </div>
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         <RewardCard
           title="Professional Reward"
           apy={20}
