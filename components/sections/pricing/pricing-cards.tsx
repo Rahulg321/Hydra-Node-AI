@@ -114,8 +114,8 @@ function PricingCard({
 }) {
   return (
     <div
-      className={clsx("rounded-lg border border-gray-200 bg-white p-4", {
-        "bg-baseC": isFeatured === true,
+      className={clsx("rounded-lg border border-gray-200 p-4", {
+        "bg-[#5d5fef]": isFeatured === true,
       })}
     >
       {isFeatured === true && (
