@@ -5,6 +5,7 @@
  */
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "@radix-ui/react-icons";
+import clsx from "clsx";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 const pricingTiers = [
@@ -12,6 +13,7 @@ const pricingTiers = [
     name: "Free Trial",
     duration: "For 7 days",
     price: 0,
+    isFeatured: false,
     description:
       "Get a quick overview of our platform through the free trial and explore the potential of HydraNode.",
     features: [
@@ -24,6 +26,7 @@ const pricingTiers = [
   {
     name: "Quarterly Billing",
     duration: "For 3 months",
+    isFeatured: false,
     price: 50,
     description:
       "Ideal for those who prefer short-term commitments with comprehensive features.",
@@ -40,6 +43,7 @@ const pricingTiers = [
   {
     name: "Yearly Billing",
     duration: "For 1 year",
+    isFeatured: true,
     price: 100,
     description:
       "Perfect for committed learners and professionals aiming for continuous growth and development.",
@@ -57,6 +61,7 @@ const pricingTiers = [
     name: "Lifetime Billing",
     duration: "For lifetime",
     price: 200,
+    isFeatured: false,
     description:
       "Gain unlimited access to HydraNode's platform and resources for life.",
     features: [
@@ -84,6 +89,7 @@ export default function PricingCardSection() {
             trialLimit={tier.duration}
             price={tier.price.toString()}
             features={tier.features}
+            isFeatured={tier.isFeatured}
           />
         ))}
       </div>
@@ -97,48 +103,93 @@ function PricingCard({
   trialLimit,
   price,
   features,
+  isFeatured,
 }: {
   heading: string;
   content: string;
   trialLimit: string;
   price: string;
   features: string[];
+  isFeatured?: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div
+      className={clsx("rounded-lg border border-gray-200 bg-white p-4", {
+        "bg-baseC": isFeatured === true,
+      })}
+    >
+      {isFeatured === true && (
+        <div className="relative top-[-40px] mx-auto w-fit rounded-full bg-[#A5A6F6] px-4 py-2 text-white">
+          <span>Most Popular</span>
+        </div>
+      )}
       <div>
-        <span className="text-sm font-semibold">{trialLimit}</span>
-        <h4 className="text-baseC">{heading}</h4>
-        <span className="text-sm font-semibold text-muted-foreground">
+        <span
+          className={clsx("text-sm font-semibold", {
+            "text-white": isFeatured === true,
+          })}
+        >
+          {trialLimit}
+        </span>
+        <h4
+          className={clsx("text-lg font-bold", {
+            "text-white": isFeatured === true,
+          })}
+        >
+          {heading}
+        </h4>
+        <span
+          className={clsx("text-sm font-semibold", {
+            "text-white": isFeatured === true,
+          })}
+        >
           {content}
         </span>
       </div>
       <div className="my-4">
-        <h2 className="text-baseC">${price}</h2>
-        <span className="font-bold text-baseC">Whats Included</span>
+        <h2
+          className={clsx("text-baseC", { "text-white": isFeatured === true })}
+        >
+          ${price}
+        </h2>
+        <span
+          className={clsx("font-bold text-baseC", {
+            "text-white": isFeatured === true,
+          })}
+        >
+          Whats Included
+        </span>
       </div>
+
       <div>
-        <div className="mb-2 flex items-center justify-between">
-          <FaCheckCircle className="h-6 w-6 basis-1/4 text-base" />{" "}
-          <span className="basis-3/4 text-sm">
-            for Additional 2% APY* each additional Associate certification
-            completed
-          </span>
-        </div>
-        <div>
-          {features.map((feature, index) => (
-            <div key={index} className="mb-2 flex items-center justify-between">
-              <FaCheckCircle className="h-6 w-6 basis-1/4 text-base" />
-              <span className="basis-3/4 text-sm">{feature}</span>
-            </div>
-          ))}
-        </div>
+        {features.map((feature, index) => (
+          <div key={index} className="mb-2 flex items-center justify-between">
+            <FaCheckCircle
+              className={clsx("h-6 w-6 basis-1/4 text-base", {
+                "text-white": isFeatured === true,
+              })}
+            />
+            <span
+              className={clsx("basis-3/4 text-sm", {
+                "text-white": isFeatured === true,
+              })}
+            >
+              {feature}
+            </span>
+          </div>
+        ))}
       </div>
-      <div className="mt-auto">
-        <Button className="mt-auto w-full rounded-full bg-base p-6 text-lg font-bold">
-          Get Started
-        </Button>
-      </div>
+
+      <Button
+        className={clsx(
+          "mt-auto w-full rounded-full bg-base p-6 text-lg font-bold",
+          {
+            "bg-white text-baseC": isFeatured === true,
+          },
+        )}
+      >
+        Get Started
+      </Button>
     </div>
   );
 }
