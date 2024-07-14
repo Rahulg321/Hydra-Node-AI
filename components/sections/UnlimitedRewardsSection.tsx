@@ -6,7 +6,7 @@ import PrimaryButton from "../ComponentButtons/PrimaryButton";
 
 const UnlimitedRewardsSection = () => {
   return (
-    <section className="bg-[#040011] text-white">
+    <section className="block-space bg-[#040011] text-white">
       <div className="container grid grid-cols-1 md:grid-cols-2">
         <div className="hidden md:block">
           <Image src={Trophies} alt="trophies" />

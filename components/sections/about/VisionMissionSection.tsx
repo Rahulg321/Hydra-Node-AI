@@ -7,7 +7,7 @@ const VisionMissionSection = () => {
   return (
     <React.Fragment>
       <section className="container">
-        <div className="flex">
+        <div className="flex flex-col-reverse gap-4 md:flex-row">
           <div className="basis-3/4">
             <h2 className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
               Mission
@@ -28,7 +28,7 @@ const VisionMissionSection = () => {
         </div>
       </section>
       <section className="block-space">
-        <div className="flex">
+        <div className="flex flex-col gap-4 md:flex-row">
           <div className="basis-1/4">
             <Image src={VisionImg} alt="" />
           </div>

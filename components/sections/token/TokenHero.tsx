@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const TokenHero = () => {
   return (
-    <section className="block-space max-h-[90vh] overflow-hidden bg-[#110C1F]">
+    <section className="block-space overflow-hidden bg-[#110C1F] md:max-h-[100vh]">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="container text-white">
           <div className="mt-4 flex items-center">
@@ -39,9 +39,8 @@ const TokenHero = () => {
             </Button>
           </div>
         </div>
-        <div>
+        <div className="hidden md:block">
           <Image src={TokenHeroImage} alt="" />
-          <Image src={TokenHeroContainer} alt="" />
         </div>
       </div>
     </section>

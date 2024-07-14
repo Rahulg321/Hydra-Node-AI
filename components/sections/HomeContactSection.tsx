@@ -5,7 +5,7 @@ const HomeContactSection = () => {
   return (
     <section className="block-space-large bg-[#040011] text-white">
       <div className="container">
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="content-center space-y-2">
             <span className="font-bold tracking-wide text-yellow-400">
               HELP DESK
@@ -21,7 +21,7 @@ const HomeContactSection = () => {
               <br /> We will reach out soon.
             </p>
           </div>
-          <div className="container">
+          <div className="">
             <ContactUsForm />
           </div>
         </div>

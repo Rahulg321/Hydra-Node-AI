@@ -26,7 +26,7 @@ const UserReviewSection = () => {
           community.
         </p>
       </div>
-      <div className="flex gap-6">
+      <div className="flex flex-col gap-6 lg:flex-row">
         <UserReviewCard />
         <UserReviewCard />
         <UserReviewCard />
@@ -40,7 +40,7 @@ export default UserReviewSection;
 
 function UserReviewCard() {
   return (
-    <div className="rounded-xl bg-base p-4">
+    <div className="bg-base p-4 lg:rounded-xl">
       <p className="mb-12 font-semibold text-white">
         We envisions a future where education and professional development are
         democratized, accessible, and rewarding for all. We aim to empower a

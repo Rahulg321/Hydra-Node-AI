@@ -38,7 +38,7 @@ const TechnologyBehindSuccessSection = () => {
           </span>
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-          <GridContainer heading="User Interface" classname="col-span-3">
+          <GridContainer heading="User Interface" classname="lg:col-span-3">
             <IconText icon={FaWallet} iconText="Wallet" />
             <IconText icon={FaRocket} iconText="Skills Marketplace" />
             <IconText
@@ -47,11 +47,14 @@ const TechnologyBehindSuccessSection = () => {
             />
             <IconText icon={GrAnalytics} iconText="Insights & Analytics" />
           </GridContainer>
-          <GridContainer classname="col-span-2" heading="Developer Interface">
+          <GridContainer
+            classname="lg:col-span-2"
+            heading="Developer Interface"
+          >
             <IconText icon={BsStack} iconText="Developer API" />
             <IconText icon={PiGraphLight} iconText="Blockchain Solutions" />
           </GridContainer>
-          <GridContainer heading="Training Model" classname="col-span-2">
+          <GridContainer heading="Training Model" classname="lg:col-span-2">
             <IconText icon={IoFunnel} iconText="Marketing Strategies" />
             <IconText icon={SiSimpleanalytics} iconText="Financial Analytics" />
             <IconText
@@ -59,18 +62,18 @@ const TechnologyBehindSuccessSection = () => {
               iconText="Blockchain Verification"
             />
           </GridContainer>
-          <GridContainer classname="col-span-3" heading="Personal Model">
+          <GridContainer classname="lg:col-span-3" heading="Personal Model">
             <IconText icon={CiGrid32} iconText="Adaptive Interactions" />
             <IconText icon={TiDocumentAdd} iconText="Data Integration" />
             <IconText icon={BsFillBoxFill} iconText="User Preferences" />
             <IconText icon={GiOpenBook} iconText="Smart Content Delivery" />
           </GridContainer>
 
-          <div className="col-span-5 flex items-center gap-4 rounded-lg border border-[#A5A6F6] p-2">
+          <div className="flex flex-col items-start gap-4 rounded-lg border border-[#A5A6F6] p-2 md:flex-row lg:col-span-5">
             <h3 className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
               AI Provider
             </h3>
-            <div className="flex w-full justify-around">
+            <div className="flex w-full flex-col gap-6 md:flex-row md:justify-around">
               <CompanyLogo img={OpenAiLogo} />
               <CompanyLogo img={HuggingFace} />
               <CompanyLogo img={GeminiLogo} />
@@ -97,14 +100,16 @@ function GridContainer({
   return (
     <div
       className={clsx(
-        "flex items-center gap-4 rounded-lg border border-[#A5A6F6] p-2",
+        "flex flex-col gap-4 rounded-lg border border-[#A5A6F6] p-2 md:flex-row",
         classname,
       )}
     >
       <h3 className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
         {heading}
       </h3>
-      <div className="flex w-full justify-around">{children}</div>
+      <div className="flex w-full flex-col gap-4 md:flex-row md:justify-around">
+        {children}
+      </div>
     </div>
   );
 }

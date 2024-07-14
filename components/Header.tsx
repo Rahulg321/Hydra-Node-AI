@@ -40,8 +40,11 @@ const Header = ({ classname }: HeaderProps) => {
     <>
       <header
         className={clsx(
-          "absolute w-full px-2 py-2 md:px-4 lg:px-12",
+          "w-full px-2 py-2 md:px-4 lg:absolute lg:px-12",
           classname,
+          pathname === "/token" || pathname === "/reward"
+            ? "bg-[#110C1F]"
+            : "bg-white",
         )}
       >
         <nav aria-label="Main-navigation">
@@ -50,7 +53,12 @@ const Header = ({ classname }: HeaderProps) => {
               <NameLogo />
               <button
                 aria-label="Open menu"
-                className="block text-2xl text-black dark:text-white md:hidden"
+                className={clsx(
+                  "block text-2xl text-black dark:text-white md:hidden",
+                  pathname === "/token" || pathname === "/reward"
+                    ? "text-white"
+                    : null,
+                )}
                 onClick={() => setIsOpen(true)}
               >
                 <MdMenu />
@@ -64,7 +72,12 @@ const Header = ({ classname }: HeaderProps) => {
             >
               <button
                 aria-label="Close menu"
-                className="fixed right-4 top-3 block p-2 text-2xl text-white md:hidden"
+                className={clsx(
+                  "fixed right-4 top-3 block p-2 text-2xl text-white md:hidden",
+                  pathname === "/token" || pathname === "/reward"
+                    ? "text-white"
+                    : null,
+                )}
                 onClick={() => setIsOpen(false)}
               >
                 <MdClose />
@@ -155,7 +168,7 @@ function DesktopMenu() {
 
 function AuthDialogNavs() {
   return (
-    <div className="space-x-4">
+    <div className="hidden space-x-4 md:flex md:items-center">
       <LoginDialog />
       <SignUpDialog />
     </div>

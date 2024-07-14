@@ -8,12 +8,12 @@ import { Button } from "../ui/button";
 const VisionSection = () => {
   return (
     <section className="relative overflow-hidden">
-      <div className="bg-custom-gradient absolute bottom-[-250px] left-[-100px] size-[45rem]"></div>
+      <div className="bg-custom-gradient bottom-[-250px] left-[-100px] hidden size-[45rem] md:absolute"></div>
       <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div>
+        <div className="hidden md:block">
           <Image src={VisionRocket23} alt="vision rocket" />
         </div>
-        <div className="container content-center text-right">
+        <div className="block-space container content-center text-right">
           <h2>
             Our Vision &{" "}
             <span className="via-[#AF89EE]/80.89% bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">

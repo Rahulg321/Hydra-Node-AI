@@ -44,7 +44,7 @@ const legalLinks = [
 const Footer = () => {
   return (
     <footer className="block-space border-t-4">
-      <div className="container flex justify-around">
+      <div className="container flex flex-col items-start gap-6 md:flex-row md:justify-around">
         <div>
           <Image src={HydraNodeLogo} alt="" />
           <span className="mt-2 block text-sm text-gray-500">
@@ -80,7 +80,7 @@ const Footer = () => {
         </div>
         <div>
           <h5 className="mb-2 font-bold">Join our Newsletter</h5>
-          <div className="flex items-center">
+          <div className="flex flex-col items-center gap-2 md:flex-row">
             <Input />
             <Button className="ml-2 bg-base">Subscribe</Button>
           </div>
