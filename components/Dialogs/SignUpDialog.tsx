@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,15 +13,21 @@ import ReusbaleButton from "../ComponentButtons/ReusbaleButton";
 import SignupForm from "../forms/SignupForm";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { usePathname, useRouter } from "next/navigation";
 
 const SignUpDialog = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [openDialog, setOpenDialog] = useState(true);
+
+  useEffect(() => {
+    if (openDialog === false) {
+      router.back();
+    }
+  }, [openDialog]);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="rounded-full bg-base p-6 text-lg font-bold">
-          Sign Up
-        </Button>
-      </DialogTrigger>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog} defaultOpen={true}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>

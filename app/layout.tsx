@@ -15,15 +15,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body
-        className={clsx("parent-container", poppins.variable, manrope.variable)}
-      >
+      <body className={clsx("", poppins.variable, manrope.variable)}>
         <Header />
+        {modal}
         {children}
         <Footer />
       </body>

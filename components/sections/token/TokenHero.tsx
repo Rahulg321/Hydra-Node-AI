@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaStar } from "react-icons/fa6";
 import TokenHeroImage from "@/public/token_ hero_full.png";
 import TokenHeroContainer from "@/public/TokenHeroContainer.png";

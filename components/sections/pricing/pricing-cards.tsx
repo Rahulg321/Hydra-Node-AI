@@ -8,6 +8,7 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
+
 const pricingTiers = [
   {
     name: "Free Trial",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,22 +12,22 @@ import {
 import ReusbaleButton from "../ComponentButtons/ReusbaleButton";
 import LoginForm from "../forms/LoginForm";
 import SigninGoogle from "@/components/ComponentButtons/SigninGoogle";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 
 const LoginDialog = () => {
+  const router = useRouter();
   const pathname = usePathname();
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(true);
+
+  useEffect(() => {
+    if (openDialog === false) {
+      router.back();
+    }
+  }, [openDialog]);
+
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-      <DialogTrigger
-        className={clsx(
-          "text-base font-bold",
-          pathname === "/token" && "text-white",
-        )}
-      >
-        Login
-      </DialogTrigger>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog} defaultOpen={true}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
