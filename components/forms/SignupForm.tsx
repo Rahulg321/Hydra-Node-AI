@@ -22,8 +22,12 @@ import {
   SignUpFormSchema,
   SignUpFormZodType,
 } from "@/lib/schemas/SignUpFormSchema";
+import { SignUpUser } from "@/actions/sign-up";
+import { useToast } from "@/components/ui/use-toast";
 
 const SignupForm = () => {
+  const { toast } = useToast();
+
   const form = useForm<SignUpFormSchema>({
     resolver: zodResolver(SignUpFormZodType),
     defaultValues: {
@@ -34,10 +38,24 @@ const SignupForm = () => {
     },
   });
   // 2. Define a submit handler.
-  function onSubmit(values: SignUpFormSchema) {
+  async function onSubmit(values: SignUpFormSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const response = await SignUpUser(values);
+    if (response.success) {
+      toast({
+        title: "Account Registered Successfully🎉",
+        description:
+          response.success || "Your account was created successfully",
+      });
+    } else if (response.error) {
+      toast({
+        title: "ERROR 🥲",
+        variant: "destructive",
+        description: response.error || "Could not register your account",
+      });
+    }
   }
   return (
     <Form {...form}>
@@ -96,7 +114,7 @@ const SignupForm = () => {
             </FormItem>
           )}
         />
-        <ul className="list-disc flex justify-between p-4 text-sm text-muted-foreground">
+        <ul className="flex list-disc justify-between p-4 text-sm text-muted-foreground">
           <div>
             <li>Use 8 or more characters</li>
             <li>Use a number(e.g. 1234)</li>

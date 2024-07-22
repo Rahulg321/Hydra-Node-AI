@@ -19,8 +19,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { LoginUser } from "@/actions/login";
+import { useToast } from "@/components/ui/use-toast";
 
 const LoginForm = () => {
+  const { toast } = useToast();
+
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(LoginFormZodType),
     defaultValues: {
@@ -29,10 +33,18 @@ const LoginForm = () => {
     },
   });
   // 2. Define a submit handler.
-  function onSubmit(values: LoginFormSchema) {
+  async function onSubmit(values: LoginFormSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const response = await LoginUser(values);
+    if (response) {
+      toast({
+        title: "ERROR 🥲",
+        variant: "destructive",
+        description: response || "Could not find your account",
+      });
+    }
   }
 
   return (

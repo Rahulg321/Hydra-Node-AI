@@ -11,8 +11,13 @@ import SignUpDialog from "./Dialogs/SignUpDialog";
 import Image from "next/image";
 import Logo from "@/public/hydranode_logo.png";
 import WhiteLogo from "@/public/hydranode_white_logo.png";
+import { signOut, useSession } from "next-auth/react";
+import SignOutButton from "./sign-out-button";
+import { Button } from "./ui/button";
+import { Session } from "next-auth";
 
 type HeaderProps = {
+  session: Session | null;
   classname?: string;
 };
 
@@ -32,7 +37,7 @@ const desktopNav = [
   { navlink: "/reward", navlabel: "Reward" },
 ];
 
-const Header = ({ classname }: HeaderProps) => {
+const Header = ({ session, classname }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -101,7 +106,8 @@ const Header = ({ classname }: HeaderProps) => {
               })}
             </div>
             <DesktopMenu />
-            <AuthDialogNavs />
+            {/* if session does not exist user is not logged in and dont show the login and sign up links */}
+            {session ? <ProfileMenu /> : <AuthDialogNavs />}
           </ul>
         </nav>
       </header>
@@ -171,6 +177,14 @@ function AuthDialogNavs() {
     <div className="hidden space-x-4 md:flex md:items-center">
       <Link href={"/login"}>Login</Link>
       <Link href={"/signup"}>Signup</Link>
+    </div>
+  );
+}
+
+function ProfileMenu() {
+  return (
+    <div>
+      <Button onClick={() => signOut()}>Signout</Button>
     </div>
   );
 }

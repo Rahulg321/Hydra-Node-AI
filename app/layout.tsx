@@ -5,28 +5,33 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import clsx from "clsx";
 import { manrope, poppins } from "./fonts";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Toaster } from "@/components/ui/toaster";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "Hydronode AI",
   description: "AI Powered Remote Learning Platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   modal,
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en">
       <body className={clsx("", poppins.variable, manrope.variable)}>
-        <Header />
-        {modal}
-        {children}
-        <Footer />
+        <SessionProvider>
+          <Header session={session} />
+          {modal}
+          {children}
+          <Footer />
+          <Toaster />
+        </SessionProvider>
       </body>
     </html>
   );

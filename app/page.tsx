@@ -11,8 +11,9 @@ import HomeContactSection from "@/components/sections/HomeContactSection";
 import InnovativeFeaturesSection from "@/components/sections/InnovativeFeaturesSection";
 import VideoGuideSection from "@/components/sections/VideoGuideSection";
 import OurPartners from "@/components/sections/OurPartners";
+import db from "@/lib/db";
 
-export default function Home() {
+export default async function Home() {
   return (
     <React.Fragment>
       <HeroSection />
