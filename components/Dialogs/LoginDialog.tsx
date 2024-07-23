@@ -12,20 +12,25 @@ import {
 import LoginForm from "../forms/LoginForm";
 import SigninGoogle from "@/components/ComponentButtons/SigninGoogle";
 import { usePathname, useRouter } from "next/navigation";
+import { Session } from "next-auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { useSession } from "next-auth/react";
 
 const LoginDialog = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [openDialog, setOpenDialog] = useState(true);
 
+  // TODO Close Dialog on successful form submission
+
   useEffect(() => {
     if (openDialog === false) {
       router.back();
     }
-  }, [openDialog]);
+  }, [openDialog, setOpenDialog]);
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog} defaultOpen={true}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>

@@ -51,3 +51,27 @@ model Account {
 
   @@id([provider, providerAccountId])
 }
+
+model ExamType {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  exams Exam[]
+}
+
+model ExamLevel {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  exams Exam[]
+}
+
+model Exam {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  examTypeId  String
+  examLevelId String
+  examType    ExamType  @relation(fields: [examTypeId], references: [id])
+  examLevel   ExamLevel @relation(fields: [examLevelId], references: [id])
+}

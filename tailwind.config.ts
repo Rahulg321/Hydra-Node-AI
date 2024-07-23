@@ -19,6 +19,7 @@ const config = {
     },
     extend: {
       colors: {
+        mutedText: "var(--muted-text)",
         base: "var(--base)",
         baseC: "var(--base)",
         border: "hsl(var(--border))",

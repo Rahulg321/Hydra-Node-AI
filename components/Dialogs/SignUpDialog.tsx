@@ -26,6 +26,8 @@ const SignUpDialog = () => {
     }
   }, [openDialog]);
 
+  // TODO Close Dialog on successful form submission
+
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog} defaultOpen={true}>
       <DialogContent>

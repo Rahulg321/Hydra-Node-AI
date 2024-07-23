@@ -40,6 +40,7 @@ export default auth(async function middleware(req) {
     console.log("you accessed a protected route in middleware");
 
     if (!isLoggedIn) {
+      console.log("cannot access a protected route without being logged in");
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }

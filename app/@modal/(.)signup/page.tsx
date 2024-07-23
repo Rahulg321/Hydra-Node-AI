@@ -3,11 +3,7 @@ import React from "react";
 
 const page = () => {
   console.log("intercepted signup route");
-  return (
-    <React.Fragment>
-      <SignUpDialog />
-    </React.Fragment>
-  );
+  return <SignUpDialog />;
 };
 
 export default page;
