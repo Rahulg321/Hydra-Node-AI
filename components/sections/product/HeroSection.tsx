@@ -21,7 +21,7 @@ const HeroSection = () => {
           </span>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
-          <Link href={"/exams"} className="rounded-lg bg-base p-6 lg:p-12">
+          <Link href={"/vendors"} className="rounded-lg bg-base p-6 lg:p-12">
             <div className="mb-4 text-4xl text-white lg:text-6xl">
               <IoDocumentText />
             </div>

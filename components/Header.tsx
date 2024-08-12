@@ -45,7 +45,7 @@ const Header = ({ session, classname }: HeaderProps) => {
     <>
       <header
         className={clsx(
-          "w-full px-2 py-2 md:px-4 lg:absolute lg:px-12",
+          "w-full px-2 py-2 md:px-4 lg:px-12",
           classname,
           pathname === "/token" || pathname === "/reward"
             ? "bg-[#110C1F]"

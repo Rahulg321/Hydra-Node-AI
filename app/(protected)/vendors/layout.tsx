@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import React from "react";
 
 const layout = async ({
@@ -12,16 +13,14 @@ const layout = async ({
     examType?: string;
   };
 }) => {
-  const AllExamsType = await db.examType.findMany();
-  const searchParamExamLevel = searchParams?.examLevel || "associate-level";
-  const searchParamExamType = searchParams?.examType || "googlenet";
+  const vendors = await db.vendor.findMany();
 
   return (
     <div className="pt-24">
       <div className="grid min-h-screen grid-cols-[220px_1fr]">
         <div className="space-y-4 border-r-2 p-4">
-          {AllExamsType.map((examType) => (
-            <ExamTypeButton key={examType.id} examType={examType} />
+          {vendors.map((vendor) => (
+            <VendorButton key={vendor.id} vendor={vendor} />
           ))}
         </div>
         <div>{children}</div>
@@ -32,22 +31,23 @@ const layout = async ({
 
 export default layout;
 
-function ExamTypeButton({
-  examType,
+function VendorButton({
+  vendor,
 }: {
-  examType: {
+  vendor: {
     id: string;
     name: string;
     slug: string;
   };
 }) {
   return (
-    <div
+    <Link
       className={cn(
-        "rounded-md border-l-4 border-base bg-[#F5F8FE] px-4 py-2 text-muted-foreground",
+        "block rounded-md border-l-4 border-base bg-[#F5F8FE] px-4 py-2 text-muted-foreground",
       )}
+      href={`/vendors/${vendor.slug}`}
     >
-      {examType.name}
-    </div>
+      {vendor.name}
+    </Link>
   );
 }
