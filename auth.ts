@@ -10,12 +10,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   callbacks: {
     jwt({ token, user }) {
+      // console.log("token and user in jwt callback", token, user);
+
       if (user) {
         token.id = user.id;
       }
+
       return token;
     },
-    session({ session }) {
+    session({ session, token }) {
+      // set the userId returned from the jwt callback in the session callback
+      if (session?.user) {
+        session.user.id = session.user.id;
+      }
       return session;
     },
   },

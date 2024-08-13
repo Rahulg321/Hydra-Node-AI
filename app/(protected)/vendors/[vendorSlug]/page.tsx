@@ -25,6 +25,7 @@ const page = async ({
     },
   });
 
+  // we are using the current vendor id so as to improve performance
   const allExams = await db.exam.findMany({
     where: {
       vendorId: currentVendor?.id,

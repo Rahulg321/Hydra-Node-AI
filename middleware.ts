@@ -20,14 +20,9 @@ export default auth(async function middleware(req) {
   //   !! converts the value into its boolean equivalent
   const isLoggedIn = !!req.auth;
 
-  console.log("req auth is", req.auth);
-  console.log("isLoggedIn->", isLoggedIn);
-  console.log("CURRENT PATHNAME->", currentPathname);
-
   if (AUTH_ROUTES.includes(currentPathname)) {
     // we are accessing an auth route
     if (isLoggedIn) {
-      console.log("already logged in and trying to access an auth route");
       // we are already logged in so we cant access the auth routes anymore
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
     }
@@ -37,10 +32,8 @@ export default auth(async function middleware(req) {
     // we are accessing a protected routes
     // check for valid sessions
     // redirect unauthorized users
-    console.log("you accessed a protected route in middleware");
 
     if (!isLoggedIn) {
-      console.log("cannot access a protected route without being logged in");
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }

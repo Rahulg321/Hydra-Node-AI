@@ -7,6 +7,8 @@ import { FaStar } from "react-icons/fa6";
 import RedMedal from "@/public/RedMedal.png";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
+import StartExamButton from "./StartExamButton";
+import { auth } from "@/auth";
 
 const page = async ({
   params,
@@ -15,6 +17,11 @@ const page = async ({
     examSlug: string;
   };
 }) => {
+  const loggedInUser = await auth();
+  if (!loggedInUser) {
+    return notFound();
+  }
+
   const exam = await db.exam.findFirst({
     where: {
       slug: params.examSlug,
@@ -27,8 +34,6 @@ const page = async ({
   if (!exam) {
     return notFound();
   }
-
-  console.log("exam is ", exam);
 
   return (
     <section className="block-space-large">
@@ -43,7 +48,8 @@ const page = async ({
         <div>
           <span className="block font-bold">Certificate Details</span>
           <span className="block font-bold text-muted-foreground">
-            Number of questions: <span className="text-baseC">15</span>
+            Number of questions:{" "}
+            <span className="text-baseC">{exam.questions.length}</span>
           </span>
           <span className="block font-bold text-muted-foreground">
             Attempt: <span className="text-baseC">{exam.attempts}</span>
@@ -65,12 +71,12 @@ const page = async ({
             </div>
             <span>4.8 (23 reviews)</span>
           </div>
-          <Button
-            className="mb-4 rounded-full bg-base p-6 text-lg font-bold"
-            asChild
-          >
-            <Link href={`#`}>Start Exam</Link>
-          </Button>
+          {/* logged in user may or may not exist, should check for null or better code */}
+          <StartExamButton
+            examId={exam.id}
+            examSlug={exam.slug}
+            currentUserId={"clzsby6sn0000qozn96yrl510"}
+          />
           <h4>Examination Instructions</h4>
           <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">
             <li>You can pause the test at any time and resume later.</li>
