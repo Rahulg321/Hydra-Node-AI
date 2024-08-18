@@ -9,7 +9,13 @@ export const AUTH_ROUTES = ["/login", "/signup"];
  *These are the routes that are protected and user cant access without being logged in
  *@type{string}
  */
-export const PROTECTED_ROUTES = ["/settings", "/product", "/dashboard"];
+export const PROTECTED_ROUTES = [
+  "/settings",
+  "/product",
+  "/exam",
+  "/dashboard",
+  "/profile",
+];
 
 /**
  *

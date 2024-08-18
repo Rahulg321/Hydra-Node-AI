@@ -1,5 +1,17 @@
 "use client";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,6 +27,8 @@ import { signOut, useSession } from "next-auth/react";
 import SignOutButton from "./sign-out-button";
 import { Button } from "./ui/button";
 import { Session } from "next-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ChevronDown } from "lucide-react";
 
 type HeaderProps = {
   session: Session | null;
@@ -107,7 +121,11 @@ const Header = ({ session, classname }: HeaderProps) => {
             </div>
             <DesktopMenu />
             {/* if session does not exist user is not logged in and dont show the login and sign up links */}
-            {session ? <ProfileMenu /> : <AuthDialogNavs />}
+            {session ? (
+              <ProfileMenu profileName={session.user?.name || "JohnDoe"} />
+            ) : (
+              <AuthDialogNavs />
+            )}
           </ul>
         </nav>
       </header>
@@ -181,10 +199,29 @@ function AuthDialogNavs() {
   );
 }
 
-function ProfileMenu() {
+function ProfileMenu({ profileName }: { profileName: string }) {
   return (
-    <div>
-      <Button onClick={() => signOut()}>Signout</Button>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <span className="flex items-center font-medium text-baseC">
+          Account <ChevronDown />
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>{profileName}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href={"/profile/rahul-gupta"}>Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>Billing</DropdownMenuItem>
+        <DropdownMenuItem>Subscription</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -1,16 +1,5 @@
 import db from "@/lib/db";
 
-export async function GET(request: Request) {
-  return Response.json(
-    {
-      success: true,
-    },
-    {
-      status: 200,
-    },
-  );
-}
-
 export async function POST(request: Request) {
   try {
     const body = await request.json();

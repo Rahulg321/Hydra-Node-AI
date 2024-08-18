@@ -4,68 +4,187 @@ import { Check, CircleOff, Timer, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import db from "@/lib/db";
+import { notFound } from "next/navigation";
+import StartExamButton from "../../../StartExamButton";
 
-const QuizResultsPage = () => {
+export const dynamic = "force-dynamic";
+
+type props = {
+  params: {
+    examSlug: string;
+    quizId: string;
+  };
+};
+
+const QuizResultsPage = async ({ params }: props) => {
+  // to display the results
+  // calculate the number of missed, answered, correct and incorrect questions
+  // calculate the total time that has elapsed as well
+
+  // fetch the quiz session
+  const currentQuizSession = await db.quizSession.findFirst({
+    where: {
+      id: params.quizId,
+    },
+    include: {
+      exam: {
+        include: {
+          questions: true,
+        },
+      },
+    },
+  });
+
+  if (!currentQuizSession) {
+    console.log("the quiz session doesnt exist");
+    return notFound();
+  }
+
+  console.log("quiz session in results page", currentQuizSession);
+
+  let examTimeInMinutes = currentQuizSession.exam.timeAllowed;
+  let totalQuestions = currentQuizSession.exam.questions.length;
+  let startTime = currentQuizSession.startTime;
+  let endTime = currentQuizSession.endTime;
+
+  if (!endTime || !startTime) {
+    console.log("Start time or end time is missing");
+    return notFound();
+  }
+
+  // calculate the time taken
+  let timeTakenMs = new Date(endTime).getTime() - new Date(startTime).getTime();
+  let timeTakenMinutes = Math.floor(timeTakenMs / 60000); // Convert milliseconds to minutes
+  const formattedEndTime = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  }).format(new Date(endTime));
+
+  let totalTimeTaken = "";
+
+  // formatted time less than 1min
+  if (timeTakenMinutes < 1) {
+    totalTimeTaken = "less than 1 min";
+  } else {
+    totalTimeTaken = `${timeTakenMinutes} minutes`;
+  }
+
+  const userAttempts = await db.userAttempt.findMany({
+    where: {
+      quizSessionId: params.quizId,
+    },
+  });
+
+  let skippedQuestions = 0;
+  let correctQuestions = 0;
+  let incorrectQuestions = 0;
+
+  userAttempts.forEach((e) => {
+    if (e.isCorrect) {
+      correctQuestions++;
+    } else {
+      incorrectQuestions++;
+    }
+
+    if (e.skipped) {
+      skippedQuestions++;
+    }
+  });
+
+  let examScore = (correctQuestions / totalQuestions) * 100;
+
   return (
-    <div>
+    <section className="container py-4">
       <span>Results for your Exam</span>
-      <h1 className="my-8">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium
-        architecto{" "}
-      </h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
+          <h2 className="my-8">
+            Total Questions <span className="font-bold">{totalQuestions}</span>
+          </h2>
+          <h2 className="my-8">
+            Total Time Allowed{" "}
+            <span className="font-bold">{examTimeInMinutes} minutes</span>
+          </h2>
+
           <h2>Exam Score</h2>
           <div className="my-4 flex items-center gap-2">
-            <h1>85%</h1>
-            <span className="font-semibold text-green-500">Passed</span>
+            <h1>{examScore.toFixed(1)} %</h1>
+            <span
+              className={cn("font-semibold text-green-500", {
+                "text-red-500": examScore < 50,
+              })}
+            >
+              {examScore >= 50 ? "Passed" : "Failed"}
+            </span>
           </div>
-          <h3 className="mb-4 font-medium">January 12, 2023 at 10:00 AM</h3>
+          <h3 className="mb-4 font-medium">{formattedEndTime}</h3>
           <div className="grid grid-cols-2 gap-4">
             <InfoCard
               title="Correct"
-              value="275"
+              value={correctQuestions.toString()}
               backgroundColor="bg-green-200"
               icon={<Check className="text-green-400" />}
             />
             <InfoCard
               title="Incorrect"
-              value="275"
+              value={incorrectQuestions.toString()}
               backgroundColor="bg-pink-400"
               icon={<X className="text-pink-800" />}
             />
             <InfoCard
               title="Skipped/Unanswered"
-              value="275"
+              value={skippedQuestions.toString()}
               backgroundColor="bg-violet-400"
               icon={<CircleOff className="text-violet-800" />}
             />
             <InfoCard
               title="Time Taken"
-              value="275"
+              value={`${totalTimeTaken}`}
               backgroundColor="bg-orange-400"
               icon={<Timer className="text-orange-800" />}
             />
           </div>
         </div>
-        <ResultsChart />
+        <ResultsChart
+          correct={correctQuestions}
+          incorrect={incorrectQuestions}
+          skipped={skippedQuestions}
+        />
       </div>
       <div className="mt-4 flex justify-between">
-        <Button className="mb-4 rounded-full bg-green-600 px-10 py-6 text-base">
-          Review Exam
+        <Button
+          className="mb-4 rounded-full bg-green-600 px-10 py-6 text-base"
+          asChild
+        >
+          <Link
+            href={`/exam/${currentQuizSession.exam.slug}/quiz/${params.quizId}/review`}
+          >
+            Review Exam
+          </Link>
         </Button>
 
         <div className="space-x-4">
-          <Button className="mb-4 rounded-full bg-base px-10 py-6 text-base">
-            Retake Exam
-          </Button>
+          <StartExamButton
+            buttonLabel="Retake Exam"
+            examId={currentQuizSession.examId}
+            examSlug={currentQuizSession.exam.slug}
+            currentUserId="clzuuk4w70002jyzv0ocenfvu"
+          />
 
-          <Button className="mb-4 rounded-full bg-base px-10 py-6 text-base">
-            Continue
+          <Button
+            className="mb-4 rounded-full bg-base px-10 py-6 text-base"
+            asChild
+          >
+            <Link href={"/product"}>Continue</Link>
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -46,7 +46,7 @@ const Footer = () => {
     <footer className="block-space border-t-4">
       <div className="container flex flex-col items-start gap-6 md:flex-row md:justify-around">
         <div>
-          <Image src={HydraNodeLogo} alt="" />
+          <Image src={HydraNodeLogo} alt="logo of hydranode" />
           <span className="mt-2 block text-sm text-gray-500">
             Boost your Competitive Skills <br /> & Earn Rewards
           </span>{" "}

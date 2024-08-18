@@ -6,7 +6,7 @@ import React from "react";
 import { FaStar } from "react-icons/fa6";
 import RedMedal from "@/public/RedMedal.png";
 import db from "@/lib/db";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import StartExamButton from "./StartExamButton";
 import { auth } from "@/auth";
 
@@ -19,7 +19,7 @@ const page = async ({
 }) => {
   const loggedInUser = await auth();
   if (!loggedInUser) {
-    return notFound();
+    return redirect("/login");
   }
 
   const exam = await db.exam.findFirst({
@@ -32,6 +32,7 @@ const page = async ({
   });
 
   if (!exam) {
+    console.log("could not find exam");
     return notFound();
   }
 
@@ -75,7 +76,7 @@ const page = async ({
           <StartExamButton
             examId={exam.id}
             examSlug={exam.slug}
-            currentUserId={"clzsby6sn0000qozn96yrl510"}
+            currentUserId={"clzxqhw150000cumzt1zfkdk5"}
           />
           <h4>Examination Instructions</h4>
           <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">

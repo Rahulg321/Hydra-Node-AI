@@ -34,6 +34,7 @@ export default auth(async function middleware(req) {
     // redirect unauthorized users
 
     if (!isLoggedIn) {
+      console.log("access denied for not logged in users");
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }

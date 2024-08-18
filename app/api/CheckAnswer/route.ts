@@ -9,17 +9,15 @@ const checkAnswerSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { questionId, userAnswer, quizSessionId } =
-      checkAnswerSchema.parse(body);
-    console.log("questionId is ", questionId);
-    console.log("userAnswer is ", userAnswer);
-    console.log("quizSessionId is ", quizSessionId);
+    const { questionId, userAnswer, quizSessionId } = await request.json();
+
     const currentQuestion = await db.question.findUnique({
       where: {
         id: questionId,
       },
     });
+
+    console.log("currentQuestion in route for checking is", currentQuestion);
 
     if (!currentQuestion) {
       return Response.json(
@@ -60,12 +58,14 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: true,
-        // isCorrect: isCorrect,
+        isCorrect,
         message: "Answer recorded successfully.",
       },
       { status: 200 },
     );
   } catch (error) {
+    console.log("error occured in api route", error);
+
     if (error instanceof ZodError) {
       return Response.json(
         {

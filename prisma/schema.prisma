@@ -102,14 +102,14 @@ model QuizSession {
 }
 
 model UserAttempt {
-  id            String   @id @default(cuid())
+  id            String      @id @default(cuid())
   quizSessionId String
   questionId    String
   userAnswer    String
   isCorrect     Boolean?
-
-  quizSession QuizSession @relation(fields: [quizSessionId], references: [id], onDelete: Cascade)
-  question    Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  skipped       Boolean?
+  quizSession   QuizSession @relation(fields: [quizSessionId], references: [id], onDelete: Cascade)
+  question      Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

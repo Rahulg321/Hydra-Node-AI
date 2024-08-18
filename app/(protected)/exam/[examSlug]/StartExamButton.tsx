@@ -6,15 +6,18 @@ import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const StartExamButton = ({
   examId,
   examSlug,
   currentUserId,
+  buttonLabel = "Start Exam",
 }: {
   examId: string;
   examSlug: string;
   currentUserId: string;
+  buttonLabel?: string;
 }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -27,6 +30,7 @@ const StartExamButton = ({
         console.log("examId", examId);
         console.log("currentUserId", currentUserId);
 
+        // creates a quiz session
         const response = await axios.post("/api/CreateQuiz", {
           examId,
           currentUserId,
@@ -70,19 +74,12 @@ const StartExamButton = ({
       disabled={isPending}
     >
       {isPending ? (
-        <div>
-          <div
-            className="text-surface inline-block size-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
-            role="status"
-          >
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              Loading...
-            </span>
-          </div>
-          <span className="ml-2">Loading...</span>
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Creating Quiz
         </div>
       ) : (
-        "Start Exam"
+        buttonLabel
       )}
     </Button>
   );

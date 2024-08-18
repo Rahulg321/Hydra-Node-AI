@@ -16,7 +16,7 @@ const layout = async ({
   const vendors = await db.vendor.findMany();
 
   return (
-    <div className="pt-24">
+    <div className="">
       <div className="grid min-h-screen grid-cols-[220px_1fr]">
         <div className="space-y-4 border-r-2 p-4">
           {vendors.map((vendor) => (
