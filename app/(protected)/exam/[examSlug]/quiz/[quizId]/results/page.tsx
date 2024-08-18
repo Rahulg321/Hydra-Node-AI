@@ -23,6 +23,8 @@ const QuizResultsPage = async ({ params }: props) => {
   // calculate the total time that has elapsed as well
 
   // fetch the quiz session
+
+  // TODO:- Fetch the quiz session with the user attempts within it
   const currentQuizSession = await db.quizSession.findFirst({
     where: {
       id: params.quizId,
@@ -158,7 +160,7 @@ const QuizResultsPage = async ({ params }: props) => {
       </div>
       <div className="mt-4 flex justify-between">
         <Button
-          className="mb-4 rounded-full bg-green-600 px-10 py-6 text-base"
+          className="mb-4 rounded-full border border-base bg-white px-10 py-6 text-baseC transition duration-150 ease-in-out hover:bg-base hover:text-white"
           asChild
         >
           <Link
@@ -173,7 +175,7 @@ const QuizResultsPage = async ({ params }: props) => {
             buttonLabel="Retake Exam"
             examId={currentQuizSession.examId}
             examSlug={currentQuizSession.exam.slug}
-            currentUserId="clzuuk4w70002jyzv0ocenfvu"
+            currentUserId="clzz72ekf0000qaa4eyyzlons"
           />
 
           <Button

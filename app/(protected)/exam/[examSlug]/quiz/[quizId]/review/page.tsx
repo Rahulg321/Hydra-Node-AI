@@ -23,6 +23,7 @@ const ReviewExamPage = async ({
           question: true,
         },
       },
+      exam: true,
     },
   });
 

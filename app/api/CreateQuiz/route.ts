@@ -2,9 +2,7 @@ import db from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    console.log("body is ", body);
-    const { examId, currentUserId } = body;
+    const { examId, currentUserId } = await request.json();
     console.log("examId is ", examId);
     console.log("currentUserId is ", currentUserId);
 
@@ -18,6 +16,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // create a new quiz session
     const quizSession = await db.quizSession.create({
       data: {
         examId: examId,
@@ -37,12 +36,12 @@ export async function POST(request: Request) {
       },
     );
   } catch (error) {
-    console.log(error);
+    console.error("could not create quiz session", error);
 
     return Response.json(
       {
         success: false,
-        message: "An unexpected error occurred.",
+        message: `An unexpected error occurred. ${error}`,
       },
       { status: 500 },
     );
