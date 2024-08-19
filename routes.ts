@@ -3,7 +3,13 @@
  *These are the routes that are used for authentication purposes
  *@type{string}
  */
-export const AUTH_ROUTES = ["/login", "/signup"];
+export const AUTH_ROUTES = [
+  "/login",
+  "/signup",
+  "/auth/reset",
+  "/auth/error",
+  "/auth/new-password",
+];
 /**
  *
  *These are the routes that are protected and user cant access without being logged in

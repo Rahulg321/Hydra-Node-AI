@@ -27,7 +27,7 @@ const LoginDialog = () => {
     if (openDialog === false) {
       router.back();
     }
-  }, [openDialog, setOpenDialog]);
+  }, [openDialog, setOpenDialog, router]);
 
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>

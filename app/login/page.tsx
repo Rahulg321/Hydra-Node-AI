@@ -6,7 +6,7 @@ const LoginPage = () => {
     <section className="block-space-large">
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div></div>
-        <div>
+        <div className="container">
           <h3>Login TO Hydranode</h3>
           <LoginForm />
         </div>

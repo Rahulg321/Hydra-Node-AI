@@ -13,7 +13,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 type ProfilePageProps = {
   params: {
-    username: string;
+    userId: string;
   };
 };
 

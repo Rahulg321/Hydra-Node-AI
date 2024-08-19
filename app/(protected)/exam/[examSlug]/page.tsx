@@ -76,7 +76,7 @@ const page = async ({
           <StartExamButton
             examId={exam.id}
             examSlug={exam.slug}
-            currentUserId={"clzz72ekf0000qaa4eyyzlons"}
+            currentUserId={loggedInUser.user.id as string}
           />
           <h4>Examination Instructions</h4>
           <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">

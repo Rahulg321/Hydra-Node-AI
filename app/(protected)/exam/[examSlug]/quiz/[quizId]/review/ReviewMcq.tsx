@@ -94,6 +94,27 @@ const ReviewMcq = ({ quiz }: ReviewMcqProps) => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <div className="container col-span-1 space-y-4">
           <h4 className="text-baseC">Exam Content</h4>
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div
+                className={`size-6 rounded-lg border bg-green-400 text-center text-white`}
+              ></div>
+              <span className="font-semibold text-green-700">Correct</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className={`size-6 rounded-lg border bg-red-400 text-center text-white`}
+              ></div>
+              <span className="font-semibold text-red-700">Incorrect</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className={`size-6 rounded-lg border bg-yellow-400 text-center text-white`}
+              ></div>
+              <span className="font-semibold text-yellow-700">Skipped</span>
+            </div>
+          </div>
           <CorrectQuestionGrid
             questionLength={quiz.userAttempts.length}
             questionStatus={quiz.userAttempts.map((attempt) =>
@@ -104,7 +125,7 @@ const ReviewMcq = ({ quiz }: ReviewMcqProps) => {
                   : "incorrect",
             )}
           />
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h5>
               Attempted Questions{" "}
               <span className="font-semibold text-baseC">

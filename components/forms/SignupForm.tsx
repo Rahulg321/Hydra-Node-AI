@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -27,7 +27,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 const SignupForm = () => {
   const { toast } = useToast();
-
+  const [isPending, startTransition] = useTransition();
   const form = useForm<SignUpFormSchema>({
     resolver: zodResolver(SignUpFormZodType),
     defaultValues: {
@@ -41,21 +41,23 @@ const SignupForm = () => {
   async function onSubmit(values: SignUpFormSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
-    const response = await SignUpUser(values);
-    if (response.success) {
-      toast({
-        title: "Account Registered Successfully🎉",
-        description:
-          response.success || "Your account was created successfully",
-      });
-    } else if (response.error) {
-      toast({
-        title: "ERROR 🥲",
-        variant: "destructive",
-        description: response.error || "Could not register your account",
-      });
-    }
+    startTransition(async () => {
+      console.log(values);
+      const response = await SignUpUser(values);
+      if (response.success) {
+        toast({
+          title: "Account Registered Successfully🎉",
+          description:
+            response.success || "Your account was created successfully",
+        });
+      } else if (response.error) {
+        toast({
+          title: "ERROR 🥲",
+          variant: "destructive",
+          description: response.error || "Could not register your account",
+        });
+      }
+    });
   }
   return (
     <Form {...form}>
@@ -124,8 +126,8 @@ const SignupForm = () => {
             <li>Use a symbol (e.g. !@#$)</li>
           </div>
         </ul>
-        <Button type="submit" className="w-full bg-base">
-          Sign in
+        <Button type="submit" className="w-full bg-base" disabled={isPending}>
+          {isPending ? "Creating User..." : "Sign in"}
         </Button>
       </form>
     </Form>
