@@ -31,6 +31,11 @@ model User {
 
   profile      Profile?
   quizSessions QuizSession[]
+
+  isTwoFactorEnabled Boolean? @default(false)
+
+  // one to one relation between user and two factor confirmation
+  TwoFactorConfirmation TwoFactorConfirmation?
 }
 
 model Profile {
@@ -61,6 +66,14 @@ model Account {
   @@id([provider, providerAccountId])
 }
 
+model TwoFactorConfirmation {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
 model VerificationToken {
   id      String   @id @default(cuid())
   email   String
@@ -71,6 +84,15 @@ model VerificationToken {
 }
 
 model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
   id      String   @id @default(cuid())
   email   String
   token   String   @unique

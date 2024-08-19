@@ -4,7 +4,6 @@ import React from "react";
 
 const page = async () => {
   const session = await auth();
-
   return (
     <React.Fragment>
       <div className="block-space-large">

@@ -4,6 +4,7 @@ import authConfig from "./auth.config";
 import db from "@/lib/db";
 import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
+import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 
 declare module "next-auth" {
   /**
@@ -12,6 +13,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       role: UserRole;
+      isTwoFactorEnabled: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -48,26 +50,45 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         return false;
       }
 
+      // adding 2 FA Check
+      if (existingUser.isTwoFactorEnabled) {
+        const confirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id,
+        );
+
+        console.log("two factor confirmation", { confirmation });
+
+        if (!confirmation) {
+          return false;
+        }
+
+        // users will do a 2FA Check everytime they login
+        await db.twoFactorConfirmation.delete({
+          where: {
+            id: confirmation.id,
+          },
+        });
+      }
+
       return true;
     },
 
     async jwt({ token, user }) {
       // If this is the first time the token is created, set the `sub` and other properties
-      if (user) {
-        token.sub = user.id;
-      }
-
-      // If the token already exists, keep the `sub` and `role` properties
-      if (token.sub) {
-        const existingUser = await getUserById(token.sub);
-        if (existingUser) {
-          token.role = existingUser.role;
-        }
-      }
+      if (!token.sub) return token;
+      const existingUser = await getUserById(token.sub);
+      if (!existingUser) return token;
+      token.name = existingUser.firstName;
+      token.email = existingUser.email;
+      token.role = existingUser.role;
+      token.id = existingUser.id;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       return token;
     },
     session({ session, token }) {
+      console.log("token in session callback", token);
+
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -75,6 +96,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
       }
+
+      if (token.isTwoFactorEnabled && session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
+
+      if (session.user) {
+        session.user.name = token.name;
+        session.user.email = token.email as string;
+      }
+
       return session;
     },
   },

@@ -4,6 +4,7 @@ import { z } from "zod";
 export const LoginFormZodType = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string(),
+  code: z.optional(z.string()),
 });
 
 // Define the TypeScript type for the login form data
