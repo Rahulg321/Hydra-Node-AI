@@ -3,16 +3,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 
-const layout = async ({
-  children,
-  searchParams,
-}: {
-  children: React.ReactNode;
-  searchParams?: {
-    examLevel?: string;
-    examType?: string;
-  };
-}) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
   const vendors = await db.vendor.findMany();
 
   return (

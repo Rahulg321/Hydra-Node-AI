@@ -11,6 +11,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import SignOutButton from "@/components/sign-out-button";
+import { Session } from "next-auth";
 
 type ProfilePageProps = {
   params: {
@@ -30,7 +31,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   return (
     <React.Fragment>
       <section className="grid min-h-screen grid-cols-5 gap-6 bg-[#F5F4FA] px-4 py-4">
-        <ProfileSidebar />
+        <ProfileSidebar session={session} />
         <CertificateUploadSection />
         <CurrentPlanSection />
         <ExamHistorySection />
@@ -117,8 +118,7 @@ function CurrentPlanSection() {
   );
 }
 
-async function ProfileSidebar() {
-  const session = await auth();
+async function ProfileSidebar({ session }: { session: Session }) {
   return (
     <div className="col-span-1 row-span-2 rounded-xl bg-white py-4">
       <Image
