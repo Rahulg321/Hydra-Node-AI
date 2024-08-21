@@ -147,6 +147,12 @@ async function ProfileSidebar({ session }: { session: Session }) {
             {session?.user.isTwoFactorEnabled ? "true" : "false"}
           </span>
         </div>
+        <div className="flex items-center justify-between gap-2">
+          <span>OAuth Login:-</span>
+          <span className="text-sm font-semibold text-baseC">
+            {session?.user.isCredentialsLogin ? "true" : "false"}
+          </span>
+        </div>
       </div>
       <ProfileForm name={session?.user.name || ""} session={session} />
       <Button variant={"link"} className="mt-4 w-full text-baseC">
