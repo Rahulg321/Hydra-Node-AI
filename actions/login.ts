@@ -22,6 +22,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 
 export async function LoginUser(values: LoginFormSchema) {
   const validatedFields = LoginFormZodType.safeParse(values);
+
   if (!validatedFields.success) {
     return {
       error:

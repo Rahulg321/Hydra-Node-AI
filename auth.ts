@@ -14,6 +14,7 @@ declare module "next-auth" {
     user: {
       role: UserRole;
       isTwoFactorEnabled: boolean;
+      isCredentialsLogin: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -73,22 +74,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return true;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       // If this is the first time the token is created, set the `sub` and other properties
       if (!token.sub) return token;
       const existingUser = await getUserById(token.sub);
       if (!existingUser) return token;
-      token.name = existingUser.firstName;
+      token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.id = existingUser.id;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
+      // Check if the user logged in with credentials or OAuth
+      token.isCredentialsLogin = !!existingUser.password;
+
       return token;
     },
     session({ session, token }) {
-      console.log("token in session callback", token);
-
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -104,6 +106,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email as string;
+        session.user.isCredentialsLogin = token.isCredentialsLogin as boolean;
       }
 
       return session;

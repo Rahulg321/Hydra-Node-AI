@@ -24,6 +24,7 @@ import {
 } from "@/lib/schemas/SignUpFormSchema";
 import { SignUpUser } from "@/actions/sign-up";
 import { useToast } from "@/components/ui/use-toast";
+import SigninGoogle from "../ComponentButtons/SigninGoogle";
 
 const SignupForm = () => {
   const { toast } = useToast();
@@ -60,77 +61,85 @@ const SignupForm = () => {
     });
   }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>FirstName</FormLabel>
-              <FormControl>
-                <Input placeholder="john" {...field} />
-              </FormControl>
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>FirstName</FormLabel>
+                <FormControl>
+                  <Input placeholder="john" {...field} />
+                </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
-              <FormControl>
-                <Input placeholder="doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="test@email.com" {...field} type="email" />
-              </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="test@email.com" {...field} type="email" />
+                </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="**********" {...field} type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <ul className="flex list-disc justify-between p-4 text-sm text-muted-foreground">
-          <div>
-            <li>Use 8 or more characters</li>
-            <li>Use a number(e.g. 1234)</li>
-          </div>
-          <div>
-            <li>Use upper and lower case letter</li>
-            <li>Use a symbol (e.g. !@#$)</li>
-          </div>
-        </ul>
-        <Button type="submit" className="w-full bg-base" disabled={isPending}>
-          {isPending ? "Creating User..." : "Sign in"}
-        </Button>
-      </form>
-    </Form>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="**********" {...field} type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ul className="flex list-disc justify-between p-4 text-sm text-muted-foreground">
+            <div>
+              <li>Use 8 or more characters</li>
+              <li>Use a number(e.g. 1234)</li>
+            </div>
+            <div>
+              <li>Use upper and lower case letter</li>
+              <li>Use a symbol (e.g. !@#$)</li>
+            </div>
+          </ul>
+          <Button type="submit" className="w-full bg-base" disabled={isPending}>
+            {isPending ? "Creating User..." : "Sign in"}
+          </Button>
+        </form>
+      </Form>
+      <div className="my-4 flex items-center">
+        <div className="flex-grow border-t border-gray-300" />
+        <span className="mx-4 text-gray-500">or</span>
+        <div className="flex-grow border-t border-gray-300" />
+      </div>
+      <SigninGoogle />
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@
 export const AUTH_ROUTES = [
   "/login",
   "/signup",
+  "/admin",
   "/auth/reset",
   "/auth/error",
   "/auth/new-password",
@@ -28,7 +29,7 @@ export const PROTECTED_ROUTES = [
  *This is default login redirect that the user will go to after successful login and registration
  *@type{string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/settings";
+export const DEFAULT_LOGIN_REDIRECT = "/product";
 
 // export const PUBLIC_ROUTES = [""];
 // export const PUBLIC_ROUTES = [""];

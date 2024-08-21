@@ -121,11 +121,7 @@ const Header = ({ session, classname }: HeaderProps) => {
             </div>
             <DesktopMenu />
             {/* if session does not exist user is not logged in and dont show the login and sign up links */}
-            {session ? (
-              <ProfileMenu profileName={session.user?.name || "JohnDoe"} />
-            ) : (
-              <AuthDialogNavs />
-            )}
+            {session ? <ProfileMenu /> : <AuthDialogNavs />}
           </ul>
         </nav>
       </header>
@@ -199,12 +195,17 @@ function AuthDialogNavs() {
   );
 }
 
-function ProfileMenu({ profileName }: { profileName: string }) {
+function ProfileMenu() {
+  const session = useSession();
+  const profileName = session.data?.user.name;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage
+            src={session?.data?.user.image || "https://github.com/shadcn.png"}
+            alt="@shadcn"
+          />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <span className="flex items-center font-medium text-baseC">
@@ -212,10 +213,10 @@ function ProfileMenu({ profileName }: { profileName: string }) {
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{profileName}</DropdownMenuLabel>
+        <DropdownMenuLabel>{profileName || "JohnDoe"}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={"/profile/rahul-gupta"}>Profile</Link>
+          <Link href={`/profile/${session?.data?.user.id}`}>Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>Billing</DropdownMenuItem>
         <DropdownMenuItem>Subscription</DropdownMenuItem>

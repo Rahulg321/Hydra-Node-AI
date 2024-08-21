@@ -24,6 +24,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSearchParams } from "next/navigation";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
+import SigninGoogle from "../ComponentButtons/SigninGoogle";
 
 const LoginForm = () => {
   const [show2fa, setShow2fa] = useState(false);
@@ -154,6 +155,12 @@ const LoginForm = () => {
       <div className="mt-4">
         <ErrorCard urlError={urlError} />
       </div>
+      <div className="flex items-center">
+        <div className="flex-grow border-t border-gray-300" />
+        <span className="mx-4 text-gray-500">or</span>
+        <div className="flex-grow border-t border-gray-300" />
+      </div>
+      <SigninGoogle />
     </div>
   );
 };

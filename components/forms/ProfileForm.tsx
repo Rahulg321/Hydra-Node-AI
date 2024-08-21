@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -25,78 +25,92 @@ import {
   ProfileFormSchema,
   ProfileFormZodType,
 } from "@/lib/schemas/ProfileFormSchema";
+import { resetEmailPassword } from "@/actions/reset-email-password";
+import { Session } from "next-auth";
 
-const ProfileForm = () => {
+type ProfileFormProps = {
+  name: string;
+  session: Session;
+};
+
+const ProfileForm = ({ name, session }: ProfileFormProps) => {
   const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<ProfileFormZodType>({
     resolver: zodResolver(ProfileFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name,
       password: "",
     },
   });
 
   async function onSubmit(values: ProfileFormZodType) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-
-    toast({
-      title: "Form Submit",
-      variant: "success",
-      description: "Submitted Form",
+    startTransition(async () => {
+      // await for 3 sec
+      const response = await resetEmailPassword(
+        values,
+        session.user.id as string,
+      );
+      if (response.success) {
+        toast({
+          title: "Form Submit Successful",
+          variant: "success",
+          description: response.success || "Successfully Completed Action",
+        });
+        form.reset();
+      } else if (response.error) {
+        toast({
+          title: "ERROR 🥲",
+          variant: "destructive",
+          description: response.error || "Could not find your account",
+        });
+      }
     });
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe...." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+    <div className="mt-4 px-2">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe...." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {!session.user.isCredentialsLogin && (
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="strong password"
+                      {...field}
+                      type="password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-              <FormControl>
-                <Input placeholder="johndoe@gmail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full bg-base">
-          Edit Profile
-        </Button>
-      </form>
-    </Form>
+          <Button type="submit" className="w-full bg-base" disabled={isPending}>
+            {isPending ? "Updating Profile..." : "Update Profile"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 

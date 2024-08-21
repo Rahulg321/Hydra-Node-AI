@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import StartExamButton from "../../../StartExamButton";
+import Link from "next/link";
 
 type ReviewMcqProps = {
   quiz: QuizSession & {
@@ -176,6 +177,11 @@ const ReviewMcq = ({ quiz }: ReviewMcqProps) => {
             examSlug={quiz.exam.slug}
             currentUserId="clzz72ekf0000qaa4eyyzlons"
           />
+          <Button asChild>
+            <Link href={`/exam/${quiz.exam.slug}/quiz/${quiz.id}/results`}>
+              Back to EXAM Result
+            </Link>
+          </Button>
         </div>
         <div
           className={cn("container col-span-4 py-4", {

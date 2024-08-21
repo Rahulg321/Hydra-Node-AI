@@ -24,7 +24,7 @@ const SignUpDialog = () => {
     if (openDialog === false) {
       router.back();
     }
-  }, [openDialog]);
+  }, [openDialog, router]);
 
   // TODO Close Dialog on successful form submission
 

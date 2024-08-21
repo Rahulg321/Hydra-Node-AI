@@ -1,36 +1,35 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import LoginForm from "../forms/LoginForm";
 import SigninGoogle from "@/components/ComponentButtons/SigninGoogle";
-import { usePathname, useRouter } from "next/navigation";
-import { Session } from "next-auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const LoginDialog = () => {
   const router = useRouter();
-  const pathname = usePathname();
   const [openDialog, setOpenDialog] = useState(true);
 
   // TODO Close Dialog on successful form submission
 
   useEffect(() => {
-    if (openDialog === false) {
+    if (!openDialog) {
       router.back();
     }
-  }, [openDialog, setOpenDialog, router]);
+  }, [openDialog, router]);
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+    <Dialog open={openDialog} onOpenChange={handleCloseDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -43,12 +42,6 @@ const LoginDialog = () => {
         <div>
           <LoginForm />
         </div>
-        <div className="flex items-center">
-          <div className="flex-grow border-t border-gray-300" />
-          <span className="mx-4 text-gray-500">or</span>
-          <div className="flex-grow border-t border-gray-300" />
-        </div>
-        <SigninGoogle />
       </DialogContent>
     </Dialog>
   );

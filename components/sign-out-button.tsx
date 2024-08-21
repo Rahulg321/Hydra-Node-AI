@@ -9,7 +9,9 @@ export default function SignOutButton() {
         await signOut();
       }}
     >
-      <Button type="submit">Sign Out</Button>
+      <Button type="submit" variant={"link"} className="mt-4 w-full text-baseC">
+        Sign Out
+      </Button>
     </form>
   );
 }
