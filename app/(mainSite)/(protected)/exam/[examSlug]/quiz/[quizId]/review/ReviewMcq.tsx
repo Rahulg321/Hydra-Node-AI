@@ -175,7 +175,7 @@ const ReviewMcq = ({ quiz }: ReviewMcqProps) => {
             buttonLabel="Retake Exam"
             examId={quiz.examId}
             examSlug={quiz.exam.slug}
-            currentUserId="clzz72ekf0000qaa4eyyzlons"
+            currentUserId={quiz.userId}
           />
           <Button asChild>
             <Link href={`/exam/${quiz.exam.slug}/quiz/${quiz.id}/results`}>

@@ -175,7 +175,7 @@ const QuizResultsPage = async ({ params }: props) => {
             buttonLabel="Retake Exam"
             examId={currentQuizSession.examId}
             examSlug={currentQuizSession.exam.slug}
-            currentUserId="cm03rlf8o00006amx4syabnau"
+            currentUserId={currentQuizSession.userId}
           />
 
           <Button
