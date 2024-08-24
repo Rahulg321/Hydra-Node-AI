@@ -4,7 +4,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 const LoginPage = async () => {
   const session = await auth();
@@ -35,7 +35,9 @@ const LoginPage = async () => {
         </div>
         <div className="mx-auto max-w-xl">
           <h3>Login TO Hydranode</h3>
-          <LoginForm />
+          <Suspense>
+            <LoginForm />
+          </Suspense>
           <div className="mt-4 text-center">
             <p>
               Need an account?

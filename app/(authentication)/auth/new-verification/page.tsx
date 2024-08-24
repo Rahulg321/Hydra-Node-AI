@@ -1,5 +1,5 @@
 import NewVerificationForm from "@/components/forms/NewVerificationForm";
-import React from "react";
+import React, { Suspense } from "react";
 
 const NewVerificationPage = ({
   params,
@@ -10,7 +10,9 @@ const NewVerificationPage = ({
 }) => {
   return (
     <section className="block-space container">
-      <NewVerificationForm />
+      <Suspense>
+        <NewVerificationForm />
+      </Suspense>
     </section>
   );
 };

@@ -3,6 +3,7 @@ import ExamTags from "../ExamTags";
 import db from "@/lib/db";
 import Link from "next/link";
 import { ExamLevel } from "@prisma/client";
+import { Suspense } from "react";
 
 const page = async ({
   params,
@@ -33,11 +34,12 @@ const page = async ({
     },
   });
 
-  //   db.exam.findMany();
   return (
     <section className="big-container">
       <div className="mb-12">
-        <ExamTags />
+        <Suspense>
+          <ExamTags />
+        </Suspense>
       </div>
       {allExams && allExams.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">

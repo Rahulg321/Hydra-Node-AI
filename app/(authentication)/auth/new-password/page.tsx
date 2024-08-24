@@ -1,8 +1,12 @@
 import NewPasswordForm from "@/components/forms/NewPasswordForm";
-import React from "react";
+import React, { Suspense } from "react";
 
 const ResetPasswordPage = () => {
-  return <NewPasswordForm />;
+  return (
+    <Suspense>
+      <NewPasswordForm />
+    </Suspense>
+  );
 };
 
 export default ResetPasswordPage;
