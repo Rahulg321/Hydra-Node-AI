@@ -19,23 +19,17 @@ export default {
           const { email, password } = validatedFields.data;
           console.log("email and password in authorize", email, password);
           const user = await getUserByEmail(email);
-          if (!user || !user.password) {
-            // if there is no password but user then the user can be logged in by OAUTH
-            throw new Error("User not found.");
-          }
+          if (!user || !user.password) return null;
 
           //   password entered by user against the password returned from the database
           const isPasswordValid = await bcrypt.compare(password, user.password);
-
-          if (!isPasswordValid) {
-            console.log("password is invalid", isPasswordValid);
-            throw new Error("Invalid password.");
-          }
 
           if (isPasswordValid) {
             return user;
           }
         }
+
+        console.log("invalid credentials");
 
         return null;
       },

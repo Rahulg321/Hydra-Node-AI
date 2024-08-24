@@ -139,11 +139,13 @@ export async function LoginUser(values: LoginFormSchema) {
   }
 
   try {
-    await signIn("credentials", {
+    const signInResponse = await signIn("credentials", {
       email,
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
+
+    console.log("signinResponse", signInResponse);
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

@@ -25,9 +25,13 @@ import { useSearchParams } from "next/navigation";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
+import { SuccessCard, ErrorCard } from "@/components/FormInfoCards";
+import { set } from "zod";
 
 const LoginForm = () => {
   const [show2fa, setShow2fa] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -49,32 +53,24 @@ const LoginForm = () => {
     // ✅ This will be type-safe and validated.
     startTransition(async () => {
       console.log(values);
+      setError("");
+      setSuccess("");
       const response = await LoginUser(values);
 
-      if (response.twoFactorToken) {
-        setShow2fa(true);
-        toast({
-          title: "SENT 2FA EMAIL🎉",
-          variant: "success",
-          description: "Enter your code from the email and login",
-        });
-      }
-
-      if (response.success) {
-        toast({
-          title: "Action Completed Successfully 🎉",
-          variant: "success",
-          description: response.success || "Action successful",
-        });
-      }
-
-      if (response.error) {
+      if (response?.error) {
         // reset the entire form
-        toast({
-          title: "ERROR 🥲",
-          variant: "destructive",
-          description: response.error || "Could not find your account",
-        });
+        console.log("in the error toast form", response?.error);
+
+        setError(response.error);
+      }
+
+      if (response?.twoFactorToken) {
+        setShow2fa(true);
+        setSuccess("successfully sent email for two factor authentication");
+      }
+
+      if (response?.success) {
+        setSuccess(response?.success);
       }
     });
   }
@@ -138,7 +134,7 @@ const LoginForm = () => {
           >
             <Link href="/auth/reset">Forgot Password</Link>
           </Button>
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <Checkbox id="terms" />
             <label
               htmlFor="terms"
@@ -146,7 +142,10 @@ const LoginForm = () => {
             >
               Keep me logged in
             </label>
-          </div>
+          </div> */}
+          {success && <SuccessCard success={success} />}
+          {error && <ErrorCard urlError={error} />}
+
           <Button type="submit" className="w-full bg-base" disabled={isPending}>
             {show2fa ? "Confirm" : "Log in"}
           </Button>
@@ -166,20 +165,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-function ErrorCard({ urlError }: { urlError?: string }) {
-  return (
-    <div>
-      {urlError ? (
-        <div className="flex flex-col items-center gap-2 rounded-md border border-red-600 bg-red-200 p-2 sm:flex-row">
-          <div className="p-2 text-red-800">
-            <CircleX />
-          </div>
-          <div className="text-center sm:text-left">
-            <span className="text-sm text-red-800">{urlError}</span>
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}

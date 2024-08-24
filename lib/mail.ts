@@ -60,6 +60,8 @@ export const sendVerificationTokenEmail = async (
     }),
   });
 
+  console.log("sending verification token email", data, error);
+
   if (error) {
     console.log("error sending email", error.name, error.message);
     return {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -25,8 +25,11 @@ import {
 import { SignUpUser } from "@/actions/sign-up";
 import { useToast } from "@/components/ui/use-toast";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
+import { ErrorCard, SuccessCard } from "../FormInfoCards";
 
 const SignupForm = () => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const form = useForm<SignUpFormSchema>({
@@ -42,21 +45,16 @@ const SignupForm = () => {
   async function onSubmit(values: SignUpFormSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    setError("");
+    setSuccess("");
+
     startTransition(async () => {
       console.log(values);
       const response = await SignUpUser(values);
       if (response.success) {
-        toast({
-          title: "Account Registered Successfully🎉",
-          description:
-            response.success || "Your account was created successfully",
-        });
+        setSuccess(response.success);
       } else if (response.error) {
-        toast({
-          title: "ERROR 🥲",
-          variant: "destructive",
-          description: response.error || "Could not register your account",
-        });
+        setError(response.error);
       }
     });
   }
@@ -128,6 +126,8 @@ const SignupForm = () => {
               <li>Use a symbol (e.g. !@#$)</li>
             </div>
           </ul>
+          {error && <ErrorCard urlError={error} />}
+          {success && <SuccessCard success={success} />}
           <Button type="submit" className="w-full bg-base" disabled={isPending}>
             {isPending ? "Creating User..." : "Sign up"}
           </Button>

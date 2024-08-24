@@ -9,6 +9,7 @@ import React from "react";
 const LoginPage = async () => {
   const session = await auth();
   if (session) {
+    console.log("logged in users accessing the login page");
     return redirect(DEFAULT_LOGIN_REDIRECT);
   }
 
@@ -22,16 +23,27 @@ const LoginPage = async () => {
           fill
         />
       </div>
-      <div className="block-space-large container content-center">
-        <h3>Login TO Hydranode</h3>
-        <LoginForm />
-        <div className="mt-4 text-center">
-          <p>
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-blue-500 hover:underline">
-              Sign up
-            </Link>
-          </p>
+      <div className="block-space-large relative content-center">
+        <div className="absolute right-4 top-4">
+          <Image
+            src={"/hydranode_logo.png"}
+            alt="official logo for hydranode"
+            className="object-cover"
+            width={200}
+            height={200}
+          />
+        </div>
+        <div className="mx-auto max-w-xl">
+          <h3>Login TO Hydranode</h3>
+          <LoginForm />
+          <div className="mt-4 text-center">
+            <p>
+              Need an account?
+              <Link href="/signup" className="ml-1 text-blue-500 underline">
+                Create one
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </section>

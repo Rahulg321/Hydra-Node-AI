@@ -50,8 +50,15 @@ export async function SignUpUser(values: SignUpFormSchema) {
     );
 
     if (response?.error) {
+      // at this point the email was not sent but the account was created in the database and the signup function does not work beacuse of the earlier control check
+      await db.user.delete({
+        where: {
+          id: newUser.id,
+        },
+      });
+
       return {
-        error: "Could not send email",
+        error: "Could not send email, please try again later",
       };
     }
 

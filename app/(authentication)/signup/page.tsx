@@ -6,16 +6,27 @@ import React from "react";
 const page = () => {
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      <div className="container content-center">
-        <h3>Sign Up For Hydranode Platform</h3>
-        <SignupForm />
-        <div className="mt-4 text-center">
-          <p>
-            Already have an account?{" "}
-            <Link href="/login" className="text-blue-500 hover:underline">
-              Log in
-            </Link>
-          </p>
+      <div className="block-space-large relative content-center">
+        <div className="absolute left-4 top-4">
+          <Image
+            src={"/hydranode_logo.png"}
+            alt="official logo for hydranode"
+            className="object-cover"
+            width={200}
+            height={200}
+          />
+        </div>
+        <div className="mx-auto max-w-xl">
+          <h3>Sign Up For Hydranode Platform</h3>
+          <SignupForm />
+          <div className="mt-4 text-center">
+            <p>
+              Already have an account?{" "}
+              <Link href="/login" className="text-blue-500 hover:underline">
+                Log in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
       <div className="relative">
