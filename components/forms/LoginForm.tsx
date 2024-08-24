@@ -56,7 +56,7 @@ const LoginForm = () => {
         toast({
           title: "SENT 2FA EMAIL🎉",
           variant: "success",
-          description: "Action successful",
+          description: "Enter your code from the email and login",
         });
       }
 

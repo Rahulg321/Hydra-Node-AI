@@ -23,6 +23,9 @@ export default auth(async function middleware(req) {
   if (AUTH_ROUTES.includes(currentPathname)) {
     // we are accessing an auth route
     if (isLoggedIn) {
+      console.log(
+        "access denied for accessing auth routes for logged in users",
+      );
       // we are already logged in so we cant access the auth routes anymore
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
     }

@@ -26,6 +26,9 @@ const companyLinks = [
     href: "*",
   },
 ];
+
+
+
 const legalLinks = [
   {
     name: "Privacy Policy",

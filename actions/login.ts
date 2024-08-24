@@ -76,17 +76,20 @@ export async function LoginUser(values: LoginFormSchema) {
         };
       }
 
+      // we check for expiration first and then verify the token
+
+      const hasExpired = new Date(faToken.expires) < new Date();
+
+      if (hasExpired) {
+        return {
+          error: "2FA token has expired",
+        };
+      }
+
       if (faToken.token !== code) {
         console.log("an invalid code was entered", code);
         return {
           error: "you entered an invalid code",
-        };
-      }
-
-      const hasExpired = new Date(faToken.expires) < new Date();
-      if (hasExpired) {
-        return {
-          error: "2FA token has expired",
         };
       }
 
@@ -139,11 +142,8 @@ export async function LoginUser(values: LoginFormSchema) {
     await signIn("credentials", {
       email,
       password,
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
-
-    return {
-      success: "successfully logged in ",
-    };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

@@ -129,7 +129,7 @@ const SignupForm = () => {
             </div>
           </ul>
           <Button type="submit" className="w-full bg-base" disabled={isPending}>
-            {isPending ? "Creating User..." : "Sign in"}
+            {isPending ? "Creating User..." : "Sign up"}
           </Button>
         </form>
       </Form>
