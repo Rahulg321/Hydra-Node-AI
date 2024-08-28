@@ -36,10 +36,15 @@ export async function LoginUser(values: LoginFormSchema) {
 
   const existingUser = await getUserByEmail(email);
   // they need to create an account first or they need to login with OAuth
-  if (!existingUser || !existingUser.password || !existingUser.email) {
+  if (!existingUser) {
     return {
-      error:
-        "Email Does not exist, please create an account or try again later",
+      error: "Your account does not exist",
+    };
+  }
+
+  if (!existingUser.password) {
+    return {
+      error: "Password does not exist, try logging in using OAuth",
     };
   }
 

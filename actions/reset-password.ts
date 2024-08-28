@@ -19,9 +19,16 @@ export async function resetPassword(values: ResetPasswordFormZodType) {
     const { email } = validatedFields.data;
 
     const existingUser = await getUserByEmail(email);
+
     if (!existingUser) {
       return {
         error: "Could not find email address!!",
+      };
+    }
+
+    if (!existingUser.password) {
+      return {
+        error: "Your password does not exist already!!!",
       };
     }
 
