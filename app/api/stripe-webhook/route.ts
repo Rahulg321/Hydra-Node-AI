@@ -143,17 +143,11 @@ async function fulfillCheckout(sessionId: string) {
 
   // Check the Checkout Session's payment_status property
   // to determine if fulfillment should be peformed
-  if (checkoutSession.payment_status !== "unpaid") {
-    // TODO: Perform fulfillment of the line items
-    // TODO: Record/save fulfillment status for this
-    // Checkout Session
-
-    console.log("checkout session is", checkoutSession);
-    console.log("line items in checkout session", checkoutSession.line_items);
-    console.log("invoice in checkout session", checkoutSession.invoice);
-
-    const customerId = checkoutSession.customer as string;
+  if (checkoutSession.payment_status === "paid") {
+    // returns a unique subscription_id
     const subscriptionId = checkoutSession.subscription as string | null;
+    let subscriptionEndDate: Date | null = null;
+
     const userEmail = checkoutSession.customer_details?.email;
 
     if (!userEmail) {
@@ -168,74 +162,47 @@ async function fulfillCheckout(sessionId: string) {
       return;
     }
 
-    if (!user.stripeCustomerId) {
-      await db.user.update({
-        where: { id: user.id },
-        data: { stripeCustomerId: customerId },
-      });
-    }
-
     if (subscriptionId) {
-      // Handle subscription-based payment
+      // For subscriptions, set the end date based on the subscription period
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-      console.log("subscription fetched in fulfill function is", subscription);
+      subscriptionEndDate = new Date(subscription.current_period_end * 1000);
 
-      // Cancel any existing active subscription
-      const existingSubscription = await db.subscription.findFirst({
-        where: { userId: user.id, status: "ACTIVE" },
-      });
-
-      if (existingSubscription) {
-        await db.subscription.update({
-          where: { id: existingSubscription.id },
-          data: { status: "CANCELED" },
-        });
-      }
+      // Create or update Subscription record
       await db.subscription.upsert({
         where: { stripeSubscriptionId: subscriptionId },
         update: {
-          status: subscription.status.toUpperCase() as SubscriptionStatus,
+          status: "ACTIVE",
           currentPeriodStart: new Date(
             subscription.current_period_start * 1000,
           ),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          currentPeriodEnd: subscriptionEndDate,
         },
         create: {
           userId: user.id,
           stripeSubscriptionId: subscriptionId,
-          status: subscription.status.toUpperCase() as SubscriptionStatus,
+          status: "ACTIVE",
           currentPeriodStart: new Date(
             subscription.current_period_start * 1000,
           ),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        },
-      });
-      // Update user subscription status
-      await db.user.update({
-        where: { id: user.id },
-        data: {
-          subscriptionStatus:
-            subscription.status.toUpperCase() as SubscriptionStatus,
-          subscriptionEndDate: new Date(subscription.current_period_end * 1000),
+          currentPeriodEnd: subscriptionEndDate,
         },
       });
     } else {
-      // Handle one-time payment
-      console.log("Processing one-time payment");
-
-      // Update user status for one-time payment if needed
-      await db.user.update({
-        where: { id: user.id },
-        data: {
-          // Update fields as needed for one-time payment
-          // For example:
-          // oneTimePaymentStatus: "COMPLETED",
-          // oneTimePaymentDate: new Date(),
-        },
-      });
+      // For one-time payments, set a fixed duration (e.g., 1 year from now)
+      subscriptionEndDate = new Date();
+      subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
     }
 
-    // Create payment record (works for both subscription and one-time payments)
+    // Update user subscription status
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        subscriptionStatus: "ACTIVE",
+        subscriptionEndDate: subscriptionEndDate,
+      },
+    });
+
+    // Create payment record
     await db.payment.create({
       data: {
         userId: user.id,
