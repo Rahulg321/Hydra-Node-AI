@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import { sendPaymentErrorEmail, sendPaymentSuccessfulEmail } from "@/lib/mail";
+import db from "@/lib/db";
+import { SubscriptionStatus } from "@prisma/client";
 
 export async function GET(req: Request) {}
 export async function POST(req: Request) {
@@ -19,11 +21,18 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
 
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json(
+      { error: "Missing stripe webhook secret" },
+      { status: 400 },
+    );
+  }
+
   try {
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (error: any) {
     return NextResponse.json(
@@ -118,6 +127,15 @@ async function fulfillCheckout(sessionId: string) {
   // TODO: Make sure fulfillment hasn't already been
   // peformed for this Checkout Session
 
+  const existingPayment = await db.payment.findUnique({
+    where: { stripePaymentIntentId: sessionId },
+  });
+
+  if (existingPayment) {
+    console.log(`Checkout session ${sessionId} has already been fulfilled`);
+    return;
+  }
+
   // Retrieve the Checkout Session from the API with line_items expanded
   const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ["line_items", "customer"],
@@ -134,36 +152,102 @@ async function fulfillCheckout(sessionId: string) {
     console.log("line items in checkout session", checkoutSession.line_items);
     console.log("invoice in checkout session", checkoutSession.invoice);
 
-    const customer = checkoutSession.customer_details;
-    const lineItems = checkoutSession.line_items?.data;
+    const customerId = checkoutSession.customer as string;
+    const subscriptionId = checkoutSession.subscription as string | null;
+    const userEmail = checkoutSession.customer_details?.email;
 
-    // if (customer && lineItems && lineItems.length > 0) {
-    //   const customerName = customer.name || "Valued Customer";
-    //   const amount = (
-    //     checkoutSession.amount_total ? checkoutSession.amount_total / 100 : 0
-    //   ).toFixed(2);
-    //   const currency = checkoutSession.currency?.toUpperCase() || "USD";
-    //   const paymentDate = new Date().toLocaleDateString();
-    //   const invoiceNumber = checkoutSession.payment_intent as string;
-    //   const productName = lineItems[0].description || "Your product";
-    //   const invoice = checkoutSession.invoice as Stripe.Invoice;
-    //   const email = customer.email || "";
+    if (!userEmail) {
+      console.error("User email not found in checkout session");
+      return;
+    }
 
-    //   await sendPaymentSuccessfulEmail(
-    //     customerName,
-    //     amount,
-    //     currency,
-    //     paymentDate,
-    //     invoiceNumber,
-    //     productName,
-    //     invoice.hosted_invoice_url || "",
-    //     email,
-    //   );
-    // } else {
-    //   console.error(
-    //     "Missing required data for sending payment successful email",
-    //   );
-    // }
+    const user = await db.user.findUnique({ where: { email: userEmail } });
+
+    if (!user) {
+      console.error(`User with email ${userEmail} not found`);
+      return;
+    }
+
+    if (!user.stripeCustomerId) {
+      await db.user.update({
+        where: { id: user.id },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    if (subscriptionId) {
+      // Handle subscription-based payment
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      console.log("subscription fetched in fulfill function is", subscription);
+
+      // Cancel any existing active subscription
+      const existingSubscription = await db.subscription.findFirst({
+        where: { userId: user.id, status: "ACTIVE" },
+      });
+
+      if (existingSubscription) {
+        await db.subscription.update({
+          where: { id: existingSubscription.id },
+          data: { status: "CANCELED" },
+        });
+      }
+      await db.subscription.upsert({
+        where: { stripeSubscriptionId: subscriptionId },
+        update: {
+          status: subscription.status.toUpperCase() as SubscriptionStatus,
+          currentPeriodStart: new Date(
+            subscription.current_period_start * 1000,
+          ),
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        },
+        create: {
+          userId: user.id,
+          stripeSubscriptionId: subscriptionId,
+          status: subscription.status.toUpperCase() as SubscriptionStatus,
+          currentPeriodStart: new Date(
+            subscription.current_period_start * 1000,
+          ),
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        },
+      });
+      // Update user subscription status
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          subscriptionStatus:
+            subscription.status.toUpperCase() as SubscriptionStatus,
+          subscriptionEndDate: new Date(subscription.current_period_end * 1000),
+        },
+      });
+    } else {
+      // Handle one-time payment
+      console.log("Processing one-time payment");
+
+      // Update user status for one-time payment if needed
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          // Update fields as needed for one-time payment
+          // For example:
+          // oneTimePaymentStatus: "COMPLETED",
+          // oneTimePaymentDate: new Date(),
+        },
+      });
+    }
+
+    // Create payment record (works for both subscription and one-time payments)
+    await db.payment.create({
+      data: {
+        userId: user.id,
+        amount: checkoutSession.amount_total! / 100,
+        currency: checkoutSession.currency!,
+        status: "SUCCEEDED",
+        stripePaymentIntentId: checkoutSession.payment_intent as string,
+        paymentType: subscriptionId ? "SUBSCRIPTION" : "ONE_TIME",
+      },
+    });
+
+    console.log(`Checkout session ${sessionId} fulfilled for user ${user.id}`);
   }
 }
 

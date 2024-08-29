@@ -36,6 +36,55 @@ model User {
 
   // one to one relation between user and two factor confirmation
   TwoFactorConfirmation TwoFactorConfirmation?
+  Payment               Payment[]
+  Subscription          Subscription[]
+
+  stripeCustomerId    String?            @unique
+  subscriptionStatus  SubscriptionStatus @default(INACTIVE)
+  subscriptionEndDate DateTime?
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  userId                String
+  user                  User          @relation(fields: [userId], references: [id])
+  amount                Float
+  currency              String
+  status                PaymentStatus
+  paymentType           PaymentType
+  stripePaymentIntentId String        @unique
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+}
+
+enum PaymentType {
+  ONE_TIME
+  SUBSCRIPTION
+}
+
+enum PaymentStatus {
+  SUCCEEDED
+  FAILED
+  PENDING
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String
+  user                 User               @relation(fields: [userId], references: [id])
+  stripeSubscriptionId String             @unique
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
 }
 
 model Profile {
