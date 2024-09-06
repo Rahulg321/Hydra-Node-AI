@@ -37,18 +37,11 @@ model User {
   // one to one relation between user and two factor confirmation
   TwoFactorConfirmation TwoFactorConfirmation?
   Payment               Payment[]
-  Subscription          Subscription?          @relation(fields: [subscriptionId], references: [id])
 
-  stripeCustomerId    String?   @unique
-  subscriptionEndDate DateTime?
-  Invoice             Invoice[]
-  subscriptionId      String?
-}
-
-enum SubscriptionStatus {
-  CREATED
-  UPDATED
-  DELETED
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 }
 
 model Payment {
@@ -57,9 +50,11 @@ model Payment {
   user                  User          @relation(fields: [userId], references: [id])
   amount                Float
   currency              String
-  status                PaymentStatus
   paymentType           PaymentType
   stripePaymentIntentId String        @unique
+  stripeInvoiceId       String? // Optional for one-time payments
+  stripeSubscriptionId  String? // Optional for subscriptions
+  status                PaymentStatus
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 }
@@ -73,38 +68,6 @@ enum PaymentStatus {
   SUCCEEDED
   FAILED
   PENDING
-}
-
-model Subscription {
-  id     String  @id @default(cuid())
-  email  String?
-  userId String?
-
-  plan_id    String?
-  status     SubscriptionStatus
-  start_date DateTime
-  end_date   DateTime
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  User       User[]
-}
-
-enum InvoiceStatus {
-  SUCCEEDED
-  FAILED
-}
-
-model Invoice {
-  id                String        @id @default(cuid())
-  subscription_id   String?
-  currency          String
-  amount_paid       Int?
-  stripe_invoice_id String
-  amount_due        Int?
-  status            InvoiceStatus
-  email             String
-  userId            String?
-  user              User?         @relation(fields: [userId], references: [id])
 }
 
 model Profile {
