@@ -69,7 +69,7 @@ const StartExamButton = ({
 
   return (
     <Button
-      className="mb-4 rounded-full bg-base p-6 text-lg font-bold"
+      className="mb-4 rounded-full bg-base p-6 text-lg"
       onClick={onSubmit}
       disabled={isPending}
     >

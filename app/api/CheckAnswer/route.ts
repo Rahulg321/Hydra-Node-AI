@@ -17,8 +17,6 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("currentQuestion in route for checking is", currentQuestion);
-
     if (!currentQuestion) {
       return Response.json(
         {

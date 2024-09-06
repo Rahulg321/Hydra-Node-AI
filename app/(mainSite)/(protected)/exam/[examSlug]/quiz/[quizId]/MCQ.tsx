@@ -7,6 +7,7 @@ import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import React, {
   useCallback,
   useEffect,
@@ -36,20 +37,42 @@ type Option = {
 };
 
 const MCQ = ({ quiz }: McqProps) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentQuestionNumber = parseInt(
+    searchParams.get("question-number") || "1",
+    10,
+  );
+
   const { toast } = useToast();
   // total time(min) into seconds
   let totalTime = quiz.exam.timeAllowed * 60;
+
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(-1);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [wrongAnswers, setWrongAnswers] = useState(0);
+  const [questionIndex, setQuestionIndex] = useState(currentQuestionNumber);
   const [skippedAnswers, setSkippedAnswers] = useState(0);
   const [hasEnded, setHasEnded] = useState(false);
   const [remainingTime, setRemainingTime] = useState(totalTime);
   const [questionStatus, setQuestionStatus] = useState(
     Array(quiz.exam.questions.length).fill(null),
   );
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
+
+  useEffect(() => {
+    setQuestionIndex(currentQuestionNumber - 1);
+  }, [currentQuestionNumber]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -102,9 +125,13 @@ const MCQ = ({ quiz }: McqProps) => {
   }, [currentQuestion]);
 
   const handlePrevious = useCallback(() => {
+    const newQuestionNumber = Math.max(1, currentQuestionNumber - 1);
+    router.push(
+      `?${createQueryString("question-number", newQuestionNumber.toString())}`,
+    );
     setQuestionIndex((prev) => prev - 1);
     setSelected(-1);
-  }, []);
+  }, [createQueryString, currentQuestionNumber, router]);
 
   const handleNext = useCallback(() => {
     startTransition(async () => {
@@ -135,6 +162,7 @@ const MCQ = ({ quiz }: McqProps) => {
             questionId: currentQuestion.id,
             quizSessionId: quiz.id,
           });
+
           if (response.status !== 200) {
             toast({
               variant: "destructive",
@@ -173,7 +201,15 @@ const MCQ = ({ quiz }: McqProps) => {
           return;
         }
 
-        setQuestionIndex((prev) => prev + 1);
+        const newQuestionNumber = Math.min(
+          quiz.exam.questions.length,
+          currentQuestionNumber + 1,
+        );
+
+        router.push(
+          `?${createQueryString("question-number", newQuestionNumber.toString())}`,
+        );
+
         setSelected(-1); // Reset selected option for the next question
       } catch (error) {
         console.log("error occurred while checking answer", error);
@@ -193,6 +229,9 @@ const MCQ = ({ quiz }: McqProps) => {
     isPending,
     questionIndex,
     quiz.exam.questions.length,
+    createQueryString,
+    currentQuestionNumber,
+    router,
   ]);
 
   useEffect(() => {

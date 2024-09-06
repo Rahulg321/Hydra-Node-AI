@@ -18,6 +18,7 @@ const page = async ({
   };
 }) => {
   const loggedInUser = await auth();
+
   if (!loggedInUser) {
     return redirect("/login");
   }

@@ -46,6 +46,10 @@ const page = async ({
     return redirect("/vendors");
   }
 
+  if (quiz.isCompleted) {
+    return redirect(`/exam/${quiz.exam.slug}/quiz/${quiz.id}/results`);
+  }
+
   console.log("returned quiz is", quiz);
 
   return <MCQ quiz={quiz} />;

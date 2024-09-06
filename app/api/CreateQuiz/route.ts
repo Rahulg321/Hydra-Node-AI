@@ -35,8 +35,8 @@ export async function POST(request: Request) {
         status: 200,
       },
     );
-  } catch (error) {
-    console.error("could not create quiz session", error);
+  } catch (error: any) {
+    console.error("could not create quiz session", error, error.message);
 
     return Response.json(
       {

@@ -37,18 +37,18 @@ model User {
   // one to one relation between user and two factor confirmation
   TwoFactorConfirmation TwoFactorConfirmation?
   Payment               Payment[]
-  Subscription          Subscription[]
+  Subscription          Subscription?          @relation(fields: [subscriptionId], references: [id])
 
-  stripeCustomerId    String?            @unique
-  subscriptionStatus  SubscriptionStatus @default(INACTIVE)
+  stripeCustomerId    String?   @unique
   subscriptionEndDate DateTime?
+  Invoice             Invoice[]
+  subscriptionId      String?
 }
 
 enum SubscriptionStatus {
-  ACTIVE
-  INACTIVE
-  PAST_DUE
-  CANCELED
+  CREATED
+  UPDATED
+  DELETED
 }
 
 model Payment {
@@ -76,15 +76,35 @@ enum PaymentStatus {
 }
 
 model Subscription {
-  id                   String             @id @default(cuid())
-  userId               String
-  user                 User               @relation(fields: [userId], references: [id])
-  stripeSubscriptionId String             @unique
-  status               SubscriptionStatus
-  currentPeriodStart   DateTime
-  currentPeriodEnd     DateTime
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
+  id     String  @id @default(cuid())
+  email  String?
+  userId String?
+
+  plan_id    String?
+  status     SubscriptionStatus
+  start_date DateTime
+  end_date   DateTime
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  User       User[]
+}
+
+enum InvoiceStatus {
+  SUCCEEDED
+  FAILED
+}
+
+model Invoice {
+  id                String        @id @default(cuid())
+  subscription_id   String?
+  currency          String
+  amount_paid       Int?
+  stripe_invoice_id String
+  amount_due        Int?
+  status            InvoiceStatus
+  email             String
+  userId            String?
+  user              User?         @relation(fields: [userId], references: [id])
 }
 
 model Profile {
@@ -183,11 +203,12 @@ model Exam {
 }
 
 model QuizSession {
-  id        String    @id @default(cuid())
-  userId    String
-  examId    String
-  startTime DateTime
-  endTime   DateTime?
+  id          String    @id @default(cuid())
+  userId      String
+  examId      String
+  startTime   DateTime
+  endTime     DateTime?
+  isCompleted Boolean   @default(false)
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   exam         Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)

@@ -20,6 +20,7 @@ export async function POST(req: Request) {
         id: quizSessionId,
       },
       data: {
+        isCompleted: true,
         endTime: new Date(),
       },
     });
