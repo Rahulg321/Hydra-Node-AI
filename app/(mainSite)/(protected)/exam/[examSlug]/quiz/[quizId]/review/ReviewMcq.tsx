@@ -45,20 +45,14 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
     };
   });
 
-  const correctAnswers = currentAttempt.question.correctAnswers.map((answer) =>
-    answer.answer.toLowerCase().trim(),
-  );
-  const userSelectedAnswers = currentAttempt.userAnswer
-    .toLowerCase()
-    .split(",")
-    .map((answer) => answer.trim());
-
   const isCorrectAnswer = (option: string) => {
-    return correctAnswers.includes(option.toLowerCase().trim());
+    return currentAttempt.question.correctAnswers.some(
+      (correct) => correct.answer.toLowerCase() === option.toLowerCase(),
+    );
   };
 
-  const isUserSelected = (option: string) => {
-    return userSelectedAnswers.includes(option.toLowerCase().trim());
+  const isSelectedAnswer = (option: string) => {
+    return currentAttempt.userAnswer.toLowerCase() === option.toLowerCase();
   };
 
   const handleNext = () => setUserAttemptIndex((prev) => prev + 1);
@@ -83,7 +77,6 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
             <Legend color="bg-green-400" label="Correct" />
             <Legend color="bg-red-400" label="Incorrect" />
             <Legend color="bg-yellow-400" label="Skipped" />
-            <Legend color="bg-blue-400" label="Partially Correct" />
           </div>
 
           <CorrectQuestionGrid
@@ -143,14 +136,12 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
           <div className="mt-4 space-y-4">
             {options.map((option, index) => {
               const isCorrectOption = isCorrectAnswer(option.option);
+              const isUserIncorrectSelection =
+                !currentAttempt.isCorrect && isSelectedAnswer(option.option);
 
-              const isUserSelectedOption = isUserSelected(option.option);
-
-              const isPartialSelection =
-                isCorrectOption && !isUserSelectedOption;
-
-              const isIncorrectSelection =
-                !isCorrectOption && isUserSelectedOption;
+              console.log("option", option);
+              console.log("isCorrectOption", isCorrectOption);
+              console.log("isUserIncorrectSelection", isUserIncorrectSelection);
 
               return (
                 <div key={index}>
@@ -159,21 +150,18 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
                       "flex cursor-pointer items-center gap-2 rounded-lg border border-base p-4 md:p-6",
                       {
                         "border-green-500 bg-green-500 text-white":
-                          isCorrectOption && isUserSelectedOption,
-                        "border-blue-500 bg-blue-500 text-white":
-                          isPartialSelection, // Partially correct
+                          isCorrectOption,
                         "border-red-500 bg-red-500 text-white":
-                          isIncorrectSelection, // Incorrect user selection
+                          isUserIncorrectSelection,
                       },
                     )}
                   >
                     <h5 className="">{option.option}</h5>
                   </div>
                   <span
-                    className={cn("font-bold", {
-                      "text-green-500": isCorrectOption,
-                      "text-red-500": isIncorrectSelection,
-                      "text-blue-500": isPartialSelection,
+                    className={cn("font-bold text-red-500", {
+                      "font-bold text-green-500": isCorrectOption,
+                      "": isUserIncorrectSelection,
                     })}
                   >
                     {option.explanation}
@@ -301,8 +289,6 @@ function CorrectQuestionGrid({
             statusClass = "bg-red-500 border-red-500";
           } else if (questionStatus[index] === "skipped") {
             statusClass = "bg-yellow-500 border-yellow-500";
-          } else if (questionStatus[index] === "partially-correct") {
-            statusClass = "bg-blue-500 border-blue-500";
           }
 
           return (

@@ -15,11 +15,6 @@ export async function POST(request: Request) {
     const { questionId, userAnswer, quizSessionId } =
       checkAnswerSchema.parse(body);
 
-    console.log("checking question");
-    console.log("user answer", userAnswer);
-    console.log("questionId", questionId);
-    console.log("quizSessionId", quizSessionId);
-
     // Fetch the current question with related correct answers
     const currentQuestion = await db.question.findUnique({
       where: { id: questionId },
@@ -38,10 +33,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if the question is MCQ or MULTI_SELECT
     if (currentQuestion.type === "MCQ") {
       // Handle MCQ: userAnswer is expected to be a single string
-
       let singleAnswer = userAnswer as string;
 
       const isCorrect = currentQuestion.correctAnswers.some(
@@ -93,14 +86,26 @@ export async function POST(request: Request) {
       const correctAnswers = currentQuestion.correctAnswers.map((answer) =>
         answer.answer.toLowerCase().trim(),
       );
+
       const userSelectedAnswers = userAnswer.map((answer) =>
         answer.toLowerCase().trim(),
       );
 
-      // Check if all correct answers are selected and no additional answers are selected
+      console.log(
+        "all user selected answers in a multi select question are",
+        userSelectedAnswers,
+      );
+      console.log(
+        "correct answers in a multi select question are",
+        correctAnswers,
+      );
+
+      // Check if all correct answers are selected, and no additional incorrect answers are selected
       const isCorrect =
         userSelectedAnswers.length === correctAnswers.length &&
         userSelectedAnswers.every((answer) => correctAnswers.includes(answer));
+
+      console.log("correct answer in multi select question", isCorrect);
 
       // Upsert the user's attempt (create or update the record)
       await db.userAttempt.upsert({
