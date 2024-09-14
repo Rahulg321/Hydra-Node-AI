@@ -195,20 +195,39 @@ model UserAttempt {
   @@unique([quizSessionId, questionId])
 }
 
-model Question {
-  id       String       @id @default(cuid())
-  question String
-  answer   String
-  options  Json
-  type     QuestionType @default(MCQ) // New field to handle different question types
+model QuestionOption {
+  id          String   @id @default(cuid())
+  option      String // Stores the option text (e.g., "Option 1", "Option 2")
+  explanation String // Explanation for the option
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
 
-  examId      String
-  exam        Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
+model CorrectAnswer {
+  id         String   @id @default(cuid())
+  answer     String // The answer could be the option ID or the option text (whichever you prefer)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Question {
+  id                 String       @id @default(cuid())
+  question           String
+  type               QuestionType @default(MCQ)
+  overallExplanation String
+  examId             String
+  exam               Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  options        QuestionOption[]
+  correctAnswers CorrectAnswer[]
+
   UserAttempt UserAttempt[]
+  createdAt   DateTime      @default(now())
 }
 
 enum QuestionType {
   MCQ
   TRUE_FALSE
+  MULTI_SELECT
   SHORT_ANSWER
 }

@@ -1,19 +1,8 @@
-import React, { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { PiDivideBold } from "react-icons/pi";
 import db from "@/lib/db";
-import { notFound, redirect } from "next/navigation";
-import Quiz from "./MCQ";
+import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
-import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "MCQ",
-  description: "MCQ",
-};
-
-const page = async ({
+const McqQuizPage = async ({
   params,
 }: {
   params: {
@@ -21,38 +10,61 @@ const page = async ({
     quizId: string;
   };
 }) => {
-  // based on the quiz session started, fetch the exam and its related questions
-  const quiz = await db.quizSession.findFirst({
+  // Fetch the quiz session
+  const quizSession = await db.quizSession.findUnique({
     where: {
       id: params.quizId,
     },
     include: {
       exam: {
-        include: {
-          questions: {
-            select: {
-              id: true,
-              question: true,
-              options: true,
-            },
-          },
+        select: {
+          slug: true,
+          name: true,
         },
       },
     },
   });
 
-  if (!quiz) {
-    console.log("the quiz was not created");
+  if (!quizSession) {
+    console.log("The quiz session was not created");
     return redirect("/vendors");
   }
 
-  if (quiz.isCompleted) {
-    return redirect(`/exam/${quiz.exam.slug}/quiz/${quiz.id}/results`);
+  if (quizSession.isCompleted) {
+    console.log("The quiz session was completed");
+    return redirect(
+      `/exam/${quizSession.exam.slug}/quiz/${quizSession.id}/results`,
+    );
   }
 
-  console.log("returned quiz is", quiz);
+  // Fetch the exam and its questions separately
+  const exam = await db.exam.findUnique({
+    where: {
+      slug: params.examSlug,
+    },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      timeAllowed: true,
+    },
+  });
 
-  return <MCQ quiz={quiz} />;
+  if (!exam) {
+    console.log("The exam was not found");
+    return redirect("/vendors");
+  }
+
+  const questions = await db.question.findMany({
+    where: {
+      examId: exam?.id,
+    },
+    include: {
+      options: true,
+    },
+  });
+
+  return <MCQ quizSession={quizSession} exam={exam} questions={questions} />;
 };
 
-export default page;
+export default McqQuizPage;

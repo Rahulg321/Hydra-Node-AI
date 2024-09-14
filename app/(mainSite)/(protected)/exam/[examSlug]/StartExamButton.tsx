@@ -36,8 +36,6 @@ const StartExamButton = ({
           currentUserId,
         });
 
-        console.log("response data", response.data);
-
         if (response.status === 200) {
           console.log("Quiz session created successfully:", response.data);
           const { quizSessionId } = response.data;

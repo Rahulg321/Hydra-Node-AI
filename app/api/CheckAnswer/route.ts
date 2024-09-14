@@ -1,85 +1,162 @@
 import db from "@/lib/db";
 import { z, ZodError } from "zod";
 
+// Update schema to accept both string (for MCQ) and array (for MULTI_SELECT)
 const checkAnswerSchema = z.object({
   questionId: z.string(),
   quizSessionId: z.string(),
-  userAnswer: z.string(),
+  userAnswer: z.union([z.string(), z.array(z.string())]), // Can be a string for MCQ or an array for MULTI_SELECT
 });
 
 export async function POST(request: Request) {
   try {
-    const { questionId, userAnswer, quizSessionId } = await request.json();
+    // Parse and validate the request body
+    const body = await request.json();
+    const { questionId, userAnswer, quizSessionId } =
+      checkAnswerSchema.parse(body);
 
+    console.log("checking question");
+    console.log("user answer", userAnswer);
+    console.log("questionId", questionId);
+    console.log("quizSessionId", quizSessionId);
+
+    // Fetch the current question with related correct answers
     const currentQuestion = await db.question.findUnique({
-      where: {
-        id: questionId,
+      where: { id: questionId },
+      include: {
+        correctAnswers: true, // Fetch the correct answers
       },
     });
 
     if (!currentQuestion) {
-      return Response.json(
-        {
+      return new Response(
+        JSON.stringify({
           success: false,
           message: "Question not found.",
-        },
-        {
-          status: 404,
-        },
+        }),
+        { status: 404 },
       );
     }
 
-    // update for the user answer we recieved
-    const isCorrect =
-      currentQuestion.answer.toLowerCase().trim() ===
-      userAnswer.toLowerCase().trim();
+    // Check if the question is MCQ or MULTI_SELECT
+    if (currentQuestion.type === "MCQ") {
+      // Handle MCQ: userAnswer is expected to be a single string
 
-    await db.userAttempt.upsert({
-      where: {
-        quizSessionId_questionId: {
-          quizSessionId: quizSessionId,
-          questionId: questionId,
+      let singleAnswer = userAnswer as string;
+
+      const isCorrect = currentQuestion.correctAnswers.some(
+        (correctAnswer) =>
+          correctAnswer.answer.toLowerCase().trim() ===
+          singleAnswer.toLowerCase().trim(),
+      );
+
+      // Upsert the user's attempt (create or update the record)
+      await db.userAttempt.upsert({
+        where: {
+          quizSessionId_questionId: {
+            quizSessionId,
+            questionId,
+          },
         },
-      },
-      update: {
-        userAnswer,
-        isCorrect,
-      },
-      create: {
-        questionId: questionId,
-        quizSessionId: quizSessionId,
-        userAnswer: userAnswer,
-        isCorrect,
-      },
-    });
+        update: {
+          userAnswer: singleAnswer,
+          isCorrect,
+        },
+        create: {
+          questionId,
+          quizSessionId,
+          userAnswer: singleAnswer,
+          isCorrect,
+        },
+      });
 
-    return Response.json(
-      {
-        success: true,
-        isCorrect,
-        message: "Answer recorded successfully.",
-      },
-      { status: 200 },
-    );
+      return new Response(
+        JSON.stringify({
+          success: true,
+          isCorrect,
+          message: "Answer recorded successfully.",
+        }),
+        { status: 200 },
+      );
+    } else if (currentQuestion.type === "MULTI_SELECT") {
+      // Handle MULTI_SELECT: userAnswer is expected to be an array of strings
+      if (!Array.isArray(userAnswer)) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Invalid answer format for MULTI_SELECT question.",
+          }),
+          { status: 400 },
+        );
+      }
+
+      const correctAnswers = currentQuestion.correctAnswers.map((answer) =>
+        answer.answer.toLowerCase().trim(),
+      );
+      const userSelectedAnswers = userAnswer.map((answer) =>
+        answer.toLowerCase().trim(),
+      );
+
+      // Check if all correct answers are selected and no additional answers are selected
+      const isCorrect =
+        userSelectedAnswers.length === correctAnswers.length &&
+        userSelectedAnswers.every((answer) => correctAnswers.includes(answer));
+
+      // Upsert the user's attempt (create or update the record)
+      await db.userAttempt.upsert({
+        where: {
+          quizSessionId_questionId: {
+            quizSessionId,
+            questionId,
+          },
+        },
+        update: {
+          userAnswer: userAnswer.join(", "), // Store as a comma-separated string for readability
+          isCorrect,
+        },
+        create: {
+          questionId,
+          quizSessionId,
+          userAnswer: userAnswer.join(", "), // Store as a comma-separated string for readability
+          isCorrect,
+        },
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          isCorrect,
+          message: "Answer recorded successfully.",
+        }),
+        { status: 200 },
+      );
+    } else {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Unsupported question type.",
+        }),
+        { status: 400 },
+      );
+    }
   } catch (error) {
-    console.log("error occured in api route", error);
+    console.error("Error occurred in checkAnswer API:", error);
 
     if (error instanceof ZodError) {
-      return Response.json(
-        {
+      return new Response(
+        JSON.stringify({
           success: false,
           message: error.issues[0].message,
-        },
-        {
-          status: 400,
-        },
+        }),
+        { status: 400 },
       );
     }
-    return Response.json(
-      {
+
+    return new Response(
+      JSON.stringify({
         success: false,
         message: "An unexpected error occurred.",
-      },
+      }),
       { status: 500 },
     );
   }
