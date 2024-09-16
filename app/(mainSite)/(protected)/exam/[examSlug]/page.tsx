@@ -20,8 +20,20 @@ const page = async ({
   const loggedInUser = await auth();
 
   if (!loggedInUser) {
+    console.log("user is not logged in");
     return redirect("/login");
   }
+
+  // const existingUser = await db.user.findUnique({
+  //   where: {
+  //     id: loggedInUser.user.id,
+  //   },
+  // });
+
+  // if (!existingUser) {
+  //   console.log("could not find an user in the database");
+  //   return redirect("/login");
+  // }
 
   const exam = await db.exam.findFirst({
     where: {
