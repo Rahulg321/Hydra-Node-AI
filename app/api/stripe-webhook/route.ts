@@ -7,9 +7,6 @@ import db from "@/lib/db";
 import { auth } from "@/auth";
 
 export const POST = auth(async function POST(req) {
-  if (!req.auth)
-    NextResponse.json({ message: "Not authenticated" }, { status: 401 });
-
   // const userSession = req.auth;
   // console.log("user session in webhook from req.auth is", userSession);
   // const currentUserId = userSession?.user.id;
@@ -48,15 +45,21 @@ export const POST = auth(async function POST(req) {
 
   try {
     const session = event.data.object as Stripe.Checkout.Session;
-    console.log("session in webhook is ", session);
+    console.log("checkoutsession in webhook is ", session);
+    const customerId = session.customer as string;
 
-    const currentUserId = session.metadata?.userId;
-    console.log("currentUserId is", currentUserId);
+    // Fetch user by Stripe customer ID
+    const customerDetails = session.customer_details;
+    const existingUser = await db.user.findUnique({
+      where: { email: customerDetails?.email as string },
+    });
 
-    if (!currentUserId) {
-      console.error("Missing userId in session metadata");
+    console.log("found an existing user using email", existingUser);
+
+    if (!existingUser) {
+      console.log("user not found using email");
       return NextResponse.json(
-        { error: "Missing userId in metadata" },
+        { error: "User not found using customer details" },
         { status: 400 },
       );
     }
@@ -71,9 +74,11 @@ export const POST = auth(async function POST(req) {
           session.subscription as string,
         );
 
+        console.log("subscription in checkout session", subscription);
+
         await db.user.update({
           where: {
-            id: currentUserId,
+            id: existingUser.id,
           },
           data: {
             stripeSubscriptionId: subscription.id,
@@ -82,17 +87,6 @@ export const POST = auth(async function POST(req) {
             stripeCurrentPeriodEnd: new Date(
               subscription.current_period_end * 1000,
             ),
-          },
-        });
-
-        await db.payment.create({
-          data: {
-            userId: currentUserId as string,
-            amount: subscription.items.data[0].price.unit_amount / 100, // Stripe stores amounts in cents
-            currency: subscription.currency,
-            paymentType: "SUBSCRIPTION",
-            stripePaymentIntentId: session.payment_intent as string,
-            status: "SUCCEEDED",
           },
         });
       } else {
@@ -104,24 +98,83 @@ export const POST = auth(async function POST(req) {
           session.payment_intent as string,
         );
 
+        const existingPayment = await db.payment.findFirst({
+          where: { stripePaymentIntentId: paymentIntent.id },
+        });
+
+        if (!existingPayment) {
+          // Proceed if the payment has not been recorded
+          await db.user.update({
+            where: { id: existingUser.id },
+            data: {
+              hasLifetimeAccess:
+                paymentIntent.status === "succeeded" ? true : false,
+            },
+          });
+
+          await db.payment.create({
+            data: {
+              userId: existingUser.id,
+              amount: paymentIntent.amount / 100, // Stripe stores amounts in cents
+              currency: paymentIntent.currency,
+              paymentType: "ONE_TIME",
+              stripePaymentIntentId: paymentIntent.id,
+              status:
+                paymentIntent.status === "succeeded" ? "SUCCEEDED" : "FAILED",
+            },
+          });
+        } else {
+          console.log(
+            "Payment record already exists, skipping creation in checkout session completed webhook.",
+          );
+        }
+      }
+    }
+
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      const customerId = paymentIntent.customer as string;
+
+      // Fetch user by Stripe customer ID
+      const user = await db.user.findUnique({
+        where: { stripeCustomerId: customerId },
+      });
+
+      if (!user) {
+        console.error("User not found for customer ID:", customerId);
+        return NextResponse.json({ error: "User not found" }, { status: 400 });
+      }
+
+      console.log("successfully fetched the user by customer id");
+      const currentUserId = user.id;
+
+      const existingPayment = await db.payment.findFirst({
+        where: { stripePaymentIntentId: paymentIntent.id },
+      });
+
+      // Update hasLifetimeAccess
+      if (!existingPayment) {
+        // Proceed if the payment has not been recorded
         await db.user.update({
           where: { id: currentUserId },
           data: {
-            hasLifetimeAccess: paymentIntent.status === "succeeded",
+            hasLifetimeAccess: true,
           },
         });
 
+        // Create payment record
         await db.payment.create({
           data: {
-            userId: currentUserId as string,
-            amount: paymentIntent.amount / 100, // Stripe stores amounts in cents
+            userId: currentUserId,
+            amount: paymentIntent.amount / 100,
             currency: paymentIntent.currency,
             paymentType: "ONE_TIME",
             stripePaymentIntentId: paymentIntent.id,
-            status:
-              paymentIntent.status === "succeeded" ? "SUCCEEDED" : "FAILED",
+            status: "SUCCEEDED",
           },
         });
+      } else {
+        console.log("Payment record already exists, skipping creation.");
       }
     }
 
@@ -147,29 +200,51 @@ export const POST = auth(async function POST(req) {
         });
 
         // Insert a payment record for the subscription
-        await db.payment.create({
-          data: {
-            userId: currentUserId as string,
-            amount: invoice.amount_paid / 100, // Stripe stores amounts in cents
-            currency: invoice.currency,
-            paymentType: "SUBSCRIPTION",
-            stripePaymentIntentId: invoice.payment_intent as string,
-            stripeInvoiceId: invoice.id,
-            status: invoice.paid ? "SUCCEEDED" : "FAILED",
-          },
+        const existingPayment = await db.payment.findFirst({
+          where: { stripeInvoiceId: invoice.id },
         });
+
+        if (!existingPayment) {
+          // Proceed if the payment has not been recorded
+          await db.payment.create({
+            data: {
+              userId: existingUser.id,
+              amount: invoice.amount_paid / 100, // Stripe stores amounts in cents
+              currency: invoice.currency,
+              paymentType: "SUBSCRIPTION",
+              stripePaymentIntentId: invoice.payment_intent as string,
+              stripeInvoiceId: invoice.id,
+              status: invoice.paid ? "SUCCEEDED" : "FAILED",
+            },
+          });
+        } else {
+          console.log(
+            "Subscription payment record already exists, skipping creation.",
+          );
+        }
       } else {
-        // Handle one-time payments
-        await db.payment.create({
-          data: {
-            userId: currentUserId as string,
-            amount: invoice.amount_paid / 100,
-            currency: invoice.currency,
-            paymentType: "ONE_TIME",
-            stripePaymentIntentId: invoice.payment_intent as string,
-            status: invoice.paid ? "SUCCEEDED" : "FAILED",
-          },
+        const existingPayment = await db.payment.findFirst({
+          where: { stripePaymentIntentId: invoice.payment_intent as string },
         });
+
+        // Handle one-time payments
+        if (!existingPayment) {
+          // Proceed if the payment has not been recorded
+          await db.payment.create({
+            data: {
+              userId: existingUser.id,
+              amount: invoice.amount_paid / 100,
+              currency: invoice.currency,
+              paymentType: "ONE_TIME",
+              stripePaymentIntentId: invoice.payment_intent as string,
+              status: invoice.paid ? "SUCCEEDED" : "FAILED",
+            },
+          });
+        } else {
+          console.log(
+            "One-time payment record already exists, skipping creation.",
+          );
+        }
       }
     }
 

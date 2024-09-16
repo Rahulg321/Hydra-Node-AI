@@ -5,19 +5,8 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
   try {
-    const currentUserSession = await auth();
-
-    if (!currentUserSession) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const {
-      id: userId,
-      name: userName,
-      email: userEmail,
-    } = currentUserSession.user;
-
-    const { priceId, mode, trialPeriodDays } = await req.json();
+    const { priceId, mode, trialPeriodDays, userId, userEmail } =
+      await req.json();
 
     if (!priceId) {
       return NextResponse.json(
@@ -36,8 +25,8 @@ export async function POST(req: Request) {
         customer_email: userEmail || undefined,
 
         metadata: {
-          userId: userId || "",
-          userName: userName || "",
+          userId: userId as string,
+          userEmail: userEmail as string,
         },
         line_items: [
           {
@@ -63,7 +52,7 @@ export async function POST(req: Request) {
         ui_mode: "embedded",
         metadata: {
           userId: userId || "",
-          userName: userName || "",
+          userEmail: userEmail as string,
         },
         customer_email: userEmail || undefined,
         invoice_creation: {

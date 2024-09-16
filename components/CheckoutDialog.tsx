@@ -23,13 +23,14 @@ import {
 
 type CheckoutDialogProps = {
   product: PricingTier;
+  session: Session;
 };
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
-const CheckoutDialog = ({ product }: CheckoutDialogProps) => {
+const CheckoutDialog = ({ product, session }: CheckoutDialogProps) => {
   const { isFeatured } = product;
 
   const fetchClientSecret = useCallback(() => {
@@ -40,13 +41,15 @@ const CheckoutDialog = ({ product }: CheckoutDialogProps) => {
       },
       body: JSON.stringify({
         priceId: product.priceId,
+        userId: session.user.id,
+        userEmail: session.user.email,
         mode: product.mode,
         trialPeriodDays: product.trialPeriodDays,
       }),
     })
       .then((res) => res.json())
       .then((data) => data.client_secret);
-  }, [product]);
+  }, [product, session]);
 
   const options = { fetchClientSecret };
 

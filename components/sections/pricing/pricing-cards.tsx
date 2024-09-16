@@ -207,7 +207,7 @@ function PricingCard({
       </CardContent>
       <CardFooter>
         {session ? (
-          <CheckoutDialog product={product} />
+          <CheckoutDialog product={product} session={session} />
         ) : (
           <Button className="w-full" asChild>
             <Link href={"/login"}>Buy Now</Link>

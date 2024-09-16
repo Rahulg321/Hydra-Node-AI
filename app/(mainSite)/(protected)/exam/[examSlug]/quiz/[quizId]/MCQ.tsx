@@ -8,6 +8,7 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+
 import React, {
   useCallback,
   useEffect,
@@ -37,7 +38,9 @@ type McqProps = {
 
 const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   const router = useRouter();
+
   const searchParams = useSearchParams();
+
   const currentQuestionNumber = parseInt(
     searchParams.get("question-number") || "1",
     10,
@@ -188,6 +191,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           if (response.status !== 200) {
             throw new Error("Could not end the quiz, error occurred");
           }
+
           setHasEnded(true);
           return;
         }
