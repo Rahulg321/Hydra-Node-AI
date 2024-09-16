@@ -24,7 +24,7 @@ export const sendPaymentErrorEmail = async (
   email: string,
 ) => {
   const { data, error } = await resend.emails.send({
-    from: "Hydranode <rahul@rahulguptadev.in>",
+    from: "Hydranode <HydraNode @hydranode.ai>",
     to: [email],
     subject: "Payment Error",
     react: React.createElement(PaymentErrorEmail, {
@@ -58,7 +58,7 @@ export const sendPaymentSuccessfulEmail = async (
   email: string,
 ) => {
   const { data, error } = await resend.emails.send({
-    from: "Hydranode <rahul@rahulguptadev.in>",
+    from: "Hydranode <HydraNode @hydranode.ai>",
     to: [email],
     subject: "Payment Successful",
     react: React.createElement(PaymentSuccessfull, {
@@ -84,7 +84,7 @@ export const sendPaymentSuccessfulEmail = async (
 
 export const sendTwoFactorEmail = async (email: string, token: string) => {
   const { data, error } = await resend.emails.send({
-    from: "Hydranode <rahul@rahulguptadev.in>",
+    from: "Hydranode <HydraNode @hydranode.ai>",
     to: [email],
     subject: "2 FA Verification",
     react: TwoFactorEmail({
@@ -104,7 +104,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resetLink = `${domain}/auth/new-password?token=${token}`;
 
   const { data, error } = await resend.emails.send({
-    from: "Hydranode <rahul@rahulguptadev.in>",
+    from: "Hydranode <HydraNode @hydranode.ai>",
     to: [email],
     subject: "Reset your Password",
     react: ResetPasswordEmail({
@@ -127,7 +127,7 @@ export const sendVerificationTokenEmail = async (
   const confirmLink = `${domain}/auth/new-verification?token=${token}`;
 
   const { data, error } = await resend.emails.send({
-    from: "Hydranode <rahul@rahulguptadev.in>",
+    from: "Hydranode <HydraNode @hydranode.ai>",
     to: [email],
     subject: "Verify your email address",
     react: TokenVerificationEmail({

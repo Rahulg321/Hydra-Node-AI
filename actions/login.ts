@@ -44,7 +44,7 @@ export async function LoginUser(values: LoginFormSchema) {
 
   if (!existingUser.password) {
     return {
-      error: "Password does not exist, try logging in using OAuth",
+      error: "Password does not exist, try logging in using Google",
     };
   }
 
