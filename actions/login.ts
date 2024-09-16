@@ -38,7 +38,7 @@ export async function LoginUser(values: LoginFormSchema) {
   // they need to create an account first or they need to login with OAuth
   if (!existingUser) {
     return {
-      error: "Your account does not exist",
+      error: "Your account does not exist, please sign up!!",
     };
   }
 
