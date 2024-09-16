@@ -24,10 +24,40 @@ export async function SignUpUser(values: SignUpFormSchema) {
 
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      return {
-        error:
-          "User email already exists, try with a different email or log in",
-      };
+      // Check if the user is already verified
+      if (existingUser.emailVerified) {
+        return {
+          error: "A user with this email already exists and is verified",
+        };
+      } else {
+        // If the user is not verified, resend the verification email
+        const verificationToken = await generateVerificationToken(email);
+
+        // Resend verification email
+        let retries = 3;
+        let emailSent = false;
+        while (retries > 0 && !emailSent) {
+          const response = await sendVerificationTokenEmail(
+            email,
+            verificationToken.token,
+          );
+          if (!response?.error) {
+            emailSent = true;
+          } else {
+            retries--;
+          }
+        }
+
+        if (!emailSent) {
+          return {
+            error: "Could not send verification email, please try again later",
+          };
+        }
+
+        return {
+          success: "A verification email has been resent to your address",
+        };
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
