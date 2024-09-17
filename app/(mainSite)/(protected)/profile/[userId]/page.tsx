@@ -12,6 +12,10 @@ import { redirect } from "next/navigation";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import SignOutButton from "@/components/sign-out-button";
 import { Session } from "next-auth";
+import db from "@/lib/db";
+import { User } from "@prisma/client";
+import { formatDateWithSuffix } from "@/lib/utils";
+import { stripe } from "@/lib/stripe";
 
 type ProfilePageProps = {
   params: {
@@ -27,13 +31,23 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
     redirect("/login");
   }
 
-  console.log("Session in page", session);
+  const existingUser = await db.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+  });
+
+  if (!existingUser) {
+    console.log("could not find an user in the database");
+    return redirect("/login");
+  }
+
   return (
     <React.Fragment>
       <section className="grid min-h-screen grid-cols-5 gap-6 bg-[#F5F4FA] px-4 py-4">
         <ProfileSidebar session={session} />
         <CertificateUploadSection />
-        <CurrentPlanSection />
+        <CurrentPlanSection loggedInUser={existingUser} />
         <ExamHistorySection />
         <ConnectWalletSection />
         <EarnedRewardSection />
@@ -96,23 +110,64 @@ function ConnectWalletSection() {
   );
 }
 
-function CurrentPlanSection() {
+async function CurrentPlanSection({ loggedInUser }: { loggedInUser: User }) {
+  if (loggedInUser.hasLifetimeAccess) {
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
+        <p className="text-muted-foreground">
+          Enjoy unlimited access to all services. No further payments required.
+        </p>
+      </div>
+    );
+  }
+
+  if (loggedInUser.stripeCurrentPeriodEnd) {
+    const subscriptionEndDate = new Date(loggedInUser.stripeCurrentPeriodEnd);
+
+    const formattedEndDate = formatDateWithSuffix(subscriptionEndDate); // E.g., '24th Feb, 2024'
+
+    const existingUserSubscription: any = await stripe.subscriptions.retrieve(
+      loggedInUser.stripeSubscriptionId as string,
+    );
+
+    console.log(
+      "fetched subscription from stripe is",
+      existingUserSubscription as any,
+    );
+
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <span className="block font-semibold">Current Plan</span>
+        <div>
+          <h5 className="text-muted-foreground">Subscription Plan</h5>
+          <h4 className="text-baseC">Expires on {formattedEndDate}</h4>
+        </div>
+        <div>
+          <h4>Next Payment</h4>
+          <h3 className="text-baseC">
+            ${existingUserSubscription.plan.amount / 100} on {formattedEndDate}
+          </h3>
+        </div>
+        <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
+          Manage Subscription
+        </Button>
+        <Button className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white">
+          Cancel Plan
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
-      <span className="block font-semibold">Current Plan</span>
-      <div>
-        <h5 className="text-muted-foreground">6 days left</h5>
-        <h4 className="text-baseC">Free Trial</h4>
-      </div>
-      <div>
-        <h4>Next Payment</h4>
-        <h3 className="text-baseC">9th July, 2024</h3>
-      </div>
-      <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
-        Previous Question
-      </Button>
+      <h3 className="font-semibold text-baseC">No Active Plan</h3>
+      <p className="text-muted-foreground">
+        You currently don’t have any active subscriptions or lifetime access.
+        Consider purchasing a plan to access premium features.
+      </p>
       <Button className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white">
-        Cancel Plan
+        Purchase a Plan
       </Button>
     </div>
   );
