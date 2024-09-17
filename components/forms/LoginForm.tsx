@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoginUser } from "@/actions/login";
 import { useToast } from "@/components/ui/use-toast";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
@@ -71,6 +71,11 @@ const LoginForm = () => {
 
       if (response?.success) {
         setSuccess(response?.success);
+      }
+
+      if (response?.successful_login) {
+        setSuccess("Logged in Successfully!!!!");
+        redirect("/");
       }
     });
   }

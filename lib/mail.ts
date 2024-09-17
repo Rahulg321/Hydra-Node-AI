@@ -10,7 +10,7 @@ import PaymentErrorEmail from "@/components/emails/PaymentError";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const domain = process.env.NEXT_PUBLIC_DEV_APP_URL;
+const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 export const sendPaymentErrorEmail = async (
   customerName: string,

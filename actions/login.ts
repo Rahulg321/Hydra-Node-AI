@@ -144,13 +144,17 @@ export async function LoginUser(values: LoginFormSchema) {
   }
 
   try {
-    const signInResponse = await signIn("credentials", {
+    const response = await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirect: false,
     });
 
-    console.log("signinResponse", signInResponse);
+    console.log("Resonse after signing in", response);
+
+    return {
+      successful_login: true,
+    };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

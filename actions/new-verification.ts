@@ -25,6 +25,7 @@ export const newVerification = async (token: string) => {
     }
 
     const existingUser = await getUserByEmail(existingToken.email);
+
     if (!existingUser) {
       console.error("Email does not exist");
       return {
