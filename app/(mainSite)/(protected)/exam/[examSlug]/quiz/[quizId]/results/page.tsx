@@ -76,29 +76,13 @@ const QuizResultsPage = async ({ params }: props) => {
     totalTimeTaken = `${timeTakenMinutes} minutes`;
   }
 
-  const userAttempts = await db.userAttempt.findMany({
-    where: {
-      quizSessionId: params.quizId,
-    },
-  });
+  let examScore = currentQuizSession.percentageScored
+    ? currentQuizSession.percentageScored
+    : 0;
 
-  let skippedQuestions = 0;
-  let correctQuestions = 0;
-  let incorrectQuestions = 0;
-
-  userAttempts.forEach((e) => {
-    if (e.isCorrect) {
-      correctQuestions++;
-    } else {
-      incorrectQuestions++;
-    }
-
-    if (e.skipped) {
-      skippedQuestions++;
-    }
-  });
-
-  let examScore = (correctQuestions / totalQuestions) * 100;
+  let correctAnswers = currentQuizSession.correctAnswers;
+  let incorrectAnswers = currentQuizSession.incorrectAnswers;
+  let skippedAnswers = currentQuizSession.skippedAnswers;
 
   return (
     <section className="container py-4">
@@ -128,19 +112,19 @@ const QuizResultsPage = async ({ params }: props) => {
           <div className="grid grid-cols-2 gap-4">
             <InfoCard
               title="Correct"
-              value={correctQuestions.toString()}
+              value={correctAnswers.toString()}
               backgroundColor="bg-green-200"
               icon={<Check className="text-green-400" />}
             />
             <InfoCard
               title="Incorrect"
-              value={incorrectQuestions.toString()}
+              value={incorrectAnswers.toString()}
               backgroundColor="bg-pink-400"
               icon={<X className="text-pink-800" />}
             />
             <InfoCard
               title="Skipped/Unanswered"
-              value={skippedQuestions.toString()}
+              value={skippedAnswers.toString()}
               backgroundColor="bg-violet-400"
               icon={<CircleOff className="text-violet-800" />}
             />
@@ -153,9 +137,9 @@ const QuizResultsPage = async ({ params }: props) => {
           </div>
         </div>
         <ResultsChart
-          correct={correctQuestions}
-          incorrect={incorrectQuestions}
-          skipped={skippedQuestions}
+          correct={correctAnswers}
+          incorrect={incorrectAnswers}
+          skipped={skippedAnswers}
         />
       </div>
       <div className="mt-4 flex justify-between">
