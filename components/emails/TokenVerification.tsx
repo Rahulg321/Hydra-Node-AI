@@ -32,7 +32,7 @@ export const TokenVerificationEmail: React.FC<
       <Container style={container}>
         <Section style={logoContainer}>
           <Img
-            src={`${baseUrl}/public/hydranode_logo.png`} // Add your Hydranode logo here
+            src={`/public/hydranode_logo.png`} // Add your Hydranode logo here
             width="120"
             height="36"
             alt="Hydranode"

@@ -1,90 +1,94 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import db from "@/lib/db";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
-import { User } from "@prisma/client";
-import { hasAccess } from "@/lib/utils";
 import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
+
+interface StartExamButtonProps {
+  examId: string;
+  examSlug: string;
+  currentUserId: string;
+  buttonLabel?: string;
+}
 
 const StartExamButton = ({
   examId,
   examSlug,
   currentUserId,
   buttonLabel = "Start Exam",
-}: {
-  examId: string;
-  examSlug: string;
-  currentUserId: string;
-  buttonLabel?: string;
-}) => {
+}: StartExamButtonProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { toast } = useToast();
 
-  function onSubmit() {
-    startTransition(async () => {
-      try {
-        // wait for 2sec
-        console.log("examId", examId);
-        console.log("currentUserId", currentUserId);
-
-        const userHasSubscriped = await hasAccess(currentUserId);
-
-        if (!userHasSubscriped) {
-          toast({
-            variant: "destructive",
-            title: "Not Subscriped ❌",
-            description:
-              "Subscripe to one of our pricing plans to start taking the exam",
-            action: (
-              <ToastAction altText="Subscribe">
-                <Link href="/pricing">Subscribe</Link>
-              </ToastAction>
-            ),
-          });
-          redirect("/pricing");
-        }
-
-        // creates a quiz session
-        const response = await axios.post("/api/CreateQuiz", {
-          examId,
-          currentUserId,
-        });
-
-        if (response.status === 200) {
-          console.log("Quiz session created successfully:", response.data);
-          const { quizSessionId } = response.data;
-          toast({
-            variant: "success",
-            title: "Quiz Successful 🎉",
-            description: "Quiz session created successfully",
-          });
-          router.push(`/exam/${examSlug}/quiz/${quizSessionId}`);
-        } else {
-          console.error("Unexpected response status:", response);
-          toast({
-            variant: "destructive",
-            title: "Error Occurred ❌",
-            description: "Error Creating Quiz, Please try again",
-          });
-        }
-      } catch (error) {
-        // Something else happened while setting up the request
-        console.error("Error in setting up the request:", error);
-        toast({
-          variant: "destructive",
-          title: "Error Occurred ❌",
-          description: "Error Creating Quiz, Please try again",
-        });
-      }
+  // Reusable function for showing subscription toast
+  const showSubscriptionToast = () => {
+    toast({
+      variant: "destructive",
+      title: "Not Subscribed ❌",
+      description:
+        "Subscribe to one of our pricing plans to start taking the exam.",
+      action: (
+        <ToastAction altText="Subscribe">
+          <Link href="/pricing">Subscribe</Link>
+        </ToastAction>
+      ),
     });
-  }
+  };
+
+  const createQuizSession = async () => {
+    try {
+      // Check if the user has access (subscription)
+      const hasAccessResponse = await axios.post("/api/hasAccess", {
+        currentUserId,
+      });
+
+      // If user is not subscribed
+      if (
+        hasAccessResponse.status !== 200 ||
+        !hasAccessResponse.data.hasAccess
+      ) {
+        showSubscriptionToast();
+        return router.push("/pricing");
+      }
+
+      // Create quiz session
+      const quizResponse = await axios.post("/api/CreateQuiz", {
+        examId,
+        currentUserId,
+      });
+
+      if (quizResponse.status === 200) {
+        const { quizSessionId } = quizResponse.data;
+        toast({
+          variant: "success",
+          title: "Quiz Successful 🎉",
+          description: "Quiz session created successfully.",
+        });
+        router.push(`/exam/${examSlug}/quiz/${quizSessionId}`);
+      } else {
+        throw new Error("Unexpected response status.");
+      }
+    } catch (error) {
+      // Log error and show toast
+      console.error("Error in quiz creation:", error);
+      toast({
+        variant: "destructive",
+        title: "Error Occurred ❌",
+        description: "Error creating the quiz. Please try again.",
+      });
+    }
+  };
+
+  // Handle form submission
+  const onSubmit = () => {
+    startTransition(createQuizSession);
+  };
 
   return (
     <Button
@@ -95,7 +99,7 @@ const StartExamButton = ({
       {isPending ? (
         <div className="flex items-center gap-2">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Creating Quiz
+          Creating Quiz...
         </div>
       ) : (
         buttonLabel
