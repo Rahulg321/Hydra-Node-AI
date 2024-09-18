@@ -48,7 +48,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         <ProfileSidebar session={session} />
         <CertificateUploadSection />
         <CurrentPlanSection loggedInUser={existingUser} />
-        <ExamHistorySection />
+        <ExamHistorySection loggedInUser={existingUser} />
         <ConnectWalletSection />
         <EarnedRewardSection />
       </section>
@@ -75,14 +75,57 @@ function CertificateUploadSection() {
   );
 }
 
-function ExamHistorySection() {
+async function ExamHistorySection({ loggedInUser }: { loggedInUser: User }) {
+  const { id } = loggedInUser;
+
+  const userQuizSessions = await db.quizSession.findMany({
+    where: {
+      userId: id,
+    },
+    include: {
+      exam: {
+        include: {
+          questions: true,
+        },
+      },
+    },
+  });
+
+  if (!userQuizSessions) {
+    console.log("could not find a quiz session, user has not taken an exam");
+  }
+
+  let examData = userQuizSessions.map((e) => {
+    const percentageScored = e.percentageScored ?? null; // Assign null if undefined
+    const passFailStatus =
+      percentageScored !== null && percentageScored >= 50 ? "Pass" : "Fail";
+    const statusClass =
+      percentageScored !== null && percentageScored >= 50
+        ? "text-green-500"
+        : "text-red-500";
+
+    return {
+      id: e.id,
+      examName: e.exam.name,
+      date: e.createdAt.toLocaleString(),
+      percentageScored: percentageScored !== null ? percentageScored : 0, // Handle display if undefined
+      totalQuestions: e.exam.questions.length,
+      difficultyLevel: e.exam.examLevel,
+      correctAnswers: e.correctAnswers,
+      incorrectAnswers: e.incorrectAnswers,
+      passFailStatus, // Safe assignment
+      statusClass, // Safe assignment
+      link: `/exam/${e.id}/quiz/${e.id}/results`,
+    };
+  });
+
   return (
     <div className="container col-span-4 rounded-xl bg-white py-4">
       <div className="mb-4 flex items-center justify-between">
         <h4>Exam History</h4>
         <Button className="rounded-full bg-base">View All</Button>
       </div>
-      <ExamHistoryTable />
+      <ExamHistoryTable examHistoryData={examData} />
     </div>
   );
 }

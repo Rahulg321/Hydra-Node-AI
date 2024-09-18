@@ -8,74 +8,97 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
 import { MoveUpRight } from "lucide-react";
 
+interface ExamHistory {
+  id: string;
+  examName: string;
+  date: string;
+  percentageScored?: number;
+  totalQuestions: number;
+  difficultyLevel: string;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  passFailStatus: string; // Either "Pass" or "Fail"
+  statusClass: string; // Dynamic class for coloring status
+  link: string; // URL for viewing details
+}
+
+// Component Prop Types
+interface ExamHistoryTableProps {
+  examHistoryData: ExamHistory[];
+}
+
+// Example data with the new fields required
 const examHistoryData = [
   {
     id: "#5489",
     examName: "Cloud Engineer Exam",
     date: "6th April, 2024",
-    marks: 10,
-    type: "Practice",
-    status: "Fail",
-    statusClass: "text-red-500", // Additional property for dynamic class
+    percentageScored: 40,
+    totalQuestions: 50,
+    difficultyLevel: "Intermediate",
+    correctAnswers: 20,
+    incorrectAnswers: 30,
+    passFailStatus: "Fail", // Could be "Pass" or "Fail"
+    statusClass: "text-red-500", // Dynamic class based on pass/fail status
     link: "/exam/5489",
   },
-  // Add more exam records here as needed
   {
     id: "#5490",
     examName: "API Development Exam",
     date: "25th May, 2024",
-    marks: 15,
-    type: "Final",
-    status: "Pending",
-    statusClass: "text-yellow-500", // Class for pass status
-    link: "/exam/5490",
-  },
-  {
-    id: "#5490",
-    examName: "Full Stack Developer Exam",
-    date: "10th May, 2024",
-    marks: 15,
-    type: "Final",
-    status: "Pass",
+    percentageScored: 75,
+    totalQuestions: 50,
+    difficultyLevel: "Advanced",
+    correctAnswers: 38,
+    incorrectAnswers: 12,
+    passFailStatus: "Pass", // Pass status
     statusClass: "text-green-500", // Class for pass status
     link: "/exam/5490",
   },
+  // Add more records as needed
 ];
 
-const ExamHistoryTable = () => {
+const ExamHistoryTable = ({ examHistoryData }: ExamHistoryTableProps) => {
   return (
     <Table>
       <TableCaption>A list of your recent exams.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Id</TableHead>
           <TableHead>Exam Name</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead>Marks</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead>Percentage Scored</TableHead>
+          <TableHead>Total Questions</TableHead>
+          <TableHead>Difficulty Level</TableHead>
+          <TableHead>Correct Answers</TableHead>
+          <TableHead>Incorrect Answers</TableHead>
+          <TableHead>Pass/Fail Status</TableHead>
+          <TableHead className="text-right">Details</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {examHistoryData.map((exam, index) => (
           <TableRow key={index}>
-            <TableCell className="font-medium">{exam.id}</TableCell>
             <TableCell>{exam.examName}</TableCell>
             <TableCell>{exam.date}</TableCell>
-            <TableCell>{exam.marks}</TableCell>
-            <TableCell>{exam.type}</TableCell>
-            <TableCell className={exam.statusClass}>{exam.status}</TableCell>
+            <TableCell>{exam.percentageScored}%</TableCell>
+            <TableCell>{exam.totalQuestions}</TableCell>
+            <TableCell>
+              {exam.difficultyLevel ? exam.difficultyLevel : "-"}
+            </TableCell>
+            <TableCell>{exam.correctAnswers}</TableCell>
+            <TableCell>{exam.incorrectAnswers}</TableCell>
+            <TableCell className={exam.statusClass}>
+              {exam.passFailStatus}
+            </TableCell>
             <TableCell className="text-right text-purple-700">
-              <Link
+              <a
                 href={exam.link}
                 className="flex items-center justify-end gap-2"
               >
                 View Details <MoveUpRight />
-              </Link>
+              </a>
             </TableCell>
           </TableRow>
         ))}
