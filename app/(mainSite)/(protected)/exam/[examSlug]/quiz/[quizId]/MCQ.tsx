@@ -64,6 +64,29 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     [questionIndex, questions],
   );
 
+  useEffect(() => {
+    if (!isPending && hasEnded) return;
+
+    function beforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+      e.returnValue = ""; // This triggers the browser's default confirmation dialog
+
+      // If the user confirms "Leave", end the quiz using sendBeacon
+      window.navigator.sendBeacon(
+        "/api/EndQuiz",
+        JSON.stringify({
+          quizSessionId: quizSession.id,
+        }),
+      );
+    }
+
+    window.addEventListener("beforeunload", beforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
+  }, [isPending, hasEnded, quizSession.id]);
+
   // This effect updates the questionIndex when the query string changes
   useEffect(() => {
     const questionNumber = parseInt(
