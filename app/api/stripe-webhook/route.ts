@@ -50,6 +50,7 @@ export const POST = auth(async function POST(req) {
 
     // Fetch user by Stripe customer ID
     const customerDetails = session.customer_details;
+
     const existingUser = await db.user.findUnique({
       where: { email: customerDetails?.email as string },
     });

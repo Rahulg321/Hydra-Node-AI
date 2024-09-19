@@ -38,10 +38,12 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
     [userAttemptIndex, userAttempts],
   );
 
-  const options = currentAttempt.question.options.map((option) => {
+  console.log("current attempt", currentAttempt);
+
+  const options = currentAttempt.question.options.map((e) => {
     return {
-      option: option.option,
-      explanation: option.explanation,
+      option: e.option,
+      explanation: e.explanation,
     };
   });
 
@@ -52,7 +54,10 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
   };
 
   const isSelectedAnswer = (option: string) => {
-    return currentAttempt.userAnswer.toLowerCase() === option.toLowerCase();
+    const userAnswersArray = currentAttempt.userAnswer.split(",");
+    return userAnswersArray.some(
+      (answer) => answer.trim().toLowerCase() === option.toLowerCase(),
+    );
   };
 
   const handleNext = () => setUserAttemptIndex((prev) => prev + 1);
@@ -136,12 +141,9 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
           <div className="mt-4 space-y-4">
             {options.map((option, index) => {
               const isCorrectOption = isCorrectAnswer(option.option);
+              const isUserSelection = isSelectedAnswer(option.option);
               const isUserIncorrectSelection =
-                !currentAttempt.isCorrect && isSelectedAnswer(option.option);
-
-              console.log("option", option);
-              console.log("isCorrectOption", isCorrectOption);
-              console.log("isUserIncorrectSelection", isUserIncorrectSelection);
+                !isCorrectOption && isUserSelection;
 
               return (
                 <div key={index}>
@@ -149,10 +151,12 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
                     className={cn(
                       "flex cursor-pointer items-center gap-2 rounded-lg border border-base p-4 md:p-6",
                       {
-                        "border-green-500 bg-green-500 text-white":
-                          isCorrectOption,
+                        "border-blue-500 bg-blue-500 text-white":
+                          isUserSelection,
                         "border-red-500 bg-red-500 text-white":
                           isUserIncorrectSelection,
+                        "border-green-500 bg-green-500 text-white":
+                          isCorrectOption,
                       },
                     )}
                   >
