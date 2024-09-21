@@ -70,6 +70,7 @@ const StartExamButton = ({
           title: "Quiz Successful 🎉",
           description: "Quiz session created successfully.",
         });
+
         router.push(`/exam/${examSlug}/quiz/${quizSessionId}`);
       } else {
         throw new Error("Unexpected response status.");

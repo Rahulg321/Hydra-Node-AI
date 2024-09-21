@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { manrope, poppins } from "../fonts";
+import { ExamModeProvider } from "@/lib/exam-mode-context";
 
 export const metadata: Metadata = {
   title: "Hydronode AI",
@@ -23,12 +24,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={clsx("", poppins.variable, manrope.variable)}>
-        <SessionProvider>
-          <Header session={session} />
-          {children}
-          <Footer />
-          <Toaster />
-        </SessionProvider>
+        <ExamModeProvider>
+          <SessionProvider>
+            <Header session={session} />
+            {children}
+            <Footer />
+            <Toaster />
+          </SessionProvider>
+        </ExamModeProvider>
       </body>
     </html>
   );

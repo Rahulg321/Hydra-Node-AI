@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { useExamModeContext } from "@/lib/exam-mode-context";
 import { cn, formatTime } from "@/lib/utils";
 import { Exam, QuizSession } from "@prisma/client";
 import axios from "axios";
@@ -29,6 +30,11 @@ type McqProps = {
     id: string;
     type: string;
     question: string;
+    overallExplanation: string;
+    correctAnswers: Array<{
+      id: string;
+      answer: string;
+    }>;
     options: Array<{
       id: string;
       option: string;
@@ -38,7 +44,7 @@ type McqProps = {
 
 const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   const router = useRouter();
-
+  const { examMode } = useExamModeContext();
   const searchParams = useSearchParams();
 
   const currentQuestionNumber = parseInt(
@@ -48,7 +54,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   const { toast } = useToast();
   const totalTime = exam.timeAllowed * 60;
-
+  const [showAnswer, setShowAnswer] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<number[]>([]);
   const [questionIndex, setQuestionIndex] = useState(currentQuestionNumber - 1);
@@ -68,10 +74,11 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     if (!isPending && hasEnded) return;
 
     function beforeUnload(e: BeforeUnloadEvent) {
+      // Modern browsers handle custom messages poorly, so it's better to use the default behavior
       e.preventDefault();
-      e.returnValue = ""; // This triggers the browser's default confirmation dialog
+      e.returnValue = ""; // Setting this makes the browser show a confirmation dialog
 
-      // If the user confirms "Leave", end the quiz using sendBeacon
+      // If the user decides to leave, send the beacon
       window.navigator.sendBeacon(
         "/api/EndQuiz",
         JSON.stringify({
@@ -156,6 +163,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
         if (isPending) return;
 
         let status = "skipped";
+
         let selectedAnswers = selected.map(
           (index) => currentQuestion.options[index].option,
         );
@@ -211,6 +219,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           const response = await axios.post("/api/EndQuiz", {
             quizSessionId: quizSession.id,
           });
+
           if (response.status !== 200) {
             throw new Error("Could not end the quiz, error occurred");
           }
@@ -304,6 +313,9 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             <h2>{exam.name}</h2>
             <div className="mt-4 flex justify-between">
               <span className="font-medium">
+                Exam Mode <span className="font-bold">{examMode}</span>
+              </span>
+              <span className="font-medium">
                 Question <span className="font-bold">{questionIndex + 1}</span>
               </span>
               <span className="font-medium">
@@ -317,7 +329,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             <div className="space-y-4">
               {currentQuestion.options.map((optionObj, index) => {
                 const isSelected = selected.includes(index);
-
                 return (
                   <div
                     key={index}
@@ -345,9 +356,22 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               })}
             </div>
             <div className="mt-4 flex justify-between">
-              <Button className="mb-4 rounded-full bg-base px-10 py-6 text-base">
-                Show Answer
-              </Button>
+              {showAnswer ? (
+                <div>
+                  <h3>
+                    Correct Answers:{" "}
+                    {currentQuestion.correctAnswers
+                      .map((answerObj) => answerObj.answer)
+                      .join(", ")}
+                  </h3>
+                  <p>{currentQuestion.overallExplanation}</p>
+                </div>
+              ) : null}
+              {examMode === "PRACTICE" ? (
+                <Button className="mb-4 rounded-full bg-base px-10 py-6 text-base">
+                  {showAnswer ? "Hide Answer" : "Show Answer"}
+                </Button>
+              ) : null}
               <div className="space-x-4">
                 <Button
                   className="mb-4 rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white"

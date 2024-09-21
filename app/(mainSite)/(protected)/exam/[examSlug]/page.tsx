@@ -9,6 +9,7 @@ import db from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import StartExamButton from "./StartExamButton";
 import { auth } from "@/auth";
+import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
 
 const page = async ({
   params,
@@ -86,10 +87,11 @@ const page = async ({
             <span>4.8 (23 reviews)</span>
           </div>
           {/* logged in user may or may not exist, should check for null or better code */}
-          <StartExamButton
+          <StartExamDialog
             examId={exam.id}
             examSlug={exam.slug}
             currentUserId={loggedInUser.user.id as string}
+            examTime={exam.timeAllowed}
           />
           <h4>Examination Instructions</h4>
           <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">
