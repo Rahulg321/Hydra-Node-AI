@@ -108,6 +108,7 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: User }) {
       id: e.id,
       examName: e.exam.name,
       date: e.createdAt.toLocaleString(),
+      examMode: e.examMode,
       percentageScored: percentageScored !== null ? percentageScored : 0, // Handle display if undefined
       totalQuestions: e.exam.questions.length,
       difficultyLevel: e.exam.examLevel,

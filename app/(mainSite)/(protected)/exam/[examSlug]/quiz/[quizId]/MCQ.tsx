@@ -276,7 +276,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   return (
     <section className="grid min-h-screen grid-cols-5">
-      <div className="block-space container col-span-1">
+      <div className="block-space container col-span-1 space-y-6">
         <TimeLeft
           time={formatTime(remainingTime)}
           isTimeCritical={isTimeCritical}
@@ -286,11 +286,15 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           questionLength={questions.length}
           questionStatus={questionStatus}
         />
-        <div className="mt-4 flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <span className="font-medium">
             Skipped Answers
             <span className="font-bold">{skippedAnswers}</span>
           </span>
+        </div>
+
+        <div className="content-end">
+          <EndQuizButton quizSession={quizSession} setHasEnded={setHasEnded} />
         </div>
       </div>
       <div className="container col-span-4 space-y-4 bg-[#F5F4FA] py-4">
@@ -356,22 +360,29 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               })}
             </div>
             <div className="mt-4 flex justify-between">
-              {showAnswer ? (
-                <div>
-                  <h3>
-                    Correct Answers:{" "}
-                    {currentQuestion.correctAnswers
-                      .map((answerObj) => answerObj.answer)
-                      .join(", ")}
-                  </h3>
-                  <p>{currentQuestion.overallExplanation}</p>
-                </div>
-              ) : null}
-              {quizSession.examMode === "PRACTICE" ? (
-                <Button className="mb-4 rounded-full bg-base px-10 py-6 text-base">
-                  {showAnswer ? "Hide Answer" : "Show Answer"}
-                </Button>
-              ) : null}
+              <div className="">
+                {showAnswer ? (
+                  <div className="space-y-4">
+                    <h3 className="text-green-400">
+                      Correct Answers:{" "}
+                      {currentQuestion.correctAnswers
+                        .map((answerObj) => answerObj.answer)
+                        .join(", ")}
+                    </h3>
+                    <span>{currentQuestion.overallExplanation}</span>
+                  </div>
+                ) : null}
+                {quizSession.examMode === "PRACTICE" ? (
+                  <Button
+                    className="my-4 rounded-full bg-base px-10 py-6 text-base"
+                    onClick={() => {
+                      setShowAnswer(!showAnswer);
+                    }}
+                  >
+                    {showAnswer ? "Hide Answer" : "Show Answer"}
+                  </Button>
+                ) : null}
+              </div>
               <div className="space-x-4">
                 <Button
                   className="mb-4 rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white"
@@ -462,5 +473,36 @@ function CorrectQuestionGrid({
         })}
       </div>
     </div>
+  );
+}
+
+function EndQuizButton({
+  quizSession,
+  setHasEnded,
+}: {
+  quizSession: QuizSession;
+  setHasEnded: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <Button
+      variant={"destructive"}
+      onClick={() => {
+        startTransition(async () => {
+          // timeout of 3 sec
+          // await new Promise((resolve) => setTimeout(resolve, 3000));
+
+          const response = await axios.post("/api/EndQuiz", {
+            quizSessionId: quizSession.id,
+          });
+          setHasEnded(true);
+        });
+      }}
+      className="w-full rounded-full px-10 py-6 text-base"
+      disabled={isPending}
+    >
+      {isPending ? "Ending Exam" : "End Exam"}
+    </Button>
   );
 }

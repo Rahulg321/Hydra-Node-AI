@@ -19,6 +19,7 @@ interface ExamHistory {
   difficultyLevel: string;
   correctAnswers: number;
   incorrectAnswers: number;
+  examMode: string;
   passFailStatus: string; // Either "Pass" or "Fail"
   statusClass: string; // Dynamic class for coloring status
   link: string; // URL for viewing details
@@ -30,36 +31,6 @@ interface ExamHistoryTableProps {
 }
 
 // Example data with the new fields required
-const examHistoryData = [
-  {
-    id: "#5489",
-    examName: "Cloud Engineer Exam",
-    date: "6th April, 2024",
-    percentageScored: 40,
-    totalQuestions: 50,
-    difficultyLevel: "Intermediate",
-    correctAnswers: 20,
-    incorrectAnswers: 30,
-    passFailStatus: "Fail", // Could be "Pass" or "Fail"
-    statusClass: "text-red-500", // Dynamic class based on pass/fail status
-    link: "/exam/5489",
-  },
-  {
-    id: "#5490",
-    examName: "API Development Exam",
-    date: "25th May, 2024",
-    percentageScored: 75,
-    totalQuestions: 50,
-    difficultyLevel: "Advanced",
-    correctAnswers: 38,
-    incorrectAnswers: 12,
-    passFailStatus: "Pass", // Pass status
-    statusClass: "text-green-500", // Class for pass status
-    link: "/exam/5490",
-  },
-  // Add more records as needed
-];
-
 const ExamHistoryTable = ({ examHistoryData }: ExamHistoryTableProps) => {
   return (
     <Table>
@@ -68,6 +39,7 @@ const ExamHistoryTable = ({ examHistoryData }: ExamHistoryTableProps) => {
         <TableRow>
           <TableHead>Exam Name</TableHead>
           <TableHead>Date</TableHead>
+          <TableHead>Exam Mode</TableHead>
           <TableHead>Percentage Scored</TableHead>
           <TableHead>Total Questions</TableHead>
           <TableHead>Difficulty Level</TableHead>
@@ -82,6 +54,7 @@ const ExamHistoryTable = ({ examHistoryData }: ExamHistoryTableProps) => {
           <TableRow key={index}>
             <TableCell>{exam.examName}</TableCell>
             <TableCell>{exam.date}</TableCell>
+            <TableCell>{exam.examMode}</TableCell>
             <TableCell>{exam.percentageScored}%</TableCell>
             <TableCell>{exam.totalQuestions}</TableCell>
             <TableCell>

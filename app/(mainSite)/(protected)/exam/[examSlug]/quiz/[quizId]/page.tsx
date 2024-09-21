@@ -65,7 +65,7 @@ const McqQuizPage = async ({
     },
   });
 
-  console.log("questions passed to mcq are", questions);
+  // console.log("questions passed to mcq are", questions);
 
   return <MCQ quizSession={quizSession} exam={exam} questions={questions} />;
 };
