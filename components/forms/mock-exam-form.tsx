@@ -94,12 +94,7 @@ const MockExamForm = ({
           return router.push("/pricing");
         }
 
-        const response = await CreateCustomExam(
-          values,
-          examId,
-          currentUserId,
-          examMode,
-        );
+        const response = await CreateCustomExam(values, examId, currentUserId);
 
         if (response.type === "error") {
           console.log("could not start quiz session from dialog");
