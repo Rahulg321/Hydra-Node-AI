@@ -7,25 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { MdMenu, MdClose } from "react-icons/md";
-import ReusbaleButton from "./ComponentButtons/ReusbaleButton";
-import LoginDialog from "./Dialogs/LoginDialog";
-import SignUpDialog from "./Dialogs/SignUpDialog";
+
 import Image from "next/image";
 import Logo from "@/public/hydranode_logo.png";
 import WhiteLogo from "@/public/hydranode_white_logo.png";
 import { signOut, useSession } from "next-auth/react";
-import SignOutButton from "./sign-out-button";
-import { Button } from "./ui/button";
+
 import { Session } from "next-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronDown } from "lucide-react";
@@ -213,8 +206,6 @@ function ProfileMenu() {
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{profileName || "JohnDoe"}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href={`/profile/${session?.data?.user.id}`}>Profile</Link>
         </DropdownMenuItem>
