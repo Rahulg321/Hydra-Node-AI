@@ -167,13 +167,19 @@ model Exam {
   QuizSession QuizSession[]
 }
 
+enum ExamModeValues {
+  PRACTICE
+  MOCK
+}
+
 model QuizSession {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   userId      String
   examId      String
+  examMode    ExamModeValues @default(PRACTICE)
   startTime   DateTime
   endTime     DateTime?
-  isCompleted Boolean   @default(false)
+  isCompleted Boolean        @default(false)
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   exam         Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)

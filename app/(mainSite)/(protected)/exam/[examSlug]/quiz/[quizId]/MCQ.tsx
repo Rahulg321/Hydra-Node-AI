@@ -44,7 +44,6 @@ type McqProps = {
 
 const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   const router = useRouter();
-  const { examMode } = useExamModeContext();
   const searchParams = useSearchParams();
 
   const currentQuestionNumber = parseInt(
@@ -313,7 +312,8 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             <h2>{exam.name}</h2>
             <div className="mt-4 flex justify-between">
               <span className="font-medium">
-                Exam Mode <span className="font-bold">{examMode}</span>
+                Exam Mode{" "}
+                <span className="font-bold">{quizSession.examMode}</span>
               </span>
               <span className="font-medium">
                 Question <span className="font-bold">{questionIndex + 1}</span>
@@ -367,7 +367,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                   <p>{currentQuestion.overallExplanation}</p>
                 </div>
               ) : null}
-              {examMode === "PRACTICE" ? (
+              {quizSession.examMode === "PRACTICE" ? (
                 <Button className="mb-4 rounded-full bg-base px-10 py-6 text-base">
                   {showAnswer ? "Hide Answer" : "Show Answer"}
                 </Button>

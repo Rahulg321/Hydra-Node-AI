@@ -8,7 +8,6 @@ export default async function CreateCustomExam(
   values: MockExamZodType,
   examId: string,
   currentUserId: string,
-  examMode: ExamModeValues,
 ) {
   // start and create a new quiz session and send the value of the quiz session back to the frontend for redirecting
   try {
