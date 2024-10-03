@@ -153,18 +153,25 @@ enum ExamLevel {
 
 // each individual exam, it can belong to a vendor
 model Exam {
-  id          String        @id @default(cuid())
-  name        String
-  slug        String        @unique
-  vendorId    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  timeAllowed Int
-  attempts    Int
-  vendor      Vendor        @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  examLevel   ExamLevel
-  questions   Question[]
-  QuizSession QuizSession[]
+  id              String        @id @default(cuid())
+  name            String
+  slug            String        @unique
+  vendorId        String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  timeAllowed     Int
+  price           Float         @default(0)
+  stripeProductId String?
+  stripePriceId   String?
+  attempts        Int
+  vendor          Vendor        @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  examLevel       ExamLevel
+  questions       Question[]
+  QuizSession     QuizSession[]
+
+  // questions to show to the user
+  questionsToShow Int     @default(10) // Default value, can be adjusted
+  description     String? // Description of the exam
 }
 
 enum ExamModeValues {

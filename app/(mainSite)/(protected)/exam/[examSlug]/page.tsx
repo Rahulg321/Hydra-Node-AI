@@ -93,6 +93,9 @@ const page = async ({
             currentUserId={loggedInUser.user.id as string}
             examTime={exam.timeAllowed}
           />
+
+          <h4>Exam Description</h4>
+          <p></p>
           <h4>Examination Instructions</h4>
           <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">
             <li>You can pause the test at any time and resume later.</li>
