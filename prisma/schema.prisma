@@ -43,7 +43,8 @@ model User {
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 
-  hasLifetimeAccess Boolean @default(false)
+  hasLifetimeAccess Boolean    @default(false)
+  Purchase          Purchase[]
 }
 
 model Payment {
@@ -170,8 +171,23 @@ model Exam {
   QuizSession     QuizSession[]
 
   // questions to show to the user
-  questionsToShow Int     @default(10) // Default value, can be adjusted
+  questionsToShow Int        @default(10) // Default value, can be adjusted
   description     String? // Description of the exam
+  Purchase        Purchase[]
+}
+
+model Purchase {
+  id           String   @id @default(cuid())
+  userId       String
+  examId       String
+  purchaseDate DateTime @default(now())
+  amount       Float
+  currency     String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exam Exam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, examId]) // Ensure that a user cannot purchase the same exam multiple times
 }
 
 enum ExamModeValues {

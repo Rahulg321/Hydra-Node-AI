@@ -63,8 +63,13 @@ const page = async ({
         <div>
           <span className="block font-bold">Certificate Details</span>
           <span className="block font-bold text-muted-foreground">
-            Number of questions:{" "}
+            Total Question Bank:{" "}
             <span className="text-baseC">{exam.questions.length}</span>
+          </span>
+
+          <span className="block font-bold text-muted-foreground">
+            Question in Exam:{" "}
+            <span className="text-baseC">{exam.questionsToShow}</span>
           </span>
           <span className="block font-bold text-muted-foreground">
             Attempt: <span className="text-baseC">{exam.attempts}</span>
@@ -94,8 +99,12 @@ const page = async ({
             examTime={exam.timeAllowed}
           />
 
-          <h4>Exam Description</h4>
-          <p></p>
+          <div className="my-4">
+            <span className="block text-lg font-bold">Exam Description</span>
+            <span className="block text-lg font-semibold text-mutedText">
+              {exam.description}
+            </span>
+          </div>
           <h4>Examination Instructions</h4>
           <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">
             <li>You can pause the test at any time and resume later.</li>
