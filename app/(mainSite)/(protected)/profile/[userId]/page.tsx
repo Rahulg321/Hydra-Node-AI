@@ -97,6 +97,9 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: User }) {
 
   let examData = userQuizSessions.map((e) => {
     const percentageScored = e.percentageScored ?? null; // Assign null if undefined
+
+    const flooredPercentageScored = percentageScored?.toFixed(2);
+
     const passFailStatus =
       percentageScored !== null && percentageScored >= 50 ? "Pass" : "Fail";
     const statusClass =
@@ -104,12 +107,15 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: User }) {
         ? "text-green-500"
         : "text-red-500";
 
+    const formattedDate = formatDateWithSuffix(new Date(e.createdAt));
+
     return {
       id: e.id,
       examName: e.exam.name,
-      date: e.createdAt.toLocaleString(),
+      date: formattedDate,
       examMode: e.examMode,
-      percentageScored: percentageScored !== null ? percentageScored : 0, // Handle display if undefined
+      percentageScored:
+        flooredPercentageScored !== null ? flooredPercentageScored : 0, // Handle display if undefined
       totalQuestions: e.exam.questions.length,
       difficultyLevel: e.exam.examLevel,
       correctAnswers: e.correctAnswers,

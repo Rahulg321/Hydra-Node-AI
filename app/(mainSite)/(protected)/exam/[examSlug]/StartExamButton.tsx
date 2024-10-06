@@ -45,6 +45,7 @@ const StartExamButton = ({
     try {
       // Check if the user has access (subscription)
       const hasAccessResponse = await axios.post("/api/hasAccess", {
+        examId,
         currentUserId,
       });
 

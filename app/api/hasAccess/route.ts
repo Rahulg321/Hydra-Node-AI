@@ -1,14 +1,15 @@
 import db from "@/lib/db";
+import { checkIfUserHasPurchasedExam } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     // Extract userId from the request body (POST request)
-    const { currentUserId } = await req.json();
+    const { currentUserId, examId } = await req.json();
 
-    if (!currentUserId) {
+    if (!currentUserId || !examId) {
       return NextResponse.json(
-        { error: "Missing userId in the request body" },
+        { error: "Missing userId or examId in the request body" },
         { status: 400 },
       );
     }
@@ -27,14 +28,24 @@ export async function POST(req: Request) {
     }
 
     // Check if the user has an active subscription
+    // Check if the user has an active subscription
     const hasActiveSubscription =
       user.stripeCurrentPeriodEnd &&
       new Date(user.stripeCurrentPeriodEnd) > new Date();
 
+    // Check if the user has purchased the specific exam
+    const hasPurchasedExam = await checkIfUserHasPurchasedExam(
+      currentUserId,
+      examId,
+    );
+
+    console.log("give user access in api he has purchased exam");
+
     // Return access status
     return NextResponse.json(
       {
-        hasAccess: user.hasLifetimeAccess || hasActiveSubscription,
+        hasAccess:
+          user.hasLifetimeAccess || hasActiveSubscription || hasPurchasedExam,
       },
       {
         status: 200,

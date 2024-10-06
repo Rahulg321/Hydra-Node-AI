@@ -19,10 +19,13 @@ export const AUTH_ROUTES = [
 export const PROTECTED_ROUTES = [
   "/settings",
   "/product",
+  "/vendors",
   "/exam",
   "/dashboard",
   "/profile",
 ];
+
+export const PROTECTED_BASE_ROUTES = ["/vendors", "/exam"];
 
 /**
  *

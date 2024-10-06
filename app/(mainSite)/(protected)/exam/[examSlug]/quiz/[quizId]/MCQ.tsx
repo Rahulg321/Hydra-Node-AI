@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useExamModeContext } from "@/lib/exam-mode-context";
 import { cn, formatTime } from "@/lib/utils";
@@ -17,6 +18,9 @@ import React, {
   useState,
   useTransition,
 } from "react";
+import EndQuizButton from "./EndQuizButton";
+import TimeLeft from "./TimeLeft";
+import CorrectQuestionGrid from "./CorrectQuestionGrid";
 
 type McqProps = {
   quizSession: QuizSession;
@@ -344,14 +348,25 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                       },
                     )}
                   >
-                    <div
-                      className={cn(
-                        "size-4 rounded-full border border-base transition duration-75 ease-in",
-                        {
-                          "border-4 border-white": isSelected,
-                        },
-                      )}
-                    ></div>
+                    {currentQuestion.type === "MULTI_SELECT" ? (
+                      // Render a checkbox for MULTI_SELECT question types
+                      <Input
+                        type="checkbox"
+                        checked={isSelected}
+                        readOnly
+                        className="form-checkbox h-5 w-5 text-base"
+                      />
+                    ) : (
+                      // Render a circle for MCQ question types
+                      <div
+                        className={cn(
+                          "size-4 rounded-full border border-base transition duration-75 ease-in",
+                          {
+                            "border-4 border-white": isSelected,
+                          },
+                        )}
+                      ></div>
+                    )}
                     <h5 className={cn("", { "text-white": isSelected })}>
                       {optionObj.option}
                     </h5>
@@ -415,94 +430,3 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 };
 
 export default MCQ;
-
-function TimeLeft({
-  time,
-  isTimeCritical,
-  quizEnded = false,
-}: {
-  time: string;
-  isTimeCritical: boolean;
-  quizEnded?: boolean;
-}) {
-  return (
-    <div
-      className={cn("rounded-lg bg-base p-4 text-center text-white", {
-        "bg-red-500": isTimeCritical,
-      })}
-    >
-      {quizEnded ? (
-        <div>
-          <h3>Exam Ended</h3>
-        </div>
-      ) : (
-        <div>
-          <h4>Time Left</h4>
-          <h3>{time}</h3>
-        </div>
-      )}
-    </div>
-  );
-}
-
-type QuestionGridProps = {
-  questionLength: number;
-  questionStatus: (string | null)[];
-};
-
-function CorrectQuestionGrid({
-  questionLength,
-  questionStatus,
-}: QuestionGridProps) {
-  return (
-    <div className="bg-muted p-4">
-      <div className="grid grid-cols-6 gap-2">
-        {Array.from({ length: questionLength }).map((_, index) => {
-          let statusClass = "border-base";
-          if (questionStatus[index] === "attempted") {
-            statusClass = "bg-green-500 border-green-500";
-          } else if (questionStatus[index] === "skipped") {
-            statusClass = "bg-yellow-500 border-yellow-500";
-          }
-          return (
-            <div
-              key={index}
-              className={`size-8 rounded-lg border ${statusClass}`}
-            ></div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function EndQuizButton({
-  quizSession,
-  setHasEnded,
-}: {
-  quizSession: QuizSession;
-  setHasEnded: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const [isPending, startTransition] = useTransition();
-
-  return (
-    <Button
-      variant={"destructive"}
-      onClick={() => {
-        startTransition(async () => {
-          // timeout of 3 sec
-          // await new Promise((resolve) => setTimeout(resolve, 3000));
-
-          const response = await axios.post("/api/EndQuiz", {
-            quizSessionId: quizSession.id,
-          });
-          setHasEnded(true);
-        });
-      }}
-      className="w-full rounded-full px-10 py-6 text-base"
-      disabled={isPending}
-    >
-      {isPending ? "Ending Exam" : "End Exam"}
-    </Button>
-  );
-}

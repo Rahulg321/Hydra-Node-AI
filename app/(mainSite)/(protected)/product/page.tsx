@@ -1,7 +1,7 @@
 import HeroSection from "@/components/sections/product/HeroSection";
 import React from "react";
 
-const page = () => {
+const page = async () => {
   return (
     <React.Fragment>
       <HeroSection />

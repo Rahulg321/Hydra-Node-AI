@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import {
   AUTH_ROUTES,
   DEFAULT_LOGIN_REDIRECT,
+  PROTECTED_BASE_ROUTES,
   PROTECTED_ROUTES,
 } from "./routes";
 
@@ -19,6 +20,17 @@ export default auth(async function middleware(req) {
   const currentPathname = req.nextUrl.pathname;
   //   !! converts the value into its boolean equivalent
   const isLoggedIn = !!req.auth;
+
+  const isProtectedBaseRoute = PROTECTED_BASE_ROUTES.some((el) =>
+    currentPathname.startsWith(el),
+  );
+
+  if (isProtectedBaseRoute && !isLoggedIn) {
+    console.log(
+      "Access denied for not logged-in users trying to access a protected base route",
+    );
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
   if (AUTH_ROUTES.includes(currentPathname)) {
     // we are accessing an auth route

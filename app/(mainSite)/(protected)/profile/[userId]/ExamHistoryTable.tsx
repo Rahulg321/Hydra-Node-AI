@@ -14,7 +14,7 @@ interface ExamHistory {
   id: string;
   examName: string;
   date: string;
-  percentageScored?: number;
+  percentageScored?: number | string;
   totalQuestions: number;
   difficultyLevel: string;
   correctAnswers: number;

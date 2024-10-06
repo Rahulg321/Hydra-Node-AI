@@ -33,6 +33,7 @@ import { useRouter } from "next/navigation";
 import { ToastAction } from "../ui/toast";
 import Link from "next/link";
 import axios from "axios";
+import { checkIfUserHasAccessToExam } from "@/lib/utils";
 
 const MockExamForm = ({
   examId,
@@ -57,7 +58,7 @@ const MockExamForm = ({
       variant: "destructive",
       title: "Not Subscribed ❌",
       description:
-        "Subscribe to one of our pricing plans to start taking the exam.",
+        "Subscribe to one of our pricing plans or purchase this exam to access it.",
       action: (
         <ToastAction altText="Subscribe">
           <Link href="/pricing">Subscribe</Link>
@@ -82,16 +83,14 @@ const MockExamForm = ({
       try {
         setExamMode(values.examMode);
 
-        const hasAccessResponse = await axios.post("/api/hasAccess", {
+        const hasAccessResponse = await checkIfUserHasAccessToExam(
           currentUserId,
-        });
+          examId,
+        );
 
-        if (
-          hasAccessResponse.status !== 200 ||
-          !hasAccessResponse.data.hasAccess
-        ) {
+        if (!hasAccessResponse) {
           showSubscriptionToast();
-          return router.push("/pricing");
+          return;
         }
 
         const response = await CreateCustomExam(values, examId, currentUserId);

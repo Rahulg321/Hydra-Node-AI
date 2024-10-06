@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
+import { shuffleArray } from "@/lib/utils";
 
 const McqQuizPage = async ({
   params,
@@ -47,6 +48,10 @@ const McqQuizPage = async ({
       name: true,
       slug: true,
       timeAllowed: true,
+      questionsToShow: true,
+      attempts: true,
+      examLevel: true,
+      description: true,
     },
   });
 
@@ -65,9 +70,30 @@ const McqQuizPage = async ({
     },
   });
 
-  // console.log("questions passed to mcq are", questions);
+  // shuffling the questions
+  // shuffling the questions
+  const shuffled = questions.sort(() => Math.random() - 0.5);
+  // console.log("shuffled questions", shuffled);
 
-  return <MCQ quizSession={quizSession} exam={exam} questions={questions} />;
+  // fetching the limit of questions to show
+  const shuffledQuestions = shuffled.slice(0, exam.questionsToShow);
+  // console.log("shuffled questions with limit", shuffledQuestions);
+
+  // shuffling the options of those shuffled Questions so that everytime a new quiz session we get a shuffled response
+  const shuffledQuestionsWithOptions = shuffledQuestions.map((el) => {
+    return {
+      ...el,
+      options: shuffleArray(el.options),
+    };
+  });
+
+  return (
+    <MCQ
+      quizSession={quizSession}
+      exam={exam}
+      questions={shuffledQuestionsWithOptions}
+    />
+  );
 };
 
 export default McqQuizPage;

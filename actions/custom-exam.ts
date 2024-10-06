@@ -12,6 +12,9 @@ export default async function CreateCustomExam(
   // start and create a new quiz session and send the value of the quiz session back to the frontend for redirecting
   try {
     if (!examId || !currentUserId) {
+      console.error(
+        "examId or currentUserId does not exist while trying to create quiz",
+      );
       return {
         type: "error",
         message: "ExamId and currentUserId are required.",

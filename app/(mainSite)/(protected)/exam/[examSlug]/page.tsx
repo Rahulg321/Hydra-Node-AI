@@ -1,6 +1,10 @@
 import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  checkIfUserHasAccessToExam,
+  checkIfUserHasPurchasedExam,
+  cn,
+} from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 import { FaStar } from "react-icons/fa6";
@@ -10,6 +14,7 @@ import { notFound, redirect } from "next/navigation";
 import StartExamButton from "./StartExamButton";
 import { auth } from "@/auth";
 import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
+import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 
 const page = async ({
   params,
@@ -23,6 +28,28 @@ const page = async ({
   if (!loggedInUser) {
     console.log("user is not logged in");
     return redirect("/login");
+  }
+
+  const currentExam = await db.exam.findFirst({
+    where: {
+      slug: params.examSlug,
+    },
+  });
+
+  if (!currentExam) {
+    console.log("Could not find exam");
+    return redirect("/login");
+  }
+
+  const { hasAccess, message } = await checkIfUserHasAccessToExam(
+    loggedInUser.user.id as string,
+    currentExam.id,
+  );
+
+  if (hasAccess) {
+    console.log("user has access");
+  } else {
+    console.log("user does not have access");
   }
 
   // const existingUser = await db.user.findUnique({
@@ -92,12 +119,20 @@ const page = async ({
             <span>4.8 (23 reviews)</span>
           </div>
           {/* logged in user may or may not exist, should check for null or better code */}
-          <StartExamDialog
-            examId={exam.id}
-            examSlug={exam.slug}
-            currentUserId={loggedInUser.user.id as string}
-            examTime={exam.timeAllowed}
-          />
+          {hasAccess ? (
+            <div>
+              <h3>Exam Purchased!!!!</h3>
+
+              <StartExamDialog
+                examId={exam.id}
+                examSlug={exam.slug}
+                currentUserId={loggedInUser.user.id as string}
+                examTime={exam.timeAllowed}
+              />
+            </div>
+          ) : (
+            <ExamCheckoutDialog exam={exam} session={loggedInUser} />
+          )}
 
           <div className="my-4">
             <span className="block text-lg font-bold">Exam Description</span>
@@ -127,37 +162,43 @@ const page = async ({
             </li>
           </ul>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <PricingCard
-            heading="Free Trial"
-            headingTag="For 7 days"
-            tagline="Get a quick overview of our platform through the free trial and explore the potential of HydraNode."
-            price="$0"
-            duration="week"
-          />
-          <PricingCard
-            heading="Quarterly Billing"
-            headingTag="For 3 months"
-            tagline="Ideal for those who prefer short-term commitments with comprehensive features."
-            price="$50"
-            duration="monthly"
-          />
-          <PricingCard
-            heading="For 1 year"
-            headingTag="Yearly Billing"
-            tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
-            price="$100"
-            isFeatured
-            duration="year"
-          />
-          <PricingCard
-            heading="For Life time"
-            headingTag="Lifetime Billing"
-            tagline="Gain unlimited access to HydraNode’s platform and resources for life."
-            price="$200"
-            duration="week"
-          />
-        </div>
+        {hasAccess ? (
+          <div>
+            <p>You have access to this exam</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <PricingCard
+              heading="Free Trial"
+              headingTag="For 7 days"
+              tagline="Get a quick overview of our platform through the free trial and explore the potential of HydraNode."
+              price="$0"
+              duration="week"
+            />
+            <PricingCard
+              heading="Quarterly Billing"
+              headingTag="For 3 months"
+              tagline="Ideal for those who prefer short-term commitments with comprehensive features."
+              price="$50"
+              duration="monthly"
+            />
+            <PricingCard
+              heading="For 1 year"
+              headingTag="Yearly Billing"
+              tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
+              price="$100"
+              isFeatured
+              duration="year"
+            />
+            <PricingCard
+              heading="For Life time"
+              headingTag="Lifetime Billing"
+              tagline="Gain unlimited access to HydraNode’s platform and resources for life."
+              price="$200"
+              duration="week"
+            />
+          </div>
+        )}
       </div>
     </section>
   );
