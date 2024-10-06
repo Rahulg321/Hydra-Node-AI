@@ -4,6 +4,7 @@ import {
   checkIfUserHasAccessToExam,
   checkIfUserHasPurchasedExam,
   cn,
+  getSession,
 } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
@@ -15,13 +16,20 @@ import StartExamButton from "./StartExamButton";
 import { auth } from "@/auth";
 import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
+import { showSuccessfulPurchase } from "@/lib/ResuableToasts";
+import { stripe } from "@/lib/stripe";
+import SuccessfullPaymentDialog from "@/components/Dialogs/SuccessfullPaymentDialog";
+
+export const dynamic = "force-dynamic";
 
 const page = async ({
   params,
+  searchParams,
 }: {
   params: {
     examSlug: string;
   };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const loggedInUser = await auth();
 

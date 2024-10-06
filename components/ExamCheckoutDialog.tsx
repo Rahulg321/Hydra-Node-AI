@@ -42,13 +42,14 @@ const ExamCheckoutDialog = ({ exam, session }: CheckoutDialogProps) => {
         priceId,
         userId: session.user.id,
         examId: exam.id,
+        examSlug: exam.slug,
         userEmail: session.user.email,
         mode: "payment",
       }),
     })
       .then((res) => res.json())
       .then((data) => data.client_secret);
-  }, [session, priceId, exam.id]);
+  }, [session, priceId, exam.id, exam.slug]);
 
   const options = { fetchClientSecret };
 

@@ -87,6 +87,8 @@ const McqQuizPage = async ({
     };
   });
 
+  console.log("shuffled array with questions is", shuffledQuestionsWithOptions);
+
   return (
     <MCQ
       quizSession={quizSession}

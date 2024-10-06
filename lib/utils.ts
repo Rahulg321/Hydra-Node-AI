@@ -1,9 +1,20 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import db from "./db";
+import { stripe } from "./stripe";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export async function getSession(sessionId: string) {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return session;
+  } catch (error) {
+    console.error("Error retrieving session:", error);
+    return null;
+  }
 }
 
 export function shuffleArray<T>(array: T[]): T[] {
