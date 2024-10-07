@@ -3,6 +3,51 @@ import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
 import { shuffleArray } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
+// export async function generateStaticParams() {
+//   let exams = await getAllExams();
+
+//   return exams?.map((e) => ({
+//     examSlug: e.slug,
+//   }));
+// }
+
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: { examSlug: string };
+// }) {
+//   let post = await getExamWithSlug(params.examSlug);
+
+//   if (!post) {
+//     return;
+//   }
+
+//   return {
+//     title: post.name,
+//     description: post.description,
+//     // openGraph: {
+//     //   title,
+//     //   description,
+//     //   type: "article",
+//     //   publishedTime,
+//     //   url: `${baseUrl}/blog/${post.slug}`,
+//     //   images: [
+//     //     {
+//     //       url: ogImage,
+//     //     },
+//     //   ],
+//     // },
+//     // twitter: {
+//     //   card: "summary_large_image",
+//     //   title,
+//     //   description,
+//     //   images: [ogImage],
+//     // },
+//   };
+// }
+
 const McqQuizPage = async ({
   params,
 }: {
