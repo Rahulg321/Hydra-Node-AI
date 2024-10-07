@@ -27,7 +27,6 @@ export default async function Home() {
       <UnlimitedRewardsSection />
       <FeaturedBlogsSection />
       <FAQSection />
-      <HomeContactSection />
     </React.Fragment>
   );
 }

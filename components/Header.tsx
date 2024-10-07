@@ -28,20 +28,13 @@ type HeaderProps = {
   classname?: string;
 };
 
-const mobileNav = [
-  { navlink: "/product", navlabel: "Product" },
-  { navlink: "/token", navlabel: "Token" },
-  { navlink: "/about-us", navlabel: "About Us" },
-  { navlink: "/pricing", navlabel: "Pricing" },
-  { navlink: "/reward", navlabel: "Reward" },
-];
-
 const desktopNav = [
   { navlink: "/product", navlabel: "Product" },
   { navlink: "/token", navlabel: "Token" },
   { navlink: "/about-us", navlabel: "About Us" },
   { navlink: "/pricing", navlabel: "Pricing" },
   { navlink: "/reward", navlabel: "Reward" },
+  { navlink: "/contact-us", navlabel: "Contact" },
 ];
 
 const Header = ({ session, classname }: HeaderProps) => {
@@ -94,7 +87,7 @@ const Header = ({ session, classname }: HeaderProps) => {
               >
                 <MdClose />
               </button>
-              {mobileNav.map((item, index) => {
+              {desktopNav.map((item, index) => {
                 return (
                   <Link
                     href={item.navlink}

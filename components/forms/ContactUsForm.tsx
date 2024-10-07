@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -20,28 +20,84 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   ContactFormSchema,
-  ContactFormZodType,
+  ContactFormSchemaZodType,
 } from "@/lib/schemas/ContactFormSchema";
 import { Textarea } from "../ui/textarea";
+import submitContactForm from "@/actions/contact-email";
+import { useToast } from "@/hooks/use-toast";
 
 const ContactUsForm = () => {
-  const form = useForm<ContactFormSchema>({
-    resolver: zodResolver(ContactFormZodType),
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<ContactFormSchemaZodType>({
+    resolver: zodResolver(ContactFormSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       message: "",
     },
   });
 
-  function onSubmit(values: ContactFormSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  function onSubmit(values: ContactFormSchemaZodType) {
+    startTransition(async () => {
+      const response = await submitContactForm(values);
+      if (response.status) {
+        toast({
+          title: "Submitted Contact Form ✅",
+          description: response.message,
+        });
+        form.reset();
+      } else {
+        toast({
+          title: "Submitted Contact Form ❌",
+          variant: "destructive",
+          description: response.message,
+        });
+      }
+    });
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="john..."
+                  {...field}
+                  className="border-none bg-gray-700 placeholder:text-gray-400"
+                />
+              </FormControl>
+              <FormDescription>Enter First Name.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="doe....."
+                  {...field}
+                  className="border-none bg-gray-700 placeholder:text-gray-400"
+                />
+              </FormControl>
+              <FormDescription>Enter Last Name.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -51,6 +107,7 @@ const ContactUsForm = () => {
               <FormControl>
                 <Input
                   placeholder="johndoe@gmail.com"
+                  type="email"
                   {...field}
                   className="border-none bg-gray-700 placeholder:text-gray-400"
                 />
@@ -79,8 +136,12 @@ const ContactUsForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full bg-base p-4 text-lg text-white">
-          Get Started
+        <Button
+          type="submit"
+          className="w-full bg-base p-4 text-white"
+          disabled={isPending}
+        >
+          {isPending ? "Submitting" : "Submit"}
         </Button>
       </form>
     </Form>

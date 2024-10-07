@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 // Define the schema for the contact form
-export const ContactFormZodType = z.object({
+export const ContactFormSchema = z.object({
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   message: z
     .string()
@@ -10,4 +12,4 @@ export const ContactFormZodType = z.object({
 });
 
 // Define the TypeScript type for the contact form data
-export type ContactFormSchema = z.infer<typeof ContactFormZodType>;
+export type ContactFormSchemaZodType = z.infer<typeof ContactFormSchema>;

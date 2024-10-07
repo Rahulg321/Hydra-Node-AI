@@ -7,6 +7,7 @@ import { TwoFactorEmail } from "@/components/emails/TwoFactorEmail";
 import PaymentSuccessfull from "@/components/emails/PaymentSuccessfull";
 import React from "react";
 import PaymentErrorEmail from "@/components/emails/PaymentError";
+import ContactMessageEmail from "@/components/emails/ContactFormEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -133,6 +134,35 @@ export const sendVerificationTokenEmail = async (
   });
 
   console.log("sending verification token email", data, error);
+
+  if (error) {
+    console.log("error sending email", error.name, error.message);
+    return {
+      error: `could not send email -> ${error.message}}`,
+    };
+  }
+};
+
+export const sendContactFormEmail = async (
+  email: string,
+  firstName: string,
+  lastName: string,
+  message: string,
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "Acme <onboarding@resend.dev>",
+    to: ["rg5353070@gmail.com"],
+    replyTo: email,
+    subject: "Contact Inquiry from HydraNode",
+    react: ContactMessageEmail({
+      firstName,
+      lastName,
+      email,
+      message,
+    }),
+  });
+
+  console.log("sending contact form email", data, error);
 
   if (error) {
     console.log("error sending email", error.name, error.message);
