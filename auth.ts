@@ -20,6 +20,7 @@ declare module "next-auth" {
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  debug: true,
   adapter: PrismaAdapter(db),
   pages: {
     signIn: "/login",

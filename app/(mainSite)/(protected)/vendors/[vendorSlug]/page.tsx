@@ -48,7 +48,7 @@ const page = async ({
               <Link
                 href={`/exam/${exam.slug}`}
                 key={exam.id}
-                className="cursor-pointer"
+                className="cursor-pointer underline-offset-2 transition-all duration-300 ease-in-out hover:underline"
               >
                 {exam.name}
               </Link>
