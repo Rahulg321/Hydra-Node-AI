@@ -1,7 +1,15 @@
 import HeroSection from "@/components/sections/product/HeroSection";
 import React from "react";
 
-const page = async () => {
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Product",
+  description:
+    "View our Product, find all the different exams available for you to take!!",
+};
+
+const ProductsPage = async () => {
   return (
     <React.Fragment>
       <HeroSection />
@@ -9,4 +17,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default ProductsPage;

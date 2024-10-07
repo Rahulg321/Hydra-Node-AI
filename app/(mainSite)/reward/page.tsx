@@ -4,7 +4,14 @@ import LookRewards from "@/components/sections/reward/LookRewards";
 import RewardHeroSection from "@/components/sections/reward/RewardHeroSection";
 import React from "react";
 
-const page = () => {
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Reward",
+  description: "View all types of records you can earn with HydraNode",
+};
+
+const RewardsPage = () => {
   return (
     <React.Fragment>
       <RewardHeroSection />
@@ -15,4 +22,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default RewardsPage;

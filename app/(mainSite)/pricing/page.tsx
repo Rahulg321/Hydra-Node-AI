@@ -2,7 +2,14 @@ import PricingCardSection from "@/components/sections/pricing/pricing-cards";
 import PricingHero from "@/components/sections/pricing/PricingHero";
 import React from "react";
 
-const page = () => {
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing",
+  description: "View our pricing plans and find the one that works for you",
+};
+
+const PricingPage = () => {
   return (
     <React.Fragment>
       <PricingHero />
@@ -11,4 +18,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PricingPage;

@@ -1,28 +1,61 @@
 import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
 import { Button } from "@/components/ui/button";
-import {
-  checkIfUserHasAccessToExam,
-  checkIfUserHasPurchasedExam,
-  cn,
-  getSession,
-} from "@/lib/utils";
-import Link from "next/link";
+import { checkIfUserHasAccessToExam, cn } from "@/lib/utils";
 import React from "react";
 import { FaStar } from "react-icons/fa6";
-import RedMedal from "@/public/RedMedal.png";
 import db from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
-import StartExamButton from "./StartExamButton";
 import { auth } from "@/auth";
 import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
-import { showSuccessfulPurchase } from "@/lib/ResuableToasts";
-import { stripe } from "@/lib/stripe";
-import SuccessfullPaymentDialog from "@/components/Dialogs/SuccessfullPaymentDialog";
+import { getAllExams, getExamWithSlug } from "@/data/exam";
 
 export const dynamic = "force-dynamic";
 
-const page = async ({
+export async function generateStaticParams() {
+  let exams = await getAllExams();
+
+  return exams?.map((e) => ({
+    examSlug: e.slug,
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { examSlug: string };
+}) {
+  let post = await getExamWithSlug(params.examSlug);
+
+  if (!post) {
+    return;
+  }
+
+  return {
+    title: post.name,
+    description: post.description,
+    // openGraph: {
+    //   title,
+    //   description,
+    //   type: "article",
+    //   publishedTime,
+    //   url: `${baseUrl}/blog/${post.slug}`,
+    //   images: [
+    //     {
+    //       url: ogImage,
+    //     },
+    //   ],
+    // },
+    // twitter: {
+    //   card: "summary_large_image",
+    //   title,
+    //   description,
+    //   images: [ogImage],
+    // },
+  };
+}
+
+const ExamPage = async ({
   params,
   searchParams,
 }: {
@@ -212,7 +245,7 @@ const page = async ({
   );
 };
 
-export default page;
+export default ExamPage;
 
 function PricingCard({
   classname,
