@@ -9,10 +9,43 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { manrope, poppins } from "../fonts";
 import { ExamModeProvider } from "@/lib/exam-mode-context";
+import { baseUrl } from "../sitemap";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
-  title: "Hydronode AI",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Hydronode AI",
+    template: "%s | Hydronode AI",
+  },
   description: "AI Powered Remote Learning Platform",
+  openGraph: {
+    title: "Hydronode AI",
+    description: "AI Powered Remote Learning Platform",
+    url: baseUrl,
+    siteName: "Hydronode AI",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  twitter: {
+    title: "HydraNode AI",
+
+    card: "summary_large_image",
+  },
+  verification: {
+    google: "4RCrNU4mc2UMomzqwPASL7m0L_Mv_fePZrGOPHe0MIU",
+  },
 };
 
 export default async function RootLayout({
@@ -50,6 +83,7 @@ export default async function RootLayout({
           </SessionProvider>
         </ExamModeProvider>
       </body>
+      <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>
   );
 }
