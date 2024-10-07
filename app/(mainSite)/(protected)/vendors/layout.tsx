@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
+import VendorButton from "./VendorButton";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const vendors = await db.vendor.findMany();
@@ -21,24 +22,3 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 };
 
 export default layout;
-
-function VendorButton({
-  vendor,
-}: {
-  vendor: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-}) {
-  return (
-    <Link
-      className={cn(
-        "block rounded-md border-l-4 border-base bg-[#F5F8FE] px-4 py-2 text-muted-foreground",
-      )}
-      href={`/vendors/${vendor.slug}`}
-    >
-      {vendor.name}
-    </Link>
-  );
-}
