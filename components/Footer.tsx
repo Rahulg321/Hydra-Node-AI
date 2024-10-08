@@ -27,20 +27,18 @@ const companyLinks = [
   },
 ];
 
-
-
 const legalLinks = [
   {
     name: "Privacy Policy",
-    href: "*",
+    href: "/privacy-policy",
   },
   {
-    name: "Terns of Use",
-    href: "*",
+    name: "Cookie Policy",
+    href: "/cookie-policy",
   },
   {
     name: "Terms of Service",
-    href: "*",
+    href: "/terms-of-service",
   },
 ];
 
