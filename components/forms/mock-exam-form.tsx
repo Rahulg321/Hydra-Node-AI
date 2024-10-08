@@ -108,7 +108,6 @@ const MockExamForm = ({
           console.log("successfully started quiz session from dialog");
           toast({
             title: "Quiz Created🎉🥲",
-            variant: "success",
             description: response.message || "Successfully started Quiz",
           });
           router.push(`/exam/${examSlug}/quiz/${response.quizSessionId}`);
