@@ -67,7 +67,6 @@ const StartExamButton = ({
       if (quizResponse.status === 200) {
         const { quizSessionId } = quizResponse.data;
         toast({
-          variant: "success",
           title: "Quiz Successful 🎉",
           description: "Quiz session created successfully.",
         });
