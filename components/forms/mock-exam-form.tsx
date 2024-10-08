@@ -110,6 +110,7 @@ const MockExamForm = ({
             title: "Quiz Created🎉🥲",
             description: response.message || "Successfully started Quiz",
           });
+
           router.push(`/exam/${examSlug}/quiz/${response.quizSessionId}`);
         }
 
