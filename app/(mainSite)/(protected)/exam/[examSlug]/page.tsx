@@ -12,13 +12,13 @@ import { getAllExams, getExamWithSlug } from "@/data/exam";
 
 export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  let exams = await getAllExams();
+// export async function generateStaticParams() {
+//   let exams = await getAllExams();
 
-  return exams?.map((e) => ({
-    examSlug: e.slug,
-  }));
-}
+//   return exams.map((e) => ({
+//     examSlug: e.slug,
+//   }));
+// }
 
 export async function generateMetadata({
   params,
