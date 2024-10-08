@@ -2,7 +2,7 @@ import React from "react";
 
 const PrivacyPolicyPage = () => {
   return (
-    <section>
+    <section className="narrow-container block-space">
       <h2>Privacy Policy</h2>
       <p>
         Your privacy is important to us. It is HydraNode&apos;s policy to
