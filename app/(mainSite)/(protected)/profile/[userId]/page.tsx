@@ -65,7 +65,7 @@ function CertificateUploadSection() {
   return (
     <div className="container col-span-2 rounded-xl bg-white py-4">
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="picture">Certificate Upload</Label>
+        <Label htmlFor="picture">Purchased Exam</Label>
         <Input id="picture" type="file" className="" />
         <span className="text-sm text-muted-foreground">
           Only supports .jpg, .png, .svg, .pdf and .zip files

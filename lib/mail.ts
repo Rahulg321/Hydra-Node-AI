@@ -151,7 +151,7 @@ export const sendContactFormEmail = async (
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Acme <onboarding@resend.dev>",
-    to: ["rg5353070@gmail.com"],
+    to: ["rg5353070@gmail.com", "contact@hydranode.ai"],
     replyTo: email,
     subject: "Contact Inquiry from HydraNode",
     react: ContactMessageEmail({
