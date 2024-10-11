@@ -45,7 +45,7 @@ const QuizResultsPage = async ({ params }: props) => {
 
   console.log("quiz session in results page", currentQuizSession);
 
-  let examTimeInMinutes = currentQuizSession.exam.timeAllowed;
+  let examTimeInMinutes = currentQuizSession.examTime;
   let totalQuestions = currentQuizSession.exam.questions.length;
   let startTime = currentQuizSession.startTime;
   let endTime = currentQuizSession.endTime;

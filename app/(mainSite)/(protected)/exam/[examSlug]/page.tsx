@@ -9,6 +9,7 @@ import { auth } from "@/auth";
 import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import { getAllExams, getExamWithSlug } from "@/data/exam";
+import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
 
 export const dynamic = "force-dynamic";
 
@@ -163,13 +164,20 @@ const ExamPage = async ({
           {hasAccess ? (
             <div>
               <h3>Exam Purchased!!!!</h3>
-
-              <StartExamDialog
+              <MultiStepExamDialog
                 examId={exam.id}
                 examSlug={exam.slug}
                 currentUserId={loggedInUser.user.id as string}
                 examTime={exam.timeAllowed}
+                examLevel={exam.examLevel}
+                examName={exam.name}
               />
+              {/* <StartExamDialog
+                examId={exam.id}
+                examSlug={exam.slug}
+                currentUserId={loggedInUser.user.id as string}
+                examTime={exam.timeAllowed}
+              /> */}
             </div>
           ) : (
             <ExamCheckoutDialog exam={exam} session={loggedInUser} />
@@ -204,8 +212,17 @@ const ExamPage = async ({
           </ul>
         </div>
         {hasAccess ? (
-          <div>
-            <p>You have access to this exam</p>
+          <div
+            className="rounded-md border-l-4 border-green-500 bg-green-100 p-4 text-green-700 shadow-md"
+            role="alert"
+          >
+            <p className="text-xl font-bold">
+              Exam Purchased! <span className="ml-2">🎉</span>
+            </p>
+            <p className="text-lg">You have access to this exam.</p>
+            <div>
+              <p>{exam.description}</p>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

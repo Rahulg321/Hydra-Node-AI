@@ -176,7 +176,6 @@ function AuthDialogNavs() {
   return (
     <div className="hidden space-x-4 md:flex md:items-center">
       <Link href={"/login"}>Login</Link>
-      <Link href={"/signup"}>Signup</Link>
     </div>
   );
 }

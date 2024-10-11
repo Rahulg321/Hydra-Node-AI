@@ -56,7 +56,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   );
 
   const { toast } = useToast();
-  const totalTime = exam.timeAllowed * 60;
+  const totalTime = quizSession.examTime * 60;
   const [showAnswer, setShowAnswer] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<number[]>([]);

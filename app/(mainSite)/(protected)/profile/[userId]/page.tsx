@@ -18,12 +18,15 @@ import { formatDateWithSuffix } from "@/lib/utils";
 import { stripe } from "@/lib/stripe";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
 
 type ProfilePageProps = {
   params: {
     userId: string;
   };
 };
+
+export const dynamic = "true";
 
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const session = await auth();
@@ -77,7 +80,6 @@ async function PurchasedExamHistorySection({
   currentSession: Session;
 }) {
   // Simulate loading delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const purchasedExams = await db.purchase.findMany({
     where: {
@@ -180,7 +182,6 @@ function CertificateUploadSection() {
 async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
   const { id } = loggedInUser.user;
   // wait for 3 sec
-  await new Promise((resolve) => setTimeout(resolve, 10000));
   const userQuizSessions = await db.quizSession.findMany({
     where: {
       userId: id,
@@ -240,25 +241,14 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
   );
 }
 
-function ConnectWalletSection() {
-  return (
-    <div className="container col-span-1 space-y-4 rounded-xl bg-white py-4">
-      <h4>Connect your Wallet</h4>
-      <span className="block text-sm text-muted-foreground">
-        Upload wallet address to receive reward direct in your wallet
-      </span>
-      <ConnectWalletForm />
-    </div>
-  );
-}
-
 async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
   // wait for 3 sec
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+
+  const { id } = loggedInUser.user;
 
   const existingUser = await db.user.findUnique({
     where: {
-      id: loggedInUser.user.id,
+      id: id,
     },
   });
 
@@ -307,9 +297,7 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
         <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
           Manage Subscription
         </Button>
-        <Button className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white">
-          Cancel Plan
-        </Button>
+        <CancelSubscriptionButton userId={id!} />
       </div>
     );
   }
@@ -393,6 +381,18 @@ async function ProfileSidebar({ session }: { session: Session }) {
         Purchase a Plan
       </Button>
       <SignOutButton />
+    </div>
+  );
+}
+
+function ConnectWalletSection() {
+  return (
+    <div className="container col-span-1 space-y-4 rounded-xl bg-white py-4">
+      <h4>Connect your Wallet</h4>
+      <span className="block text-sm text-muted-foreground">
+        Upload wallet address to receive reward direct in your wallet
+      </span>
+      <ConnectWalletForm />
     </div>
   );
 }

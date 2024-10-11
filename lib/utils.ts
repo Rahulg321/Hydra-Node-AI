@@ -2,6 +2,13 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import db from "./db";
 import { stripe } from "./stripe";
+import { format } from "date-fns"; // Assuming you're using date-fns or similar for date formatting
+
+// Helper function to compare dates
+const isTrialExpired = (trialEndDate: Date): boolean => {
+  const currentDate = new Date();
+  return currentDate > trialEndDate; // Returns true if the trial end date is in the past
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -117,8 +124,12 @@ export async function checkIfUserHasAccessToExam(
 
     const userHasSubscription = await checkIfUserHasSubscription(userId);
 
+    const userHasTrialAccess = await checkIfUserHasTrialAccess(userId);
+
     const userHasExamAccess =
-      userHasPurchasedExam.status || userHasSubscription.status;
+      userHasPurchasedExam.status ||
+      userHasSubscription.status ||
+      userHasTrialAccess.status;
 
     return {
       hasAccess: userHasExamAccess ? true : false,
@@ -131,6 +142,44 @@ export async function checkIfUserHasAccessToExam(
     return {
       hasAccess: false,
       message: "An error occurred while checking access to the exam.",
+    };
+  }
+}
+
+export async function checkIfUserHasTrialAccess(userId: string) {
+  try {
+    // Query the Purchase table to check the trial period
+    const currentUser = await db.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!currentUser) {
+      throw new Error("Could not find user");
+    }
+
+    let hasTrialAccess;
+
+    if (isTrialExpired(currentUser.trialEndsAt!)) {
+      console.log("users trial period has expired");
+      hasTrialAccess = false;
+    } else {
+      console.log("users has access to the exam for this trial period");
+      hasTrialAccess = true;
+    }
+
+    return {
+      status: hasTrialAccess,
+      message: hasTrialAccess
+        ? "User has trial access."
+        : "User's trial period has expired.",
+    };
+  } catch (error) {
+    console.error("Error checking trial access:", error);
+    return {
+      status: false,
+      message: "An error occurred while checking the trial access.",
     };
   }
 }

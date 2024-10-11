@@ -74,14 +74,12 @@ export default async function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={clsx("", poppins.variable, manrope.variable)}>
-        <ExamModeProvider>
-          <SessionProvider>
-            <Header session={session} />
-            {children}
-            <Footer />
-            <Toaster />
-          </SessionProvider>
-        </ExamModeProvider>
+        <SessionProvider>
+          <Header session={session} />
+          {children}
+          <Footer />
+          <Toaster />
+        </SessionProvider>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>
