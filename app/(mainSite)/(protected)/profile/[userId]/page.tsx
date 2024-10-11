@@ -26,8 +26,6 @@ type ProfilePageProps = {
   };
 };
 
-export const dynamic = "true";
-
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const session = await auth();
 
