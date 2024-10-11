@@ -109,7 +109,7 @@ async function PurchasedExamHistorySection({
   }
 
   return (
-    <div className="container col-span-4 space-y-4 rounded-xl bg-white py-4">
+    <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
       <h2 className="text-lg font-semibold text-gray-700">
         Purchased Exam History
       </h2>
@@ -266,16 +266,16 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
     return null;
   }
 
-  if (existingUser.hasLifetimeAccess) {
-    return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
-        <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
-        <p className="text-muted-foreground">
-          Enjoy unlimited access to all services. No further payments required.
-        </p>
-      </div>
-    );
-  }
+  // if (existingUser.hasLifetimeAccess) {
+  //   return (
+  //     <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+  //       <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
+  //       <p className="text-muted-foreground">
+  //         Enjoy unlimited access to all services. No further payments required.
+  //       </p>
+  //     </div>
+  //   );
+  // }
 
   if (existingUser.stripeCurrentPeriodEnd) {
     const subscriptionEndDate = new Date(existingUser.stripeCurrentPeriodEnd);
