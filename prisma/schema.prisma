@@ -45,6 +45,8 @@ model User {
 
   hasLifetimeAccess Boolean    @default(false)
   Purchase          Purchase[]
+
+  trialEndsAt DateTime? @map(name: "trial_ends_at") // Tracks when the user's free trial ends
 }
 
 model Payment {

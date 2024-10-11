@@ -25,6 +25,7 @@ export default {
           const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (isPasswordValid) {
+            console.log("user authorized, valid credentials");
             return user;
           }
         }

@@ -10,6 +10,7 @@ import db from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationTokenEmail } from "@/lib/mail";
+import { addDays } from "date-fns";
 
 export async function SignUpUser(values: SignUpFormSchema) {
   try {
@@ -23,6 +24,7 @@ export async function SignUpUser(values: SignUpFormSchema) {
     const { firstName, lastName, email, password } = validatedFields.data;
 
     const existingUser = await getUserByEmail(email);
+
     if (existingUser) {
       // Check if the user is already verified
       if (existingUser.emailVerified) {
@@ -36,6 +38,7 @@ export async function SignUpUser(values: SignUpFormSchema) {
         // Resend verification email
         let retries = 3;
         let emailSent = false;
+
         while (retries > 0 && !emailSent) {
           const response = await sendVerificationTokenEmail(
             email,
@@ -68,6 +71,7 @@ export async function SignUpUser(values: SignUpFormSchema) {
         lastName,
         email,
         password: hashedPassword,
+        trialEndsAt: addDays(new Date(), 7), // Adds 7 days from now
       },
     });
 

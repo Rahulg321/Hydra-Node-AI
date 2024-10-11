@@ -4,11 +4,13 @@ const TermsOfServicePage = () => {
   return (
     <section className="narrow-container block-space">
       <h2>Terms of Service</h2>
+
       <p>
         These Terms of Service govern your use of the website located at&nbsp;
         <a href="https://hydranode.ai">https://hydranode.ai</a>&nbsp;and any
         related services provided by HydraNode.
       </p>
+
       <p>
         By accessing&nbsp;
         <a href="https://hydranode.ai">https://hydranode.ai</a>, you agree to

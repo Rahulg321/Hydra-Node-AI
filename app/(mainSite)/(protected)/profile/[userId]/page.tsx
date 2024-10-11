@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import TokenGraph from "./TokenGraph";
 import ProfileForm from "@/components/forms/ProfileForm";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,8 @@ import db from "@/lib/db";
 import { User } from "@prisma/client";
 import { formatDateWithSuffix } from "@/lib/utils";
 import { stripe } from "@/lib/stripe";
+import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ProfilePageProps = {
   params: {
@@ -31,35 +33,135 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
     redirect("/login");
   }
 
-  const existingUser = await db.user.findUnique({
-    where: {
-      id: session.user.id,
-    },
-  });
-
-  if (!existingUser) {
-    console.log("could not find an user in the database");
-    return redirect("/login");
-  }
-
   return (
     <React.Fragment>
       <section className="grid min-h-screen grid-cols-5 gap-6 bg-[#F5F4FA] px-4 py-4">
         <ProfileSidebar session={session} />
-        <CertificateUploadSection />
-        <CurrentPlanSection loggedInUser={existingUser} />
-        <ExamHistorySection loggedInUser={existingUser} />
-        <ConnectWalletSection />
-        <EarnedRewardSection />
-      </section>
-      <section>
-        <TokenGraph />
+        <Suspense
+          fallback={
+            <div>
+              <Skeleton className="h-[200px] w-full" />
+            </div>
+          }
+        >
+          <PurchasedExamHistorySection currentSession={session} />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div>
+              <Skeleton className="h-[150px] w-full" />
+            </div>
+          }
+        >
+          <CurrentPlanSection loggedInUser={session} />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div>
+              <Skeleton className="h-[200px] w-full" />
+            </div>
+          }
+        >
+          <ExamHistorySection loggedInUser={session} />
+        </Suspense>
       </section>
     </React.Fragment>
   );
 };
 
 export default ProfilePage;
+
+async function PurchasedExamHistorySection({
+  currentSession,
+}: {
+  currentSession: Session;
+}) {
+  // Simulate loading delay
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const purchasedExams = await db.purchase.findMany({
+    where: {
+      userId: currentSession.user.id,
+    },
+    include: {
+      exam: true, // Include the related exam details
+    },
+  });
+
+  if (!purchasedExams || purchasedExams.length === 0) {
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center">
+        <h2 className="text-lg font-semibold text-gray-700">
+          You have not purchased any exams
+        </h2>
+        <p className="text-sm text-gray-500">
+          It looks like you haven&apos;t purchased any exams yet. Purchase an
+          exam to start practicing.
+        </p>
+        <Button
+          className="mt-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
+          asChild
+        >
+          <Link href="/pricing">Purchase an Exam</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container col-span-4 space-y-4 rounded-xl bg-white py-4">
+      <h2 className="text-lg font-semibold text-gray-700">
+        Purchased Exam History
+      </h2>
+      <table className="min-w-full table-auto border-collapse bg-white">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Exam Name
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Purchase Date
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Price
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {purchasedExams.map((exam) => {
+            const formattedDate = formatDateWithSuffix(
+              new Date(exam.purchaseDate),
+            );
+            return (
+              <tr key={exam.id} className="border-t">
+                <td className="px-4 py-2 text-sm text-gray-700">
+                  {exam.exam.name}
+                </td>
+                <td className="px-4 py-2 text-sm text-gray-500">
+                  {formattedDate}
+                </td>
+                <td className="px-4 py-2 text-sm text-gray-700">
+                  ${exam.amount.toFixed(2)}
+                </td>
+                <td className="px-4 py-2">
+                  <Link
+                    href={`/exam/${exam.exam.id}`}
+                    className="text-baseC hover:underline"
+                  >
+                    View Details
+                  </Link>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function CertificateUploadSection() {
   return (
@@ -75,9 +177,10 @@ function CertificateUploadSection() {
   );
 }
 
-async function ExamHistorySection({ loggedInUser }: { loggedInUser: User }) {
-  const { id } = loggedInUser;
-
+async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
+  const { id } = loggedInUser.user;
+  // wait for 3 sec
+  await new Promise((resolve) => setTimeout(resolve, 10000));
   const userQuizSessions = await db.quizSession.findMany({
     where: {
       userId: id,
@@ -137,17 +240,6 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: User }) {
   );
 }
 
-function EarnedRewardSection() {
-  return (
-    <div className="container col-span-4 rounded-xl bg-white py-4">
-      <h4>Earned Reward</h4>
-      <h2 className="text-center text-muted-foreground">
-        Not Recieved any Reward Yet
-      </h2>
-    </div>
-  );
-}
-
 function ConnectWalletSection() {
   return (
     <div className="container col-span-1 space-y-4 rounded-xl bg-white py-4">
@@ -160,8 +252,21 @@ function ConnectWalletSection() {
   );
 }
 
-async function CurrentPlanSection({ loggedInUser }: { loggedInUser: User }) {
-  if (loggedInUser.hasLifetimeAccess) {
+async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
+  // wait for 3 sec
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+
+  const existingUser = await db.user.findUnique({
+    where: {
+      id: loggedInUser.user.id,
+    },
+  });
+
+  if (!existingUser) {
+    return null;
+  }
+
+  if (existingUser.hasLifetimeAccess) {
     return (
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
         <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
@@ -172,13 +277,13 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: User }) {
     );
   }
 
-  if (loggedInUser.stripeCurrentPeriodEnd) {
-    const subscriptionEndDate = new Date(loggedInUser.stripeCurrentPeriodEnd);
+  if (existingUser.stripeCurrentPeriodEnd) {
+    const subscriptionEndDate = new Date(existingUser.stripeCurrentPeriodEnd);
 
     const formattedEndDate = formatDateWithSuffix(subscriptionEndDate); // E.g., '24th Feb, 2024'
 
     const existingUserSubscription: any = await stripe.subscriptions.retrieve(
-      loggedInUser.stripeSubscriptionId as string,
+      existingUser.stripeSubscriptionId as string,
     );
 
     console.log(
@@ -204,6 +309,30 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: User }) {
         </Button>
         <Button className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white">
           Cancel Plan
+        </Button>
+      </div>
+    );
+  }
+
+  if (existingUser.trialEndsAt && !existingUser.stripeSubscriptionId) {
+    const trialEndDate = new Date(existingUser.trialEndsAt);
+    const formattedTrialEndDate = formatDateWithSuffix(trialEndDate); // Format as '24th Feb, 2024'
+
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <h3 className="font-semibold text-baseC">Active Trial</h3>
+        <p className="text-muted-foreground">
+          Your free trial is active and will expire on {formattedTrialEndDate}.
+          After your trial ends, consider subscribing to continue enjoying
+          premium services.
+        </p>
+        <Button
+          className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
+          asChild
+        >
+          <Link className="" href={"/pricing"}>
+            Purchase a Plan
+          </Link>
         </Button>
       </div>
     );

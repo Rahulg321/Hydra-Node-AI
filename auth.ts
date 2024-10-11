@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
+import { addDays } from "date-fns";
 
 declare module "next-auth" {
   /**
@@ -20,7 +21,7 @@ declare module "next-auth" {
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  debug: true,
+  // debug: true,
   adapter: PrismaAdapter(db),
   pages: {
     signIn: "/login",
@@ -29,14 +30,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   events: {
     //this event is only triggered when we use an OAuth provider
     async linkAccount({ user }) {
+      console.log("oauth triggered from auth events");
+
       await db.user.update({
         where: {
           id: user.id,
         },
         data: {
           emailVerified: new Date(),
+          trialEndsAt: addDays(new Date(), 7),
         },
       });
+
+      console.log("added 7 days to trial period");
     },
   },
   callbacks: {
