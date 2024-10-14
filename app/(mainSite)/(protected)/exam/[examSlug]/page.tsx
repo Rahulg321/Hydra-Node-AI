@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
 export async function generateStaticParams() {
   let exams = await getAllExams();
 
-  return exams?.map((e) => ({
+  return exams!.map((e) => ({
     examSlug: e.slug,
   }));
 }
@@ -33,13 +33,9 @@ export async function generateMetadata({
 }) {
   let post = await getExamWithSlug(params.examSlug);
 
-  if (!post) {
-    return;
-  }
-
   return {
-    title: post.name,
-    description: post.description,
+    title: post!.name,
+    description: post!.description,
   };
 }
 
