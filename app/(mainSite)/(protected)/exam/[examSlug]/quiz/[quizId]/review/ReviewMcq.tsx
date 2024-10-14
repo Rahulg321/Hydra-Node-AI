@@ -123,12 +123,12 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
         </div>
 
         {/* Question and Answer Section */}
-        <div
+        {/* <div
           className={cn("container col-span-4 py-4", {
             "bg-green-200": currentAttempt.isCorrect,
             "bg-red-200": !currentAttempt.isCorrect,
-          })}
-        >
+          })} */}
+        <div className={cn("container col-span-4 py-4")}>
           {/* Question Navigation */}
           <QuestionHeader
             currentQuestionIndex={userAttemptIndex + 1}
@@ -151,12 +151,13 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
                     className={cn(
                       "flex cursor-pointer items-center gap-2 rounded-lg border border-base p-4 md:p-6",
                       {
-                        "border-blue-500 bg-blue-500 text-white":
-                          isUserSelection,
-                        "border-red-500 bg-red-500 text-white":
-                          isUserIncorrectSelection,
-                        "border-green-500 bg-green-500 text-white":
-                          isCorrectOption,
+                        "border-4 border-green-500 bg-green-50 text-green-600":
+                          isCorrectOption, // Correct Answer (light green background)
+                        "border-4 border-red-500 bg-red-50 text-red-600":
+                          isUserIncorrectSelection, // Incorrect Answer (light red background)
+                        "border-4 border-blue-500 bg-blue-50 text-blue-600":
+                          isUserSelection && !isCorrectOption, // User-selected wrong option
+                        "hover:shadow-lg": !isUserSelection, // Add subtle hover effect for unselected
                       },
                     )}
                   >
@@ -250,7 +251,7 @@ const Summary = ({
     <h5>Correct Questions: {correctQuestions}</h5>
     <h5>Incorrect Questions: {incorrectQuestions}</h5>
     <h5>Skipped Questions: {skippedQuestions}</h5>
-    <h5>Exam Score: {score}%</h5>
+    <h5>Exam Score: {score.toFixed(2)}%</h5>
   </div>
 );
 
