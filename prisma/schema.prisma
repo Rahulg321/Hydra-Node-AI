@@ -43,8 +43,9 @@ model User {
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 
-  hasLifetimeAccess Boolean    @default(false)
-  Purchase          Purchase[]
+  hasLifetimeAccess     Boolean    @default(false)
+  hasActiveSubscription Boolean    @default(false)
+  Purchase              Purchase[]
 
   trialEndsAt DateTime? @map(name: "trial_ends_at") // Tracks when the user's free trial ends
 }

@@ -1,6 +1,10 @@
 import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
 import { Button } from "@/components/ui/button";
-import { checkIfUserHasAccessToExam, cn } from "@/lib/utils";
+import {
+  checkIfUserHasAccessToExam,
+  checkIfUserHasTrialAccess,
+  cn,
+} from "@/lib/utils";
 import React from "react";
 import { FaStar } from "react-icons/fa6";
 import db from "@/lib/db";
@@ -94,16 +98,11 @@ const ExamPage = async ({
     console.log("user does not have access");
   }
 
-  // const existingUser = await db.user.findUnique({
-  //   where: {
-  //     id: loggedInUser.user.id,
-  //   },
-  // });
+  const hasTrialAccess = await checkIfUserHasTrialAccess(
+    loggedInUser.user.id as string,
+  );
 
-  // if (!existingUser) {
-  //   console.log("could not find an user in the database");
-  //   return redirect("/login");
-  // }
+  console.log("user has trial access", hasTrialAccess);
 
   const exam = await db.exam.findFirst({
     where: {
@@ -227,20 +226,6 @@ const ExamPage = async ({
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <PricingCard
-              heading="Free Trial"
-              headingTag="For 7 days"
-              tagline="Get a quick overview of our platform through the free trial and explore the potential of HydraNode."
-              price="$0"
-              duration="week"
-            />
-            <PricingCard
-              heading="Quarterly Billing"
-              headingTag="For 3 months"
-              tagline="Ideal for those who prefer short-term commitments with comprehensive features."
-              price="$50"
-              duration="monthly"
-            />
-            <PricingCard
               heading="For 1 year"
               headingTag="Yearly Billing"
               tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
@@ -255,6 +240,8 @@ const ExamPage = async ({
               price="$200"
               duration="week"
             />
+            <div></div>
+            <div></div>
           </div>
         )}
       </div>

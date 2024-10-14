@@ -5,7 +5,7 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
   try {
-    const { priceId, mode, trialPeriodDays, userId, userEmail } =
+    const { priceId, mode, trialPeriodDays, userId, userEmail, isLifetime } =
       await req.json();
 
     if (!priceId) {
@@ -50,9 +50,11 @@ export async function POST(req: Request) {
     } else {
       session = await stripe.checkout.sessions.create({
         ui_mode: "embedded",
+        mode: "payment",
         metadata: {
           userId: userId || "",
           userEmail: userEmail as string,
+          isLifetime,
         },
         customer_email: userEmail || undefined,
         invoice_creation: {
@@ -65,7 +67,6 @@ export async function POST(req: Request) {
             quantity: 1,
           },
         ],
-        mode: "payment",
         return_url: `${req.headers.get(
           "origin",
         )}/return?session_id={CHECKOUT_SESSION_ID}`,

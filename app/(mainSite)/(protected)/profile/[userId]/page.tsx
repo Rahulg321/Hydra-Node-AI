@@ -30,7 +30,6 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   const session = await auth();
 
   if (!session) {
-    // IF WE DONT HAVE A SESSION
     redirect("/login");
   }
 
@@ -148,7 +147,7 @@ async function PurchasedExamHistorySection({
                 </td>
                 <td className="px-4 py-2">
                   <Link
-                    href={`/exam/${exam.exam.id}`}
+                    href={`/exam/${exam.exam.slug}`}
                     className="text-baseC hover:underline"
                   >
                     View Details

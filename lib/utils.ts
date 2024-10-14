@@ -124,12 +124,15 @@ export async function checkIfUserHasAccessToExam(
 
     const userHasSubscription = await checkIfUserHasSubscription(userId);
 
-    const userHasTrialAccess = await checkIfUserHasTrialAccess(userId);
+    // const userHasTrialAccess = await checkIfUserHasTrialAccess(userId);
+
+    // const userHasExamAccess =
+    //   userHasPurchasedExam.status ||
+    //   userHasSubscription.status ||
+    //   userHasTrialAccess.status;
 
     const userHasExamAccess =
-      userHasPurchasedExam.status ||
-      userHasSubscription.status ||
-      userHasTrialAccess.status;
+      userHasPurchasedExam.status || userHasSubscription.status;
 
     return {
       hasAccess: userHasExamAccess ? true : false,

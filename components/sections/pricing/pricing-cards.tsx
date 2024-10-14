@@ -35,42 +35,6 @@ export type PricingTier = {
 
 const pricingTiers: PricingTier[] = [
   {
-    name: "Free Trial",
-    duration: "For 7 days",
-    priceId: "price_1PsgJhIbE21KKZM9euPNiOY9",
-    price: 0,
-    trialPeriodDays: 7,
-    isFeatured: false,
-    mode: "subscription",
-    description:
-      "Get a quick overview of our platform through the free trial and explore the potential of HydraNode.",
-    features: [
-      "Limited study materials access",
-      "Participation in basic contests",
-      "Limited personalized learning",
-      "Access to a community forum",
-    ],
-  },
-  {
-    name: "Quarterly Billing",
-    duration: "For 3 months",
-    isFeatured: false,
-    priceId: "price_1PrzWhIbE21KKZM9Ji68Xdwn",
-    mode: "subscription",
-    price: 50,
-    description:
-      "Ideal for those who prefer short-term commitments with comprehensive features.",
-    features: [
-      "Full access to all study materials",
-      "Participation in all contests",
-      "Full use of personalized learning",
-      "Monthly prog. report & feedback",
-      "Base APY* of 10% for staking HydraNode tokens",
-      "for Additional 2% APY* each additional Associate certification completed",
-      "Access to exclusive webinars and workshops",
-    ],
-  },
-  {
     name: "Yearly Billing",
     duration: "For 1 year",
     mode: "subscription",

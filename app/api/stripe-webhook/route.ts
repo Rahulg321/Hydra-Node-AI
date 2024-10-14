@@ -38,7 +38,6 @@ export const POST = auth(async function POST(req) {
 
     console.log("cutomer details ", customerDetails);
 
-    console.log("finding user");
     const user = await db.user.findUnique({
       where: { email: customerDetails?.email as string },
     });
@@ -52,19 +51,67 @@ export const POST = auth(async function POST(req) {
       );
     }
 
-    // Handle checkout session completion
+    if (event.type === "customer.subscription.deleted") {
+      // Handle subscription cancellation
+      const subscription = event.data.object;
+      const customerId = subscription.customer;
+
+      console.log(`Subscription ${subscription.id} has been deleted.`);
+
+      const user = await db.user.findUnique({
+        where: { stripeCustomerId: customerId as string },
+      });
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "User not found while revoking subscription access" },
+          { status: 400 },
+        );
+      }
+
+      console.log(`Revoking access for user: ${user.email}`);
+
+      // Update the user's access status
+      await db.user.update({
+        where: { id: user.id },
+        data: { hasActiveSubscription: false },
+      });
+    }
+
     if (event.type === "checkout.session.completed") {
-      // Subscription case
-      if (session.subscription) {
+      const isLifetime = session.metadata?.isLifetime === "true";
+      console.log("session metadata", session.metadata);
+
+      if (isLifetime) {
+        console.log(`Granting lifetime access to user: ${user.email}`);
+
+        const paymentIntent = await stripe.paymentIntents.retrieve(
+          session.payment_intent as string,
+        );
+
+        console.log("payment intent in one time payment was", paymentIntent);
+
+        await db.user.update({
+          where: { id: user.id },
+          data: {
+            hasLifetimeAccess: true, // Grant lifetime access
+          },
+        });
+
+        await createPaymentRecord(user.id, paymentIntent);
+      } else if (session.subscription) {
+        console.log("a subscription was made");
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string,
         );
 
-        console.log("updating subscription");
+        console.log("updating subscription", subscription);
         await updateUserWithSubscription(user, subscription);
       }
       // One-time payment case
       else if (session.payment_intent && examId) {
+        console.log("a one time payment was made");
+
         const paymentIntent = await stripe.paymentIntents.retrieve(
           session.payment_intent as string,
         );
@@ -95,6 +142,8 @@ async function updateUserWithSubscription(
     const subscriptionItem = subscription.items.data[0];
     const price = subscriptionItem?.price;
 
+    console.log("subscription item is", subscriptionItem);
+
     if (
       !price ||
       price.unit_amount === null ||
@@ -115,6 +164,7 @@ async function updateUserWithSubscription(
         stripeCurrentPeriodEnd: new Date(
           subscription.current_period_end * 1000,
         ),
+        hasActiveSubscription: true,
       },
     });
 
