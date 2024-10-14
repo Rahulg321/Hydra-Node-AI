@@ -14,16 +14,17 @@ import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import { getAllExams, getExamWithSlug } from "@/data/exam";
 import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
+import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";
 
 export const dynamic = "force-dynamic";
 
-// export async function generateStaticParams() {
-//   let exams = await getAllExams();
+export async function generateStaticParams() {
+  let exams = await getAllExams();
 
-//   return exams.map((e) => ({
-//     examSlug: e.slug,
-//   }));
-// }
+  return exams?.map((e) => ({
+    examSlug: e.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
@@ -39,24 +40,6 @@ export async function generateMetadata({
   return {
     title: post.name,
     description: post.description,
-    // openGraph: {
-    //   title,
-    //   description,
-    //   type: "article",
-    //   publishedTime,
-    //   url: `${baseUrl}/blog/${post.slug}`,
-    //   images: [
-    //     {
-    //       url: ogImage,
-    //     },
-    //   ],
-    // },
-    // twitter: {
-    //   card: "summary_large_image",
-    //   title,
-    //   description,
-    //   images: [ogImage],
-    // },
   };
 }
 
@@ -180,6 +163,22 @@ const ExamPage = async ({
             </div>
           ) : (
             <ExamCheckoutDialog exam={exam} session={loggedInUser} />
+          )}
+
+          {hasTrialAccess ? (
+            <div>
+              <h3>You have trial access to this exam</h3>
+              <StartTrialExamDialog
+                examId={exam.id}
+                examSlug={exam.slug}
+                userId={loggedInUser.user.id as string}
+                examTime={exam.timeAllowed}
+              />
+            </div>
+          ) : (
+            <div>
+              <h3>Your trial has expired</h3>
+            </div>
           )}
 
           <div className="my-4">

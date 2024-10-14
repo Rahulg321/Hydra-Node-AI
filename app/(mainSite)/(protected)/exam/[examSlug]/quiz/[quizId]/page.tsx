@@ -2,51 +2,26 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
 import { shuffleArray } from "@/lib/utils";
+import { getExamWithSlug } from "@/data/exam";
 
 export const dynamic = "force-dynamic";
 
-// export async function generateStaticParams() {
-//   let exams = await getAllExams();
+export async function generateMetadata({
+  params,
+}: {
+  params: { examSlug: string };
+}) {
+  const post = await getExamWithSlug(params.examSlug);
 
-//   return exams?.map((e) => ({
-//     examSlug: e.slug,
-//   }));
-// }
+  if (!post) {
+    return;
+  }
 
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { examSlug: string };
-// }) {
-//   let post = await getExamWithSlug(params.examSlug);
-
-//   if (!post) {
-//     return;
-//   }
-
-//   return {
-//     title: post.name,
-//     description: post.description,
-//     // openGraph: {
-//     //   title,
-//     //   description,
-//     //   type: "article",
-//     //   publishedTime,
-//     //   url: `${baseUrl}/blog/${post.slug}`,
-//     //   images: [
-//     //     {
-//     //       url: ogImage,
-//     //     },
-//     //   ],
-//     // },
-//     // twitter: {
-//     //   card: "summary_large_image",
-//     //   title,
-//     //   description,
-//     //   images: [ogImage],
-//     // },
-//   };
-// }
+  return {
+    title: post.name,
+    description: post.description,
+  };
+}
 
 const McqQuizPage = async ({
   params,
@@ -115,24 +90,32 @@ const McqQuizPage = async ({
     },
   });
 
-  // shuffling the questions
-  // shuffling the questions
-  const shuffled = questions.sort(() => Math.random() - 0.5);
-  // console.log("shuffled questions", shuffled);
+  // Apply limit based on quiz session mode
+  // default mode is MOCK
+  let questionsLimit = exam.questionsToShow; // Default to the exam's limit
 
-  // fetching the limit of questions to show
-  const shuffledQuestions = shuffled.slice(0, exam.questionsToShow);
-  // console.log("shuffled questions with limit", shuffledQuestions);
+  if (quizSession.examMode === "TRIAL") {
+    questionsLimit = 50; // Trial mode has a fixed limit of 50 questions
+  } else if (quizSession.examMode === "PRACTICE") {
+    questionsLimit = questions.length; // No limit in practice mode (all questions)
+  }
 
-  // shuffling the options of those shuffled Questions so that everytime a new quiz session we get a shuffled response
-  const shuffledQuestionsWithOptions = shuffledQuestions.map((el) => {
-    return {
-      ...el,
-      options: shuffleArray(el.options),
-    };
-  });
+  console.log(
+    "Applying questions limit based on mode:",
+    quizSession.examMode,
+    questionsLimit,
+  );
 
-  console.log("shuffled array with questions is", shuffledQuestionsWithOptions);
+  // Shuffle the questions and apply the limit
+  const shuffledQuestions = shuffleArray(questions).slice(0, questionsLimit);
+
+  // Shuffle options for each question
+  const shuffledQuestionsWithOptions = shuffledQuestions.map((question) => ({
+    ...question,
+    options: shuffleArray(question.options),
+  }));
+
+  console.log("Shuffled questions with options:", shuffledQuestionsWithOptions);
 
   return (
     <MCQ

@@ -64,6 +64,15 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         >
           <ExamHistorySection loggedInUser={session} />
         </Suspense>
+        <Suspense
+          fallback={
+            <div>
+              <Skeleton className="h-[200px] w-full" />
+            </div>
+          }
+        >
+          <PaymentHistorySection loggedInUser={session} />
+        </Suspense>
       </section>
     </React.Fragment>
   );
@@ -101,7 +110,7 @@ async function PurchasedExamHistorySection({
           className="mt-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
           asChild
         >
-          <Link href="/pricing">Purchase an Exam</Link>
+          <Link href="/vendors">Purchase an Exam</Link>
         </Button>
       </div>
     );
@@ -152,6 +161,92 @@ async function PurchasedExamHistorySection({
                   >
                     View Details
                   </Link>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+async function PaymentHistorySection({
+  loggedInUser,
+}: {
+  loggedInUser: Session;
+}) {
+  const { id } = loggedInUser.user;
+
+  // Fetch payment history from the database
+  const paymentHistory = await db.payment.findMany({
+    where: { userId: id },
+    orderBy: { createdAt: "desc" }, // Show latest payments first
+  });
+
+  if (!paymentHistory || paymentHistory.length === 0) {
+    return (
+      <div className="container col-span-5 space-y-4 rounded-xl bg-white py-4 text-center">
+        <h2 className="text-lg font-semibold text-gray-700">
+          No Payment History Found
+        </h2>
+        <p className="text-sm text-gray-500">
+          It looks like you haven&apos;t made any payments yet.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container col-span-5 space-y-4 rounded-xl bg-white py-4">
+      <h2 className="text-lg font-semibold text-gray-700">Payment History</h2>
+      <table className="min-w-full table-auto border-collapse bg-white">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Date
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Amount
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Currency
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Payment Type
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {paymentHistory.map((payment) => {
+            const formattedDate = formatDateWithSuffix(
+              new Date(payment.createdAt),
+            );
+            return (
+              <tr key={payment.id} className="border-t">
+                <td className="px-4 py-2 text-sm text-gray-700">
+                  {formattedDate}
+                </td>
+                <td className="px-4 py-2 text-sm text-gray-700">
+                  ${payment.amount.toFixed(2)}
+                </td>
+                <td className="px-4 py-2 text-sm text-gray-700">
+                  {payment.currency.toUpperCase()}
+                </td>
+                <td className="px-4 py-2 text-sm text-gray-700">
+                  {payment.paymentType.replace("_", " ")}
+                </td>
+                <td
+                  className={`px-4 py-2 text-sm ${
+                    payment.status === "SUCCEEDED"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {payment.status}
                 </td>
               </tr>
             );
@@ -237,46 +332,41 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
     </div>
   );
 }
-
 async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
-  // wait for 3 sec
-
   const { id } = loggedInUser.user;
 
   const existingUser = await db.user.findUnique({
-    where: {
-      id: id,
-    },
+    where: { id },
   });
 
-  if (!existingUser) {
-    return null;
+  if (!existingUser) return null;
+
+  // Case 1: Lifetime Access
+  if (existingUser.hasLifetimeAccess) {
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
+        <p className="text-muted-foreground">
+          Enjoy unlimited access to all services. No further payments required.
+        </p>
+      </div>
+    );
   }
 
-  // if (existingUser.hasLifetimeAccess) {
-  //   return (
-  //     <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
-  //       <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
-  //       <p className="text-muted-foreground">
-  //         Enjoy unlimited access to all services. No further payments required.
-  //       </p>
-  //     </div>
-  //   );
-  // }
-
-  if (existingUser.stripeCurrentPeriodEnd) {
+  // Case 2: Active Subscription
+  if (
+    existingUser.hasActiveSubscription &&
+    existingUser.stripeCurrentPeriodEnd &&
+    new Date(existingUser.stripeCurrentPeriodEnd) > new Date()
+  ) {
     const subscriptionEndDate = new Date(existingUser.stripeCurrentPeriodEnd);
-
-    const formattedEndDate = formatDateWithSuffix(subscriptionEndDate); // E.g., '24th Feb, 2024'
+    const formattedEndDate = formatDateWithSuffix(subscriptionEndDate);
 
     const existingUserSubscription: any = await stripe.subscriptions.retrieve(
       existingUser.stripeSubscriptionId as string,
     );
 
-    console.log(
-      "fetched subscription from stripe is",
-      existingUserSubscription as any,
-    );
+    console.log("fetched subscription from stripe:", existingUserSubscription);
 
     return (
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
@@ -299,39 +389,93 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
     );
   }
 
-  if (existingUser.trialEndsAt && !existingUser.stripeSubscriptionId) {
-    const trialEndDate = new Date(existingUser.trialEndsAt);
-    const formattedTrialEndDate = formatDateWithSuffix(trialEndDate); // Format as '24th Feb, 2024'
+  // Case 3: Expired Subscription (Grace Period)
+  if (
+    existingUser.stripeCurrentPeriodEnd &&
+    new Date(existingUser.stripeCurrentPeriodEnd) <= new Date()
+  ) {
+    const formattedEndDate = formatDateWithSuffix(
+      new Date(existingUser.stripeCurrentPeriodEnd),
+    );
 
     return (
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
-        <h3 className="font-semibold text-baseC">Active Trial</h3>
+        <h3 className="font-semibold text-baseC">Subscription Ended</h3>
         <p className="text-muted-foreground">
-          Your free trial is active and will expire on {formattedTrialEndDate}.
-          After your trial ends, consider subscribing to continue enjoying
-          premium services.
+          Your subscription ended on {formattedEndDate}. Renew your plan to
+          regain access to premium services.
         </p>
         <Button
           className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
           asChild
         >
-          <Link className="" href={"/pricing"}>
-            Purchase a Plan
-          </Link>
+          <Link href="/pricing">Renew Plan</Link>
         </Button>
       </div>
     );
   }
 
+  // Case 4: Active Trial Period
+  if (existingUser.trialEndsAt && !existingUser.stripeSubscriptionId) {
+    const trialEndDate = new Date(existingUser.trialEndsAt);
+    const formattedTrialEndDate = formatDateWithSuffix(trialEndDate);
+
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <h3 className="font-semibold text-baseC">Active Trial</h3>
+        <p className="text-muted-foreground">
+          Your trial is active until {formattedTrialEndDate}. Subscribe to
+          continue enjoying premium services after the trial ends.
+        </p>
+        <Button
+          className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
+          asChild
+        >
+          <Link href="/pricing">Subscribe Now</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  // Case 5: Expired Trial Period
+  if (
+    existingUser.trialEndsAt &&
+    new Date(existingUser.trialEndsAt) <= new Date()
+  ) {
+    const formattedTrialEndDate = formatDateWithSuffix(
+      new Date(existingUser.trialEndsAt),
+    );
+
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <h3 className="font-semibold text-baseC">Trial Ended</h3>
+        <p className="text-muted-foreground">
+          Your trial period ended on {formattedTrialEndDate}. Subscribe to
+          unlock premium services.
+        </p>
+        <Button
+          className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
+          asChild
+        >
+          <Link href="/pricing">Subscribe Now</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  // Case 6: No Plan (Default Case)
   return (
     <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
       <h3 className="font-semibold text-baseC">No Active Plan</h3>
       <p className="text-muted-foreground">
-        You currently don’t have any active subscriptions or lifetime access.
-        Consider purchasing a plan to access premium features.
+        You don&apos;t have any active plans. Subscribe to unlock premium
+        features.
       </p>
-      <Button className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white">
-        Purchase a Plan
+      <Button
+        className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
+        asChild
+      >
+        <Link href="/pricing">Subscribe Now</Link>
       </Button>
     </div>
   );

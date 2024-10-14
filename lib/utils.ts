@@ -112,17 +112,24 @@ export async function hasAccess(userId: string) {
   return user.hasLifetimeAccess || hasActiveSubscription;
 }
 
+/**
+ * Checks whether a user has access to a specific exam.
+ *
+ * @param {string} userId - The ID of the user.
+ * @param {string} examId - The ID of the exam.
+ * @returns {Promise<{hasAccess: boolean, message: string}>} - An object indicating if the user has access and a corresponding message.
+ */
 export async function checkIfUserHasAccessToExam(
   userId: string,
   examId: string,
 ) {
   try {
-    const userHasPurchasedExam = await checkIfUserHasPurchasedExam(
-      userId,
-      examId,
-    );
-
-    const userHasSubscription = await checkIfUserHasSubscription(userId);
+    const [userHasPurchasedExam, userHasSubscription, userHasLifeTimeAccess] =
+      await Promise.all([
+        checkIfUserHasPurchasedExam(userId, examId),
+        checkIfUserHasSubscription(userId),
+        checkIfUserHasLifeTimeAcess(userId),
+      ]);
 
     // const userHasTrialAccess = await checkIfUserHasTrialAccess(userId);
 
@@ -131,8 +138,13 @@ export async function checkIfUserHasAccessToExam(
     //   userHasSubscription.status ||
     //   userHasTrialAccess.status;
 
+    // const userHasExamAccess =
+    //   userHasPurchasedExam.status || userHasSubscription.status;
+
     const userHasExamAccess =
-      userHasPurchasedExam.status || userHasSubscription.status;
+      userHasPurchasedExam.status ||
+      userHasSubscription.status ||
+      userHasLifeTimeAccess.status;
 
     return {
       hasAccess: userHasExamAccess ? true : false,
@@ -149,6 +161,12 @@ export async function checkIfUserHasAccessToExam(
   }
 }
 
+/**
+ * Checks if the user is within the trial period and has access to the exam.
+ *
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<{status: boolean, message: string}>} - An object indicating trial access status and a corresponding message.
+ */
 export async function checkIfUserHasTrialAccess(userId: string) {
   try {
     // Query the Purchase table to check the trial period
@@ -187,6 +205,12 @@ export async function checkIfUserHasTrialAccess(userId: string) {
   }
 }
 
+/**
+ * Checks if the user has an active subscription.
+ *
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<{status: boolean, message: string}>} - An object indicating the subscription status and a corresponding message.
+ */
 export async function checkIfUserHasSubscription(userId: string) {
   try {
     const currentUser = await db.user.findFirst({
@@ -224,6 +248,13 @@ export async function checkIfUserHasSubscription(userId: string) {
   }
 }
 
+/**
+ * Checks if the user has purchased a specific exam.
+ *
+ * @param {string} userId - The ID of the user.
+ * @param {string} examId - The ID of the exam.
+ * @returns {Promise<{status: boolean, message: string}>} - An object indicating if the user has purchased the exam and a corresponding message.
+ */
 export async function checkIfUserHasPurchasedExam(
   userId: string,
   examId: string,
@@ -249,6 +280,50 @@ export async function checkIfUserHasPurchasedExam(
     return {
       status: false,
       message: "An error occurred while checking the exam purchase.",
+    };
+  }
+}
+
+/**
+ * Checks if the user has lifetime access to the platform or product.
+ *
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<{status: boolean, message: string}>} - An object indicating if the user has lifetime access and a corresponding message.
+ */
+export async function checkIfUserHasLifeTimeAcess(userId: string) {
+  try {
+    const currentUser = await db.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!currentUser) {
+      console.log(
+        "could not find current user while checking for subscription",
+      );
+      return {
+        status: false,
+        message: "could not find current user while checking for subscription",
+      };
+    }
+
+    if (currentUser.hasLifetimeAccess) {
+      // If purchase exists, user has access to the exam
+      return {
+        status: true,
+        message: currentUser.hasLifetimeAccess
+          ? "User has lifetime access to the product. Access granted."
+          : "User does not have lifetime access. Access denied.",
+      };
+    } else {
+      throw new Error("User does not have lifetime access.");
+    }
+  } catch (error) {
+    console.error("Error checking liftime acceess:", error);
+    return {
+      status: false,
+      message: "An error occurred while checking for lifetime access",
     };
   }
 }

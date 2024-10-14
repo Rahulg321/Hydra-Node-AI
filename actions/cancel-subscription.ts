@@ -28,8 +28,7 @@ export async function cancelUserSubscription(userId: string) {
     await db.user.update({
       where: { id: userId },
       data: {
-        stripeSubscriptionId: null, // Remove subscription ID
-        stripeCurrentPeriodEnd: null, // Reset subscription end date
+        hasActiveSubscription: false,
       },
     });
 
