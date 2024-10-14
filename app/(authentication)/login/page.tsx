@@ -16,12 +16,14 @@ const LoginPage = async () => {
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div className="relative">
-        <Image
-          src={"/auth/loginSignupImage.png"}
-          alt="blue background wavy for authentication pages"
-          className="object-cover"
-          fill
-        />
+        <Link href="/">
+          <Image
+            src={"/auth/loginSignupImage.png"}
+            alt="blue background wavy for authentication pages"
+            className="object-cover"
+            fill
+          />
+        </Link>
       </div>
       <div className="block-space-large relative content-center">
         <div className="absolute right-4 top-4">
