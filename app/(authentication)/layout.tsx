@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import "../globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { baseUrl } from "../sitemap";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -62,7 +63,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={cn("", poppins.variable, manrope.variable)}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>

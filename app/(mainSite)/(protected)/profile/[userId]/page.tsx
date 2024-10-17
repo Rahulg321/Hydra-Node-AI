@@ -1,16 +1,9 @@
 import React, { Suspense } from "react";
-import TokenGraph from "./TokenGraph";
-import ProfileForm from "@/components/forms/ProfileForm";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import ConnectWalletForm from "@/components/forms/ConnectWalletForm";
 import ExamHistoryTable from "./ExamHistoryTable";
 import Image from "next/image";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import SignOutButton from "@/components/sign-out-button";
 import { Session } from "next-auth";
 import db from "@/lib/db";
 import { User } from "@prisma/client";
@@ -19,16 +12,42 @@ import { stripe } from "@/lib/stripe";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
-import ProfileImageUploadButton from "@/components/ProfileImageUploadButton";
-import { ProfileDetailsEditDialog } from "@/components/Dialogs/ProfileDetailsEditDialog";
 import { ProfilePicUploadDialog } from "@/components/Dialogs/ProfilePicUploadDialog";
 import EditProfileForm from "@/components/forms/edit-profile-form";
+import type { Metadata, ResolvingMetadata } from "next";
 
 type ProfilePageProps = {
   params: {
     userId: string;
   };
 };
+
+type MetadataProps = {
+  params: { userId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params, searchParams }: MetadataProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+  const id = params.userId;
+
+  const user = await db.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return {
+    title: `${user?.firstName} ${user?.lastName} ${user?.name} - Profile`,
+    description: `Profile page of ${user?.firstName} ${user?.lastName} for HydraNode AI`,
+    openGraph: {
+      images: ["/about_hero.png"],
+    },
+  };
+}
 
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const session = await auth();
@@ -266,20 +285,6 @@ async function PaymentHistorySection({
   );
 }
 
-function CertificateUploadSection() {
-  return (
-    <div className="container col-span-2 rounded-xl bg-white py-4">
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="picture">Purchased Exam</Label>
-        <Input id="picture" type="file" className="" />
-        <span className="text-sm text-muted-foreground">
-          Only supports .jpg, .png, .svg, .pdf and .zip files
-        </span>
-      </div>
-    </div>
-  );
-}
-
 async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
   const { id } = loggedInUser.user;
   // wait for 3 sec
@@ -403,8 +408,9 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
         <h3 className="font-semibold text-baseC">Subscription Ended</h3>
         <p className="text-muted-foreground">
-          Your subscription ended on {formattedEndDate}. Renew your plan to
-          regain access to premium services.
+          Your subscription ended on {formattedEndDate} but you can still
+          continue to access service until you renew till your expiry. Renew
+          your plan to regain access to premium services.
         </p>
         <Button
           className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"

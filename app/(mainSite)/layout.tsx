@@ -11,6 +11,7 @@ import { manrope, poppins } from "../fonts";
 import { ExamModeProvider } from "@/lib/exam-mode-context";
 import { baseUrl } from "../sitemap";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -74,12 +75,19 @@ export default async function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={clsx("", poppins.variable, manrope.variable)}>
-        <SessionProvider>
-          <Header session={session} />
-          {children}
-          <Footer />
-          <Toaster />
-        </SessionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider>
+            <Header session={session} />
+            {children}
+            <Footer />
+            <Toaster />
+          </SessionProvider>
+        </ThemeProvider>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>

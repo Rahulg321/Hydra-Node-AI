@@ -7,6 +7,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./ModeToggle";
 
 const companyLinks = [
   {
@@ -75,6 +76,9 @@ const Footer = () => {
               </Link>
             ))}
           </div>
+        </div>
+        <div>
+          <ModeToggle />
         </div>
       </div>
     </footer>
