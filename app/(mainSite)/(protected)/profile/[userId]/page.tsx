@@ -33,7 +33,6 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   // read route params
   const id = params.userId;
-
   const user = await db.user.findUnique({
     where: {
       id,
