@@ -8,6 +8,10 @@ import PaymentSuccessfull from "@/components/emails/PaymentSuccessfull";
 import React from "react";
 import PaymentErrorEmail from "@/components/emails/PaymentError";
 import ContactMessageEmail from "@/components/emails/ContactFormEmail";
+import SubscriptionEndEmail from "@/components/emails/SubscriptionEndEmail";
+import LifetimeAccessEmail from "@/components/emails/LifetimeAccessEmail";
+import SubscriptionStartEmail from "@/components/emails/SubscriptionSuccessfulEmail";
+import ExamPurchaseEmail from "@/components/emails/ExamPurchaseEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -43,6 +47,145 @@ export const sendPaymentErrorEmail = async (
   }
 
   return { data };
+};
+
+export const sendLifetimeAccessEmail = async (
+  email: string,
+  productName: string,
+  dashboardLink: string,
+  accessStartDate: string,
+  firstName: string | null,
+  lastName: string | null,
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: [email],
+    subject: "🎉 You've Got Lifetime Access! 🎉", // Updated subject line
+    react: LifetimeAccessEmail({
+      firstName,
+      lastName,
+      email,
+      productName,
+      accessStartDate,
+      dashboardLink,
+    }),
+  });
+
+  if (error) {
+    console.log(
+      "Error sending lifetime access email:",
+      error.name,
+      error.message,
+    );
+    return {
+      error: `Could not send email -> ${error.message}}`,
+    };
+  }
+
+  return { data };
+};
+export const sendSubscriptionStartEmail = async (
+  email: string,
+  subscriptionPlan: string, // Matches productName in the SubscriptionStartEmail component
+  dashboardLink: string,
+  subscriptionStartDate: string,
+  firstName: string | null,
+  lastName: string | null,
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: [email],
+    subject: `🎉 You've Got Access to ${subscriptionPlan}! 🎉`, // Updated subject line dynamically based on productName
+    react: SubscriptionStartEmail({
+      firstName,
+      lastName,
+      email,
+      subscriptionStartDate,
+      subscriptionPlan, // Passed as productName to match the prop in the component
+      dashboardLink,
+    }),
+  });
+
+  if (error) {
+    console.log(
+      "Error sending subscription start email:",
+      error.name,
+      error.message,
+    );
+    return {
+      error: `Could not send email -> ${error.message}}`,
+    };
+  }
+
+  return { data };
+};
+
+export const sendExamPurchaseEmail = async (
+  firstName: string | null,
+  lastName: string | null,
+  email: string,
+  examName: string,
+  purchaseDate: string,
+  examLink: string,
+  examPrice: string,
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: [email],
+    subject: `🎉 Successfully Purchased Exam ${examName}! 🎉`, // Updated subject line dynamically based on productName
+    react: ExamPurchaseEmail({
+      firstName,
+      lastName,
+      email,
+      examName,
+      purchaseDate,
+      examLink,
+      examPrice,
+    }),
+  });
+
+  if (error) {
+    console.log(
+      "Error sending exam purchase email:",
+      error.name,
+      error.message,
+    );
+    return {
+      error: `Could not send email -> ${error.message}}`,
+    };
+  }
+
+  return { data };
+};
+
+export const sendSubscriptionEndedEmail = async (
+  email: string,
+  subscriptionPlan: string,
+  renewalLink: string,
+  subscriptionEndDate: string,
+  firstName: string | null,
+  lastName: string | null,
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: [email],
+    subject: "2 FA Verification",
+    react: SubscriptionEndEmail({
+      firstName,
+      lastName,
+      email,
+      subscriptionEndDate,
+      subscriptionPlan,
+      renewalLink,
+    }),
+  });
+
+  if (error) {
+    console.log("error sending email", error.name, error.message);
+    return {
+      error: `could not send email -> ${error.message}}`,
+    };
+  }
 };
 
 export const sendPaymentSuccessfulEmail = async (
@@ -150,10 +293,10 @@ export const sendContactFormEmail = async (
   message: string,
 ) => {
   const { data, error } = await resend.emails.send({
-    from: "Acme <onboarding@resend.dev>",
-    to: ["rg5353070@gmail.com", "contact@hydranode.ai"],
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: ["contact@hydranode.ai"],
     replyTo: email,
-    subject: "Contact Inquiry from HydraNode",
+    subject: `Contact Inquiry by ${firstName} ${lastName} from HydraNode`,
     react: ContactMessageEmail({
       firstName,
       lastName,

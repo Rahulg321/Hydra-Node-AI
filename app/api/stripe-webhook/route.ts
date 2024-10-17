@@ -4,6 +4,12 @@ import { stripe } from "@/lib/stripe";
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { auth } from "@/auth";
+import {
+  sendExamPurchaseEmail,
+  sendLifetimeAccessEmail,
+  sendSubscriptionEndedEmail,
+  sendSubscriptionStartEmail,
+} from "@/lib/mail";
 
 export const POST = auth(async function POST(req) {
   const body = await req.text();
@@ -76,6 +82,18 @@ export const POST = auth(async function POST(req) {
         where: { id: user.id },
         data: { hasActiveSubscription: false },
       });
+
+      // **Send the subscription ended email**
+      await sendSubscriptionEndedEmail(
+        user.email,
+        new Date(subscription.current_period_end * 1000).toLocaleDateString(), // Format the end date
+        `www.hydranode.ai/pricing`, // Link to renew the subscription
+        subscription.items.data[0]?.price?.nickname || "Your Subscription Plan", // Subscription plan name
+        user.firstName,
+        user.lastName,
+      );
+
+      console.log(`Revoking access for user: ${user.email} and sending email.`);
     }
 
     if (event.type === "checkout.session.completed") {
@@ -99,6 +117,15 @@ export const POST = auth(async function POST(req) {
         });
 
         await createPaymentRecord(user.id, paymentIntent);
+
+        await sendLifetimeAccessEmail(
+          user.email,
+          "LIFETIME ACCESS",
+          `https://hydranode.ai/profile/${user.id}`,
+          new Date().toLocaleDateString(), // Access start date
+          user.firstName,
+          user.lastName,
+        );
       } else if (session.subscription) {
         console.log("a subscription was made");
         const subscription = await stripe.subscriptions.retrieve(
@@ -107,6 +134,16 @@ export const POST = auth(async function POST(req) {
 
         console.log("updating subscription", subscription);
         await updateUserWithSubscription(user, subscription);
+
+        await sendSubscriptionStartEmail(
+          user.email,
+          subscription.items.data[0]?.price?.nickname ||
+            "Your Subscription Plan",
+          `https://hydranode.ai/profile/${user.id}`,
+          new Date().toLocaleDateString(), // Subscription start date
+          user.firstName,
+          user.lastName,
+        );
       }
       // One-time payment case
       else if (session.payment_intent && examId) {
@@ -194,6 +231,16 @@ async function processExamPurchase(
   examId: string,
   paymentIntent: Stripe.PaymentIntent,
 ) {
+  // Fetch the exam details from the database
+  const exam = await db.exam.findUnique({
+    where: { id: examId },
+  });
+
+  if (!exam) {
+    console.log(`Exam with ID ${examId} not found.`);
+    throw new Error("Exam not found");
+  }
+
   const existingPurchase = await db.purchase.findFirst({
     where: { userId: user.id, examId: examId },
   });
@@ -216,13 +263,16 @@ async function processExamPurchase(
     // Create a new payment record, as it's the first time purchasing the exam
     await createPaymentRecord(user.id, paymentIntent);
 
-    // Grant lifetime access if the payment is successful
-    if (paymentIntent.status === "succeeded") {
-      await db.user.update({
-        where: { id: user.id },
-        data: { hasLifetimeAccess: true },
-      });
-    }
+    // SEND EMAIL FOR SUCCESSFUL EXAM PURCHASE
+    await sendExamPurchaseEmail(
+      user.firstName,
+      user.lastName,
+      user.email,
+      exam.name,
+      new Date().toLocaleDateString(), // Purchase date
+      `https://hydranode.ai/exam/${exam.slug}`,
+      exam.price.toString(),
+    );
   } else {
     console.log(
       "User has already purchased this exam, skipping purchase and payment creation.",
