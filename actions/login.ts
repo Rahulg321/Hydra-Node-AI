@@ -125,6 +125,7 @@ export async function LoginUser(values: LoginFormSchema) {
       });
     } else {
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+
       const response = await sendTwoFactorEmail(
         existingUser.email,
         twoFactorToken.token,

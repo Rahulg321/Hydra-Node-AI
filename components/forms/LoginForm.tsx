@@ -55,6 +55,7 @@ const LoginForm = () => {
       console.log(values);
       setError("");
       setSuccess("");
+
       const response = await LoginUser(values);
 
       if (response?.error) {
@@ -152,7 +153,7 @@ const LoginForm = () => {
           {error && <ErrorCard urlError={error} />}
 
           <Button type="submit" className="w-full bg-base" disabled={isPending}>
-            {show2fa ? "Confirm" : "Log in"}
+            {isPending ? "Logging in..." : show2fa ? "Confirm" : "Log in"}
           </Button>
         </form>
       </Form>

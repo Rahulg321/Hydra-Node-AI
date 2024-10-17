@@ -16,24 +16,24 @@ const LoginPage = async () => {
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div className="relative">
-        <Link href="/">
-          <Image
-            src={"/auth/loginSignupImage.png"}
-            alt="blue background wavy for authentication pages"
-            className="object-cover"
-            fill
-          />
-        </Link>
+        <Image
+          src={"/auth/loginSignupImage.png"}
+          alt="blue background wavy for authentication pages"
+          className="object-cover"
+          fill
+        />
       </div>
       <div className="block-space-large relative content-center">
         <div className="absolute right-4 top-4">
-          <Image
-            src={"/hydranode_logo.png"}
-            alt="official logo for hydranode"
-            className="object-cover"
-            width={200}
-            height={200}
-          />
+          <Link href={"/"}>
+            <Image
+              src={"/hydranode_logo.png"}
+              alt="official logo for hydranode"
+              className="object-cover"
+              width={200}
+              height={200}
+            />
+          </Link>
         </div>
         <div className="mx-auto max-w-xl">
           <h3>Login TO Hydranode</h3>

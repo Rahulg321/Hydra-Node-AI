@@ -15,6 +15,7 @@ import { addDays } from "date-fns";
 export async function SignUpUser(values: SignUpFormSchema) {
   try {
     const validatedFields = SignUpFormZodType.safeParse(values);
+
     if (!validatedFields.success) {
       return {
         error: validatedFields.error.message,
@@ -29,7 +30,8 @@ export async function SignUpUser(values: SignUpFormSchema) {
       // Check if the user is already verified
       if (existingUser.emailVerified) {
         return {
-          error: "A user with this email already exists and is verified",
+          error:
+            "A user with this email already exists, try creating a new user",
         };
       } else {
         // If the user is not verified, resend the verification email

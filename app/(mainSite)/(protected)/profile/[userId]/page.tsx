@@ -19,6 +19,10 @@ import { stripe } from "@/lib/stripe";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
+import ProfileImageUploadButton from "@/components/ProfileImageUploadButton";
+import { ProfileDetailsEditDialog } from "@/components/Dialogs/ProfileDetailsEditDialog";
+import { ProfilePicUploadDialog } from "@/components/Dialogs/ProfilePicUploadDialog";
+import EditProfileForm from "@/components/forms/edit-profile-form";
 
 type ProfilePageProps = {
   params: {
@@ -33,10 +37,21 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
     redirect("/login");
   }
 
+  const existingLoggedInUser = await db.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+  });
+
+  if (!existingLoggedInUser) {
+    console.error("user is not logged in");
+    redirect("/login");
+  }
+
   return (
     <React.Fragment>
       <section className="grid min-h-screen grid-cols-5 gap-6 bg-[#F5F4FA] px-4 py-4">
-        <ProfileSidebar session={session} />
+        <ProfileSidebar loggedInUser={existingLoggedInUser} />
         <Suspense
           fallback={
             <div>
@@ -46,15 +61,9 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         >
           <PurchasedExamHistorySection currentSession={session} />
         </Suspense>
-        <Suspense
-          fallback={
-            <div>
-              <Skeleton className="h-[150px] w-full" />
-            </div>
-          }
-        >
-          <CurrentPlanSection loggedInUser={session} />
-        </Suspense>
+
+        <CurrentPlanSection existingUser={existingLoggedInUser} />
+
         <Suspense
           fallback={
             <div>
@@ -332,15 +341,7 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
     </div>
   );
 }
-async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
-  const { id } = loggedInUser.user;
-
-  const existingUser = await db.user.findUnique({
-    where: { id },
-  });
-
-  if (!existingUser) return null;
-
+async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
   // Case 1: Lifetime Access
   if (existingUser.hasLifetimeAccess) {
     return (
@@ -384,7 +385,7 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
         <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
           Manage Subscription
         </Button>
-        <CancelSubscriptionButton userId={id!} />
+        <CancelSubscriptionButton userId={existingUser.id} />
       </div>
     );
   }
@@ -481,59 +482,41 @@ async function CurrentPlanSection({ loggedInUser }: { loggedInUser: Session }) {
   );
 }
 
-async function ProfileSidebar({ session }: { session: Session }) {
+async function ProfileSidebar({ loggedInUser }: { loggedInUser: User }) {
+  const { id, firstName, lastName, email, image, isTwoFactorEnabled } =
+    loggedInUser;
+
   return (
     <div className="col-span-1 row-span-2 rounded-xl bg-white py-4">
       <Image
-        src={session?.user.image || "https://github.com/shadcn.png"}
+        src={image || "https://github.com/shadcn.png"}
         alt=""
         height={150}
         width={150}
         className="mx-auto rounded-full"
       />
       <div className="mt-2 space-y-2 px-2">
+        <div className="block">
+          <ProfilePicUploadDialog />
+        </div>
         <div className="flex items-center justify-between gap-2">
-          <span>Name:-</span>
           <span className="text-sm font-semibold text-baseC">
-            {session?.user.name || "No Name"}
+            {`${firstName} ${lastName}`}
           </span>
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span>Email:-</span>
-          <span className="text-sm font-semibold text-baseC">
-            {session?.user.email || "No Email"}
-          </span>
+          <span className="text-sm font-semibold text-baseC">{email}</span>
         </div>
-        <div className="flex items-center justify-between gap-2">
-          <span>TwoFactorEnabled:-</span>
-          <span className="text-sm font-semibold text-baseC">
-            {session?.user.isTwoFactorEnabled ? "true" : "false"}
-          </span>
-        </div>
-        <div className="flex items-center justify-between gap-2">
-          <span>OAuth Login:-</span>
-          <span className="text-sm font-semibold text-baseC">
-            {session?.user.isCredentialsLogin ? "true" : "false"}
-          </span>
-        </div>
+        <EditProfileForm
+          userId={id}
+          firstName={firstName}
+          lastName={lastName}
+        />
       </div>
-      <ProfileForm name={session?.user.name || ""} session={session} />
-      <Button variant={"link"} className="mt-4 w-full text-baseC">
-        Purchase a Plan
+      {/* <ProfileForm name={session?.user.name || ""} session={session} /> */}
+      <Button variant={"link"} className="mt-4 text-baseC" asChild>
+        <Link href={"/pricing"}>Purchase a Plan</Link>
       </Button>
-      <SignOutButton />
-    </div>
-  );
-}
-
-function ConnectWalletSection() {
-  return (
-    <div className="container col-span-1 space-y-4 rounded-xl bg-white py-4">
-      <h4>Connect your Wallet</h4>
-      <span className="block text-sm text-muted-foreground">
-        Upload wallet address to receive reward direct in your wallet
-      </span>
-      <ConnectWalletForm />
     </div>
   );
 }

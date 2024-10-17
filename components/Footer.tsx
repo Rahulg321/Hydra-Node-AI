@@ -11,19 +11,16 @@ import { Button } from "./ui/button";
 const companyLinks = [
   {
     name: "About Us",
-    href: "*",
+    href: "/about-us",
   },
-  {
-    name: "Token",
-    href: "*",
-  },
+
   {
     name: "Product",
-    href: "*",
+    href: "/product",
   },
   {
     name: "Pricing",
-    href: "*",
+    href: "/pricing",
   },
 ];
 
@@ -78,16 +75,6 @@ const Footer = () => {
               </Link>
             ))}
           </div>
-        </div>
-        <div>
-          <h5 className="mb-2 font-bold">Join our Newsletter</h5>
-          <div className="flex flex-col items-center gap-2 md:flex-row">
-            <Input />
-            <Button className="ml-2 bg-base">Subscribe</Button>
-          </div>
-          <span className="mt-2 block text-sm text-gray-500">
-            Will send you weekly updates
-          </span>
         </div>
       </div>
     </footer>
