@@ -36,7 +36,7 @@ const LoginPage = async () => {
           </Link>
         </div>
         <div className="mx-auto max-w-xl">
-          <h3>Login TO Hydranode</h3>
+          <h3>Welcome to Hydranode </h3>
           <Suspense>
             <LoginForm />
           </Suspense>

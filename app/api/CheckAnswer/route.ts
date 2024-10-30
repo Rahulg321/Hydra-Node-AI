@@ -91,15 +91,6 @@ export async function POST(request: Request) {
         answer.toLowerCase().trim(),
       );
 
-      console.log(
-        "all user selected answers in a multi select question are",
-        userSelectedAnswers,
-      );
-      console.log(
-        "correct answers in a multi select question are",
-        correctAnswers,
-      );
-
       // Check if all correct answers are selected, and no additional incorrect answers are selected
       const isCorrect =
         userSelectedAnswers.length === correctAnswers.length &&

@@ -28,20 +28,25 @@ type MetadataProps = {
 };
 
 export async function generateMetadata(
-  { params, searchParams }: MetadataProps,
+  { params }: MetadataProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  // read route params
-  const id = params.userId;
+  // Extract the user ID from route parameters
+  const userId = params.userId;
+
+  // Fetch the user data from the database
   const user = await db.user.findUnique({
-    where: {
-      id,
-    },
+    where: { id: userId },
   });
 
+  // Construct the user's full name if available
+  const fullName = [user?.firstName, user?.lastName, user?.name]
+    .filter(Boolean)
+    .join(" ");
+
   return {
-    title: `${user?.firstName} ${user?.lastName} ${user?.name} - Profile`,
-    description: `Profile page of ${user?.firstName} ${user?.lastName} for HydraNode AI`,
+    title: `${fullName} - Profile`,
+    description: `Profile page of ${fullName} for HydraNode AI`,
     openGraph: {
       images: ["/about_hero.png"],
     },
@@ -502,11 +507,11 @@ async function ProfileSidebar({ loggedInUser }: { loggedInUser: User }) {
       />
       <div className="mt-2 space-y-2 px-2">
         <div className="block">
-          <ProfilePicUploadDialog />
+          <ProfilePicUploadDialog userId={id} />
         </div>
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-semibold text-baseC">
-            {`${firstName} ${lastName}`}
+            {`${firstName ? firstName : ""} ${lastName ? lastName : ""}`}
           </span>
         </div>
         <div className="flex items-center justify-between gap-2">

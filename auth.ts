@@ -92,7 +92,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.role = existingUser.role;
       token.id = existingUser.id;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-
+      token.image = existingUser.image;
       // Check if the user logged in with credentials or OAuth
       token.isCredentialsLogin = !!existingUser.password;
 
@@ -109,6 +109,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (token.isTwoFactorEnabled && session.user) {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
+
+      if (token.image && session.user) {
+        session.user.image = token.image as string;
       }
 
       if (session.user) {

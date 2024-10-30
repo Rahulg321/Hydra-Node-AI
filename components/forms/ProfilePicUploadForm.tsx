@@ -29,7 +29,7 @@ export type ProfilePicUploadZodType = z.infer<
   typeof ProfilePicUploadFormSchema
 >;
 
-const ProfilePicUploadForm: React.FC = () => {
+const ProfilePicUploadForm = ({ userId }: { userId: string }) => {
   const { toast } = useToast();
   const [preview, setPreview] = React.useState<string | ArrayBuffer | null>("");
   const [isPending, startTransition] = React.useTransition();
@@ -76,7 +76,7 @@ const ProfilePicUploadForm: React.FC = () => {
         formData.append("image", values.image);
         formData.append("fileName", blobName);
 
-        const response = await UpdateProfilePic(formData);
+        const response = await UpdateProfilePic(formData, userId);
 
         if (response.success) {
           console.log("image uploaded successfully", response.imageUrl);

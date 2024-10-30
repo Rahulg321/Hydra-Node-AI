@@ -27,7 +27,7 @@ import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import ProfilePicUploadForm from "../forms/ProfilePicUploadForm";
 
-export function ProfilePicUploadDialog() {
+export function ProfilePicUploadDialog({ userId }: { userId: string }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -45,7 +45,7 @@ export function ProfilePicUploadDialog() {
               done.
             </DialogDescription>
           </DialogHeader>
-          <ProfilePicUploadForm />
+          <ProfilePicUploadForm userId={userId} />
         </DialogContent>
       </Dialog>
     );
@@ -63,7 +63,7 @@ export function ProfilePicUploadDialog() {
             Make changes to your profile here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <ProfilePicUploadForm />
+        <ProfilePicUploadForm userId={userId} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

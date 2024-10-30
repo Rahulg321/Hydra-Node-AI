@@ -1,6 +1,9 @@
 "use server";
 
-const UpdateProfilePic = async (formData: FormData) => {
+import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
+
+const UpdateProfilePic = async (formData: FormData, userId: string) => {
   try {
     console.log("Values in profile pic server action");
 
@@ -32,6 +35,17 @@ const UpdateProfilePic = async (formData: FormData) => {
     // https://${storageAccountName}.blob.core.windows.net/${containerName}/${name}
 
     const imageUrl = `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${fileName}`;
+
+    await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        image: imageUrl,
+      },
+    });
+
+    revalidatePath(`/profile/${userId}`);
 
     return {
       success: true,
