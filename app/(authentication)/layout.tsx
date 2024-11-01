@@ -63,14 +63,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={cn("", poppins.variable, manrope.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>

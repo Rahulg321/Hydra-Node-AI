@@ -75,19 +75,12 @@ export default async function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={clsx("", poppins.variable, manrope.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProvider>
-            <Header session={session} />
-            {children}
-            <Footer />
-            <Toaster />
-          </SessionProvider>
-        </ThemeProvider>
+        <SessionProvider>
+          <Header session={session} />
+          {children}
+          <Footer />
+          <Toaster />
+        </SessionProvider>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>
