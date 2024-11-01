@@ -5,7 +5,25 @@ import Link from "next/link";
 import { ExamLevel } from "@prisma/client";
 import { Suspense } from "react";
 
-const page = async ({
+export async function generateMetadata({
+  params,
+}: {
+  params: { vendorSlug: string };
+}) {
+  let { vendorSlug } = params;
+  const singleVendor = await db.vendor.findFirst({
+    where: {
+      slug: vendorSlug,
+    },
+  });
+
+  return {
+    title: `${singleVendor?.name} Exams`,
+    description: `See the exams for Vendor ${singleVendor?.name} and pick the one which you like`,
+  };
+}
+
+const VendorPage = async ({
   params,
   searchParams,
 }: {
@@ -72,4 +90,4 @@ const page = async ({
   );
 };
 
-export default page;
+export default VendorPage;

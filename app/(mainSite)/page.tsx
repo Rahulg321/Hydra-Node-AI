@@ -12,6 +12,12 @@ import InnovativeFeaturesSection from "@/components/sections/InnovativeFeaturesS
 import VideoGuideSection from "@/components/sections/VideoGuideSection";
 import OurPartners from "@/components/sections/OurPartners";
 import db from "@/lib/db";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Home page",
+};
 
 export default async function Home() {
   return (

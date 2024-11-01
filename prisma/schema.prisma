@@ -238,39 +238,31 @@ model UserAttempt {
   @@unique([quizSessionId, questionId])
 }
 
-model QuestionOption {
-  id          String   @id @default(cuid())
-  option      String // Stores the option text (e.g., "Option 1", "Option 2")
-  explanation String // Explanation for the option
-  questionId  String
-  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-}
-
-model CorrectAnswer {
-  id         String   @id @default(cuid())
-  answer     String // The answer could be the option ID or the option text (whichever you prefer)
-  questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-}
-
 model Question {
-  id                 String       @id @default(cuid())
+  id                 String        @id @default(cuid())
   question           String
-  type               QuestionType @default(MCQ)
+  questionType       QuestionType
+  answerOption1      String
+  explanation1       String
+  answerOption2      String
+  explanation2       String
+  answerOption3      String
+  explanation3       String
+  answerOption4      String
+  explanation4       String
+  answerOption5      String? // Nullable as there are some missing values
+  explanation5       String? // Nullable as there are some missing values
+  answerOption6      String? // Nullable as there are some missing values
+  explanation6       String? // Nullable as there are some missing values
+  correctAnswers     String // Storing as string, assuming multi-select answers are comma-separated
   overallExplanation String
-  examId             String
-  exam               Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
-
-  options        QuestionOption[]
-  correctAnswers CorrectAnswer[]
-
-  UserAttempt UserAttempt[]
-  createdAt   DateTime      @default(now())
+  domain             String
+  Exam               Exam?         @relation(fields: [examId], references: [id])
+  examId             String?
+  UserAttempt        UserAttempt[]
 }
 
 enum QuestionType {
-  MCQ
-  TRUE_FALSE
-  MULTI_SELECT
-  SHORT_ANSWER
+  multiple_choice
+  multi_select
 }

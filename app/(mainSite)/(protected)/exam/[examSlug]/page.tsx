@@ -162,8 +162,8 @@ const ExamPage = async ({
           )}
 
           {hasTrialAccess ? (
-            <div>
-              <h3>You have trial access to this exam</h3>
+            <div className="mt-4 md:mt-6">
+              <h3 className="mb-2">You have trial access to this exam</h3>
               <StartTrialExamDialog
                 examId={exam.id}
                 examSlug={exam.slug}
@@ -266,7 +266,7 @@ function PricingCard({
   return (
     <div
       className={cn(
-        "flex flex-col justify-between gap-4 rounded-lg border p-4",
+        "flex h-fit flex-col justify-between gap-4 rounded-lg border p-4",
         classname,
         {
           "bg-base": isFeatured,

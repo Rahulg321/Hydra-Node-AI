@@ -1,6 +1,14 @@
 import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
 import db from "@/lib/db";
+import { redirect } from "next/navigation";
 import React from "react";
+
+export async function generateMetadata() {
+  return {
+    title: `Vendors`,
+    description: `Select a vendor to view their exams and select an exam to view its particulars`,
+  };
+}
 
 const ExamsPage = async ({
   searchParams,
@@ -10,6 +18,7 @@ const ExamsPage = async ({
     examType?: string;
   };
 }) => {
+  redirect("/vendors/amazon-exams");
   return (
     <section className="block-space big-container">
       <h2>Select an Exam to view its Particulars</h2>

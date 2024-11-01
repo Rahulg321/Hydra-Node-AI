@@ -189,7 +189,7 @@ function ProfileMenu() {
             src={session?.data?.user.image || "https://github.com/shadcn.png"}
             alt="@shadcn"
           />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>HN</AvatarFallback>
         </Avatar>
         <span className="flex items-center font-medium text-baseC">
           Account <ChevronDown />

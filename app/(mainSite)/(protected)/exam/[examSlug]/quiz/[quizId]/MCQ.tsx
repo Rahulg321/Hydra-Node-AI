@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useExamModeContext } from "@/lib/exam-mode-context";
 import { cn, formatTime } from "@/lib/utils";
-import { Exam, QuizSession } from "@prisma/client";
+import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +21,7 @@ import React, {
 import EndQuizButton from "./EndQuizButton";
 import TimeLeft from "./TimeLeft";
 import CorrectQuestionGrid from "./CorrectQuestionGrid";
+import HtmlContent from "@/components/html-content";
 
 type McqProps = {
   quizSession: QuizSession;
@@ -30,20 +31,7 @@ type McqProps = {
     slug: string;
     timeAllowed: number;
   };
-  questions: Array<{
-    id: string;
-    type: string;
-    question: string;
-    overallExplanation: string;
-    correctAnswers: Array<{
-      id: string;
-      answer: string;
-    }>;
-    options: Array<{
-      id: string;
-      option: string;
-    }>;
-  }>;
+  questions: Question[];
 };
 
 const MCQ = ({ quizSession, exam, questions }: McqProps) => {
@@ -56,22 +44,20 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   );
 
   const { toast } = useToast();
-  const totalTime = quizSession.examTime * 60;
+
+  const totalQuizTime = quizSession.examTime * 60;
+
   const [showAnswer, setShowAnswer] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<number[]>([]);
   const [questionIndex, setQuestionIndex] = useState(currentQuestionNumber - 1);
   const [skippedAnswers, setSkippedAnswers] = useState(0);
   const [hasEnded, setHasEnded] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(totalTime);
   const [questionStatus, setQuestionStatus] = useState(
     Array(questions.length).fill(null),
   );
 
-  const currentQuestion = useMemo(
-    () => questions[questionIndex],
-    [questionIndex, questions],
-  );
+  const currentQuestion = questions[questionIndex];
 
   useEffect(() => {
     if (!isPending && hasEnded) return;
@@ -115,48 +101,11 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     [searchParams],
   );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRemainingTime((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(interval);
-          axios
-            .post("/api/EndQuiz", { quizSessionId: quizSession.id })
-            .then((response) => {
-              if (response.status !== 200) {
-                throw new Error("Could not end the quiz, error occurred");
-              }
-              toast({
-                variant: "default",
-                title: "Quiz has Ended",
-                description: "Your Exam has Ended",
-              });
-            })
-            .catch((error) => {
-              console.error("Error updating end time:", error);
-              toast({
-                variant: "destructive",
-                title: "Error Ending Quiz ❌",
-                description:
-                  "Could not update the quiz end time. Please try again.",
-              });
-            });
-          setHasEnded(true);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [toast, quizSession.id]);
-
   const handlePrevious = useCallback(() => {
     const newQuestionNumber = Math.max(1, currentQuestionNumber - 1);
     router.push(
       `?${createQueryString("question-number", newQuestionNumber.toString())}`,
     );
-    setQuestionIndex((prev) => prev - 1);
     setSelected([]);
   }, [createQueryString, currentQuestionNumber, router]);
 
@@ -166,39 +115,37 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
         if (isPending) return;
 
         let status = "skipped";
+        let questionId = currentQuestion.id;
+        let quizSessionId = quizSession.id;
+        let questionType = currentQuestion.questionType;
 
-        let selectedAnswers = selected.map(
-          (index) => currentQuestion.options[index].option,
-        );
-
+        // check if any answer is selected
         if (selected.length > 0) {
+          // Make an API call to check the answer
+          const userAnswer = selected;
+
+          console.log({ questionId, quizSessionId, questionType, userAnswer });
+
           const response = await axios.post("/api/CheckAnswer", {
-            questionId: currentQuestion.id,
-            quizSessionId: quizSession.id,
-            userAnswer:
-              currentQuestion.type === "MCQ"
-                ? selectedAnswers[0]
-                : selectedAnswers,
+            questionId,
+            quizSessionId,
+            questionType,
+            userAnswer,
           });
 
           if (response.status !== 200) {
-            throw new Error("Error Clicking Next");
+            throw new Error("Server Side Error while submitting question");
           }
 
           status = "attempted";
         } else {
           const response = await axios.post("/api/SkipAnswer", {
-            questionId: currentQuestion.id,
-            quizSessionId: quizSession.id,
+            questionId,
+            quizSessionId,
           });
 
           if (response.status !== 200) {
-            toast({
-              variant: "destructive",
-              title: "Error making API call to skip question",
-              description: "Made an API call to skip the question",
-            });
-            throw new Error("Error Clicking Next");
+            throw new Error("Server Side Error while skipping a question");
           }
 
           toast({
@@ -251,8 +198,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     });
   }, [
     currentQuestion.id,
-    currentQuestion.options,
-    currentQuestion.type,
+    currentQuestion.questionType,
     currentQuestionNumber,
     questionIndex,
     quizSession.id,
@@ -265,26 +211,28 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   ]);
 
   const handleSelectOption = (index: number) => {
-    if (currentQuestion.type === "MCQ") {
-      setSelected([index]); // Single selection for MCQ
-    } else if (currentQuestion.type === "MULTI_SELECT") {
-      setSelected((prev) =>
-        prev.includes(index)
-          ? prev.filter((i) => i !== index)
-          : [...prev, index],
-      ); // Toggle for multi-select
+    if (currentQuestion.questionType === "multiple_choice") {
+      setSelected([index]);
+    }
+
+    if (currentQuestion.questionType === "multi_select") {
+      setSelected((prevSelected) => {
+        if (prevSelected.includes(index)) {
+          return prevSelected.filter((i) => i !== index);
+        }
+        return [...prevSelected, index];
+      });
     }
   };
-
-  const isTimeCritical = remainingTime <= 60;
 
   return (
     <section className="grid min-h-screen grid-cols-5">
       <div className="block-space container col-span-1 space-y-6">
-        <TimeLeft
-          time={formatTime(remainingTime)}
-          isTimeCritical={isTimeCritical}
-          quizEnded={hasEnded}
+        <CountDownTimer
+          initialTime={totalQuizTime}
+          quizSessionId={quizSession.id}
+          mcqQuizEnded={hasEnded}
+          setMcqQuizEnded={setHasEnded}
         />
         <CorrectQuestionGrid
           questionLength={questions.length}
@@ -332,61 +280,42 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               </span>
             </div>
 
-            <span>Question Type: {currentQuestion.type}</span>
-            <h3 className="my-4 font-medium">{currentQuestion.question}</h3>
-            <div className="space-y-4">
-              {currentQuestion.options.map((optionObj, index) => {
-                const isSelected = selected.includes(index);
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectOption(index)}
-                    className={cn(
-                      "flex cursor-pointer items-center gap-2 rounded-lg border border-base p-4 md:p-6",
-                      {
-                        "border-white bg-base": isSelected,
-                      },
-                    )}
-                  >
-                    {currentQuestion.type === "MULTI_SELECT" ? (
-                      // Render a checkbox for MULTI_SELECT question types
-                      <Input
-                        type="checkbox"
-                        checked={isSelected}
-                        readOnly
-                        className="form-checkbox h-5 w-5 text-base"
-                      />
-                    ) : (
-                      // Render a circle for MCQ question types
-                      <div
-                        className={cn(
-                          "size-4 rounded-full border border-base transition duration-75 ease-in",
-                          {
-                            "border-4 border-white": isSelected,
-                          },
-                        )}
-                      ></div>
-                    )}
-                    <h5 className={cn("", { "text-white": isSelected })}>
-                      {optionObj.option}
-                    </h5>
-                  </div>
-                );
-              })}
+            <span>Question Type: {currentQuestion.questionType}</span>
+            <div>
+              <div className="my-4 md:my-6 lg:my-8">
+                <HtmlContent content={currentQuestion.question} />
+              </div>
+              <div className="space-y-4">
+                {/* TODO:-  figure out why this does not work */}
+                {[...Array(6)].map((_, i) => {
+                  let questionType = currentQuestion.questionType;
+
+                  // @ts-ignore
+                  let optionText = currentQuestion[`answerOption${i + 1}`];
+
+                  return (
+                    <Option
+                      key={i}
+                      questionType={questionType}
+                      optionText={optionText}
+                      selected={selected.includes(i + 1)}
+                      onSelect={() => {
+                        handleSelectOption(i + 1);
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div>
+              {showAnswer ? (
+                <div className="space-y-4">
+                  <span>{currentQuestion.overallExplanation}</span>
+                </div>
+              ) : null}
             </div>
             <div className="mt-4 flex justify-between">
               <div className="">
-                {showAnswer ? (
-                  <div className="space-y-4">
-                    <h3 className="text-green-400">
-                      Correct Answers:{" "}
-                      {currentQuestion.correctAnswers
-                        .map((answerObj) => answerObj.answer)
-                        .join(", ")}
-                    </h3>
-                    <span>{currentQuestion.overallExplanation}</span>
-                  </div>
-                ) : null}
                 {quizSession.examMode === "PRACTICE" ? (
                   <Button
                     className="my-4 rounded-full bg-base px-10 py-6 text-base"
@@ -430,3 +359,117 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 };
 
 export default MCQ;
+
+function CountDownTimer({
+  initialTime,
+  quizSessionId,
+  mcqQuizEnded,
+  setMcqQuizEnded,
+}: {
+  initialTime: number;
+  quizSessionId: string;
+  mcqQuizEnded: boolean;
+  setMcqQuizEnded: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { toast } = useToast();
+  const [remainingTime, setRemainingTime] = useState(initialTime);
+
+  const isTimeCritical = remainingTime <= 60;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(interval);
+          axios
+            .post("/api/EndQuiz", { quizSessionId })
+            .then((response) => {
+              if (response.status !== 200) {
+                throw new Error("Could not end the quiz, error occurred");
+              }
+              toast({
+                variant: "default",
+                title: "Quiz has Ended",
+                description: "Your Exam has Ended",
+              });
+            })
+            .catch((error) => {
+              console.error("Error updating end time:", error);
+              toast({
+                variant: "destructive",
+                title: "Error Ending Quiz ❌",
+                description:
+                  "Could not update the quiz end time. Please try again.",
+              });
+            });
+          setMcqQuizEnded(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [quizSessionId, setMcqQuizEnded, toast]);
+
+  return (
+    <div
+      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-500" : "bg-base"} text-white`}
+    >
+      {mcqQuizEnded ? (
+        <div>
+          <h3>Exam Ended</h3>
+        </div>
+      ) : (
+        <div>
+          <h4>Time Left</h4>
+          <h3>{formatTime(remainingTime)}</h3>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Option({
+  questionType,
+  optionText,
+  selected,
+  onSelect,
+}: {
+  questionType: "multi_select" | "multiple_choice";
+  optionText: string | null;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  if (!optionText) return null;
+
+  console.log({ questionType, optionText, selected });
+
+  return (
+    <div
+      className={`flex cursor-pointer items-center gap-2 rounded-lg border-2 border-base p-4 ${
+        selected ? "bg-baseC text-white" : ""
+      }`}
+      onClick={onSelect}
+    >
+      {questionType === "multi_select" ? (
+        <input
+          type="checkbox"
+          checked={selected}
+          readOnly
+          className="form-checkbox h-5 w-5 cursor-pointer text-base"
+        />
+      ) : (
+        <input
+          type="radio"
+          checked={selected}
+          readOnly
+          className="form-radio h-5 w-5 cursor-pointer text-base"
+        />
+      )}
+      <label className="cursor-pointer text-xl font-semibold">
+        {optionText}
+      </label>
+    </div>
+  );
+}

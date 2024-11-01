@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import React from "react";
 import { redirect } from "next/navigation";
 import ReviewMcq from "./ReviewMcq";
+import { getExamWithSlug } from "@/data/exam";
 
 type ReviewExamPageProps = {
   params: {
@@ -9,6 +10,29 @@ type ReviewExamPageProps = {
     quizId: string;
   };
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { examSlug: string; quizId: string };
+}) {
+  let slug = params.examSlug;
+
+  let post = await db.exam.findFirst({
+    where: {
+      slug,
+    },
+    select: {
+      name: true,
+      description: true,
+    },
+  });
+
+  return {
+    title: `Review ${post!.name}`,
+    description: `Review of your exam:- ${post!.description}`,
+  };
+}
 
 const ReviewExamPage = async ({
   params: { examSlug, quizId },
@@ -32,16 +56,22 @@ const ReviewExamPage = async ({
   const userAttempts = await db.userAttempt.findMany({
     where: { quizSessionId: quizId },
     include: {
-      question: {
-        include: {
-          options: true,
-          correctAnswers: true,
-        },
-      },
+      question: true,
     },
   });
 
-  return <ReviewMcq quizSession={quizSession} userAttempts={userAttempts} />;
+  console.log("user attempts", userAttempts);
+
+  return (
+    <div className="min-h-screen">
+      <ReviewMcq
+        quizSession={quizSession}
+        userAttempts={userAttempts}
+        examName={quizSession.exam.name}
+        examSlug={examSlug}
+      />
+    </div>
+  );
 };
 
 export default ReviewExamPage;

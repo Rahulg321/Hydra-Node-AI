@@ -1,158 +1,98 @@
 import db from "@/lib/db";
-import { z, ZodError } from "zod";
+import { NextRequest, NextResponse } from "next/server";
 
-// Update schema to accept both string (for MCQ) and array (for MULTI_SELECT)
-const checkAnswerSchema = z.object({
-  questionId: z.string(),
-  quizSessionId: z.string(),
-  userAnswer: z.union([z.string(), z.array(z.string())]), // Can be a string for MCQ or an array for MULTI_SELECT
-});
+function areAnswersCorrect(correctAnswersStr: string, userAnswer: number[]) {
+  // Step 1: Convert correctAnswersStr to an array of numbers and sort it
+  const correctAnswersArr = correctAnswersStr
+    .split(",")
+    .map(Number)
+    .sort((a, b) => a - b);
 
-export async function POST(request: Request) {
+  // Step 2: Sort the userAnswer array as well
+  const sortedUserAnswer = [...userAnswer].sort((a, b) => a - b);
+
+  // Step 3: Compare both arrays for equality
+  if (correctAnswersArr.length !== sortedUserAnswer.length) {
+    return false;
+  }
+
+  return correctAnswersArr.every(
+    (val, index) => val === sortedUserAnswer[index],
+  );
+}
+
+export async function POST(request: NextRequest) {
   try {
-    // Parse and validate the request body
     const body = await request.json();
-    const { questionId, userAnswer, quizSessionId } =
-      checkAnswerSchema.parse(body);
+    const { questionId, quizSessionId, questionType, userAnswer } = body;
 
-    // Fetch the current question with related correct answers
-    const currentQuestion = await db.question.findUnique({
+    if (
+      !questionId ||
+      !quizSessionId ||
+      !questionType ||
+      !Array.isArray(userAnswer)
+    ) {
+      return NextResponse.json(
+        {
+          message: "Invalid request body. Missing fields or incorrect format.",
+        },
+        { status: 400 },
+      );
+    }
+
+    // Retrieve question from database
+    const databaseQuestion = await db.question.findFirst({
       where: { id: questionId },
-      include: {
-        correctAnswers: true, // Fetch the correct answers
-      },
     });
 
-    if (!currentQuestion) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "Question not found.",
-        }),
+    if (!databaseQuestion) {
+      return NextResponse.json(
+        { message: "Question not found." },
         { status: 404 },
       );
     }
 
-    if (currentQuestion.type === "MCQ") {
-      // Handle MCQ: userAnswer is expected to be a single string
-      let singleAnswer = userAnswer as string;
+    // Determine if the user's answer is correct
+    const correctAnswers = databaseQuestion.correctAnswers;
+    const answerResult = areAnswersCorrect(correctAnswers, userAnswer);
 
-      const isCorrect = currentQuestion.correctAnswers.some(
-        (correctAnswer) =>
-          correctAnswer.answer.toLowerCase().trim() ===
-          singleAnswer.toLowerCase().trim(),
-      );
+    console.log("correct answers", correctAnswers);
+    console.log("user answers", userAnswer);
+    console.log("answerResult", answerResult);
 
-      // Upsert the user's attempt (create or update the record)
-      await db.userAttempt.upsert({
-        where: {
-          quizSessionId_questionId: {
-            quizSessionId,
-            questionId,
-          },
-        },
-        update: {
-          userAnswer: singleAnswer,
-          isCorrect,
-        },
-        create: {
-          questionId,
+    // Track if the user skipped the question
+    const isSkipped = userAnswer.length === 0;
+
+    // Upsert UserAttempt with the result
+    await db.userAttempt.upsert({
+      where: {
+        quizSessionId_questionId: {
           quizSessionId,
-          userAnswer: singleAnswer,
-          isCorrect,
-        },
-      });
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          isCorrect,
-          message: "Answer recorded successfully.",
-        }),
-        { status: 200 },
-      );
-    } else if (currentQuestion.type === "MULTI_SELECT") {
-      // Handle MULTI_SELECT: userAnswer is expected to be an array of strings
-      if (!Array.isArray(userAnswer)) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: "Invalid answer format for MULTI_SELECT question.",
-          }),
-          { status: 400 },
-        );
-      }
-
-      const correctAnswers = currentQuestion.correctAnswers.map((answer) =>
-        answer.answer.toLowerCase().trim(),
-      );
-
-      const userSelectedAnswers = userAnswer.map((answer) =>
-        answer.toLowerCase().trim(),
-      );
-
-      // Check if all correct answers are selected, and no additional incorrect answers are selected
-      const isCorrect =
-        userSelectedAnswers.length === correctAnswers.length &&
-        userSelectedAnswers.every((answer) => correctAnswers.includes(answer));
-
-      console.log("correct answer in multi select question", isCorrect);
-
-      // Upsert the user's attempt (create or update the record)
-      await db.userAttempt.upsert({
-        where: {
-          quizSessionId_questionId: {
-            quizSessionId,
-            questionId,
-          },
-        },
-        update: {
-          userAnswer: userAnswer.join(", "), // Store as a comma-separated string for readability
-          isCorrect,
-        },
-        create: {
           questionId,
-          quizSessionId,
-          userAnswer: userAnswer.join(", "), // Store as a comma-separated string for readability
-          isCorrect,
         },
-      });
+      },
+      create: {
+        quizSessionId,
+        questionId,
+        userAnswer: userAnswer.join(","),
+        isCorrect: answerResult,
+        skipped: isSkipped,
+      },
+      update: {
+        userAnswer: userAnswer.join(","),
+        isCorrect: answerResult,
+        skipped: isSkipped,
+      },
+    });
 
-      return new Response(
-        JSON.stringify({
-          success: true,
-          isCorrect,
-          message: "Answer recorded successfully.",
-        }),
-        { status: 200 },
-      );
-    } else {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "Unsupported question type.",
-        }),
-        { status: 400 },
-      );
-    }
+    return NextResponse.json(
+      { message: "Answer was evaluated successfully." },
+      { status: 200 },
+    );
   } catch (error) {
-    console.error("Error occurred in checkAnswer API:", error);
-
-    if (error instanceof ZodError) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: error.issues[0].message,
-        }),
-        { status: 400 },
-      );
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: "An unexpected error occurred.",
-      }),
+    console.error("Error evaluating question", error);
+    return NextResponse.json(
+      { message: "Error evaluating question" },
       { status: 500 },
     );
   }

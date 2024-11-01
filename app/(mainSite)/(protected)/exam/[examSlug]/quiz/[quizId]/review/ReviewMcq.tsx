@@ -1,67 +1,31 @@
 "use client";
 
+import HtmlContent from "@/components/html-content";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Exam, QuizSession, UserAttempt } from "@prisma/client";
-import React, { useEffect, useMemo, useState } from "react";
+import { Question, QuizSession, UserAttempt } from "@prisma/client";
+import { CircleCheckBig, CircleX } from "lucide-react";
 import Link from "next/link";
-import StartExamButton from "../../../StartExamButton";
+import React from "react";
 
-type ReviewMcqProps = {
-  quizSession: QuizSession & {
-    exam: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-  };
-  userAttempts: Array<
-    UserAttempt & {
-      question: {
-        id: string;
-        type: string;
-        overallExplanation: string;
-        question: string;
-        options: Array<{ id: string; option: string; explanation: string }>;
-        correctAnswers: Array<{ id: string; answer: string }>;
-      };
-    }
-  >;
-};
+const ReviewMcq = ({
+  userAttempts,
+  quizSession,
+  examName,
+  examSlug,
+}: {
+  userAttempts: (UserAttempt & {
+    question: Question;
+  })[];
+  quizSession: QuizSession;
+  examName: string;
+  examSlug: string;
+}) => {
+  const [userAttemptIndex, setUserAttemptIndex] = React.useState(0);
+  const [showOverallExplanation, setShowOverallExplanation] =
+    React.useState(false);
 
-const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
-  const [userAttemptIndex, setUserAttemptIndex] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-
-  const currentAttempt = useMemo(
-    () => userAttempts[userAttemptIndex],
-    [userAttemptIndex, userAttempts],
-  );
-
-  console.log("current attempt", currentAttempt);
-
-  const options = currentAttempt.question.options.map((e) => {
-    return {
-      option: e.option,
-      explanation: e.explanation,
-    };
-  });
-
-  const isCorrectAnswer = (option: string) => {
-    return currentAttempt.question.correctAnswers.some(
-      (correct) => correct.answer.toLowerCase() === option.toLowerCase(),
-    );
-  };
-
-  const isSelectedAnswer = (option: string) => {
-    const userAnswersArray = currentAttempt.userAnswer.split(",");
-    return userAnswersArray.some(
-      (answer) => answer.trim().toLowerCase() === option.toLowerCase(),
-    );
-  };
-
-  const handleNext = () => setUserAttemptIndex((prev) => prev + 1);
-  const handlePrevious = () => setUserAttemptIndex((prev) => prev - 1);
+  const currentAttempt = userAttempts[userAttemptIndex];
 
   const calculateScore = () => {
     const correctQuestions = userAttempts.filter(
@@ -70,10 +34,12 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
     return (correctQuestions / userAttempts.length) * 100;
   };
 
+  const handleNext = () => setUserAttemptIndex((prev) => prev + 1);
+  const handlePrevious = () => setUserAttemptIndex((prev) => prev - 1);
+
   return (
     <section className="">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-        {/* Sidebar Section */}
+      <div className="grid grid-cols-1 md:grid-cols-5">
         <div className="container col-span-1 space-y-4">
           <h4 className="text-baseC">Exam Content</h4>
 
@@ -106,108 +72,86 @@ const ReviewMcq = ({ quizSession, userAttempts }: ReviewMcqProps) => {
             score={calculateScore()}
           />
 
-          <StartExamButton
-            buttonLabel="Retake Exam"
-            examId={quizSession.examId}
-            examSlug={quizSession.exam.slug}
-            currentUserId={quizSession.userId}
-          />
-
-          <Button asChild>
-            <Link
-              href={`/exam/${quizSession.exam.slug}/quiz/${quizSession.id}/results`}
-            >
-              Back to EXAM Result
+          <Button asChild variant={"hydraPrimary"}>
+            <Link href={`/exam/${examSlug}/quiz/${quizSession.id}/results`}>
+              See Results
             </Link>
           </Button>
         </div>
+        <div className="container col-span-4 py-4">
+          <h2>{examName}</h2>
+          <div className="mt-4 flex justify-between">
+            <span className="font-medium">
+              Exam Mode{" "}
+              <span className="font-bold">{quizSession.examMode}</span>
+            </span>
+            <span className="font-medium">
+              Question <span className="font-bold">{userAttemptIndex + 1}</span>
+            </span>
+            <span className="font-medium">
+              Total Questions{" "}
+              <span className="font-bold">{userAttempts.length}</span>
+            </span>
+          </div>
 
-        {/* Question and Answer Section */}
-        {/* <div
-          className={cn("container col-span-4 py-4", {
-            "bg-green-200": currentAttempt.isCorrect,
-            "bg-red-200": !currentAttempt.isCorrect,
-          })} */}
-        <div className={cn("container col-span-4 py-4")}>
-          {/* Question Navigation */}
-          <QuestionHeader
-            currentQuestionIndex={userAttemptIndex + 1}
-            totalQuestions={userAttempts.length}
-          />
+          <span>Question Type: {currentAttempt.question.questionType}</span>
+          <div className="my-4 md:my-8">
+            <HtmlContent content={currentAttempt.question.question} />
+          </div>
 
-          <h2>{currentAttempt.question.question}</h2>
+          <div className="space-y-4 md:space-y-6">
+            {/* TODO:-  figure out why this does not work */}
+            {[...Array(6)].map((_, i) => {
+              let questionType = currentAttempt.question.questionType;
+              let currentQuestion = currentAttempt.question;
 
-          {/* Options Section */}
-          <div className="mt-4 space-y-4">
-            {options.map((option, index) => {
-              const isCorrectOption = isCorrectAnswer(option.option);
-              const isUserSelection = isSelectedAnswer(option.option);
-              const isUserIncorrectSelection =
-                !isCorrectOption && isUserSelection;
+              // @ts-ignore
+              let optionText = currentQuestion[`answerOption${i + 1}`];
+
+              // @ts-ignore
+              let optionExplanation = currentQuestion[`explanation${i + 1}`];
+
+              let correctAnswers = currentAttempt.question.correctAnswers;
+              let correctAnswersArray = correctAnswers.split(",").map(Number);
+              let isCorrect = correctAnswersArray.includes(i + 1);
 
               return (
-                <div key={index}>
-                  <div
-                    className={cn(
-                      "flex cursor-pointer items-center gap-2 rounded-lg border border-base p-4 md:p-6",
-                      {
-                        "border-4 border-green-500 bg-green-50 text-green-600":
-                          isCorrectOption, // Correct Answer (light green background)
-                        "border-4 border-red-500 bg-red-50 text-red-600":
-                          isUserIncorrectSelection, // Incorrect Answer (light red background)
-                        "border-4 border-blue-500 bg-blue-50 text-blue-600":
-                          isUserSelection && !isCorrectOption, // User-selected wrong option
-                        "hover:shadow-lg": !isUserSelection, // Add subtle hover effect for unselected
-                      },
-                    )}
-                  >
-                    <h5 className="">{option.option}</h5>
-                  </div>
-                  <span
-                    className={cn("font-bold text-red-500", {
-                      "font-bold text-green-500": isCorrectOption,
-                      "": isUserIncorrectSelection,
-                    })}
-                  >
-                    {option.explanation}
-                  </span>
-                </div>
+                <Option
+                  key={i}
+                  questionType={questionType}
+                  optionText={optionText}
+                  optionExplanation={optionExplanation}
+                  isCorrect={isCorrect!}
+                />
               );
             })}
           </div>
-
           {/* Show/Hide Answer Button */}
-          {showAnswer && (
+          {showOverallExplanation && (
             <div className="mt-6 space-y-4">
-              <h4 className="font-medium text-green-600">
-                Correct Answer:{" "}
-                {currentAttempt.question.correctAnswers
-                  .map((a) => a.answer)
-                  .join(", ")}
-              </h4>
-              <span className="block font-medium">
+              <h4>Overall Explanation:-</h4>
+              <span className="font-semibold text-green-800">
                 {currentAttempt.question.overallExplanation}
               </span>
             </div>
           )}
-
           <div className="mt-4 flex justify-between">
             <Button
-              className="mb-4 rounded-full bg-base px-10 py-6 text-base"
-              onClick={() => setShowAnswer((prev) => !prev)}
+              variant={"hydraPrimary"}
+              onClick={() => setShowOverallExplanation((prev) => !prev)}
             >
-              {showAnswer ? "Hide Answer" : "Get Overall Explanation"}
+              {showOverallExplanation ? "Hide" : "Get Overall Explanation"}
             </Button>
             <div className="space-x-4">
               <Button
-                className="mb-4 rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white"
+                variant={"hydraPrimary"}
                 onClick={handlePrevious}
                 disabled={userAttemptIndex === 0}
               >
                 Previous Question
               </Button>
               <Button
-                className="mb-4 rounded-full bg-base px-10 py-6 text-base"
+                variant={"hydraPrimary"}
                 onClick={handleNext}
                 disabled={userAttemptIndex === userAttempts.length - 1}
               >
@@ -306,6 +250,64 @@ function CorrectQuestionGrid({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function Option({
+  questionType,
+  optionText,
+  optionExplanation,
+  isCorrect,
+}: {
+  questionType: "multi_select" | "multiple_choice";
+  optionExplanation: string;
+  optionText: string | null;
+  isCorrect: boolean;
+}) {
+  const [selected, setSelected] = React.useState(false);
+
+  const onSelect = () => setSelected((prev) => !prev);
+
+  if (!optionText) return null;
+
+  console.log({ questionType, optionText, selected, isCorrect });
+
+  return (
+    <div
+      className={cn("cursor-pointer border-2 border-base p-4", {
+        "border-green-500": isCorrect,
+        "border-red-500": !isCorrect,
+      })}
+      onClick={onSelect}
+    >
+      <div className={`flex cursor-pointer items-center gap-2 rounded-lg`}>
+        {isCorrect ? (
+          <div>
+            <CircleCheckBig className="text-green-600" />
+          </div>
+        ) : (
+          <div>
+            <CircleX className="text-red-800" />
+          </div>
+        )}
+        <label className="cursor-pointer text-xl font-semibold">
+          {optionText}
+        </label>
+      </div>
+      {selected && (
+        <div className="mt-4 space-y-4">
+          <h4>Explanation</h4>
+          <span
+            className={cn("font-semibold", {
+              "text-green-800": isCorrect,
+              "text-red-800": !isCorrect,
+            })}
+          >
+            {optionExplanation}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -35,6 +35,12 @@ const QuizResultsPage = async ({ params }: props) => {
           questions: true,
         },
       },
+      userAttempts: {
+        select: {
+          isCorrect: true,
+          skipped: true,
+        },
+      },
     },
   });
 
@@ -86,13 +92,19 @@ const QuizResultsPage = async ({ params }: props) => {
 
   return (
     <section className="container py-4">
-      <span>Results for your Exam</span>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div>
-          <h2 className="my-8">
+      <h1>Exam Results</h1>
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="space-y-4">
+          <h2 className="">
             Total Questions <span className="font-bold">{totalQuestions}</span>
           </h2>
-          <h2 className="my-8">
+          <h2 className="">
+            Questions Attempted{" "}
+            <span className="font-bold">
+              {currentQuizSession.userAttempts.length}
+            </span>
+          </h2>
+          <h2 className="">
             Total Time Allowed{" "}
             <span className="font-bold">{examTimeInMinutes} minutes</span>
           </h2>

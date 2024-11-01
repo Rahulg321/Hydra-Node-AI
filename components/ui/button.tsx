@@ -18,7 +18,8 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        hydraPrimary: "bg-base shadow-sm text-gray-100 hover:bg-base/80",
+        hydraPrimary:
+          "bg-base shadow-sm text-gray-100 hover:bg-base/80 rounded-2xl",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

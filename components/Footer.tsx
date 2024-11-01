@@ -77,9 +77,7 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <div>
-          <ModeToggle />
-        </div>
+        <div></div>
       </div>
     </footer>
   );

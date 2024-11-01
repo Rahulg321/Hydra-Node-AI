@@ -4,7 +4,7 @@ import MCQ from "./MCQ";
 import { shuffleArray } from "@/lib/utils";
 import { getExamWithSlug } from "@/data/exam";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -13,13 +13,9 @@ export async function generateMetadata({
 }) {
   const post = await getExamWithSlug(params.examSlug);
 
-  if (!post) {
-    return;
-  }
-
   return {
-    title: post.name,
-    description: post.description,
+    title: `${post?.name} Quiz`,
+    description: `Attempt the quiz for ${post?.name} - ${post?.description} and see how well you perform`,
   };
 }
 
@@ -82,11 +78,7 @@ const McqQuizPage = async ({
 
   const questions = await db.question.findMany({
     where: {
-      examId: exam?.id,
-    },
-    include: {
-      options: true,
-      correctAnswers: true,
+      examId: exam.id,
     },
   });
 
@@ -109,20 +101,8 @@ const McqQuizPage = async ({
   // Shuffle the questions and apply the limit
   const shuffledQuestions = shuffleArray(questions).slice(0, questionsLimit);
 
-  // Shuffle options for each question
-  const shuffledQuestionsWithOptions = shuffledQuestions.map((question) => ({
-    ...question,
-    options: shuffleArray(question.options),
-  }));
-
-  console.log("Shuffled questions with options:", shuffledQuestionsWithOptions);
-
   return (
-    <MCQ
-      quizSession={quizSession}
-      exam={exam}
-      questions={shuffledQuestionsWithOptions}
-    />
+    <MCQ quizSession={quizSession} exam={exam} questions={shuffledQuestions} />
   );
 };
 
