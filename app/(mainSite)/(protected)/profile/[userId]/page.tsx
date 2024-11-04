@@ -15,6 +15,7 @@ import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
 import { ProfilePicUploadDialog } from "@/components/Dialogs/ProfilePicUploadDialog";
 import EditProfileForm from "@/components/forms/edit-profile-form";
 import type { Metadata, ResolvingMetadata } from "next";
+import { getPlaceholderForRemoteImage } from "@/lib/get-placeholder";
 
 type ProfilePageProps = {
   params: {
@@ -496,6 +497,10 @@ async function ProfileSidebar({ loggedInUser }: { loggedInUser: User }) {
   const { id, firstName, lastName, email, image, isTwoFactorEnabled } =
     loggedInUser;
 
+  let blurData = await getPlaceholderForRemoteImage(
+    image || "https://github.com/shadcn.png",
+  );
+
   return (
     <div className="col-span-1 row-span-2 rounded-xl bg-white py-4">
       <Image
@@ -504,6 +509,7 @@ async function ProfileSidebar({ loggedInUser }: { loggedInUser: User }) {
         height={150}
         width={150}
         className="mx-auto rounded-full"
+        blurDataURL={blurData}
       />
       <div className="mt-2 space-y-2 px-2">
         <div className="block">

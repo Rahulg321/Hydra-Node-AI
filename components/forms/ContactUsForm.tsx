@@ -48,7 +48,6 @@ const ContactUsForm = () => {
           title: "Submitted Contact Form ✅",
           description: response.message,
         });
-        form.reset();
       } else {
         toast({
           title: "Submitted Contact Form ❌",

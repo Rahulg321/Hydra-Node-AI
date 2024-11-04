@@ -2,10 +2,36 @@
 
 import { sendContactFormEmail } from "@/lib/mail";
 import { ContactFormSchemaZodType } from "@/lib/schemas/ContactFormSchema";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/lib/redis";
+import { headers } from "next/headers";
+
+const rateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
 
 export default async function submitContactForm(
   values: ContactFormSchemaZodType,
 ) {
+  const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+
+  const {
+    remaining,
+    limit,
+    success: limitReached,
+  } = await rateLimit.limit(ip!);
+
+  console.log({ remaining, limit, limitReached });
+
+  if (!limitReached) {
+    return {
+      status: false,
+      message:
+        "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
+    };
+  }
+
   try {
     console.log("Values", values);
     const emailResponse = await sendContactFormEmail(

@@ -2,9 +2,35 @@
 
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/lib/redis";
+import { headers } from "next/headers";
+
+const rateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(3, "10m"),
+});
 
 const UpdateProfilePic = async (formData: FormData, userId: string) => {
   try {
+    const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+
+    const {
+      remaining,
+      limit,
+      success: limitReached,
+    } = await rateLimit.limit(ip!);
+
+    console.log({ remaining, limit, limitReached });
+
+    if (!limitReached) {
+      return {
+        success: false,
+        message:
+          "Too Many requests!!!. Please try again later after 10 minutes",
+      };
+    }
+
     console.log("Values in profile pic server action");
 
     const image = formData.get("image") as File;
