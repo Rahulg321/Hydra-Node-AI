@@ -281,13 +281,6 @@ function PricingCard({
         >
           {heading}
         </h4>
-        <span
-          className={cn("font-base text-mutedText", {
-            "text-[#D9DBE9]": isFeatured,
-          })}
-        >
-          {tagline}
-        </span>
 
         <h4
           className={cn("flex items-center gap-1", {

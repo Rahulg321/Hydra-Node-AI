@@ -20,6 +20,7 @@ import {
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export type PricingTier = {
   name: string;
@@ -106,7 +107,7 @@ function PricingCard({
   return (
     <Card
       className={clsx("rounded-lg border border-gray-200", {
-        "bg-[#5d5fef]": product.isFeatured === true,
+        "bg-[#5d5fef]": isFeatured === true,
       })}
     >
       {product.isFeatured === true && (
@@ -173,7 +174,12 @@ function PricingCard({
         {session ? (
           <CheckoutDialog product={product} session={session} />
         ) : (
-          <Button className="w-full" asChild>
+          <Button
+            className={cn("w-full bg-base", {
+              "bg-white text-baseC hover:bg-gray-200": isFeatured,
+            })}
+            asChild
+          >
             <Link href={"/login"}>Buy Now</Link>
           </Button>
         )}
