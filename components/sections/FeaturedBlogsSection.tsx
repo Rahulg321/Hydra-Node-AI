@@ -6,6 +6,7 @@ import Image, { StaticImageData } from "next/image";
 import ReusbaleButton from "../ComponentButtons/ReusbaleButton";
 import PrimaryButton from "../ComponentButtons/PrimaryButton";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const FeaturedBlogsSection = () => {
   return (
@@ -29,16 +30,19 @@ const FeaturedBlogsSection = () => {
           img={AIBlog}
           heading="AI and LLMs: Bridging Language Barriers in Global Education"
           desc="In recent years, Artificial Intelligence (AI) and Large Language Models  (LLMs) have revolutionized various industries, including education..."
+          blogLink="https://medium.com/@hydranodeai/ai-and-llms-bridging-language-barriers-in-global-education-983a036165af"
         />
         <BlogCard
           img={StemCard}
           heading="Revolutionizing STEM Education with AI and Blockchain"
           desc="The landscape of STEM (Science, Technology, Engineering, and  Mathematics) education faces significant challenges today. Traditional  teaching methods often..."
+          blogLink="https://medium.com/@hydranodeai/revolutionizing-stem-education-with-ai-and-blockchain-47e84cacc962"
         />
         <BlogCard
           img={BlockBlog}
           heading="Blockchain Credentials: The Future of Academic Certification"
           desc="Blockchain technology, originally devised for the digital currency  Bitcoin, is now being adapted for various other uses, including academic  certifications..."
+          blogLink="https://medium.com/@hydranodeai/blockchain-credentials-the-future-of-academic-certification-927ac080ee95"
         />
       </div>
     </section>
@@ -56,10 +60,10 @@ function BlogCard({
   heading: string;
   desc: string;
   img: StaticImageData;
-  blogLink?: string;
+  blogLink: string;
 }) {
   return (
-    <div>
+    <Link href={blogLink} target="_blank">
       <Image src={img} alt="" />
       <h3 className="mt-6">{heading}</h3>
       <p className="block">{desc}</p>
@@ -69,6 +73,6 @@ function BlogCard({
       >
         Get Rewards
       </Button>
-    </div>
+    </Link>
   );
 }
