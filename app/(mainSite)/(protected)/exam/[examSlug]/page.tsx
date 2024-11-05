@@ -99,13 +99,6 @@ const ExamPage = async ({
 
   return (
     <section className="block-space-large">
-      <div className="mb-12 text-center">
-        <div className="mx-auto mb-4 block w-fit rounded-md border-4 p-2">
-          <h5 className="font-bold">Certification EXAM</h5>
-        </div>
-        <h1 className="">{exam.name}</h1>
-      </div>
-
       <div className="container grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <span className="block font-bold">Certificate Details</span>
