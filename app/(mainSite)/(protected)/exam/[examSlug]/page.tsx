@@ -55,20 +55,22 @@ const ExamPage = async ({
     return redirect("/login");
   }
 
-  const currentExam = await db.exam.findFirst({
+  const exam = await db.exam.findFirst({
     where: {
       slug: params.examSlug,
     },
+    include: {
+      questions: true,
+    },
   });
 
-  if (!currentExam) {
-    console.log("Could not find exam");
-    return redirect("/login");
+  if (!exam) {
+    console.log("could not find exam");
+    return notFound();
   }
-
   const { hasAccess, message } = await checkIfUserHasAccessToExam(
     loggedInUser.user.id as string,
-    currentExam.id,
+    exam.id,
   );
 
   if (hasAccess) {
@@ -83,25 +85,12 @@ const ExamPage = async ({
 
   console.log("user has trial access", hasTrialAccess);
 
-  const exam = await db.exam.findFirst({
-    where: {
-      slug: params.examSlug,
-    },
-    include: {
-      questions: true,
-    },
-  });
-
-  if (!exam) {
-    console.log("could not find exam");
-    return notFound();
-  }
-
   return (
     <section className="block-space-large">
       <div className="container grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
-          <span className="block font-bold">Certificate Details</span>
+          <h2 className="mb-4">{exam.name}</h2>
+          <span className="block font-bold underline">Certificate Details</span>
           <span className="block font-bold text-muted-foreground">
             Total Question Bank:{" "}
             <span className="text-baseC">{exam.questions.length}</span>
