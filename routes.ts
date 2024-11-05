@@ -32,7 +32,7 @@ export const PROTECTED_BASE_ROUTES = ["/vendors", "/exam"];
  *This is default login redirect that the user will go to after successful login and registration
  *@type{string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/product";
+export const DEFAULT_LOGIN_REDIRECT = "/";
 
 // export const PUBLIC_ROUTES = [""];
 // export const PUBLIC_ROUTES = [""];
