@@ -18,13 +18,6 @@ type props = {
 };
 
 const QuizResultsPage = async ({ params }: props) => {
-  // to display the results
-  // calculate the number of missed, answered, correct and incorrect questions
-  // calculate the total time that has elapsed as well
-
-  // fetch the quiz session
-
-  // TODO:- Fetch the quiz session with the user attempts within it
   const currentQuizSession = await db.quizSession.findFirst({
     where: {
       id: params.quizId,
@@ -48,8 +41,6 @@ const QuizResultsPage = async ({ params }: props) => {
     console.log("the quiz session doesnt exist");
     return notFound();
   }
-
-  console.log("quiz session in results page", currentQuizSession);
 
   let examTimeInMinutes = currentQuizSession.examTime;
   let totalQuestions = currentQuizSession.exam.questions.length;

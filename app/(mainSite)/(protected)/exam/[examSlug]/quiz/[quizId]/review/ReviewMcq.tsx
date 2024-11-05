@@ -1,6 +1,7 @@
 "use client";
 
 import HtmlContent from "@/components/html-content";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Question, QuizSession, UserAttempt } from "@prisma/client";
@@ -104,7 +105,9 @@ const ReviewMcq = ({
             {[...Array(6)].map((_, i) => {
               let questionType = currentAttempt.question.questionType;
               let currentQuestion = currentAttempt.question;
-
+              let userSelections = currentAttempt.userAnswer
+                ? currentAttempt.userAnswer.split(",").map(Number)
+                : [];
               // @ts-ignore
               let optionText = currentQuestion[`answerOption${i + 1}`];
 
@@ -115,6 +118,8 @@ const ReviewMcq = ({
               let correctAnswersArray = correctAnswers.split(",").map(Number);
               let isCorrect = correctAnswersArray.includes(i + 1);
 
+              let isOptionSelected = userSelections.includes(i + 1);
+
               return (
                 <Option
                   key={i}
@@ -122,6 +127,7 @@ const ReviewMcq = ({
                   optionText={optionText}
                   optionExplanation={optionExplanation}
                   isCorrect={isCorrect!}
+                  isUserOptionSelected={isOptionSelected}
                 />
               );
             })}
@@ -259,11 +265,13 @@ function Option({
   optionText,
   optionExplanation,
   isCorrect,
+  isUserOptionSelected,
 }: {
   questionType: "multi_select" | "multiple_choice";
   optionExplanation: string;
   optionText: string | null;
   isCorrect: boolean;
+  isUserOptionSelected: boolean;
 }) {
   const [selected, setSelected] = React.useState(false);
 
@@ -282,15 +290,28 @@ function Option({
       onClick={onSelect}
     >
       <div className={`flex cursor-pointer items-center gap-2 rounded-lg`}>
-        {isCorrect ? (
-          <div>
-            <CircleCheckBig className="text-green-600" />
-          </div>
-        ) : (
-          <div>
-            <CircleX className="text-red-800" />
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-center">
+          {isCorrect ? (
+            <div>
+              <CircleCheckBig className="text-green-600" />
+            </div>
+          ) : (
+            <div>
+              <CircleX className="text-red-800" />
+            </div>
+          )}
+          {isUserOptionSelected && isCorrect && (
+            <div>
+              <Badge variant="success">Selected</Badge>
+            </div>
+          )}
+
+          {isUserOptionSelected && !isCorrect && (
+            <div>
+              <Badge variant="destructive">Selected</Badge>
+            </div>
+          )}
+        </div>
         <label className="cursor-pointer text-xl font-semibold">
           {optionText}
         </label>

@@ -60,8 +60,6 @@ const ReviewExamPage = async ({
     },
   });
 
-  console.log("user attempts", userAttempts);
-
   return (
     <div className="min-h-screen">
       <ReviewMcq
