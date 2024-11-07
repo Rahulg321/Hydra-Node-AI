@@ -29,7 +29,13 @@ export type ProfilePicUploadZodType = z.infer<
   typeof ProfilePicUploadFormSchema
 >;
 
-const ProfilePicUploadForm = ({ userId }: { userId: string }) => {
+const ProfilePicUploadForm = ({
+  userId,
+  setDialogOpenState,
+}: {
+  userId: string;
+  setDialogOpenState: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const { toast } = useToast();
   const [preview, setPreview] = React.useState<string | ArrayBuffer | null>("");
   const [isPending, startTransition] = React.useTransition();
@@ -86,6 +92,8 @@ const ProfilePicUploadForm = ({ userId }: { userId: string }) => {
             variant: "success",
             description: response.message || "Successfully Completed Action",
           });
+
+          setDialogOpenState(false);
         } else {
           toast({
             title: "ERROR 🥲",

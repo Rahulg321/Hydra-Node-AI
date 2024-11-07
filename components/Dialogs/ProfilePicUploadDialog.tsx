@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,8 +21,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import ProfilePicUploadForm from "../forms/ProfilePicUploadForm";
 
@@ -45,7 +42,7 @@ export function ProfilePicUploadDialog({ userId }: { userId: string }) {
               done.
             </DialogDescription>
           </DialogHeader>
-          <ProfilePicUploadForm userId={userId} />
+          <ProfilePicUploadForm userId={userId} setDialogOpenState={setOpen} />
         </DialogContent>
       </Dialog>
     );
@@ -63,7 +60,7 @@ export function ProfilePicUploadDialog({ userId }: { userId: string }) {
             Make changes to your profile here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <ProfilePicUploadForm userId={userId} />
+        <ProfilePicUploadForm userId={userId} setDialogOpenState={setOpen} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
