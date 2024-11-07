@@ -42,8 +42,6 @@ const EditUserProfile = async (
 
     if (loggedInUser.isOAuth) {
       values.email = undefined;
-      values.password = undefined;
-      values.newPassword = undefined;
     }
 
     if (values.email && values.email !== dbUser.email) {
@@ -72,31 +70,32 @@ const EditUserProfile = async (
       };
     }
 
-    if (values.password && values.newPassword && dbUser.password) {
-      // check whether the user entered the correct password or not
-      console.log("changing passwords");
-      const passwordsMatch = await bcrypt.compare(
-        values.password,
-        dbUser.password,
-      );
+    // if (values.password && values.newPassword && dbUser.password) {
+    //   // check whether the user entered the correct password or not
+    //   console.log("changing passwords");
+    //   const passwordsMatch = await bcrypt.compare(
+    //     values.password,
+    //     dbUser.password,
+    //   );
 
-      if (!passwordsMatch) {
-        console.log("passwords do not match");
-        console.log("passwords do not match");
-        return {
-          success: false,
-          message: "Incorrect Password, passwords does not match",
-        };
-      }
+    //   if (!passwordsMatch) {
+    //     console.log("passwords do not match");
+    //     console.log("passwords do not match");
+    //     return {
+    //       success: false,
+    //       message: "Incorrect Password, passwords does not match",
+    //     };
+    //   }
 
-      console.log("generating hash");
-      const hashedPassword = await bcrypt.hash(values.newPassword, 10);
-      values.password = hashedPassword;
-      values.newPassword = undefined;
-    }
+    //   console.log("generating hash");
+    //   const hashedPassword = await bcrypt.hash(values.newPassword, 10);
+    //   values.password = hashedPassword;
+    //   values.newPassword = undefined;
+    // }
 
     // Update the user profile
     console.log("updating with new values");
+
     await db.user.update({
       where: {
         id: userId,

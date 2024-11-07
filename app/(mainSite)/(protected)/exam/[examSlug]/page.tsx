@@ -143,7 +143,7 @@ const ExamPage = async ({
             <ExamCheckoutDialog exam={exam} session={loggedInUser} />
           )}
 
-          {hasTrialAccess ? (
+          {hasTrialAccess && !hasAccess ? (
             <div className="mt-4 md:mt-6">
               <h3 className="mb-2">You have trial access to this exam</h3>
               <StartTrialExamDialog

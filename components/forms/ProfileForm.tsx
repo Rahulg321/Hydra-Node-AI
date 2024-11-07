@@ -86,25 +86,23 @@ const ProfileForm = ({ name, session }: ProfileFormProps) => {
               </FormItem>
             )}
           />
-          {!session.user.isCredentialsLogin && (
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="strong password"
-                      {...field}
-                      type="password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="strong password"
+                    {...field}
+                    type="password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button type="submit" className="w-full bg-base" disabled={isPending}>
             {isPending ? "Updating Profile..." : "Update Profile"}
           </Button>

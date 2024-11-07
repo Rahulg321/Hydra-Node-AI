@@ -47,8 +47,6 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
     defaultValues: {
       name: name || "",
       email: email || "",
-      password: "",
-      newPassword: "",
     },
   });
 
@@ -97,32 +95,6 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="johndoe@gmail.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <PasswordInput placeholder="***********" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>New Password</FormLabel>
-                    <FormControl>
-                      <PasswordInput placeholder="***********" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
