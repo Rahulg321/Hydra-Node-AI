@@ -73,7 +73,8 @@ const McqQuizPage = async ({
   );
 
   // Shuffle the questions and apply the limit
-  const shuffledQuestions = shuffleArray(questions).slice(0, questionsLimit);
+  // const shuffledQuestions = shuffleArray(questions).slice(0, questionsLimit);
+  const shuffledQuestions = questions.slice(0, questionsLimit);
 
   console.log("shuffled quesitons length", shuffledQuestions.length);
 
