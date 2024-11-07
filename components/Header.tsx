@@ -199,8 +199,6 @@ function ProfileMenu() {
         <DropdownMenuItem asChild>
           <Link href={`/profile/${session?.data?.user.id}`}>Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
       </DropdownMenuContent>

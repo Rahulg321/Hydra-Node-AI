@@ -10,6 +10,7 @@ export const getPasswordResetTokenByToken = async (token: string) => {
     return returnedToken;
   } catch (error) {
     console.log("prisma error occured", error);
+    return null;
   }
 };
 

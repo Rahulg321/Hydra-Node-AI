@@ -35,6 +35,7 @@ import {
 } from "@/lib/schemas/NewPasswordSchema";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
 import { newPasswordVerification } from "@/actions/new-password-verification";
+import { PasswordInput } from "../ui/password-input";
 
 const NewPasswordForm = () => {
   const searchParams = useSearchParams();
@@ -80,7 +81,7 @@ const NewPasswordForm = () => {
                 <FormItem>
                   <FormLabel>Enter new Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="******" type="password" {...field} />
+                    <PasswordInput placeholder="******" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

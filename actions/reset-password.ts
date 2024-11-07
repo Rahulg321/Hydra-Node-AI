@@ -6,7 +6,10 @@ import {
   ResetPasswordFormSchema,
   ResetPasswordFormZodType,
 } from "@/lib/schemas/ResetPasswordFormSchema";
-import { generatePasswordVerificationToken } from "@/lib/tokens";
+import {
+  generatePasswordResetToken,
+  generatePasswordVerificationToken,
+} from "@/lib/tokens";
 
 export async function resetPassword(values: ResetPasswordFormZodType) {
   try {
@@ -28,12 +31,13 @@ export async function resetPassword(values: ResetPasswordFormZodType) {
 
     if (!existingUser.password) {
       return {
-        error: "Your password does not exist already!!!",
+        error:
+          "This account was created via Google. Password reset is not allowed!",
       };
     }
 
     // after verifying the email address, generate token and send verification email
-    const newPasswordToken = await generatePasswordVerificationToken(email);
+    const newPasswordToken = await generatePasswordResetToken(email);
 
     const response = await sendPasswordResetEmail(
       email,

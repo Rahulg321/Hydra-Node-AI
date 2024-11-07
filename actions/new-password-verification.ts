@@ -34,7 +34,7 @@ export const newPasswordVerification = async (
     if (!existingToken) {
       console.error("token does not exist", existingToken);
       return {
-        error: "Invalid token, it does not exist in the backend",
+        error: "Invalid token, it does not exist on the server",
       };
     }
 

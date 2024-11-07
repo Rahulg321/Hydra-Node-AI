@@ -32,7 +32,7 @@ const SignUpPage = () => {
           </Link>
         </div>
         <div className="mx-auto max-w-xl">
-          <h3>Sign Up For Hydranode Platform</h3>
+          <h3 className="mb-4">Sign Up For Hydranode Platform</h3>
           <SignupForm />
           <div className="mt-4 text-center">
             <p>

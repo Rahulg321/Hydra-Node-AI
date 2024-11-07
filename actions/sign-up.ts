@@ -12,9 +12,9 @@ import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationTokenEmail } from "@/lib/mail";
 import { addDays } from "date-fns";
 
-export async function SignUpUser(values: SignUpFormSchema) {
+export async function SignUpUser(values: SignUpFormZodType) {
   try {
-    const validatedFields = SignUpFormZodType.safeParse(values);
+    const validatedFields = SignUpFormSchema.safeParse(values);
 
     if (!validatedFields.success) {
       return {
@@ -22,7 +22,7 @@ export async function SignUpUser(values: SignUpFormSchema) {
       };
     }
 
-    const { firstName, lastName, email, password } = validatedFields.data;
+    const { name, email, password } = validatedFields.data;
 
     const existingUser = await getUserByEmail(email);
 
@@ -69,8 +69,7 @@ export async function SignUpUser(values: SignUpFormSchema) {
 
     const newUser = await db.user.create({
       data: {
-        firstName,
-        lastName,
+        name,
         email,
         password: hashedPassword,
         trialEndsAt: addDays(new Date(), 7), // Adds 7 days from now

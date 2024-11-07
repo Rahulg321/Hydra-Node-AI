@@ -40,14 +40,9 @@ export async function generateMetadata(
     where: { id: userId },
   });
 
-  // Construct the user's full name if available
-  const fullName = [user?.firstName, user?.lastName, user?.name]
-    .filter(Boolean)
-    .join(" ");
-
   return {
-    title: `${fullName} - Profile`,
-    description: `Profile page of ${fullName} for HydraNode AI`,
+    title: `${user?.name} - Profile`,
+    description: `Profile page of ${user?.name} for HydraNode AI`,
     openGraph: {
       images: ["/about_hero.png"],
     },
@@ -75,7 +70,10 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   return (
     <React.Fragment>
       <section className="grid min-h-screen grid-cols-5 gap-6 bg-[#F5F4FA] px-4 py-4">
-        <ProfileSidebar loggedInUser={existingLoggedInUser} />
+        <ProfileSidebar
+          loggedInUser={existingLoggedInUser}
+          userSession={session}
+        />
         <Suspense
           fallback={
             <div>
@@ -493,8 +491,13 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
   );
 }
 
-async function ProfileSidebar({ loggedInUser }: { loggedInUser: User }) {
-  const { id, firstName, lastName, email, image, isTwoFactorEnabled } =
+async function ProfileSidebar({
+  loggedInUser,
+}: {
+  loggedInUser: User;
+  userSession: Session;
+}) {
+  const { id, firstName, lastName, name, email, image, isTwoFactorEnabled } =
     loggedInUser;
 
   let blurData = await getPlaceholderForRemoteImage(
@@ -516,18 +519,12 @@ async function ProfileSidebar({ loggedInUser }: { loggedInUser: User }) {
           <ProfilePicUploadDialog userId={id} />
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold text-baseC">
-            {`${firstName ? firstName : ""} ${lastName ? lastName : ""}`}
-          </span>
+          <span className="text-sm font-semibold text-baseC">{`${name}`}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-semibold text-baseC">{email}</span>
         </div>
-        <EditProfileForm
-          userId={id}
-          firstName={firstName}
-          lastName={lastName}
-        />
+        <EditProfileForm userId={id} name={name} email={email} />
       </div>
       {/* <ProfileForm name={session?.user.name || ""} session={session} /> */}
       <Button variant={"link"} className="mt-4 text-baseC" asChild>

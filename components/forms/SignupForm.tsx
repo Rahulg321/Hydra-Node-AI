@@ -26,23 +26,23 @@ import { SignUpUser } from "@/actions/sign-up";
 import { useToast } from "@/components/ui/use-toast";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
+import { PasswordInput } from "../ui/password-input";
 
 const SignupForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
-  const form = useForm<SignUpFormSchema>({
-    resolver: zodResolver(SignUpFormZodType),
+  const form = useForm<SignUpFormZodType>({
+    resolver: zodResolver(SignUpFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       password: "",
     },
   });
   // 2. Define a submit handler.
-  async function onSubmit(values: SignUpFormSchema) {
+  async function onSubmit(values: SignUpFormZodType) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setError("");
@@ -64,10 +64,10 @@ const SignupForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
           <FormField
             control={form.control}
-            name="firstName"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>FirstName</FormLabel>
+                <FormLabel>Full Name</FormLabel>
                 <FormControl>
                   <Input placeholder="john" {...field} />
                 </FormControl>
@@ -76,19 +76,7 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <FormField
             control={form.control}
             name="email"
@@ -98,7 +86,6 @@ const SignupForm = () => {
                 <FormControl>
                   <Input placeholder="test@email.com" {...field} type="email" />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -110,7 +97,7 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="**********" {...field} type="password" />
+                  <PasswordInput placeholder="**********" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

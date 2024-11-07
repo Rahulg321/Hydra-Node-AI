@@ -1,10 +1,16 @@
 import { auth } from "@/auth";
 import LoginForm from "@/components/forms/LoginForm";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Login to your hydranode account",
+};
 
 const LoginPage = async () => {
   const session = await auth();

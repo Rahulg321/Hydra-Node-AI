@@ -6,6 +6,7 @@ import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { addDays } from "date-fns";
+import { getAccountByUserId } from "./lib/account";
 
 declare module "next-auth" {
   /**
@@ -15,7 +16,7 @@ declare module "next-auth" {
     user: {
       role: UserRole;
       isTwoFactorEnabled: boolean;
-      isCredentialsLogin: boolean;
+      isOAuth: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -87,6 +88,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (!token.sub) return token;
       const existingUser = await getUserById(token.sub);
       if (!existingUser) return token;
+
+      const existingUserAccount = await getAccountByUserId(existingUser.id);
+
+      token.isOAuth = !!existingUserAccount;
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
@@ -94,7 +99,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       token.image = existingUser.image;
       // Check if the user logged in with credentials or OAuth
-      token.isCredentialsLogin = !!existingUser.password;
 
       return token;
     },
@@ -118,7 +122,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email as string;
-        session.user.isCredentialsLogin = token.isCredentialsLogin as boolean;
+        session.user.isOAuth = token.isOAuth as boolean;
       }
 
       return session;

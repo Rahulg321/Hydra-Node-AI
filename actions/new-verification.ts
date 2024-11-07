@@ -18,7 +18,7 @@ export const newVerification = async (token: string) => {
 
     const hasExpired = new Date(existingToken.expires) < new Date();
     if (hasExpired) {
-      console.error("token has expired");
+      console.log("token has expired");
       return {
         error: "Your token has expired, please try again later",
       };

@@ -21,16 +21,17 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoginUser } from "@/actions/login";
 import { useToast } from "@/components/ui/use-toast";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
 import { SuccessCard, ErrorCard } from "@/components/FormInfoCards";
 import { set } from "zod";
+import { PasswordInput } from "../ui/password-input";
 
 const LoginForm = () => {
   const [show2fa, setShow2fa] = useState(false);
-
+  const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -125,7 +126,7 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} type="password" />
+                      <PasswordInput placeholder="*********" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -135,11 +136,12 @@ const LoginForm = () => {
           )}
           <Button
             variant={"link"}
-            size={"default"}
-            className="px-0 font-normal"
-            asChild
+            className="px-0 text-baseC"
+            onClick={() => {
+              router.push("/auth/reset");
+            }}
           >
-            <Link href="/auth/reset">Forgot Password</Link>
+            Forgot Password
           </Button>
           {/* <div className="flex items-center space-x-2">
             <Checkbox id="terms" />
