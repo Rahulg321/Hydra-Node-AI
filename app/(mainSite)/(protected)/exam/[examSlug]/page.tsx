@@ -143,7 +143,7 @@ const ExamPage = async ({
             <ExamCheckoutDialog exam={exam} session={loggedInUser} />
           )}
 
-          {hasTrialAccess && !hasAccess ? (
+          {hasTrialAccess.status && !hasAccess ? (
             <div className="mt-4 md:mt-6">
               <h3 className="mb-2">You have trial access to this exam</h3>
               <StartTrialExamDialog
@@ -154,9 +154,7 @@ const ExamPage = async ({
               />
             </div>
           ) : (
-            <div>
-              <h3>Your trial has expired</h3>
-            </div>
+            <div></div>
           )}
 
           <div className="my-4">

@@ -349,8 +349,11 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
     </div>
   );
 }
+
 async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
-  // Case 1: Lifetime Access
+  const currentDate = new Date();
+
+  // 1. Lifetime Access
   if (existingUser.hasLifetimeAccess) {
     return (
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
@@ -362,46 +365,10 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
   }
 
-  // Case 2: Active Subscription
-  if (
-    existingUser.hasActiveSubscription &&
-    existingUser.stripeCurrentPeriodEnd &&
-    new Date(existingUser.stripeCurrentPeriodEnd) > new Date()
-  ) {
-    const subscriptionEndDate = new Date(existingUser.stripeCurrentPeriodEnd);
-    const formattedEndDate = formatDateWithSuffix(subscriptionEndDate);
-
-    const existingUserSubscription: any = await stripe.subscriptions.retrieve(
-      existingUser.stripeSubscriptionId as string,
-    );
-
-    console.log("fetched subscription from stripe:", existingUserSubscription);
-
-    return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
-        <span className="block font-semibold">Current Plan</span>
-        <div>
-          <h5 className="text-muted-foreground">Subscription Plan</h5>
-          <h4 className="text-baseC">Expires on {formattedEndDate}</h4>
-        </div>
-        <div>
-          <h4>Next Payment</h4>
-          <h3 className="text-baseC">
-            ${existingUserSubscription.plan.amount / 100} on {formattedEndDate}
-          </h3>
-        </div>
-        <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
-          Manage Subscription
-        </Button>
-        <CancelSubscriptionButton userId={existingUser.id} />
-      </div>
-    );
-  }
-
-  // Case 3: Expired Subscription (Grace Period)
+  // 2. Expired Subscription
   if (
     existingUser.stripeCurrentPeriodEnd &&
-    new Date(existingUser.stripeCurrentPeriodEnd) <= new Date()
+    new Date(existingUser.stripeCurrentPeriodEnd) <= currentDate
   ) {
     const formattedEndDate = formatDateWithSuffix(
       new Date(existingUser.stripeCurrentPeriodEnd),
@@ -411,9 +378,8 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
         <h3 className="font-semibold text-baseC">Subscription Ended</h3>
         <p className="text-muted-foreground">
-          Your subscription ended on {formattedEndDate} but you can still
-          continue to access service until you renew till your expiry. Renew
-          your plan to regain access to premium services.
+          Your subscription ended on {formattedEndDate}. Renew to regain access
+          to premium services.
         </p>
         <Button
           className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
@@ -425,32 +391,42 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
   }
 
-  // Case 4: Active Trial Period
-  if (existingUser.trialEndsAt && !existingUser.stripeSubscriptionId) {
-    const trialEndDate = new Date(existingUser.trialEndsAt);
-    const formattedTrialEndDate = formatDateWithSuffix(trialEndDate);
+  // 3. Active Subscription
+  if (
+    existingUser.stripeSubscriptionId &&
+    new Date(existingUser.stripeCurrentPeriodEnd as Date) > currentDate
+  ) {
+    const formattedEndDate = formatDateWithSuffix(
+      new Date(existingUser.stripeCurrentPeriodEnd as Date),
+    );
+
+    const existingUserSubscription = await stripe.subscriptions.retrieve(
+      existingUser.stripeSubscriptionId as string,
+    );
 
     return (
       <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
-        <h3 className="font-semibold text-baseC">Active Trial</h3>
-        <p className="text-muted-foreground">
-          Your trial is active until {formattedTrialEndDate}. Subscribe to
-          continue enjoying premium services after the trial ends.
-        </p>
-        <Button
-          className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
-          asChild
-        >
-          <Link href="/pricing">Subscribe Now</Link>
+        <span className="block font-semibold">Current Plan</span>
+        <div>
+          <h5 className="text-muted-foreground">Subscription Plan</h5>
+          <h4 className="text-baseC">Expires on {formattedEndDate}</h4>
+        </div>
+        <div>
+          <h4>Next Payment</h4>
+          {/* @ts-ignore */}
+          <h3 className="text-baseC">{formattedEndDate}</h3>
+        </div>
+        <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
+          Manage Subscription
         </Button>
+        <CancelSubscriptionButton userId={existingUser.id} />
       </div>
     );
   }
 
-  // Case 5: Expired Trial Period
   if (
     existingUser.trialEndsAt &&
-    new Date(existingUser.trialEndsAt) <= new Date()
+    new Date(existingUser.trialEndsAt) <= currentDate
   ) {
     const formattedTrialEndDate = formatDateWithSuffix(
       new Date(existingUser.trialEndsAt),
@@ -473,7 +449,31 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
   }
 
-  // Case 6: No Plan (Default Case)
+  // 4. Active Trial Period
+  if (existingUser.trialEndsAt && !existingUser.stripeSubscriptionId) {
+    const trialEndDate = new Date(existingUser.trialEndsAt);
+    const formattedTrialEndDate = formatDateWithSuffix(trialEndDate);
+
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <h3 className="font-semibold text-baseC">Active Trial</h3>
+        <p className="text-muted-foreground">
+          Your trial is active until {formattedTrialEndDate}. Subscribe to
+          continue enjoying premium services after the trial ends.
+        </p>
+        <Button
+          className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
+          asChild
+        >
+          <Link href="/pricing">Subscribe Now</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  // 5. Expired Trial Period
+
+  // 6. No Active Plan (Default Case)
   return (
     <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
       <h3 className="font-semibold text-baseC">No Active Plan</h3>

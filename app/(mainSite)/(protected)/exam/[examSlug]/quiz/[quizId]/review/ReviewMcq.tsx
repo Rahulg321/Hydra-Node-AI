@@ -99,12 +99,17 @@ const ReviewMcq = ({
           <div className="my-4 md:my-8">
             <HtmlContent content={currentAttempt.question.question} />
           </div>
-
+          {!currentAttempt.userAnswer && (
+            <div className="mb-4">
+              <Badge variant={"destructive"}>Skipped</Badge>
+            </div>
+          )}
           <div className="space-y-4 md:space-y-6">
             {/* TODO:-  figure out why this does not work */}
             {[...Array(6)].map((_, i) => {
               let questionType = currentAttempt.question.questionType;
               let currentQuestion = currentAttempt.question;
+              console.log("current attempt", currentAttempt);
               let userSelections = currentAttempt.userAnswer
                 ? currentAttempt.userAnswer.split(",").map(Number)
                 : [];

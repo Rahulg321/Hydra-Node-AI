@@ -43,7 +43,7 @@ const QuizResultsPage = async ({ params }: props) => {
   }
 
   let examTimeInMinutes = currentQuizSession.examTime;
-  let totalQuestions = currentQuizSession.exam.questions.length;
+  let totalQuestions = currentQuizSession.userAttempts.length;
   let startTime = currentQuizSession.startTime;
   let endTime = currentQuizSession.endTime;
 
@@ -73,13 +73,25 @@ const QuizResultsPage = async ({ params }: props) => {
     totalTimeTaken = `${timeTakenMinutes} minutes`;
   }
 
-  let examScore = currentQuizSession.percentageScored
-    ? currentQuizSession.percentageScored
-    : 0;
+  const { correctQuestions, incorrectQuestions, skippedQuestions } =
+    currentQuizSession.userAttempts.reduce(
+      (acc, { isCorrect, skipped }) => {
+        if (isCorrect) {
+          acc.correctQuestions++;
+        } else if (!skipped) {
+          acc.incorrectQuestions++;
+        }
 
-  let correctAnswers = currentQuizSession.correctAnswers;
-  let incorrectAnswers = currentQuizSession.incorrectAnswers;
-  let skippedAnswers = currentQuizSession.skippedAnswers;
+        if (skipped) {
+          acc.skippedQuestions++;
+        }
+        return acc;
+      },
+      { correctQuestions: 0, incorrectQuestions: 0, skippedQuestions: 0 },
+    );
+
+  let examScore =
+    (correctQuestions / currentQuizSession.userAttempts.length) * 100;
 
   return (
     <section className="container py-4">
@@ -89,12 +101,7 @@ const QuizResultsPage = async ({ params }: props) => {
           <h2 className="">
             Total Questions <span className="font-bold">{totalQuestions}</span>
           </h2>
-          <h2 className="">
-            Questions Attempted{" "}
-            <span className="font-bold">
-              {currentQuizSession.userAttempts.length}
-            </span>
-          </h2>
+
           <h2 className="">
             Total Time Allowed{" "}
             <span className="font-bold">{examTimeInMinutes} minutes</span>
@@ -102,7 +109,7 @@ const QuizResultsPage = async ({ params }: props) => {
 
           <h2>Exam Score</h2>
           <div className="my-4 flex items-center gap-2">
-            <h1>{examScore.toFixed(1)} %</h1>
+            <h1>{examScore} %</h1>
             <span
               className={cn("font-semibold text-green-500", {
                 "text-red-500": examScore < 50,
@@ -115,19 +122,19 @@ const QuizResultsPage = async ({ params }: props) => {
           <div className="grid grid-cols-2 gap-4">
             <InfoCard
               title="Correct"
-              value={correctAnswers.toString()}
+              value={correctQuestions.toString()}
               backgroundColor="bg-green-200"
               icon={<Check className="text-green-400" />}
             />
             <InfoCard
               title="Incorrect"
-              value={incorrectAnswers.toString()}
+              value={incorrectQuestions.toString()}
               backgroundColor="bg-pink-400"
               icon={<X className="text-pink-800" />}
             />
             <InfoCard
               title="Skipped/Unanswered"
-              value={skippedAnswers.toString()}
+              value={skippedQuestions.toString()}
               backgroundColor="bg-violet-400"
               icon={<CircleOff className="text-violet-800" />}
             />
@@ -140,9 +147,9 @@ const QuizResultsPage = async ({ params }: props) => {
           </div>
         </div>
         <ResultsChart
-          correct={correctAnswers}
-          incorrect={incorrectAnswers}
-          skipped={skippedAnswers}
+          correct={correctQuestions}
+          incorrect={incorrectQuestions}
+          skipped={skippedQuestions}
         />
       </div>
       <div className="mt-4 flex justify-between">

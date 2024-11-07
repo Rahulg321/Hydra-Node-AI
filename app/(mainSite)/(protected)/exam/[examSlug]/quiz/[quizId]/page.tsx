@@ -34,9 +34,8 @@ const McqQuizPage = async ({
     },
     include: {
       exam: {
-        select: {
-          slug: true,
-          name: true,
+        include: {
+          questions: true,
         },
       },
     },
@@ -54,33 +53,8 @@ const McqQuizPage = async ({
     );
   }
 
-  // Fetch the exam and its questions separately
-  const exam = await db.exam.findUnique({
-    where: {
-      slug: params.examSlug,
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      timeAllowed: true,
-      questionsToShow: true,
-      attempts: true,
-      examLevel: true,
-      description: true,
-    },
-  });
-
-  if (!exam) {
-    console.log("The exam was not found");
-    return redirect("/vendors");
-  }
-
-  const questions = await db.question.findMany({
-    where: {
-      examId: exam.id,
-    },
-  });
+  const exam = quizSession.exam;
+  const questions = exam.questions;
 
   // Apply limit based on quiz session mode
   // default mode is MOCK
@@ -101,8 +75,16 @@ const McqQuizPage = async ({
   // Shuffle the questions and apply the limit
   const shuffledQuestions = shuffleArray(questions).slice(0, questionsLimit);
 
+  console.log("shuffled quesitons length", shuffledQuestions.length);
+
   return (
-    <MCQ quizSession={quizSession} exam={exam} questions={shuffledQuestions} />
+    <div>
+      <MCQ
+        quizSession={quizSession}
+        exam={exam}
+        questions={shuffledQuestions}
+      />
+    </div>
   );
 };
 

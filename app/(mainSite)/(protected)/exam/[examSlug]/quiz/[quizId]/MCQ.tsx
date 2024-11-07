@@ -212,14 +212,17 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   const handleSelectOption = (index: number) => {
     if (currentQuestion.questionType === "multiple_choice") {
-      setSelected([index]);
+      // For single choice questions, deselect if already selected
+      setSelected((prevSelected) => (prevSelected[0] === index ? [] : [index]));
     }
 
     if (currentQuestion.questionType === "multi_select") {
       setSelected((prevSelected) => {
         if (prevSelected.includes(index)) {
+          // Deselect if already selected
           return prevSelected.filter((i) => i !== index);
         }
+        // Otherwise, add it to the selected list
         return [...prevSelected, index];
       });
     }

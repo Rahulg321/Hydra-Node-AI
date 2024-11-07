@@ -27,6 +27,8 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log("successfully skipped question");
+
     return NextResponse.json(
       {
         effect: "success",

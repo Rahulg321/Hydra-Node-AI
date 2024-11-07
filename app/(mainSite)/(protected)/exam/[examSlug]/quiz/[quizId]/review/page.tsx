@@ -42,6 +42,11 @@ const ReviewExamPage = async ({
     where: { id: quizId },
     include: {
       exam: { select: { slug: true, name: true, id: true } },
+      userAttempts: {
+        include: {
+          question: true,
+        },
+      },
     },
   });
 
@@ -52,23 +57,17 @@ const ReviewExamPage = async ({
     );
   }
 
-  // Fetch user attempts for the quiz session
-  const userAttempts = await db.userAttempt.findMany({
-    where: { quizSessionId: quizId },
-    include: {
-      question: true,
-    },
-  });
+  let userAttempts = quizSession.userAttempts;
 
   return (
-    <div className="min-h-screen">
+    <section className="min-h-screen">
       <ReviewMcq
         quizSession={quizSession}
         userAttempts={userAttempts}
         examName={quizSession.exam.name}
         examSlug={examSlug}
       />
-    </div>
+    </section>
   );
 };
 
