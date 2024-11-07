@@ -12,7 +12,33 @@ import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationTokenEmail } from "@/lib/mail";
 import { addDays } from "date-fns";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/lib/redis";
+import { headers } from "next/headers";
+
+const rateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
+
 export async function SignUpUser(values: SignUpFormZodType) {
+  const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+
+  const {
+    remaining,
+    limit,
+    success: limitReached,
+  } = await rateLimit.limit(ip!);
+
+  console.log({ remaining, limit, limitReached });
+
+  if (!limitReached) {
+    return {
+      error:
+        "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
+    };
+  }
+
   try {
     const validatedFields = SignUpFormSchema.safeParse(values);
 
@@ -38,19 +64,14 @@ export async function SignUpUser(values: SignUpFormZodType) {
         const verificationToken = await generateVerificationToken(email);
 
         // Resend verification email
-        let retries = 3;
         let emailSent = false;
 
-        while (retries > 0 && !emailSent) {
-          const response = await sendVerificationTokenEmail(
-            email,
-            verificationToken.token,
-          );
-          if (!response?.error) {
-            emailSent = true;
-          } else {
-            retries--;
-          }
+        const response = await sendVerificationTokenEmail(
+          email,
+          verificationToken.token,
+        );
+        if (!response?.error) {
+          emailSent = true;
         }
 
         if (!emailSent) {

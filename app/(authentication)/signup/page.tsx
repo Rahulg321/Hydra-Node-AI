@@ -2,6 +2,7 @@ import SignupForm from "@/components/forms/SignupForm";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import LoginBackground from "@/public/auth/loginSignupImage.png";
 
 export const metadata = {
   title: "Sign Up",
@@ -13,9 +14,10 @@ const SignUpPage = () => {
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div className="relative">
         <Image
-          src={"/auth/loginSignupImage.png"}
+          src={LoginBackground}
           alt="blue background wavy for authentication pages"
           className="object-cover"
+          placeholder="blur"
           fill
         />
       </div>

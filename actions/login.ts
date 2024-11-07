@@ -20,7 +20,33 @@ import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import db from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/lib/redis";
+import { headers } from "next/headers";
+
+const rateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
+
 export async function LoginUser(values: LoginFormSchema) {
+  const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+
+  const {
+    remaining,
+    limit,
+    success: limitReached,
+  } = await rateLimit.limit(ip!);
+
+  console.log({ remaining, limit, limitReached });
+
+  if (!limitReached) {
+    return {
+      error:
+        "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
+    };
+  }
+
   const validatedFields = LoginFormZodType.safeParse(values);
 
   if (!validatedFields.success) {

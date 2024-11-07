@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
+import LoginBackground from "@/public/auth/loginSignupImage.png";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -23,9 +24,10 @@ const LoginPage = async () => {
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div className="relative">
         <Image
-          src={"/auth/loginSignupImage.png"}
+          src={LoginBackground}
           alt="blue background wavy for authentication pages"
           className="object-cover"
+          placeholder="blur"
           fill
         />
       </div>
