@@ -15,6 +15,8 @@ import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import { getAllExams, getExamWithSlug } from "@/data/exam";
 import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
 import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";
+import RefreshCourseButton from "@/components/WebButtons/RefreshCourseButton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -215,6 +217,26 @@ const ExamPage = async ({
               price="$200"
               duration="week"
             />
+            <Card className="col-span-2 h-fit">
+              <CardHeader>
+                <CardTitle>
+                  <h3 className="text-lg font-semibold">
+                    Don&apos;t See Your Purchased Exam?
+                  </h3>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="">
+                  <p className="mb-4 text-gray-600">
+                    If your purchased exam isn&apos;t appearing, try refreshing
+                    the page or clearing your browser cache. Still having
+                    trouble? Feel free to contact our support team for further
+                    assistance.
+                  </p>
+                  <RefreshCourseButton />
+                </div>
+              </CardContent>
+            </Card>
             <div></div>
             <div></div>
           </div>
