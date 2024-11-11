@@ -43,11 +43,8 @@ const NewVerificationForm = () => {
   }, [onSubmit]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 px-4">
+    <div className="flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-lg">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          Email Verification
-        </h1>
         <p className="text-gray-600">
           We are confirming your email address. Please wait while we process
           your request.
@@ -78,7 +75,7 @@ const NewVerificationForm = () => {
               Please ensure your verification link is correct, or try requesting
               a new one.
             </p>
-            <Button variant="default" asChild>
+            <Button variant="hydraPrimary" asChild className="mt-4">
               <Link href={"/signup"}>Signup</Link>
             </Button>
           </div>

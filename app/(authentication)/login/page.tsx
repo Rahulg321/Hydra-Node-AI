@@ -21,44 +21,33 @@ const LoginPage = async () => {
   }
 
   return (
-    <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      <div className="relative">
-        <Image
-          src={LoginBackground}
-          alt="blue background wavy for authentication pages"
-          className="object-cover"
-          placeholder="blur"
-          fill
-        />
+    <div className="block-space-large relative content-center">
+      <div className="absolute right-4 top-4">
+        <Link href={"/"}>
+          <Image
+            src={"/hydranode_logo.png"}
+            alt="official logo for hydranode"
+            className="object-cover"
+            width={200}
+            height={200}
+          />
+        </Link>
       </div>
-      <div className="block-space-large relative content-center">
-        <div className="absolute right-4 top-4">
-          <Link href={"/"}>
-            <Image
-              src={"/hydranode_logo.png"}
-              alt="official logo for hydranode"
-              className="object-cover"
-              width={200}
-              height={200}
-            />
-          </Link>
-        </div>
-        <div className="mx-auto max-w-xl">
-          <h3>Welcome to Hydranode </h3>
-          <Suspense>
-            <LoginForm />
-          </Suspense>
-          <div className="mt-4 text-center">
-            <p>
-              Need an account?
-              <Link href="/signup" className="ml-1 text-blue-500 underline">
-                Create one
-              </Link>
-            </p>
-          </div>
+      <div className="mx-auto max-w-xl">
+        <h3>Welcome to Hydranode </h3>
+        <Suspense>
+          <LoginForm />
+        </Suspense>
+        <div className="mt-4 text-center">
+          <p>
+            Need an account?
+            <Link href="/signup" className="ml-1 text-blue-500 underline">
+              Create one
+            </Link>
+          </p>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

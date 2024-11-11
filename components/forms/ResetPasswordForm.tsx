@@ -60,36 +60,29 @@ const ResetPasswordForm = () => {
   }
 
   return (
-    <div className="grid grid-cols-2">
-      <div></div>
-      <div className="block-space container">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="johndoe@gmail.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <ErrorCard urlError={error} />
-            <SuccessCard success={success} />
-            <Button
-              type="submit"
-              className="w-full bg-base"
-              disabled={isPending}
-            >
-              {isPending ? "Resetting....." : "Send Reset Email"}
-            </Button>
-          </form>
-        </Form>
-      </div>
+    <div className="mt-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="johndoe@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ErrorCard urlError={error} />
+          <SuccessCard success={success} />
+          <Button type="submit" className="bg-base" disabled={isPending}>
+            {isPending ? "Resetting....." : "Send Reset Email"}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 };

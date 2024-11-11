@@ -8,11 +8,42 @@ import {
   NewPasswordFormZodType,
 } from "@/lib/schemas/NewPasswordSchema";
 import bcrypt from "bcryptjs";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/lib/redis";
+import { headers } from "next/headers";
+
+const rateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(3, "60m"),
+});
 
 export const newPasswordVerification = async (
   values: NewPasswordFormZodType,
   token?: string | null,
 ) => {
+  // TODO: Implement rate limiting and error handling
+  const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+
+  const {
+    remaining,
+    limit,
+    success: limitReached,
+  } = await rateLimit.limit(ip!);
+
+  console.log({ remaining, limit, limitReached });
+
+  if (!limitReached) {
+    console.log(
+      "Rate limit reached for new password verification at 3 requests per hour",
+    );
+
+    return {
+      status: false,
+      message:
+        "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
+    };
+  }
+
   try {
     if (!token) {
       return {
@@ -73,11 +104,13 @@ export const newPasswordVerification = async (
 
     return {
       success: "Successfully set new password",
+      message: "your password was successfully updated",
     };
   } catch (error) {
     console.log("an error occured during new password setting", error);
     return {
       error: "An unexpected error occurred",
+      message: "there was an error updating your password",
     };
   }
 };

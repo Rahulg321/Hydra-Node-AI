@@ -6,6 +6,8 @@ import "../globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { baseUrl } from "../sitemap";
 import { ThemeProvider } from "@/components/theme-provider";
+import Image from "next/image";
+import LoginBackground from "@/public/auth/loginSignupImage.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -63,7 +65,18 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={cn("", poppins.variable, manrope.variable)}>
-        {children}
+        <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+          <div className="relative">
+            <Image
+              src={LoginBackground}
+              alt="blue background wavy for authentication pages"
+              className="object-cover"
+              placeholder="blur"
+              fill
+            />
+          </div>
+          <div>{children}</div>
+        </section>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>

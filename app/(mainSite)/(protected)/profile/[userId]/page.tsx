@@ -560,6 +560,10 @@ async function ProfileSidebar({
       </div>
       {/* <ProfileForm name={session?.user.name || ""} session={session} /> */}
       <Button variant={"link"} className="mt-4 text-baseC" asChild>
+        <Link href={`/profile/${id}/reset`}>Reset Password</Link>
+      </Button>
+
+      <Button variant={"link"} className="mt-4 text-baseC" asChild>
         <Link href={"/pricing"}>Purchase a Plan</Link>
       </Button>
     </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ErrorPage = () => {
+const ErrorPage = async () => {
   return (
     <section className="block-space container">
       <div>

@@ -86,7 +86,7 @@ const LoginForm = () => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {show2fa && (
             <div>
               <FormField
@@ -134,15 +134,10 @@ const LoginForm = () => {
               />
             </React.Fragment>
           )}
-          <Button
-            variant={"link"}
-            className="px-0 text-baseC"
-            onClick={() => {
-              router.push("/auth/reset");
-            }}
-          >
+
+          <Link href={"/auth/reset"} className="mt-4 px-0 text-baseC">
             Forgot Password
-          </Button>
+          </Link>
           {/* <div className="flex items-center space-x-2">
             <Checkbox id="terms" />
             <label
