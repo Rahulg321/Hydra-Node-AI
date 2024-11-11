@@ -51,7 +51,7 @@ export function formatDateWithSuffix(date: Date): string {
           ? "rd"
           : "th";
 
-  return `${day}${suffix} ${month}, ${year} at ${hours}:${minutes}${period}`;
+  return `${day}${suffix} ${month}, ${year}`;
 }
 
 /**

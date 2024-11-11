@@ -295,6 +295,9 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
     where: {
       userId: id,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       exam: {
         include: {
@@ -302,6 +305,7 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
         },
       },
     },
+    take: 5,
   });
 
   if (!userQuizSessions) {
@@ -309,17 +313,6 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
   }
 
   let examData = userQuizSessions.map((e) => {
-    const percentageScored = e.percentageScored ?? null; // Assign null if undefined
-
-    const flooredPercentageScored = percentageScored?.toFixed(2);
-
-    const passFailStatus =
-      percentageScored !== null && percentageScored >= 50 ? "Pass" : "Fail";
-    const statusClass =
-      percentageScored !== null && percentageScored >= 50
-        ? "text-green-500"
-        : "text-red-500";
-
     const formattedDate = formatDateWithSuffix(new Date(e.createdAt));
 
     return {
@@ -327,14 +320,8 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
       examName: e.exam.name,
       date: formattedDate,
       examMode: e.examMode,
-      percentageScored:
-        flooredPercentageScored !== null ? flooredPercentageScored : 0, // Handle display if undefined
       totalQuestions: e.exam.questions.length,
       difficultyLevel: e.exam.examLevel,
-      correctAnswers: e.correctAnswers,
-      incorrectAnswers: e.incorrectAnswers,
-      passFailStatus, // Safe assignment
-      statusClass, // Safe assignment
       link: `/exam/${e.id}/quiz/${e.id}/results`,
     };
   });
@@ -343,7 +330,9 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
     <div className="container col-span-4 rounded-xl bg-white py-4">
       <div className="mb-4 flex items-center justify-between">
         <h4>Exam History</h4>
-        <Button className="rounded-full bg-base">View All</Button>
+        <Button className="" variant={"link"} asChild>
+          <Link href={`/profile/${id}/exam-history`}>View All</Link>
+        </Button>
       </div>
       <ExamHistoryTable examHistoryData={examData} />
     </div>
