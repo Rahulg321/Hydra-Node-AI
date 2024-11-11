@@ -16,6 +16,7 @@ import { ProfilePicUploadDialog } from "@/components/Dialogs/ProfilePicUploadDia
 import EditProfileForm from "@/components/forms/edit-profile-form";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getPlaceholderForRemoteImage } from "@/lib/get-placeholder";
+import { ResetUserPasswordDialog } from "@/components/Dialogs/ResetUserPasswordDialog";
 
 type ProfilePageProps = {
   params: {
@@ -559,9 +560,7 @@ async function ProfileSidebar({
         <EditProfileForm userId={id} name={name} email={email} />
       </div>
       {/* <ProfileForm name={session?.user.name || ""} session={session} /> */}
-      <Button variant={"link"} className="mt-4 text-baseC" asChild>
-        <Link href={`/profile/${id}/reset`}>Reset Password</Link>
-      </Button>
+      <ResetUserPasswordDialog userId={id} />
 
       <Button variant={"link"} className="mt-4 text-baseC" asChild>
         <Link href={"/pricing"}>Purchase a Plan</Link>

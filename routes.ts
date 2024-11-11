@@ -11,6 +11,7 @@ export const AUTH_ROUTES = [
   "/auth/error",
   "/auth/new-password",
 ];
+
 /**
  *
  *These are the routes that are protected and user cant access without being logged in
