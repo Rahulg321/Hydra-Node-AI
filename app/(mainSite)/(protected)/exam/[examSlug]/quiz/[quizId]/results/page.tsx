@@ -102,13 +102,8 @@ const QuizResultsPage = async ({ params }: props) => {
             Total Questions <span className="font-bold">{totalQuestions}</span>
           </h2>
 
-          <h2 className="">
-            Total Time Allowed{" "}
-            <span className="font-bold">{examTimeInMinutes} minutes</span>
-          </h2>
-
           <h2>Exam Score</h2>
-          <div className="my-4 flex items-center gap-2">
+          <div className="mb-4 mt-2 flex items-center gap-1">
             <h1>{examScore} %</h1>
             <span
               className={cn("font-semibold text-green-500", {
@@ -165,19 +160,19 @@ const QuizResultsPage = async ({ params }: props) => {
         </Button>
 
         <div className="space-x-4">
-          <StartExamButton
-            buttonLabel="Retake Exam"
-            examId={currentQuizSession.examId}
-            examSlug={currentQuizSession.exam.slug}
-            currentUserId={currentQuizSession.userId}
-          />
-
           <Button
             className="mb-4 rounded-full bg-base px-10 py-6 text-base"
             asChild
           >
-            <Link href={"/product"}>Continue</Link>
+            <Link href={`/exam/${params.examSlug}`}>Retake Exam</Link>
           </Button>
+
+          {/* <Button
+            className="mb-4 rounded-full bg-base px-10 py-6 text-base"
+            asChild
+          >
+            <Link href={"/product"}>Continue</Link>
+          </Button> */}
         </div>
       </div>
     </section>

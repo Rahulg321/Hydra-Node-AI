@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { stripe } from "@/lib/stripe";
+import { revalidatePath } from "next/cache";
 
 // Function to cancel subscription for a user
 export async function cancelUserSubscription(userId: string) {
@@ -31,6 +32,8 @@ export async function cancelUserSubscription(userId: string) {
         hasActiveSubscription: false,
       },
     });
+
+    revalidatePath(`/profile/${userId}`);
 
     return {
       type: "success",

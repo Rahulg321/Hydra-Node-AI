@@ -29,7 +29,7 @@ type HeaderProps = {
 };
 
 const desktopNav = [
-  { navlink: "/product", navlabel: "Product" },
+  { navlink: "/vendors", navlabel: "Product" },
   { navlink: "/about-us", navlabel: "About Us" },
   { navlink: "/pricing", navlabel: "Pricing" },
   { navlink: "/contact-us", navlabel: "Contact" },

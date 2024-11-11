@@ -6,10 +6,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "View our pricing plans and find the one that works for you",
+  description: "View our pricing plans and subscrible to HydraNode",
 };
 
-const PricingPage = () => {
+const PricingPage = async () => {
   return (
     <React.Fragment>
       <PricingHero />

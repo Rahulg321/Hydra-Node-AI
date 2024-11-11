@@ -229,7 +229,7 @@ async function PaymentHistorySection({
   }
 
   return (
-    <div className="container col-span-5 space-y-4 rounded-xl bg-white py-4">
+    <div className="col-span-5 space-y-4 rounded-xl bg-white px-2 py-4">
       <h2 className="text-lg font-semibold text-gray-700">Payment History</h2>
       <table className="min-w-full table-auto border-collapse bg-white">
         <thead className="bg-gray-100">
@@ -298,10 +298,19 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
     orderBy: {
       createdAt: "desc",
     },
-    include: {
+    select: {
+      id: true,
+      createdAt: true,
+      examMode: true,
       exam: {
-        include: {
-          questions: true,
+        select: {
+          name: true,
+          examLevel: true,
+          questions: {
+            select: {
+              id: true, // Selecting 'id' to count the number of questions
+            },
+          },
         },
       },
     },
@@ -375,6 +384,40 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
           asChild
         >
           <Link href="/pricing">Renew Plan</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  // 3. Active Subscription which was cancelled
+  if (
+    existingUser.stripeSubscriptionId &&
+    new Date(existingUser.stripeCurrentPeriodEnd as Date) > currentDate &&
+    !existingUser.hasActiveSubscription
+  ) {
+    const formattedEndDate = formatDateWithSuffix(
+      new Date(existingUser.stripeCurrentPeriodEnd as Date),
+    );
+
+    const existingUserSubscription = await stripe.subscriptions.retrieve(
+      existingUser.stripeSubscriptionId as string,
+    );
+
+    return (
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+        <span className="block font-semibold">Cancelled Subscription</span>
+        <span className="block font-semibold">
+          Your subscription was cancelled
+        </span>
+        <div>
+          <h5 className="text-muted-foreground">Subscription Plan</h5>
+          <h4 className="text-baseC">
+            Supposed to expire on {formattedEndDate}
+          </h4>
+        </div>
+
+        <Button className="mb-4 w-full rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white">
+          Manage Subscription
         </Button>
       </div>
     );
@@ -467,8 +510,8 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
       <h3 className="font-semibold text-baseC">No Active Plan</h3>
       <p className="text-muted-foreground">
-        You don&apos;t have any active plans. Subscribe to unlock premium
-        features.
+        You don&apos;t have any active plans or purchases. Subscribe to unlock
+        premium features.
       </p>
       <Button
         className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
