@@ -41,14 +41,14 @@ const ReviewExamPage = async ({
   const quizSession = await db.quizSession.findUnique({
     where: { id: quizId },
     include: {
-      exam: { select: { slug: true, name: true, id: true } },
-      userAttempts: {
-        include: {
-          question: true,
-        },
+      exam: {
+        include: { questions: true },
       },
+      userAttempts: true,
     },
   });
+
+  console.log("quizSession", quizSession);
 
   if (!quizSession || !quizSession.isCompleted) {
     console.log("Quiz session not found or not completed");
@@ -58,6 +58,11 @@ const ReviewExamPage = async ({
   }
 
   let userAttempts = quizSession.userAttempts;
+  const exam = quizSession.exam;
+  const questions = exam.questions;
+  let questionsLimit = quizSession.questionCount;
+
+  const sliceQuestions = questions.slice(0, questionsLimit);
 
   return (
     <section className="min-h-screen">
@@ -66,6 +71,7 @@ const ReviewExamPage = async ({
         userAttempts={userAttempts}
         examName={quizSession.exam.name}
         examSlug={examSlug}
+        questions={sliceQuestions}
       />
     </section>
   );

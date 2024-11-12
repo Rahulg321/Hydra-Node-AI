@@ -10,23 +10,25 @@ import Link from "next/link";
 import React from "react";
 
 const ReviewMcq = ({
-  userAttempts,
+  userAttempts = [],
+  questions,
   quizSession,
   examName,
   examSlug,
 }: {
-  userAttempts: (UserAttempt & {
-    question: Question;
-  })[];
+  userAttempts?: UserAttempt[];
+  questions: Question[];
   quizSession: QuizSession;
   examName: string;
   examSlug: string;
 }) => {
   const [userAttemptIndex, setUserAttemptIndex] = React.useState(0);
+  const [questionIndex, setQuestionIndex] = React.useState(0);
   const [showOverallExplanation, setShowOverallExplanation] =
     React.useState(false);
 
-  const currentAttempt = userAttempts[userAttemptIndex];
+  let currentAttempt = userAttempts[userAttemptIndex];
+  let currentQuestion = questions[questionIndex];
 
   const calculateScore = () => {
     const correctQuestions = userAttempts.filter(
@@ -35,8 +37,15 @@ const ReviewMcq = ({
     return (correctQuestions / userAttempts.length) * 100;
   };
 
-  const handleNext = () => setUserAttemptIndex((prev) => prev + 1);
-  const handlePrevious = () => setUserAttemptIndex((prev) => prev - 1);
+  const handleNext = () => {
+    setUserAttemptIndex((prev) => prev + 1);
+    setQuestionIndex((prev) => prev + 1);
+  };
+
+  const handlePrevious = () => {
+    setUserAttemptIndex((prev) => prev - 1);
+    setQuestionIndex((prev) => prev - 1);
+  };
 
   return (
     <section className="">
@@ -64,13 +73,11 @@ const ReviewMcq = ({
 
           {/* Summary Section */}
           <Summary
-            totalQuestions={userAttempts.length}
-            correctQuestions={userAttempts.filter((a) => a.isCorrect).length}
-            incorrectQuestions={
-              userAttempts.filter((a) => !a.isCorrect && !a.skipped).length
-            }
-            skippedQuestions={userAttempts.filter((a) => a.skipped).length}
-            score={calculateScore()}
+            totalQuestions={questions.length}
+            correctQuestions={quizSession.correctAnswers}
+            incorrectQuestions={quizSession.incorrectAnswers}
+            skippedQuestions={quizSession.skippedAnswers}
+            score={quizSession.percentageScored!}
           />
 
           <Button asChild variant={"hydraPrimary"}>
@@ -91,35 +98,43 @@ const ReviewMcq = ({
             </span>
             <span className="font-medium">
               Total Questions{" "}
-              <span className="font-bold">{userAttempts.length}</span>
+              <span className="font-bold">{questions.length}</span>
             </span>
           </div>
 
-          <span>Question Type: {currentAttempt.question.questionType}</span>
+          <span>Question Type: {currentQuestion.questionType}</span>
           <div className="my-4 md:my-8">
-            <HtmlContent content={currentAttempt.question.question} />
+            <HtmlContent content={currentQuestion.question} />
           </div>
-          {!currentAttempt.userAnswer && (
+          {!currentAttempt || currentAttempt.skipped ? (
             <div className="mb-4">
               <Badge variant={"destructive"}>Skipped</Badge>
+            </div>
+          ) : (
+            <div className="mb-4">
+              <Badge variant={"success"}>Attempted</Badge>
             </div>
           )}
           <div className="space-y-4 md:space-y-6">
             {/* TODO:-  figure out why this does not work */}
             {[...Array(6)].map((_, i) => {
-              let questionType = currentAttempt.question.questionType;
-              let currentQuestion = currentAttempt.question;
-              console.log("current attempt", currentAttempt);
-              let userSelections = currentAttempt.userAnswer
-                ? currentAttempt.userAnswer.split(",").map(Number)
-                : [];
+              let userSelections: number[] = [];
+
+              if (!currentAttempt) {
+                userSelections = [];
+              } else {
+                userSelections = currentAttempt.userAnswer
+                  ? currentAttempt.userAnswer.split(",").map(Number)
+                  : [];
+              }
+
               // @ts-ignore
               let optionText = currentQuestion[`answerOption${i + 1}`];
 
               // @ts-ignore
               let optionExplanation = currentQuestion[`explanation${i + 1}`];
 
-              let correctAnswers = currentAttempt.question.correctAnswers;
+              let correctAnswers = currentQuestion.correctAnswers;
               let correctAnswersArray = correctAnswers.split(",").map(Number);
               let isCorrect = correctAnswersArray.includes(i + 1);
 
@@ -128,7 +143,6 @@ const ReviewMcq = ({
               return (
                 <Option
                   key={i}
-                  questionType={questionType}
                   optionText={optionText}
                   optionExplanation={optionExplanation}
                   isCorrect={isCorrect!}
@@ -142,7 +156,7 @@ const ReviewMcq = ({
             <div className="mt-6 space-y-4">
               <h4>Overall Explanation:-</h4>
               <span className="font-semibold text-green-800">
-                {currentAttempt.question.overallExplanation}
+                {currentQuestion.overallExplanation}
               </span>
             </div>
           )}
@@ -157,14 +171,14 @@ const ReviewMcq = ({
               <Button
                 variant={"hydraPrimary"}
                 onClick={handlePrevious}
-                disabled={userAttemptIndex === 0}
+                disabled={questionIndex === 0}
               >
                 Previous Question
               </Button>
               <Button
                 variant={"hydraPrimary"}
                 onClick={handleNext}
-                disabled={userAttemptIndex === userAttempts.length - 1}
+                disabled={questionIndex === questions.length - 1}
               >
                 Next Question
               </Button>
@@ -266,13 +280,11 @@ function CorrectQuestionGrid({
 }
 
 function Option({
-  questionType,
   optionText,
   optionExplanation,
   isCorrect,
   isUserOptionSelected,
 }: {
-  questionType: "multi_select" | "multiple_choice";
   optionExplanation: string;
   optionText: string | null;
   isCorrect: boolean;
@@ -284,7 +296,7 @@ function Option({
 
   if (!optionText) return null;
 
-  console.log({ questionType, optionText, selected, isCorrect });
+  console.log({ optionText, selected, isCorrect });
 
   return (
     <div

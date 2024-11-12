@@ -99,7 +99,7 @@ const ExamPage = async ({
           </span>
 
           <span className="block font-bold text-muted-foreground">
-            Question in Exam:{" "}
+            Question For Mock:{" "}
             <span className="text-baseC">{exam.questionsToShow}</span>
           </span>
           <span className="block font-bold text-muted-foreground">
@@ -133,6 +133,8 @@ const ExamPage = async ({
                 examTime={exam.timeAllowed}
                 examLevel={exam.examLevel}
                 examName={exam.name}
+                examLength={exam.questions.length}
+                questionsToShow={exam.questionsToShow}
               />
               {/* <StartExamDialog
                 examId={exam.id}
@@ -153,6 +155,7 @@ const ExamPage = async ({
                 examSlug={exam.slug}
                 userId={loggedInUser.user.id as string}
                 examTime={exam.timeAllowed}
+                examLength={exam.questions.length}
               />
             </div>
           ) : (
@@ -193,9 +196,10 @@ const ExamPage = async ({
             role="alert"
           >
             <p className="text-xl font-bold">
-              Exam Purchased! <span className="ml-2">🎉</span>
+              Exam Available! <span className="ml-2">🎉</span>
             </p>
             <p className="text-lg">You have access to this exam.</p>
+            <p className="text-lg">Take this exam and test your knowledge</p>
             <div>
               <p>{exam.description}</p>
             </div>

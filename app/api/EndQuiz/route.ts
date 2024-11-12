@@ -4,14 +4,14 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { quizSessionId } = body;
+    const { quizSessionId, questionLength } = body;
 
     // Ensure the quizSessionId is provided
-    if (!quizSessionId) {
+    if (!quizSessionId || !questionLength) {
       return NextResponse.json(
         {
           success: false,
-          message: "quizSessionId is required.",
+          message: "quizSessionId and questionLength is required.",
         },
         { status: 400 },
       );
@@ -43,18 +43,21 @@ export async function POST(req: Request) {
       );
     }
 
-    const totalQuestions = currentQuizSession.exam.questions.length;
-    const userAttempts = currentQuizSession.userAttempts;
+    let userAttempts = await db.userAttempt.findMany({
+      where: {
+        id: quizSessionId,
+      },
+    });
 
-    // Use reduce to calculate correct, incorrect, and skipped questions in a single pass
     const { correctQuestions, incorrectQuestions, skippedQuestions } =
       userAttempts.reduce(
         (acc, { isCorrect, skipped }) => {
           if (isCorrect) {
             acc.correctQuestions++;
-          } else {
+          } else if (!skipped) {
             acc.incorrectQuestions++;
           }
+
           if (skipped) {
             acc.skippedQuestions++;
           }
@@ -63,25 +66,20 @@ export async function POST(req: Request) {
         { correctQuestions: 0, incorrectQuestions: 0, skippedQuestions: 0 },
       );
 
-    // Calculate score percentage
-    const examScore = (correctQuestions / totalQuestions) * 100;
+    let examScore = (correctQuestions / questionLength) * 100 || 0;
 
-    // Define a passing score, could be moved to an environment variable or config
-    const PASSING_SCORE = 50;
-
-    // Update the quiz session with the results
     await db.quizSession.update({
       where: {
         id: quizSessionId,
       },
       data: {
-        isCompleted: true,
-        endTime: new Date(),
         correctAnswers: correctQuestions,
         incorrectAnswers: incorrectQuestions,
-        skippedAnswers: skippedQuestions,
+        skippedAnswers: questionLength - correctQuestions - incorrectQuestions,
+        endTime: new Date(),
+        isCompleted: true,
         percentageScored: examScore,
-        passFailStatus: examScore >= PASSING_SCORE, // Simplified boolean condition
+        passFailStatus: examScore >= 50 ? true : false,
       },
     });
 
@@ -93,7 +91,7 @@ export async function POST(req: Request) {
           incorrectQuestions,
           skippedQuestions,
           examScore,
-          passFailStatus: examScore >= PASSING_SCORE,
+          passFailStatus: examScore >= 50 ? true : false,
         },
       },
       { status: 200 },

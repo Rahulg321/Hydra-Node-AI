@@ -1,7 +1,6 @@
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
-import { shuffleArray } from "@/lib/utils";
 import { getExamWithSlug } from "@/data/exam";
 
 // export const dynamic = "force-dynamic";
@@ -55,36 +54,15 @@ const McqQuizPage = async ({
 
   const exam = quizSession.exam;
   const questions = exam.questions;
+  let questionsLimit = quizSession.questionCount;
 
-  // Apply limit based on quiz session mode
-  // default mode is MOCK
-  let questionsLimit = exam.questionsToShow; // Default to the exam's limit
+  const sliceQuestions = questions.slice(0, questionsLimit);
 
-  if (quizSession.examMode === "TRIAL") {
-    questionsLimit = 50; // Trial mode has a fixed limit of 50 questions
-  } else if (quizSession.examMode === "PRACTICE") {
-    questionsLimit = questions.length; // No limit in practice mode (all questions)
-  }
-
-  console.log(
-    "Applying questions limit based on mode:",
-    quizSession.examMode,
-    questionsLimit,
-  );
-
-  // Shuffle the questions and apply the limit
-  // const shuffledQuestions = shuffleArray(questions).slice(0, questionsLimit);
-  const shuffledQuestions = questions.slice(0, questionsLimit);
-
-  console.log("shuffled quesitons length", shuffledQuestions.length);
+  console.log("shuffled quesitons length", sliceQuestions.length);
 
   return (
     <div>
-      <MCQ
-        quizSession={quizSession}
-        exam={exam}
-        questions={shuffledQuestions}
-      />
+      <MCQ quizSession={quizSession} exam={exam} questions={sliceQuestions} />
     </div>
   );
 };

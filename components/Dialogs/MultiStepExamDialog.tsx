@@ -39,6 +39,8 @@ export const MultiStepExamDialog = ({
   examName,
   currentUserId,
   buttonLabel = "Start Exam",
+  examLength,
+  questionsToShow,
 }: {
   examId: string;
   examSlug: string;
@@ -47,6 +49,8 @@ export const MultiStepExamDialog = ({
   examName: string;
   currentUserId: string;
   buttonLabel?: string;
+  examLength: number;
+  questionsToShow: number;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -230,6 +234,8 @@ export const MultiStepExamDialog = ({
           examMode === "PRACTICE" ? timeForExam : examTime,
           examId,
           currentUserId,
+          examLength,
+          questionsToShow,
         );
 
         console.log("recieved response");

@@ -19,11 +19,13 @@ const StartTrialExamDialog = ({
   userId,
   examSlug,
   examTime,
+  examLength,
 }: {
   examId: string;
   examSlug: string;
   userId: string;
   examTime: number;
+  examLength: number;
 }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -33,7 +35,12 @@ const StartTrialExamDialog = ({
     console.log("Trial exam started!");
     // Logic to start the trial exam can be placed here
     startTransition(async () => {
-      const response = await StartTrialExam(examTime, examId, userId);
+      const response = await StartTrialExam(
+        examTime,
+        examId,
+        userId,
+        examLength,
+      );
       if (response.type === "error") {
         console.log("could not start quiz session from dialog");
         toast({

@@ -22,6 +22,7 @@ import EndQuizButton from "./EndQuizButton";
 import TimeLeft from "./TimeLeft";
 import CorrectQuestionGrid from "./CorrectQuestionGrid";
 import HtmlContent from "@/components/html-content";
+import EndQuizAction from "@/actions/end-quiz";
 
 type McqProps = {
   quizSession: QuizSession;
@@ -166,14 +167,23 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
         }
 
         if (questionIndex === questions.length - 1) {
-          const response = await axios.post("/api/EndQuiz", {
-            quizSessionId: quizSession.id,
-          });
+          const response = await EndQuizAction(quizSessionId, questions.length);
 
-          if (response.status !== 200) {
-            throw new Error("Could not end the quiz, error occurred");
+          if (response.type === "success") {
+            toast({
+              title: "Successfully Ended Mcq Exam",
+              variant: "success",
+              description:
+                response.message || "Your exam was ended successfully",
+            });
+          } else {
+            toast({
+              title: "Could not End Exam ❌",
+              variant: "destructive",
+              description:
+                response.message || "There was an issue ending your exam",
+            });
           }
-
           setHasEnded(true);
           return;
         }
@@ -236,6 +246,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           quizSessionId={quizSession.id}
           mcqQuizEnded={hasEnded}
           setMcqQuizEnded={setHasEnded}
+          mcqQuestionsLength={questions.length}
         />
         <CorrectQuestionGrid
           questionLength={questions.length}
@@ -248,9 +259,15 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           </span>
         </div>
 
-        <div className="content-end">
-          <EndQuizButton quizSession={quizSession} setHasEnded={setHasEnded} />
-        </div>
+        {!hasEnded && (
+          <div className="content-end">
+            <EndQuizButton
+              quizSessionId={quizSession.id}
+              setHasEnded={setHasEnded}
+              mcqQuestionLength={questions.length}
+            />
+          </div>
+        )}
       </div>
       <div className="container col-span-4 space-y-4 bg-[#F5F4FA] py-4">
         {hasEnded ? (
@@ -296,11 +313,24 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                   // @ts-ignore
                   let optionText = currentQuestion[`answerOption${i + 1}`];
 
+                  let correctAnswers = currentQuestion.correctAnswers;
+                  let correctAnswersArray = correctAnswers
+                    .split(",")
+                    .map(Number);
+
+                  // @ts-ignore
+                  let optionExp = currentQuestion[`explanation${i + 1}`];
+
+                  let isCorrect = correctAnswersArray.includes(i + 1);
+
                   return (
                     <Option
                       key={i}
                       questionType={questionType}
                       optionText={optionText}
+                      isShowAnswer={showAnswer}
+                      optionExplanation={optionExp}
+                      isCorrect={isCorrect}
                       selected={selected.includes(i + 1)}
                       onSelect={() => {
                         handleSelectOption(i + 1);
@@ -312,8 +342,10 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             </div>
             <div>
               {showAnswer ? (
-                <div className="space-y-4">
-                  <span>{currentQuestion.overallExplanation}</span>
+                <div className="mt-4">
+                  <p className="font-semibold text-green-800">
+                    {currentQuestion.overallExplanation}
+                  </p>
                 </div>
               ) : null}
             </div>
@@ -363,13 +395,16 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
 export default MCQ;
 
+// after the timer has expired it automatically ends the quiz using the correct values
 function CountDownTimer({
   initialTime,
   quizSessionId,
   mcqQuizEnded,
   setMcqQuizEnded,
+  mcqQuestionsLength,
 }: {
   initialTime: number;
+  mcqQuestionsLength: number;
   quizSessionId: string;
   mcqQuizEnded: boolean;
   setMcqQuizEnded: React.Dispatch<React.SetStateAction<boolean>>;
@@ -380,40 +415,58 @@ function CountDownTimer({
   const isTimeCritical = remainingTime <= 60;
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       setRemainingTime((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(interval);
-          axios
-            .post("/api/EndQuiz", { quizSessionId })
-            .then((response) => {
-              if (response.status !== 200) {
-                throw new Error("Could not end the quiz, error occurred");
-              }
-              toast({
-                variant: "default",
-                title: "Quiz has Ended",
-                description: "Your Exam has Ended",
-              });
-            })
-            .catch((error) => {
-              console.error("Error updating end time:", error);
-              toast({
-                variant: "destructive",
-                title: "Error Ending Quiz ❌",
-                description:
-                  "Could not update the quiz end time. Please try again.",
-              });
-            });
-          setMcqQuizEnded(true);
           return 0;
         }
         return prevTime - 1;
       });
+
+      if (remainingTime <= 1 && !mcqQuizEnded) {
+        try {
+          const response = await EndQuizAction(
+            quizSessionId,
+            mcqQuestionsLength,
+          );
+
+          if (response.type === "success") {
+            toast({
+              title: "Successfully Ended Mcq Exam",
+              variant: "success",
+              description:
+                response.message || "Your exam was ended successfully",
+            });
+          } else {
+            toast({
+              title: "Could not End Exam ❌",
+              variant: "destructive",
+              description:
+                response.message || "There was an issue ending your exam",
+            });
+          }
+          setMcqQuizEnded(true);
+        } catch (error) {
+          console.error("Failed to end the quiz:", error);
+          toast({
+            title: "Error",
+            variant: "destructive",
+            description: "An unexpected error occurred while ending the exam.",
+          });
+        }
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [quizSessionId, setMcqQuizEnded, toast]);
+  }, [
+    quizSessionId,
+    mcqQuizEnded,
+    setMcqQuizEnded,
+    remainingTime,
+    toast,
+    mcqQuestionsLength,
+  ]);
 
   return (
     <div
@@ -436,12 +489,18 @@ function CountDownTimer({
 function Option({
   questionType,
   optionText,
+  optionExplanation,
   selected,
   onSelect,
+  isShowAnswer,
+  isCorrect,
 }: {
   questionType: "multi_select" | "multiple_choice";
   optionText: string | null;
+  optionExplanation: string | null;
   selected: boolean;
+  isShowAnswer: boolean;
+  isCorrect: boolean;
   onSelect: () => void;
 }) {
   if (!optionText) return null;
@@ -450,9 +509,11 @@ function Option({
 
   return (
     <div
-      className={`flex cursor-pointer items-center gap-2 rounded-lg border-2 border-base p-4 ${
-        selected ? "bg-baseC text-white" : ""
-      }`}
+      className={cn(
+        "flex cursor-pointer items-center gap-2 rounded-lg border-2 border-base p-4",
+        selected && "bg-baseC text-white",
+        isShowAnswer && isCorrect && "border-green-500 bg-green-600 text-white",
+      )}
       onClick={onSelect}
     >
       {questionType === "multi_select" ? (
@@ -470,9 +531,21 @@ function Option({
           className="form-radio h-5 w-5 cursor-pointer text-base"
         />
       )}
-      <label className="cursor-pointer text-xl font-semibold">
-        {optionText}
-      </label>
+      <div className="flex flex-col">
+        <label className="cursor-pointer text-xl font-semibold">
+          {optionText}
+        </label>
+        {isShowAnswer && (
+          <span
+            className={cn("", {
+              "": isCorrect,
+              "text-red-600": !isCorrect,
+            })}
+          >
+            {optionExplanation}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

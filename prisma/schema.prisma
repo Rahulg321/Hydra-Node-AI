@@ -213,9 +213,12 @@ model QuizSession {
   userAttempts UserAttempt[]
 
   // New fields to track quiz result details
-  correctAnswers   Int      @default(0) // Tracks the number of correct answers
-  incorrectAnswers Int      @default(0) // Tracks the number of incorrect answers
-  skippedAnswers   Int      @default(0) // Tracks the number of skipped answers
+  correctAnswers   Int @default(0) // Tracks the number of correct answers
+  incorrectAnswers Int @default(0) // Tracks the number of incorrect answers
+  skippedAnswers   Int @default(0) // Tracks the number of skipped answers
+
+  questionCount Int @default(0)
+
   passFailStatus   Boolean? // True for pass, False for fail, nullable until quiz is evaluated
   percentageScored Float? // Stores the percentage score, nullable until quiz is completed
 

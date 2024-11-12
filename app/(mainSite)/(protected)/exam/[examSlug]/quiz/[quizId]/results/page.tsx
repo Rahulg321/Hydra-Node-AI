@@ -7,14 +7,18 @@ import Link from "next/link";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import StartExamButton from "../../../StartExamButton";
-
-export const dynamic = "force-dynamic";
+import { Metadata } from "next";
 
 type props = {
   params: {
     examSlug: string;
     quizId: string;
   };
+};
+
+export const metadata: Metadata = {
+  title: "Quiz Results",
+  description: "View the results of your quiz session",
 };
 
 const QuizResultsPage = async ({ params }: props) => {
@@ -24,14 +28,8 @@ const QuizResultsPage = async ({ params }: props) => {
     },
     include: {
       exam: {
-        include: {
-          questions: true,
-        },
-      },
-      userAttempts: {
         select: {
-          isCorrect: true,
-          skipped: true,
+          slug: true,
         },
       },
     },
@@ -43,7 +41,8 @@ const QuizResultsPage = async ({ params }: props) => {
   }
 
   let examTimeInMinutes = currentQuizSession.examTime;
-  let totalQuestions = currentQuizSession.userAttempts.length;
+
+  let totalQuestions = currentQuizSession.questionCount;
   let startTime = currentQuizSession.startTime;
   let endTime = currentQuizSession.endTime;
 
@@ -73,25 +72,13 @@ const QuizResultsPage = async ({ params }: props) => {
     totalTimeTaken = `${timeTakenMinutes} minutes`;
   }
 
-  const { correctQuestions, incorrectQuestions, skippedQuestions } =
-    currentQuizSession.userAttempts.reduce(
-      (acc, { isCorrect, skipped }) => {
-        if (isCorrect) {
-          acc.correctQuestions++;
-        } else if (!skipped) {
-          acc.incorrectQuestions++;
-        }
-
-        if (skipped) {
-          acc.skippedQuestions++;
-        }
-        return acc;
-      },
-      { correctQuestions: 0, incorrectQuestions: 0, skippedQuestions: 0 },
-    );
-
-  let examScore =
-    (correctQuestions / currentQuizSession.userAttempts.length) * 100;
+  const {
+    correctAnswers,
+    incorrectAnswers,
+    skippedAnswers,
+    percentageScored,
+    passFailStatus,
+  } = currentQuizSession;
 
   return (
     <section className="container py-4">
@@ -104,32 +91,32 @@ const QuizResultsPage = async ({ params }: props) => {
 
           <h2>Exam Score</h2>
           <div className="mb-4 mt-2 flex items-center gap-1">
-            <h1>{examScore} %</h1>
+            <h1>{percentageScored} %</h1>
             <span
               className={cn("font-semibold text-green-500", {
-                "text-red-500": examScore < 50,
+                "text-red-500": !passFailStatus,
               })}
             >
-              {examScore >= 50 ? "Passed" : "Failed"}
+              {passFailStatus ? "Passed" : "Failed"}
             </span>
           </div>
           <h3 className="mb-4 font-medium">{formattedEndTime}</h3>
           <div className="grid grid-cols-2 gap-4">
             <InfoCard
               title="Correct"
-              value={correctQuestions.toString()}
+              value={correctAnswers.toString()}
               backgroundColor="bg-green-200"
               icon={<Check className="text-green-400" />}
             />
             <InfoCard
               title="Incorrect"
-              value={incorrectQuestions.toString()}
+              value={incorrectAnswers.toString()}
               backgroundColor="bg-pink-400"
               icon={<X className="text-pink-800" />}
             />
             <InfoCard
               title="Skipped/Unanswered"
-              value={skippedQuestions.toString()}
+              value={skippedAnswers.toString()}
               backgroundColor="bg-violet-400"
               icon={<CircleOff className="text-violet-800" />}
             />
@@ -142,9 +129,9 @@ const QuizResultsPage = async ({ params }: props) => {
           </div>
         </div>
         <ResultsChart
-          correct={correctQuestions}
-          incorrect={incorrectQuestions}
-          skipped={skippedQuestions}
+          correct={correctAnswers}
+          incorrect={incorrectAnswers}
+          skipped={skippedAnswers}
         />
       </div>
       <div className="mt-4 flex justify-between">
@@ -166,13 +153,6 @@ const QuizResultsPage = async ({ params }: props) => {
           >
             <Link href={`/exam/${params.examSlug}`}>Retake Exam</Link>
           </Button>
-
-          {/* <Button
-            className="mb-4 rounded-full bg-base px-10 py-6 text-base"
-            asChild
-          >
-            <Link href={"/product"}>Continue</Link>
-          </Button> */}
         </div>
       </div>
     </section>

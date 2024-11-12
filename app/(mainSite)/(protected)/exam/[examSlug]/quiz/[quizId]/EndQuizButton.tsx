@@ -1,15 +1,20 @@
+import EndQuizAction from "@/actions/end-quiz";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { QuizSession } from "@prisma/client";
 import axios from "axios";
 import { useTransition } from "react";
 
 export default function EndQuizButton({
-  quizSession,
+  quizSessionId,
+  mcqQuestionLength,
   setHasEnded,
 }: {
-  quizSession: QuizSession;
+  quizSessionId: string;
+  mcqQuestionLength: number;
   setHasEnded: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -20,10 +25,29 @@ export default function EndQuizButton({
           // timeout of 3 sec
           // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-          const response = await axios.post("/api/EndQuiz", {
-            quizSessionId: quizSession.id,
-          });
-          setHasEnded(true);
+          const response = await EndQuizAction(
+            quizSessionId,
+            mcqQuestionLength,
+          );
+
+          if (response.type === "success") {
+            toast({
+              title: "Successfully Ended Mcq Exam",
+              variant: "success",
+              description:
+                response.message || "Your exam was ended successfully",
+            });
+            setHasEnded(true);
+          }
+
+          if (response.type === "error") {
+            toast({
+              title: "Could not End Exam ❌",
+              variant: "destructive",
+              description:
+                response.message || "Your exam was ended successfully",
+            });
+          }
         });
       }}
       className="w-full rounded-full px-10 py-6 text-base"
