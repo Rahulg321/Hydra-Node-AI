@@ -94,7 +94,7 @@ const ProductConfirmationPage = async ({
             features of your plan.
           </p>
           <Button asChild className="w-full">
-            <Link href="/product">Explore the Product</Link>
+            <Link href="/vendors">Explore the Product</Link>
           </Button>
         </div>
       </section>
