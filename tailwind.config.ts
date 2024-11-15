@@ -28,8 +28,8 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#00A3FF",
+          dark: "#0082CC",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -54,6 +54,11 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        dark: {
+          DEFAULT: "#0A0A0F",
+          lighter: "#121218",
+          card: "#1A1A23",
         },
       },
       borderRadius: {

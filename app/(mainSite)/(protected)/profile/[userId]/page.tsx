@@ -17,6 +17,7 @@ import EditProfileForm from "@/components/forms/edit-profile-form";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getPlaceholderForRemoteImage } from "@/lib/get-placeholder";
 import { ResetUserPasswordDialog } from "@/components/Dialogs/ResetUserPasswordDialog";
+import ParticleBackground from "@/components/ParticleBackground";
 
 type ProfilePageProps = {
   params: {
@@ -70,7 +71,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
   return (
     <React.Fragment>
-      <section className="grid min-h-screen grid-cols-5 gap-6 bg-[#F5F4FA] px-4 py-4">
+      <section className="block-space grid min-h-screen grid-cols-5 gap-6 px-4 py-4">
         <ProfileSidebar
           loggedInUser={existingLoggedInUser}
           userSession={session}
@@ -130,11 +131,11 @@ async function PurchasedExamHistorySection({
 
   if (!purchasedExams || purchasedExams.length === 0) {
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
+      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center shadow-lg transition-shadow hover:shadow-xl">
+        <h2 className="text-lg font-semibold">
           You have not purchased any exams
         </h2>
-        <p className="text-sm text-gray-500">
+        <p className="dark:text-gray-200">
           It looks like you haven&apos;t purchased any exams yet. Purchase an
           exam to start practicing.
         </p>
@@ -149,7 +150,7 @@ async function PurchasedExamHistorySection({
   }
 
   return (
-    <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+    <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center shadow-lg transition-shadow hover:shadow-xl">
       <h2 className="text-lg font-semibold text-gray-700">
         Purchased Exam History
       </h2>
@@ -218,19 +219,17 @@ async function PaymentHistorySection({
 
   if (!paymentHistory || paymentHistory.length === 0) {
     return (
-      <div className="container col-span-5 space-y-4 rounded-xl bg-white py-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
-          No Payment History Found
-        </h2>
-        <p className="text-sm text-gray-500">
+      <div className="dark:bg-dark-card col-span-5 rounded-xl bg-white px-2 py-4 text-center shadow-lg transition-shadow hover:shadow-xl">
+        <h2 className="text-lg font-semibold">No Payment History Found</h2>
+        <h4 className="text-sm">
           It looks like you haven&apos;t made any payments yet.
-        </p>
+        </h4>
       </div>
     );
   }
 
   return (
-    <div className="col-span-5 space-y-4 rounded-xl bg-white px-2 py-4">
+    <div className="dark:bg-dark-card col-span-5 rounded-xl bg-white px-2 py-4 shadow-lg transition-shadow hover:shadow-xl">
       <h2 className="text-lg font-semibold text-gray-700">Payment History</h2>
       <table className="min-w-full table-auto border-collapse bg-white">
         <thead className="bg-gray-100">
@@ -337,7 +336,7 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
   });
 
   return (
-    <div className="container col-span-4 rounded-xl bg-white py-4">
+    <div className="dark:bg-dark-card container col-span-4 rounded-xl bg-white p-4 py-4 shadow-lg transition-shadow hover:shadow-xl">
       <div className="mb-4 flex items-center justify-between">
         <h4>Exam History</h4>
         <Button className="" variant={"link"} asChild>
@@ -355,7 +354,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
   // 1. Lifetime Access
   if (existingUser.hasLifetimeAccess) {
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+      <div className="dark:bg-dark-card col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
         <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
         <p className="text-muted-foreground">
           Enjoy unlimited access to all services. No further payments required.
@@ -374,7 +373,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+      <div className="dark:bg-dark-card col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
         <h3 className="font-semibold text-baseC">Subscription Ended</h3>
         <p className="text-muted-foreground">
           Your subscription ended on {formattedEndDate}. Renew to regain access
@@ -405,7 +404,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
         <span className="block font-semibold">Cancelled Subscription</span>
         <span className="block font-semibold">
           Your subscription was cancelled
@@ -438,7 +437,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
         <span className="block font-semibold">Current Plan</span>
         <div>
           <h5 className="text-muted-foreground">Subscription Plan</h5>
@@ -466,7 +465,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
         <h3 className="font-semibold text-baseC">Trial Ended</h3>
         <p className="text-muted-foreground">
           Your trial period ended on {formattedTrialEndDate}. Subscribe to
@@ -488,7 +487,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     const formattedTrialEndDate = formatDateWithSuffix(trialEndDate);
 
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
         <h3 className="font-semibold text-baseC">Active Trial</h3>
         <p className="text-muted-foreground">
           Your trial is active until {formattedTrialEndDate}. Subscribe to
@@ -508,7 +507,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
 
   // 6. No Active Plan (Default Case)
   return (
-    <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4">
+    <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
       <h3 className="font-semibold text-baseC">No Active Plan</h3>
       <p className="text-muted-foreground">
         You don&apos;t have any active plans or purchases. Subscribe to unlock
@@ -538,7 +537,7 @@ async function ProfileSidebar({
   );
 
   return (
-    <div className="col-span-1 row-span-2 rounded-xl bg-white py-4">
+    <div className="dark:bg-dark-card col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
       <Image
         src={image || "https://github.com/shadcn.png"}
         alt=""

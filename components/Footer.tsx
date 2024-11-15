@@ -1,83 +1,131 @@
 import React from "react";
-import HydraNodeLogo from "@/public/hydranode_logo.png";
-import Image from "next/image";
-import { FaMedium } from "react-icons/fa6";
-import { FaLinkedin } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { Twitter, Linkedin, CircleDot } from "lucide-react";
 import Link from "next/link";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { ModeToggle } from "./ModeToggle";
-
-const companyLinks = [
-  {
-    name: "About Us",
-    href: "/about-us",
-  },
-
-  {
-    name: "Product",
-    href: "/product",
-  },
-  {
-    name: "Pricing",
-    href: "/pricing",
-  },
-];
-
-const legalLinks = [
-  {
-    name: "Privacy Policy",
-    href: "/privacy-policy",
-  },
-  {
-    name: "Cookie Policy",
-    href: "/cookie-policy",
-  },
-  {
-    name: "Terms of Service",
-    href: "/terms-of-service",
-  },
-];
 
 const Footer = () => {
   return (
-    <footer className="block-space border-t-4">
-      <div className="container flex flex-col items-start gap-6 md:flex-row md:justify-around">
-        <div>
-          <Image src={HydraNodeLogo} alt="logo of hydranode" />
-          <span className="mt-2 block text-sm text-gray-500">
-            Boost your Competitive Skills <br /> & Earn Rewards
-          </span>{" "}
-          <div className="mt-4 flex gap-4">
-            <FaXTwitter className="size-6 text-base" />
-
-            <FaLinkedin className="size-6 text-base" />
-
-            <FaMedium className="size-6 text-base" />
-          </div>
-        </div>
-        <div>
-          <h5 className="mb-2 font-bold">Company</h5>
-          <div className="space-y-2">
-            {companyLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="block">
-                {link.name}
+    <footer className="bg-white py-16 dark:bg-black/90">
+      <div className="container mx-auto px-4">
+        <div className="mx-auto max-w-7xl">
+          {/* Main Footer Content */}
+          <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-3">
+            {/* Logo and Social Section */}
+            <div>
+              <Link href="/" className="mb-4 flex items-center gap-2">
+                <img
+                  src="/logo-dark.svg"
+                  alt="Hydranode"
+                  className="h-8 dark:hidden"
+                />
+                <img
+                  src="/logo-light.svg"
+                  alt="Hydranode"
+                  className="hidden h-8 dark:block"
+                />
               </Link>
-            ))}
+              <p className="mb-6 text-gray-600 dark:text-gray-400">
+                Boost your Competitive Skills
+                <br />& Earn Rewards
+              </p>
+              <div className="flex gap-4">
+                <a
+                  href="#"
+                  className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  aria-label="Medium"
+                >
+                  <CircleDot className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                Company
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    href="/about-us"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    Product
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    href="/pricing"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    Pricing
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal Links */}
+            <div>
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                Legal
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    Cookie Policy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    Terms of Service
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div className="border-t border-gray-200 pt-8 dark:border-gray-800">
+            <p className="text-center text-gray-600 dark:text-gray-400">
+              © 2024 Hydranode AI Ltd. All rights reserved.
+            </p>
           </div>
         </div>
-        <div>
-          <h5 className="mb-2 font-bold">Legal</h5>
-          <div className="space-y-2">
-            {legalLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="block">
-                {link.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div></div>
       </div>
     </footer>
   );

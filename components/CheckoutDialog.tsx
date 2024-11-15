@@ -26,6 +26,11 @@ type CheckoutDialogProps = {
   session: Session;
 };
 
+type CheckoutDialogNewProps = {
+  priceId: string;
+  session: Session;
+};
+
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );

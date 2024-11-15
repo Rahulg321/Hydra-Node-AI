@@ -11,9 +11,12 @@ const rateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "1m"),
 });
 
-export default async function submitContactForm(
-  values: ContactFormSchemaZodType,
-) {
+export default async function submitContactForm(values: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  message: string;
+}) {
   const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
 
   const {

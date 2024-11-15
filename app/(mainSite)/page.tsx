@@ -13,6 +13,9 @@ import VideoGuideSection from "@/components/sections/VideoGuideSection";
 import OurPartners from "@/components/sections/OurPartners";
 import db from "@/lib/db";
 import { Metadata } from "next";
+import Features from "@/components/sections/Features";
+import Solutions from "@/components/sections/Solutions";
+import SocialProof from "@/components/sections/SocialProof";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -24,15 +27,12 @@ export default async function Home() {
     <React.Fragment>
       <HeroSection />
       <OurPartners />
-      <VideoGuideSection />
-      <InnovativeFeaturesSection />
+      <Features />
       <VisionSection />
-      <TechnologyBehindSuccessSection />
+      <Solutions />
       <UseCasesSection />
-      <UserReviewSection />
-      <UnlimitedRewardsSection />
+      <SocialProof />
       <FeaturedBlogsSection />
-      <FAQSection />
     </React.Fragment>
   );
 }

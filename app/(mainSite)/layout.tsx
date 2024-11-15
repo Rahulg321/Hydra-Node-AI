@@ -12,6 +12,10 @@ import { ExamModeProvider } from "@/lib/exam-mode-context";
 import { baseUrl } from "../sitemap";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AnimatePresence } from "framer-motion";
+import { Moon, Sun } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -75,12 +79,23 @@ export default async function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={clsx("", poppins.variable, manrope.variable)}>
-        <SessionProvider>
-          <Header session={session} />
-          {children}
-          <Footer />
-          <Toaster />
-        </SessionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider>
+            <div className="min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-background dark:text-gray-100">
+              <ThemeSwitchButton />
+              {/* <Header session={session} /> */}
+              <Navbar session={session} />
+              {children}
+              <Footer />
+              <Toaster />
+            </div>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>
