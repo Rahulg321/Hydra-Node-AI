@@ -32,7 +32,7 @@ export function ProfilePicUploadDialog({ userId }: { userId: string }) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Edit Profile Pic</Button>
+          <Button>Edit Profile Pic</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] md:max-w-2xl lg:max-w-3xl">
           <DialogHeader>

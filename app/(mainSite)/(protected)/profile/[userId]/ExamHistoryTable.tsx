@@ -51,7 +51,7 @@ const ExamHistoryTable = ({ examHistoryData }: ExamHistoryTableProps) => {
               {exam.difficultyLevel ? exam.difficultyLevel : "-"}
             </TableCell>
 
-            <TableCell className="text-right text-purple-700">
+            <TableCell className="text-right text-primary">
               <a
                 href={exam.link}
                 className="flex items-center justify-end gap-2"

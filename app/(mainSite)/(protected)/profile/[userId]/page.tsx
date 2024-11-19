@@ -131,7 +131,7 @@ async function PurchasedExamHistorySection({
 
   if (!purchasedExams || purchasedExams.length === 0) {
     return (
-      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center shadow-lg transition-shadow hover:shadow-xl">
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <h2 className="text-lg font-semibold">
           You have not purchased any exams
         </h2>
@@ -150,23 +150,19 @@ async function PurchasedExamHistorySection({
   }
 
   return (
-    <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center shadow-lg transition-shadow hover:shadow-xl">
-      <h2 className="text-lg font-semibold text-gray-700">
-        Purchased Exam History
-      </h2>
-      <table className="min-w-full table-auto border-collapse bg-white">
-        <thead className="bg-gray-100">
+    <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
+      <h2 className="text-lg font-semibold">Purchased Exam History</h2>
+      <table className="min-w-full table-auto border-collapse bg-white dark:bg-dark-card">
+        <thead className="">
           <tr>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Exam Name
             </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Purchase Date
             </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
-              Price
-            </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">Price</th>
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Action
             </th>
           </tr>
@@ -178,19 +174,19 @@ async function PurchasedExamHistorySection({
             );
             return (
               <tr key={exam.id} className="border-t">
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="py-2 text-left text-sm text-gray-700 dark:text-gray-400">
                   {exam.exam.name}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-500">
+                <td className="py-2 text-sm text-gray-700 dark:text-gray-400">
                   {formattedDate}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="py-2 text-sm text-gray-700 dark:text-gray-400">
                   ${exam.amount.toFixed(2)}
                 </td>
-                <td className="px-4 py-2">
+                <td className="py-2">
                   <Link
                     href={`/exam/${exam.exam.slug}`}
-                    className="text-baseC hover:underline"
+                    className="text-primary hover:underline"
                   >
                     View Details
                   </Link>
@@ -219,7 +215,7 @@ async function PaymentHistorySection({
 
   if (!paymentHistory || paymentHistory.length === 0) {
     return (
-      <div className="dark:bg-dark-card col-span-5 rounded-xl bg-white px-2 py-4 text-center shadow-lg transition-shadow hover:shadow-xl">
+      <div className="col-span-5 rounded-xl bg-white px-2 py-4 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <h2 className="text-lg font-semibold">No Payment History Found</h2>
         <h4 className="text-sm">
           It looks like you haven&apos;t made any payments yet.
@@ -229,24 +225,22 @@ async function PaymentHistorySection({
   }
 
   return (
-    <div className="dark:bg-dark-card col-span-5 rounded-xl bg-white px-2 py-4 shadow-lg transition-shadow hover:shadow-xl">
+    <div className="col-span-5 rounded-xl bg-white px-2 py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
       <h2 className="text-lg font-semibold text-gray-700">Payment History</h2>
-      <table className="min-w-full table-auto border-collapse bg-white">
-        <thead className="bg-gray-100">
+      <table className="min-w-full table-auto border-collapse bg-white dark:bg-dark-card">
+        <thead className="">
           <tr>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
-              Date
-            </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">Date</th>
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Amount
             </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Currency
             </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Payment Type
             </th>
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-4 py-2 text-left text-sm font-semibold">
               Status
             </th>
           </tr>
@@ -258,16 +252,16 @@ async function PaymentHistorySection({
             );
             return (
               <tr key={payment.id} className="border-t">
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="px-4 py-2 text-sm text-gray-700 dark:text-gray-400">
                   {formattedDate}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="px-4 py-2 text-sm text-gray-700 dark:text-gray-400">
                   ${payment.amount.toFixed(2)}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="px-4 py-2 text-sm text-gray-700 dark:text-gray-400">
                   {payment.currency.toUpperCase()}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="px-4 py-2 text-sm text-gray-700 dark:text-gray-400">
                   {payment.paymentType.replace("_", " ")}
                 </td>
                 <td
@@ -336,7 +330,7 @@ async function ExamHistorySection({ loggedInUser }: { loggedInUser: Session }) {
   });
 
   return (
-    <div className="dark:bg-dark-card container col-span-4 rounded-xl bg-white p-4 py-4 shadow-lg transition-shadow hover:shadow-xl">
+    <div className="container col-span-4 rounded-xl bg-white p-4 py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
       <div className="mb-4 flex items-center justify-between">
         <h4>Exam History</h4>
         <Button className="" variant={"link"} asChild>
@@ -354,7 +348,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
   // 1. Lifetime Access
   if (existingUser.hasLifetimeAccess) {
     return (
-      <div className="dark:bg-dark-card col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
+      <div className="col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <h3 className="font-semibold text-baseC">You have Lifetime Access</h3>
         <p className="text-muted-foreground">
           Enjoy unlimited access to all services. No further payments required.
@@ -373,7 +367,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="dark:bg-dark-card col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
+      <div className="col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <h3 className="font-semibold text-baseC">Subscription Ended</h3>
         <p className="text-muted-foreground">
           Your subscription ended on {formattedEndDate}. Renew to regain access
@@ -404,7 +398,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <span className="block font-semibold">Cancelled Subscription</span>
         <span className="block font-semibold">
           Your subscription was cancelled
@@ -437,7 +431,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <span className="block font-semibold">Current Plan</span>
         <div>
           <h5 className="text-muted-foreground">Subscription Plan</h5>
@@ -465,7 +459,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     );
 
     return (
-      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <h3 className="font-semibold text-baseC">Trial Ended</h3>
         <p className="text-muted-foreground">
           Your trial period ended on {formattedTrialEndDate}. Subscribe to
@@ -487,7 +481,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
     const formattedTrialEndDate = formatDateWithSuffix(trialEndDate);
 
     return (
-      <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
+      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
         <h3 className="font-semibold text-baseC">Active Trial</h3>
         <p className="text-muted-foreground">
           Your trial is active until {formattedTrialEndDate}. Subscribe to
@@ -507,7 +501,7 @@ async function CurrentPlanSection({ existingUser }: { existingUser: User }) {
 
   // 6. No Active Plan (Default Case)
   return (
-    <div className="dark:bg-dark-card container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl">
+    <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
       <h3 className="font-semibold text-baseC">No Active Plan</h3>
       <p className="text-muted-foreground">
         You don&apos;t have any active plans or purchases. Subscribe to unlock
@@ -537,7 +531,7 @@ async function ProfileSidebar({
   );
 
   return (
-    <div className="dark:bg-dark-card col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
+    <div className="col-span-1 row-span-2 rounded-xl bg-white p-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
       <Image
         src={image || "https://github.com/shadcn.png"}
         alt=""
@@ -551,10 +545,10 @@ async function ProfileSidebar({
           <ProfilePicUploadDialog userId={id} />
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold text-baseC">{`${name}`}</span>
+          <span className="text-sm font-semibold text-primary">{`${name}`}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold text-baseC">{email}</span>
+          <span className="text-sm font-semibold text-primary">{email}</span>
         </div>
         <EditProfileForm userId={id} name={name} email={email} />
       </div>

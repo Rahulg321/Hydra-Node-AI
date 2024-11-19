@@ -18,6 +18,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import LogoDark from "@/public/logo-dark.svg";
+import LogoLight from "@/public/logo-light.svg";
 
 const menuItems = ["Product", "About Us", "Pricing", "Contact Us"];
 
@@ -67,14 +69,14 @@ const Navbar = ({ session }: { session: Session | null }) => {
           >
             <Link href={"/"}>
               <Image
-                src="/logo-dark.svg"
+                src={LogoDark}
                 alt="Hydranode"
                 width={150}
                 height={150}
                 className="h-8 dark:hidden"
               />
               <Image
-                src="/logo-light.svg"
+                src={LogoLight}
                 width={150}
                 height={150}
                 alt="Hydranode"
@@ -182,5 +184,54 @@ function ProfileMenu({ session }: { session: Session }) {
         <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function DarkLogo() {
+  return (
+    <svg
+      width="800"
+      height="182"
+      viewBox="0 0 800 182"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M50 0L100 90L50 182L0 90L50 0Z" fill="#00A3FF" />
+      <path d="M150 45L200 135L150 182L100 90L150 45Z" fill="#0082CC" />
+      <text
+        x="250"
+        y="120"
+        font-family="Arial, sans-serif"
+        font-size="72"
+        font-weight="bold"
+        fill="#1A1A1A"
+      >
+        HYDRANODE
+      </text>
+    </svg>
+  );
+}
+
+function LightLogo() {
+  return (
+    <svg
+      width="800"
+      height="182"
+      viewBox="0 0 800 182"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M50 0L100 90L50 182L0 90L50 0Z" fill="#00A3FF" />
+      <path d="M150 45L200 135L150 182L100 90L150 45Z" fill="#0082CC" />
+      <text
+        x="250"
+        y="120"
+        font-family="Arial"
+        font-size="72"
+        font-weight="bold"
+        fill="#FFFFFF"
+      >
+        HYDRANODE
+      </text>
+    </svg>
   );
 }
