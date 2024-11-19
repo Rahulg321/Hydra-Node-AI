@@ -41,14 +41,6 @@ export default function PaymentErrorEmail({
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Img
-              src={`${baseUrl}/logo.png`}
-              width="100"
-              height="50"
-              alt="HydraNode"
-              style={logo}
-            />
-            <Hr style={hr} />
             <Text style={heading}>Payment Error</Text>
             <Text style={paragraph}>Dear {customerName},</Text>
             <Text style={paragraph}>

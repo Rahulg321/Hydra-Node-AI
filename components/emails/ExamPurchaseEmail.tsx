@@ -45,14 +45,6 @@ export default function ExamPurchaseEmail({
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Img
-              src={`./hydranode_logo.png`}
-              width="100"
-              height="50"
-              alt="HydraNode"
-              style={logo}
-            />
-            <Hr style={hr} />
             <Text style={heading}>🎉 Exam Purchase Successful! 🎉</Text>
             <Text style={paragraph}>
               {firstName && lastName

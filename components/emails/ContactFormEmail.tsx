@@ -39,14 +39,6 @@ export default function ContactMessageEmail({
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Img
-              src={`${baseUrl}/hydranode_logo.png`}
-              width="100"
-              height="50"
-              alt="HydraNode"
-              style={logo}
-            />
-            <Hr style={hr} />
             <Text style={heading}>New Contact Message</Text>
             <Text style={paragraph}>
               You have received a new message through the contact form:

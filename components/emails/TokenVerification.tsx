@@ -30,14 +30,7 @@ export const TokenVerificationEmail: React.FC<
     <Preview>Verify your email address</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Section style={logoContainer}>
-          <Img
-            src={`/public/hydranode_logo.png`} // Add your Hydranode logo here
-            width="120"
-            height="36"
-            alt="Hydranode"
-          />
-        </Section>
+        <Section style={logoContainer}></Section>
         <Heading style={h1}>Welcome to Hydranode!!!!</Heading>
         <Text style={heroText}>
           You need to verify your email address first to create your account.

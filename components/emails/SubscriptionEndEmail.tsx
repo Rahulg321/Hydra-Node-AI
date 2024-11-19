@@ -43,14 +43,6 @@ export default function SubscriptionEndEmail({
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Img
-              src={`/hydranode_logo.png`}
-              width="100"
-              height="50"
-              alt="HydraNode"
-              style={logo}
-            />
-            <Hr style={hr} />
             <Text style={heading}>Subscription Ended</Text>
             <Text style={paragraph}>
               Hello {firstName} {lastName},
