@@ -3,7 +3,6 @@ import db from "@/lib/db";
 export async function getAllExams() {
   try {
     const exams = await db.exam.findMany();
-
     return exams;
   } catch (error) {
     console.log(

@@ -12,6 +12,7 @@ import {
   Building,
 } from "lucide-react";
 import ParticleBackground from "../ParticleBackground";
+import Image from "next/image";
 
 const useCases = [
   {
@@ -97,16 +98,17 @@ const UseCaseCard = ({ useCase, index }: any) => {
     >
       <div className="preserve-3d hover:rotate-y-12 relative h-[400px] w-full transform-gpu overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-2xl">
         {/* Front Face */}
-        <div className="dark:bg-dark-card backface-hidden absolute inset-0 overflow-hidden rounded-2xl bg-white">
+        <div className="backface-hidden absolute inset-0 overflow-hidden rounded-2xl bg-white dark:bg-dark-card">
           <div className="relative h-48">
             <motion.div
               className="absolute inset-0"
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.6 }}
             >
-              <img
+              <Image
                 src={useCase.image}
                 alt={useCase.title}
+                fill
                 className="h-full w-full object-cover"
               />
             </motion.div>

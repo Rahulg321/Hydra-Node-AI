@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Marquee from "react-fast-marquee";
+import Image from "next/image";
 
 const blogs = [
   {
@@ -106,9 +107,10 @@ const BlogCard = ({ blog }: any) => (
     whileHover={{ y: -5, scale: 1.02 }}
   >
     <div className="relative h-48 overflow-hidden">
-      <img
+      <Image
         src={blog.image}
         alt={blog.title}
+        fill
         className="h-full w-full transform object-cover transition-transform duration-300 group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

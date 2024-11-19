@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import ParticleBackground from "../ParticleBackground";
 import Link from "next/link";
+import Image from "next/image";
 
 const VisionSection = () => {
   const [ref, inView] = useInView({
@@ -29,8 +30,10 @@ const VisionSection = () => {
             className="relative"
           >
             <div className="animate-float relative z-10">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"
+                width={800}
+                height={800}
                 alt="Digital Learning Illustration"
                 className="mx-auto w-full max-w-md rounded-2xl"
               />
@@ -79,7 +82,7 @@ const VisionSection = () => {
                 transition={{ delay: 0.4 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="hover:bg-primary-dark rounded-xl bg-primary px-8 py-4 text-white shadow-lg transition-all duration-300 hover:shadow-xl"
+                className="rounded-xl bg-primary px-8 py-4 text-white shadow-lg transition-all duration-300 hover:bg-primary-dark hover:shadow-xl"
               >
                 Learn More
               </motion.button>
@@ -93,7 +96,7 @@ const VisionSection = () => {
       </div>
 
       {/* Bottom Gradient Overlay */}
-      <div className="dark:from-dark absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent dark:from-dark"></div>
     </section>
   );
 };
