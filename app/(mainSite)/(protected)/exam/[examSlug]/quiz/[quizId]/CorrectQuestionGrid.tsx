@@ -13,7 +13,7 @@ const CorrectQuestionGrid = ({
     <div className="bg-muted p-4">
       <div className="grid grid-cols-6 gap-2">
         {Array.from({ length: questionLength }).map((_, index) => {
-          let statusClass = "border-base";
+          let statusClass = "border-primary";
           if (questionStatus[index] === "attempted") {
             statusClass = "bg-green-500 border-green-500";
           } else if (questionStatus[index] === "skipped") {

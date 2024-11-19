@@ -269,15 +269,12 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           </div>
         )}
       </div>
-      <div className="container col-span-4 space-y-4 bg-[#F5F4FA] py-4">
+      <div className="container col-span-4 space-y-4 bg-[#F5F4FA] py-4 dark:bg-dark">
         {hasEnded ? (
           <div className="flex flex-col items-center justify-center gap-4">
             <h2>Your {exam.name} Exam has Ended</h2>
             <h3>Check Your Score here 👇</h3>
-            <Button
-              className="mb-4 rounded-full bg-base px-10 py-6 text-base"
-              asChild
-            >
+            <Button className="mb-4 rounded-full px-10 py-6" asChild>
               <Link href={`/exam/${exam.slug}/quiz/${quizSession.id}/results`}>
                 Score
               </Link>
@@ -343,7 +340,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             <div>
               {showAnswer ? (
                 <div className="mt-4">
-                  <p className="font-semibold text-green-800">
+                  <p className="font-semibold text-green-800 dark:text-green-600">
                     {currentQuestion.overallExplanation}
                   </p>
                 </div>
@@ -353,7 +350,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               <div className="">
                 {quizSession.examMode === "PRACTICE" ? (
                   <Button
-                    className="my-4 rounded-full bg-base px-10 py-6 text-base"
+                    className="mb-4 rounded-full px-10 py-6"
                     onClick={() => {
                       setShowAnswer(!showAnswer);
                     }}
@@ -364,14 +361,14 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               </div>
               <div className="space-x-4">
                 <Button
-                  className="mb-4 rounded-full border border-base bg-white px-10 py-6 text-base font-semibold text-baseC hover:bg-base hover:text-white"
+                  className="mb-4 rounded-full px-10 py-6"
                   onClick={handlePrevious}
                   disabled={questionIndex === 0}
                 >
                   Previous Question
                 </Button>
                 <Button
-                  className="mb-4 rounded-full bg-base px-10 py-6 text-base"
+                  className="mb-4 rounded-full px-10 py-6"
                   onClick={handleNext}
                   disabled={isPending}
                 >
@@ -470,7 +467,7 @@ function CountDownTimer({
 
   return (
     <div
-      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-500" : "bg-base"} text-white`}
+      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-500" : "bg-primary dark:bg-primary-dark"} text-white`}
     >
       {mcqQuizEnded ? (
         <div>
@@ -510,9 +507,11 @@ function Option({
   return (
     <div
       className={cn(
-        "flex cursor-pointer items-center gap-2 rounded-lg border-2 border-base p-4",
-        selected && "bg-baseC text-white",
-        isShowAnswer && isCorrect && "border-green-500 bg-green-600 text-white",
+        "hover; flex transform cursor-pointer items-center gap-2 rounded-lg border-2 border-primary p-4",
+        selected && "bg-primary text-white dark:bg-primary-dark",
+        isShowAnswer &&
+          isCorrect &&
+          "border-green-500 bg-green-600 text-white dark:bg-green-800",
       )}
       onClick={onSelect}
     >
@@ -531,15 +530,15 @@ function Option({
           className="form-radio h-5 w-5 cursor-pointer text-base"
         />
       )}
-      <div className="flex flex-col">
+      <div className="ml-2 flex flex-col">
         <label className="cursor-pointer text-xl font-semibold">
           {optionText}
         </label>
         {isShowAnswer && (
           <span
-            className={cn("", {
+            className={cn("mt-2 block", {
               "": isCorrect,
-              "text-red-600": !isCorrect,
+              "font-semibold": !isCorrect,
             })}
           >
             {optionExplanation}

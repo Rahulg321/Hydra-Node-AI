@@ -20,7 +20,7 @@ export default function VendorButton({
   return (
     <Link
       className={cn("block rounded-md px-4 py-2 text-muted-foreground", {
-        "border-l-4 border-base bg-[#F5F8FE]": isActive,
+        "border-l-4 border-base bg-[#F5F8FE] dark:bg-dark-card": isActive,
       })}
       href={`/vendors/${vendor.slug}`}
     >

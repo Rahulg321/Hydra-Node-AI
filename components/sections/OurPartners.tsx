@@ -34,7 +34,7 @@ const technologies = [
 
 const OurPartners = () => {
   return (
-    <section className="dark:to-dark-lighter overflow-hidden bg-gradient-to-b from-transparent to-gray-50 py-16">
+    <section className="overflow-hidden bg-gradient-to-b from-transparent to-gray-50 py-16 dark:to-dark-lighter">
       <div className="container mx-auto mb-8 px-4">
         <h2 className="text-center text-2xl font-semibold text-gray-600 dark:text-gray-400">
           Powered by Industry Leaders
@@ -43,8 +43,8 @@ const OurPartners = () => {
 
       <div className="relative">
         {/* Gradient Overlays */}
-        <div className="dark:from-dark absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent"></div>
-        <div className="dark:from-dark absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-white to-transparent"></div>
+        <div className="absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent dark:from-dark"></div>
+        <div className="absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-white to-transparent dark:from-dark"></div>
 
         {/* Single Scrolling Row */}
         <div className="flex overflow-hidden">
@@ -65,7 +65,7 @@ const OurPartners = () => {
               (tech, index) => (
                 <div
                   key={`${tech.name}-${index}`}
-                  className="dark:bg-dark-card group flex min-w-[280px] items-center gap-4 rounded-xl bg-white px-8 py-4 shadow-md transition-transform hover:scale-105"
+                  className="group flex min-w-[280px] items-center gap-4 rounded-xl bg-white px-8 py-4 shadow-md transition-transform hover:scale-105 dark:bg-dark-card"
                 >
                   <div className="flex h-16 w-16 items-center justify-center p-2">
                     {"logo" in tech ? (

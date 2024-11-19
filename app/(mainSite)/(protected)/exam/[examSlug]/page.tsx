@@ -95,22 +95,22 @@ const ExamPage = async ({
           <span className="block font-bold underline">Certificate Details</span>
           <span className="block font-bold text-muted-foreground">
             Total Question Bank:{" "}
-            <span className="text-baseC">{exam.questions.length}</span>
+            <span className="text-primary">{exam.questions.length}</span>
           </span>
 
           <span className="block font-bold text-muted-foreground">
             Question For Mock:{" "}
-            <span className="text-baseC">{exam.questionsToShow}</span>
+            <span className="text-primary">{exam.questionsToShow}</span>
           </span>
           <span className="block font-bold text-muted-foreground">
-            Attempt: <span className="text-baseC">{exam.attempts}</span>
+            Attempt: <span className="text-primary">{exam.attempts}</span>
           </span>
           <span className="block font-bold text-muted-foreground">
             Exam Time:{" "}
-            <span className="text-baseC">{exam.timeAllowed} minutes</span>
+            <span className="text-primary">{exam.timeAllowed} minutes</span>
           </span>
           <span className="block font-bold text-muted-foreground">
-            Exam Level: <span className="text-baseC">{exam.examLevel}</span>
+            Exam Level: <span className="text-primary">{exam.examLevel}</span>
           </span>
           <div className="my-4 flex items-center gap-1">
             <div className="flex gap-1 text-yellow-400">

@@ -17,6 +17,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const menuItems = ["Product", "About Us", "Pricing", "Contact Us"];
 
@@ -43,7 +44,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
       case "Contact Us":
         return "/contact-us";
       case "Product":
-        return "/product";
+        return "/vendors";
       default:
         return `/#${item.toLowerCase().replace(" ", "-")}`;
     }
@@ -51,7 +52,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
 
   return (
     <nav
-      className={`fixed z-50 w-full transition-all duration-300 ${
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isScrolled
           ? "bg-white/80 shadow-lg backdrop-blur-lg dark:bg-black/80"
           : ""
@@ -65,13 +66,17 @@ const Navbar = ({ session }: { session: Session | null }) => {
             className="flex items-center gap-2"
           >
             <Link href={"/"}>
-              <img
+              <Image
                 src="/logo-dark.svg"
                 alt="Hydranode"
+                width={150}
+                height={150}
                 className="h-8 dark:hidden"
               />
-              <img
+              <Image
                 src="/logo-light.svg"
+                width={150}
+                height={150}
                 alt="Hydranode"
                 className="hidden h-8 dark:block"
               />
@@ -93,7 +98,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
             ) : (
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                className="hover:bg-primary-dark rounded-lg bg-primary px-6 py-2 text-white transition-colors"
+                className="rounded-lg bg-primary px-6 py-2 text-white transition-colors hover:bg-primary-dark"
                 onClick={() => {
                   router.push("/login");
                 }}
@@ -119,7 +124,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="dark:bg-dark-lighter border-t bg-white dark:border-gray-800 md:hidden"
+            className="border-t bg-white dark:border-gray-800 dark:bg-dark-lighter md:hidden"
           >
             <div className="container mx-auto px-4 py-4">
               {menuItems.map((item) => (
@@ -136,7 +141,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
                 <ProfileMenu session={session} />
               ) : (
                 <button
-                  className="hover:bg-primary-dark mt-4 w-full rounded-lg bg-primary px-6 py-2 text-white transition-colors"
+                  className="mt-4 w-full rounded-lg bg-primary px-6 py-2 text-white transition-colors hover:bg-primary-dark"
                   onClick={() => {
                     router.push("/login");
                   }}
@@ -165,7 +170,7 @@ function ProfileMenu({ session }: { session: Session }) {
           />
           <AvatarFallback>HN</AvatarFallback>
         </Avatar>
-        <span className="flex items-center font-medium text-baseC">
+        <span className="flex items-center font-medium text-primary">
           Account <ChevronDown />
         </span>
       </DropdownMenuTrigger>

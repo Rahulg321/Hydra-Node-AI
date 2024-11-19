@@ -335,11 +335,11 @@ function Option({
       </div>
       {selected && (
         <div className="mt-4 space-y-4">
-          <h4>Explanation</h4>
+          <h6 className="text-muted-foreground">Explanation</h6>
           <span
             className={cn("font-semibold", {
-              "text-green-800": isCorrect,
-              "text-red-800": !isCorrect,
+              "text-green-800 dark:text-green-600": isCorrect,
+              "text-red-800 dark:text-red-600": !isCorrect,
             })}
           >
             {optionExplanation}

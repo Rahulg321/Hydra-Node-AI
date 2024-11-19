@@ -127,7 +127,7 @@ export const MultiStepExamDialog = ({
               ready.
             </DialogDescription>
 
-            <div className="mt-4 rounded-md bg-gray-100 p-4 shadow-sm">
+            <div className="mt-4 rounded-md bg-card p-4 shadow-sm">
               <h3 className="mb-4 text-lg font-semibold">Exam Details</h3>
 
               <div className="grid grid-cols-2 gap-4">
@@ -274,7 +274,7 @@ export const MultiStepExamDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="" variant={"hydraPrimary"} size={"lg"}>
+        <Button className="hover:bg-primary-dark" size={"lg"}>
           {buttonLabel}
         </Button>
       </DialogTrigger>

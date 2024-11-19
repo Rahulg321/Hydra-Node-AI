@@ -31,7 +31,7 @@ const ExamTags = () => {
   };
 
   return (
-    <div className="flex w-full gap-2 rounded-md bg-[#E5E6FF]">
+    <div className="flex w-full gap-2 rounded-md bg-[#E5E6FF] dark:bg-dark-card">
       {examLevels.map((level) => (
         <div
           key={level.value}

@@ -91,7 +91,7 @@ const QuizResultsPage = async ({ params }: props) => {
 
           <h2>Exam Score</h2>
           <div className="mb-4 mt-2 flex items-center gap-1">
-            <h1>{percentageScored} %</h1>
+            <h1>{percentageScored?.toFixed(2)} %</h1>
             <span
               className={cn("font-semibold text-green-500", {
                 "text-red-500": !passFailStatus,
@@ -105,8 +105,8 @@ const QuizResultsPage = async ({ params }: props) => {
             <InfoCard
               title="Correct"
               value={correctAnswers.toString()}
-              backgroundColor="bg-green-200"
-              icon={<Check className="text-green-400" />}
+              backgroundColor="bg-green-200 dark:bg-green-400"
+              icon={<Check className="text-green-400 dark:text-green-100" />}
             />
             <InfoCard
               title="Incorrect"
@@ -135,10 +135,7 @@ const QuizResultsPage = async ({ params }: props) => {
         />
       </div>
       <div className="mt-4 flex justify-between">
-        <Button
-          className="mb-4 rounded-full border border-base bg-white px-10 py-6 text-baseC transition duration-150 ease-in-out hover:bg-base hover:text-white"
-          asChild
-        >
+        <Button className="rounded-fullpx-10 mb-4 py-6" asChild>
           <Link
             href={`/exam/${currentQuizSession.exam.slug}/quiz/${params.quizId}/review`}
           >
@@ -147,10 +144,7 @@ const QuizResultsPage = async ({ params }: props) => {
         </Button>
 
         <div className="space-x-4">
-          <Button
-            className="mb-4 rounded-full bg-base px-10 py-6 text-base"
-            asChild
-          >
+          <Button className="mb-4 rounded-full px-10 py-6" asChild>
             <Link href={`/exam/${params.examSlug}`}>Retake Exam</Link>
           </Button>
         </div>
