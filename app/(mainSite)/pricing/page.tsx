@@ -5,8 +5,19 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Check, X, Zap, Users, Crown, Brain } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
+import CheckoutDialog from "@/components/CheckoutDialog";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const PricingPage = () => {
+  const session = useSession();
+  const router = useRouter();
+
+  console.log("session in pricing page", session);
+
+  const userId = session.data?.user.id;
+  const userEmail = session.data?.user.email;
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -14,33 +25,13 @@ const PricingPage = () => {
 
   const plans = [
     {
-      name: "Starter",
-      icon: Brain,
-      description: "Perfect for individual learners",
-      priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
-      price: 100,
-      features: [
-        "Access to basic courses",
-        "AI-powered study plans",
-        "Practice tests",
-        "Basic analytics",
-        "Email support",
-        "Mobile app access",
-      ],
-      notIncluded: [
-        "Advanced AI features",
-        "Mentorship sessions",
-        "Custom learning paths",
-        "Team collaboration",
-        "API access",
-      ],
-    },
-    {
-      name: "Professional",
+      name: "Yearly",
       icon: Zap,
       description: "Ideal for serious learners",
-      priceId: "price_1PsgMGIbE21KKZM9fg2dyVJ6",
-      price: 200,
+      duration: "For 1 year",
+      priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
+      mode: "subscription",
+      price: 100,
       popular: true,
       features: [
         "Everything in Starter",
@@ -55,10 +46,13 @@ const PricingPage = () => {
       notIncluded: ["Team collaboration", "API access"],
     },
     {
-      name: "Enterprise",
+      name: "Lifetime Billing",
       icon: Crown,
-      description: "For teams and organizations",
-      price: 999,
+      description: "For lifetime access",
+      duration: "For lifetime",
+      mode: "payment",
+      priceId: "price_1PsgMGIbE21KKZM9fg2dyVJ6",
+      price: 200,
       lifetime: true,
       features: [
         "Everything in Professional",
@@ -116,7 +110,7 @@ const PricingPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className={`dark:bg-dark-card relative overflow-hidden rounded-2xl bg-white shadow-xl ${
+                className={`relative overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-dark-card ${
                   plan.popular ? "ring-2 ring-primary" : ""
                 }`}
               >
@@ -142,18 +136,33 @@ const PricingPage = () => {
                   <div className="mb-6">
                     <span className="text-4xl font-bold">${plan.price}</span>
                     <span className="text-gray-600 dark:text-gray-400">
-                      {plan.lifetime ? " one-time" : "/month"}
+                      {plan.lifetime ? " one-time" : "/year"}
                     </span>
                   </div>
-                  <button
-                    className={`mb-8 w-full rounded-lg px-6 py-3 font-medium transition-all duration-300 ${
-                      plan.popular || plan.lifetime
-                        ? "hover:bg-primary-dark bg-primary text-white"
-                        : "dark:bg-dark-lighter dark:hover:bg-dark-card bg-gray-100 hover:bg-gray-200"
-                    }`}
-                  >
-                    Get Started
-                  </button>
+                  {session.data ? (
+                    <CheckoutDialog
+                      priceId={plan.priceId}
+                      mode={plan.mode}
+                      popular={plan.popular}
+                      lifetime={plan.lifetime}
+                      name={plan.name}
+                      userId={userId as string}
+                      email={userEmail as string}
+                    />
+                  ) : (
+                    <button
+                      className={`mb-8 w-full rounded-lg px-6 py-3 font-medium transition-all duration-300 ${
+                        plan.popular || plan.lifetime
+                          ? "bg-primary text-white hover:bg-primary-dark"
+                          : "bg-gray-100 hover:bg-gray-200 dark:bg-dark-lighter dark:hover:bg-dark-card"
+                      }`}
+                      onClick={() => {
+                        router.push("/login");
+                      }}
+                    >
+                      Get Started
+                    </button>
+                  )}
 
                   <div className="space-y-4">
                     {plan.features.map((feature) => (
@@ -214,7 +223,7 @@ const PricingPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.2 + index * 0.1 }}
-                  className="dark:bg-dark-card rounded-xl bg-white p-6"
+                  className="rounded-xl bg-white p-6 dark:bg-dark-card"
                 >
                   <h3 className="mb-2 text-lg font-semibold">{faq.q}</h3>
                   <p className="text-gray-600 dark:text-gray-400">{faq.a}</p>

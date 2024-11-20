@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Brain, GraduationCap } from "lucide-react";
 import ParticleBackground from "../ParticleBackground";
+import Image from "next/image";
 
 const HeroSection = () => {
   return (
@@ -56,11 +57,11 @@ const HeroSection = () => {
               transition={{ delay: 0.5 }}
               className="flex flex-col gap-4 sm:flex-row"
             >
-              <button className="hover:bg-primary-dark group flex transform items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-white transition-all hover:scale-105">
+              <button className="group flex transform items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-white transition-all hover:scale-105 hover:bg-primary-dark">
                 Start Learning
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </button>
-              <button className="bg-dark-lighter hover:bg-dark-card transform rounded-lg px-8 py-4 text-white transition-all hover:scale-105 dark:bg-white/10 dark:hover:bg-white/20">
+              <button className="transform rounded-lg bg-dark-lighter px-8 py-4 text-white transition-all hover:scale-105 hover:bg-dark-card dark:bg-white/10 dark:hover:bg-white/20">
                 View Courses
               </button>
             </motion.div>
@@ -73,11 +74,13 @@ const HeroSection = () => {
             >
               <div className="flex -space-x-4">
                 {[...Array(4)].map((_, i) => (
-                  <img
+                  <Image
                     key={i}
                     src={`https://i.pravatar.cc/40?img=${i + 1}`}
                     alt="User"
-                    className="dark:border-dark h-10 w-10 rounded-full border-2 border-white"
+                    width={40}
+                    height={40}
+                    className="rounded-full border-2 border-white dark:border-dark"
                   />
                 ))}
               </div>
@@ -99,12 +102,14 @@ const HeroSection = () => {
             className="relative"
           >
             <div className="relative z-10">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&q=80&w=1000"
+                width={1000}
+                height={1000}
                 alt="AI Learning Platform"
                 className="rounded-2xl shadow-2xl"
               />
-              <div className="dark:bg-dark-card absolute -bottom-6 -right-6 flex items-center gap-3 rounded-xl bg-white p-4 shadow-lg">
+              <div className="absolute -bottom-6 -right-6 flex items-center gap-3 rounded-xl bg-white p-4 shadow-lg dark:bg-dark-card">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <GraduationCap className="h-6 w-6 text-primary" />
                 </div>
@@ -120,7 +125,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className="dark:from-dark absolute bottom-0 h-24 w-full bg-gradient-to-t from-white to-transparent"></div>
+      <div className="absolute bottom-0 h-24 w-full bg-gradient-to-t from-white to-transparent dark:from-dark"></div>
     </div>
   );
 };

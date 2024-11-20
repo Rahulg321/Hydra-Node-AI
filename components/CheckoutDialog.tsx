@@ -22,22 +22,30 @@ import {
 } from "@stripe/react-stripe-js";
 
 type CheckoutDialogProps = {
-  product: PricingTier;
-  session: Session;
-};
-
-type CheckoutDialogNewProps = {
   priceId: string;
-  session: Session;
+  userId: string;
+  email: string;
+  name: string;
+  mode: string;
+  trialPeriodDays?: number;
+  popular?: boolean;
+  lifetime?: boolean;
 };
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
-const CheckoutDialog = ({ product, session }: CheckoutDialogProps) => {
-  const { isFeatured } = product;
-
+const CheckoutDialog = ({
+  priceId,
+  mode,
+  popular,
+  lifetime,
+  name,
+  trialPeriodDays,
+  userId,
+  email,
+}: CheckoutDialogProps) => {
   const fetchClientSecret = useCallback(() => {
     return fetch("/api/embedded-checkout", {
       method: "POST",
@@ -45,37 +53,37 @@ const CheckoutDialog = ({ product, session }: CheckoutDialogProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        priceId: product.priceId,
-        userId: session.user.id,
-        userEmail: session.user.email,
-        mode: product.mode,
-        trialPeriodDays: product.trialPeriodDays,
-        isLifetime: product.name === "Lifetime Billing" ? true : false,
+        priceId: priceId,
+        userId: userId,
+        userEmail: email,
+        mode: mode,
+        trialPeriodDays: trialPeriodDays,
+        isLifetime: name === "Lifetime Billing" ? true : false,
       }),
     })
       .then((res) => res.json())
       .then((data) => data.client_secret);
-  }, [product, session]);
+  }, [mode, name, priceId, trialPeriodDays, userId, email]);
 
   const options = { fetchClientSecret };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          className={clsx("w-full rounded-full bg-base p-6 text-lg font-bold", {
-            "bg-white text-baseC hover:bg-slate-300": isFeatured === true,
-          })}
+        <button
+          className={`mb-8 w-full rounded-lg px-6 py-3 font-medium transition-all duration-300 ${
+            popular || lifetime
+              ? "bg-primary text-white hover:bg-primary-dark"
+              : "bg-gray-100 hover:bg-gray-200 dark:bg-dark-lighter dark:hover:bg-dark-card"
+          }`}
         >
-          Buy Now
-        </Button>
+          Get Started
+        </button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] w-full max-w-6xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{product.name}</DialogTitle>
-          <DialogDescription>
-            Get the {product.name} for {product.duration}
-          </DialogDescription>
+          <DialogTitle>{name}</DialogTitle>
+          <DialogDescription>Get {name}</DialogDescription>
         </DialogHeader>
         <div className="w-full">
           <div id="checkout">

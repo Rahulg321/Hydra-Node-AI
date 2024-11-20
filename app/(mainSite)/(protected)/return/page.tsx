@@ -40,13 +40,13 @@ const ProductConfirmationPage = async ({
 
   if (!currentCheckoutSession) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-yellow-50">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
+      <section className="flex min-h-screen items-center justify-center bg-yellow-50 dark:bg-dark">
+        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
           <FaExclamationTriangle className="mx-auto mb-4 text-6xl text-yellow-500" />
-          <h2 className="mb-4 text-3xl font-bold text-yellow-700">
+          <h2 className="mb-4 text-3xl font-bold text-yellow-700 dark:text-yellow-400">
             Session Not Found
           </h2>
-          <p className="mb-6 text-gray-600">
+          <p className="mb-6 dark:text-gray-200">
             We couldn&apos;t retrieve your session information. Please try again
             or contact support.
           </p>
@@ -62,15 +62,14 @@ const ProductConfirmationPage = async ({
 
   if (currentCheckoutSession.status === "open") {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-red-50">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
-          <FaTimesCircle className="mx-auto mb-4 text-6xl text-red-500" />
-          <h1 className="mb-4 text-3xl font-bold text-red-700">
+      <section className="flex min-h-screen items-center justify-center bg-yellow-50 dark:bg-dark">
+        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
+          <FaExclamationTriangle className="mx-auto mb-4 text-6xl text-yellow-500" />
+          <h2 className="mb-4 text-3xl font-bold text-yellow-700 dark:text-yellow-400">
             Payment Failed
-          </h1>
-          <p className="mb-6 text-gray-600">
-            We&apos;re sorry, but your payment couldn&apos;t be processed.
-            Please try again or contact support.
+          </h2>
+          <p className="mb-6 dark:text-gray-200">
+            Could not process your payment
           </p>
           <Button asChild className="w-full">
             <Link href="/pricing">Try Again</Link>
@@ -82,14 +81,14 @@ const ProductConfirmationPage = async ({
 
   if (currentCheckoutSession.status === "complete") {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-green-50">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
+      <section className="flex min-h-screen items-center justify-center bg-green-50 dark:bg-dark">
+        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
           <FaCheckCircle className="mx-auto mb-4 text-6xl text-green-500" />
-          <h1 className="mb-2 text-3xl font-bold text-green-700">
+          <h1 className="mb-2 text-3xl font-bold text-green-700 dark:text-green-400">
             Payment Successful 🎉
           </h1>
-          <h2 className="mb-6 text-xl text-gray-700">Welcome to HydraNode!</h2>
-          <p className="mb-6 text-gray-600">
+          <h2 className="mb-6 text-xl">Welcome to HydraNode!</h2>
+          <p className="mb-6 dark:text-white">
             Your account has been activated. You now have access to all the
             features of your plan.
           </p>
@@ -102,8 +101,8 @@ const ProductConfirmationPage = async ({
   }
 
   return (
-    <section className="flex min-h-screen items-center justify-center bg-yellow-50">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
+    <section className="flex min-h-screen items-center justify-center dark:bg-dark">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
         <FaExclamationTriangle className="mx-auto mb-4 text-6xl text-yellow-500" />
         <h2 className="mb-4 text-3xl font-bold text-yellow-700">
           Something Went Wrong

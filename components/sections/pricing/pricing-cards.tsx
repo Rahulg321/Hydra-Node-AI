@@ -170,20 +170,7 @@ function PricingCard({
           ))}
         </div>
       </CardContent>
-      <CardFooter>
-        {session ? (
-          <CheckoutDialog product={product} session={session} />
-        ) : (
-          <Button
-            className={cn("w-full bg-base", {
-              "bg-white text-baseC hover:bg-gray-200": isFeatured,
-            })}
-            asChild
-          >
-            <Link href={"/login"}>Buy Now</Link>
-          </Button>
-        )}
-      </CardFooter>
+      <CardFooter></CardFooter>
     </Card>
   );
 }
