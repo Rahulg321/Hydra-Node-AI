@@ -5,8 +5,12 @@ import { motion } from "framer-motion";
 import { ArrowRight, Brain, GraduationCap } from "lucide-react";
 import ParticleBackground from "../ParticleBackground";
 import Image from "next/image";
+import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
-const HeroSection = () => {
+const HeroSection = ({ session }: { session: Session | null }) => {
+  const router = useRouter();
+
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
       <ParticleBackground />
@@ -57,12 +61,18 @@ const HeroSection = () => {
               transition={{ delay: 0.5 }}
               className="flex flex-col gap-4 sm:flex-row"
             >
-              <button className="group flex transform items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-white transition-all hover:scale-105 hover:bg-primary-dark">
+              <button
+                className="group flex transform items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-white transition-all hover:scale-105 hover:bg-primary-dark"
+                onClick={() => {
+                  if (session) {
+                    router.push("/vendors");
+                  } else {
+                    router.push("/login");
+                  }
+                }}
+              >
                 Start Learning
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </button>
-              <button className="transform rounded-lg bg-dark-lighter px-8 py-4 text-white transition-all hover:scale-105 hover:bg-dark-card dark:bg-white/10 dark:hover:bg-white/20">
-                View Courses
               </button>
             </motion.div>
 

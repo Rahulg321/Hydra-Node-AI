@@ -7,6 +7,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import LoginBackground from "@/public/auth/loginSignupImage.png";
+import LogoDark from "@/public/logo-dark.svg";
+import LogoLight from "@/public/logo-light.svg";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -25,11 +27,18 @@ const LoginPage = async () => {
       <div className="absolute right-4 top-4">
         <Link href={"/"}>
           <Image
-            src={"/hydranode_logo.png"}
-            alt="official logo for hydranode"
-            className="object-cover"
-            width={200}
-            height={200}
+            src={LogoDark}
+            alt="Hydranode"
+            width={150}
+            height={150}
+            className="h-8 dark:hidden"
+          />
+          <Image
+            src={LogoLight}
+            width={150}
+            height={150}
+            alt="Hydranode"
+            className="hidden h-8 dark:block"
           />
         </Link>
       </div>

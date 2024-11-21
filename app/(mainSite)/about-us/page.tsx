@@ -15,6 +15,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
+import Image from "next/image";
 
 const AboutPage = () => {
   const [ref, inView] = useInView({
@@ -155,12 +156,14 @@ const AboutPage = () => {
               className="relative"
             >
               <div className="relative z-10">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800"
+                  width={800}
+                  height={600}
                   alt="Team Collaboration"
                   className="rounded-2xl shadow-2xl"
                 />
-                <div className="dark:bg-dark-card absolute -bottom-6 -right-6 flex items-center gap-3 rounded-xl bg-white p-4 shadow-lg">
+                <div className="absolute -bottom-6 -right-6 flex items-center gap-3 rounded-xl bg-white p-4 shadow-lg dark:bg-dark-card">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                     <GraduationCap className="h-6 w-6 text-primary" />
                   </div>
@@ -222,7 +225,7 @@ const AboutPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className="dark:bg-dark-card rounded-xl bg-white p-6 shadow-lg transition-shadow hover:shadow-xl"
+                className="rounded-xl bg-white p-6 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <value.icon className="h-6 w-6 text-primary" />
@@ -231,56 +234,6 @@ const AboutPage = () => {
                 <p className="text-gray-600 dark:text-gray-400">
                   {value.description}
                 </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="relative py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="mb-16 text-center"
-          >
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Leadership Team
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              Meet the visionaries shaping the future of education
-            </p>
-          </motion.div>
-
-          <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
-            {team.map((member, index) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.2 }}
-                className="dark:bg-dark-card overflow-hidden rounded-xl bg-white shadow-lg"
-              >
-                <div className="relative h-48">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-4 left-4">
-                    <h3 className="text-xl font-bold text-white">
-                      {member.name}
-                    </h3>
-                    <p className="text-primary">{member.role}</p>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {member.bio}
-                  </p>
-                </div>
               </motion.div>
             ))}
           </div>

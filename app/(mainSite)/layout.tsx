@@ -16,6 +16,7 @@ import { AnimatePresence } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -61,12 +62,12 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <html lang="en">
-      <head>
+      <Head>
         <link
           rel="icon"
           type="image/png"
-          href="/favicon-48x48.png"
-          sizes="48x48"
+          href="/favicon-96x96.png"
+          sizes="96x96"
         />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -75,9 +76,8 @@ export default async function RootLayout({
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <meta name="apple-mobile-web-app-title" content="Hydranode" />
         <link rel="manifest" href="/site.webmanifest" />
-      </head>
+      </Head>
       <body className={clsx("", poppins.variable, manrope.variable)}>
         <ThemeProvider
           attribute="class"

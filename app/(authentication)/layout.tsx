@@ -8,6 +8,7 @@ import { baseUrl } from "../sitemap";
 import { ThemeProvider } from "@/components/theme-provider";
 import Image from "next/image";
 import LoginBackground from "@/public/auth/loginSignupImage.png";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -47,12 +48,12 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
-      <head>
+      <Head>
         <link
           rel="icon"
           type="image/png"
-          href="/favicon-48x48.png"
-          sizes="48x48"
+          href="/favicon-96x96.png"
+          sizes="96x96"
         />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -61,9 +62,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <meta name="apple-mobile-web-app-title" content="Hydranode" />
         <link rel="manifest" href="/site.webmanifest" />
-      </head>
+      </Head>
       <body className={cn("", poppins.variable, manrope.variable)}>
         <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
           <div className="relative">
