@@ -308,7 +308,7 @@ function Option({
 
   return (
     <div
-      className={cn("cursor-pointer border-2 border-base p-4", {
+      className={cn("border-2 border-base p-4", {
         "border-green-500": isCorrect,
         "border-red-500": !isCorrect,
       })}
