@@ -29,7 +29,7 @@ export default async function Home() {
     <React.Fragment>
       <HeroSection session={userSession} />
       <OurPartners />
-      <Features />
+      <Features session={userSession} />
       <VisionSection />
       <Solutions />
       <UseCasesSection />

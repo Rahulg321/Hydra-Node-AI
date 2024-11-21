@@ -19,6 +19,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import ParticleBackground from "../ParticleBackground";
+import Image from "next/image";
 
 const features = {
   user: [
@@ -112,7 +113,7 @@ const FeatureSection = ({ title, features, index }: any) => {
         rotateX: 5,
         transition: { duration: 0.3 },
       }}
-      className="dark:bg-dark-card/40 perspective transform rounded-2xl border border-gray-200 bg-white/80 p-6 backdrop-blur-sm dark:border-gray-800"
+      className="perspective transform rounded-2xl border border-gray-200 bg-white/80 p-6 backdrop-blur-sm dark:border-gray-800 dark:bg-dark-card/40"
     >
       <h3 className="mb-4 text-lg font-semibold text-primary">{title}</h3>
       <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
@@ -141,96 +142,6 @@ const FeatureSection = ({ title, features, index }: any) => {
             <span className="text-sm text-gray-700 dark:text-gray-300">
               {feature.title}
             </span>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  );
-};
-
-const AIProviders = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const providers = [
-    {
-      name: "OpenAI",
-      logo: "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
-      darkMode: true,
-    },
-    {
-      name: "Hugging Face",
-      logo: "https://huggingface.co/front/assets/huggingface_logo-noborder.svg",
-      darkMode: false,
-    },
-    {
-      name: "Google Gemini",
-      logo: "https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png",
-      darkMode: false,
-    },
-    {
-      name: "Hydranode",
-      logo: "/logo-light.svg",
-      darkMode: false,
-    },
-  ];
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20, rotateX: -10 }}
-      animate={
-        inView
-          ? {
-              opacity: 1,
-              y: 0,
-              rotateX: 0,
-              transition: {
-                type: "spring",
-                duration: 0.8,
-                delay: 0.6,
-              },
-            }
-          : {}
-      }
-      whileHover={{
-        scale: 1.02,
-        rotateX: 5,
-        transition: { duration: 0.3 },
-      }}
-      className="dark:bg-dark-card/40 perspective transform rounded-2xl border border-gray-200 bg-white/80 p-6 backdrop-blur-sm dark:border-gray-800"
-    >
-      <h3 className="mb-4 text-lg font-semibold text-primary">AI Provider</h3>
-      <div className="grid grid-cols-2 items-center gap-8 md:grid-cols-4">
-        {providers.map((provider, index) => (
-          <motion.div
-            key={provider.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={
-              inView
-                ? {
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      delay: 0.8 + index * 0.1,
-                    },
-                  }
-                : {}
-            }
-            whileHover={{ scale: 1.1 }}
-            className="flex h-12 items-center justify-center"
-          >
-            <img
-              src={provider.logo}
-              alt={provider.name}
-              className={`h-8 w-auto object-contain ${
-                provider.darkMode
-                  ? "dark:invert"
-                  : "dark:brightness-0 dark:invert"
-              }`}
-            />
           </motion.div>
         ))}
       </div>
@@ -292,8 +203,6 @@ const Solutions = () => {
                 index={3}
               />
             </div>
-
-            <AIProviders />
           </div>
         </div>
       </section>

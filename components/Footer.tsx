@@ -29,8 +29,8 @@ const Footer = () => {
                 />
               </Link>
               <p className="mb-6 text-gray-600 dark:text-gray-400">
-                Boost your Competitive Skills
-                <br />& Earn Rewards
+                Boost your Competitive Skills and <br /> clear your
+                Certifications
               </p>
               <div className="flex gap-4">
                 <a

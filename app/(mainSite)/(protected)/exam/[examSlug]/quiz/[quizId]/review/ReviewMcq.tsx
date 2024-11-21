@@ -147,6 +147,7 @@ const ReviewMcq = ({
                   optionExplanation={optionExplanation}
                   isCorrect={isCorrect!}
                   isUserOptionSelected={isOptionSelected}
+                  isShowAnswer={showOverallExplanation}
                 />
               );
             })}
@@ -165,7 +166,7 @@ const ReviewMcq = ({
               variant={"hydraPrimary"}
               onClick={() => setShowOverallExplanation((prev) => !prev)}
             >
-              {showOverallExplanation ? "Hide" : "Get Overall Explanation"}
+              {showOverallExplanation ? "Hide" : "Get Explanation"}
             </Button>
             <div className="space-x-4">
               <Button
@@ -284,10 +285,12 @@ function Option({
   optionExplanation,
   isCorrect,
   isUserOptionSelected,
+  isShowAnswer,
 }: {
   optionExplanation: string;
   optionText: string | null;
   isCorrect: boolean;
+  isShowAnswer: boolean;
   isUserOptionSelected: boolean;
 }) {
   const [selected, setSelected] = React.useState(false);
@@ -329,23 +332,24 @@ function Option({
             </div>
           )}
         </div>
-        <label className="cursor-pointer text-xl font-semibold">
+        <label className="cursor-pointer text-sm font-semibold">
           {optionText}
         </label>
       </div>
-      {selected && (
-        <div className="mt-4 space-y-4">
-          <h6 className="text-muted-foreground">Explanation</h6>
-          <span
-            className={cn("font-semibold", {
-              "text-green-800 dark:text-green-600": isCorrect,
-              "text-red-800 dark:text-red-600": !isCorrect,
-            })}
-          >
-            {optionExplanation}
-          </span>
-        </div>
-      )}
+      {selected ||
+        (isShowAnswer && (
+          <div className="mt-4 space-y-4">
+            <h6 className="text-sm text-muted-foreground">Explanation</h6>
+            <span
+              className={cn("text-sm font-semibold", {
+                "text-green-800 dark:text-green-600": isCorrect,
+                "text-red-800 dark:text-red-600": !isCorrect,
+              })}
+            >
+              {optionExplanation}
+            </span>
+          </div>
+        ))}
     </div>
   );
 }

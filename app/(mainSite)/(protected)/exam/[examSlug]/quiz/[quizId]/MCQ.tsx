@@ -340,7 +340,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             <div>
               {showAnswer ? (
                 <div className="mt-4">
-                  <p className="font-semibold text-green-800 dark:text-green-600">
+                  <p className="text-sm font-semibold leading-loose text-green-800 dark:text-green-600">
                     {currentQuestion.overallExplanation}
                   </p>
                 </div>
@@ -502,8 +502,6 @@ function Option({
 }) {
   if (!optionText) return null;
 
-  console.log({ questionType, optionText, selected });
-
   return (
     <div
       className={cn(
@@ -531,12 +529,12 @@ function Option({
         />
       )}
       <div className="ml-2 flex flex-col">
-        <label className="cursor-pointer text-xl font-semibold">
+        <label className="cursor-pointer text-sm font-semibold">
           {optionText}
         </label>
         {isShowAnswer && (
           <span
-            className={cn("mt-2 block", {
+            className={cn("mt-2 block text-sm", {
               "": isCorrect,
               "font-semibold": !isCorrect,
             })}

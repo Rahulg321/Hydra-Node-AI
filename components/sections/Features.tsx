@@ -16,6 +16,8 @@ import {
   Award,
   BookOpen,
 } from "lucide-react";
+import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
 const TabButton = ({
   isActive,
@@ -31,7 +33,7 @@ const TabButton = ({
     className={`rounded-lg px-6 py-3 text-sm font-medium transition-all duration-300 ${
       isActive
         ? "bg-primary text-white shadow-lg shadow-primary/25"
-        : "dark:hover:bg-dark-card text-gray-600 hover:bg-gray-100 dark:text-gray-400"
+        : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-dark-card"
     }`}
   >
     {children}
@@ -329,18 +331,18 @@ const features = [
   },
 ];
 
-const Features = () => {
+const Features = ({ session }: { session: Session | null }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [ref, inView] = useInView({
     triggerOnce: false,
     threshold: 0.1,
   });
-
+  const router = useRouter();
   const ActiveIcon = features[activeTab].Icon;
 
   return (
     <section className="relative py-24" id="features">
-      <div className="dark:via-dark-lighter absolute inset-0 bg-gradient-to-b from-transparent via-gray-50 to-transparent opacity-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-50 to-transparent opacity-50 dark:via-dark-lighter" />
 
       <div className="container relative mx-auto px-4">
         <motion.div
@@ -393,7 +395,7 @@ const Features = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="dark:bg-dark-card/50 rounded-2xl border border-gray-200 bg-white/50 p-8 backdrop-blur-sm dark:border-gray-800"
+              className="rounded-2xl border border-gray-200 bg-white/50 p-8 backdrop-blur-sm dark:border-gray-800 dark:bg-dark-card/50"
             >
               <div className="flex flex-col items-center gap-12 lg:flex-row">
                 <div className="relative flex-1">
@@ -413,7 +415,7 @@ const Features = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <div className="dark:bg-dark-card rounded-2xl border border-gray-200 bg-white p-6 shadow-xl transition-colors duration-300 hover:border-primary/50 dark:border-gray-800 dark:hover:border-primary/50">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xl transition-colors duration-300 hover:border-primary/50 dark:border-gray-800 dark:bg-dark-card dark:hover:border-primary/50">
                     {features[activeTab].diagram}
                   </div>
                 </motion.div>
@@ -427,7 +429,16 @@ const Features = () => {
             transition={{ duration: 0.5 }}
             className="mt-24 text-center"
           >
-            <button className="hover:bg-primary-dark transform rounded-xl bg-primary px-8 py-4 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <button
+              className="transform rounded-xl bg-primary px-8 py-4 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
+              onClick={() => {
+                if (session) {
+                  router.push("/vendors");
+                } else {
+                  router.push("/login");
+                }
+              }}
+            >
               Start Your Certification Journey
             </button>
           </motion.div>
