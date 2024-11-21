@@ -1,6 +1,7 @@
 import React from "react";
 import { Twitter, Linkedin, CircleDot } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -12,13 +13,17 @@ const Footer = () => {
             {/* Logo and Social Section */}
             <div>
               <Link href="/" className="mb-4 flex items-center gap-2">
-                <img
+                <Image
                   src="/logo-dark.svg"
                   alt="Hydranode"
+                  width={150}
+                  height={150}
                   className="h-8 dark:hidden"
                 />
-                <img
+                <Image
                   src="/logo-light.svg"
+                  width={150}
+                  height={150}
                   alt="Hydranode"
                   className="hidden h-8 dark:block"
                 />
@@ -68,7 +73,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/vendors"
                     className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   >
                     Product
@@ -82,6 +87,14 @@ const Footer = () => {
                     Pricing
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/contact-us"
+                    className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  >
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -92,28 +105,28 @@ const Footer = () => {
               </h3>
               <ul className="space-y-3">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/privacy-policy"
                     className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/cookie-policy"
                     className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   >
                     Cookie Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/terms-of-service"
                     className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   >
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

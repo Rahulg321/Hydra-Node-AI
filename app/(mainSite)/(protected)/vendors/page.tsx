@@ -10,14 +10,7 @@ export async function generateMetadata() {
   };
 }
 
-const ExamsPage = async ({
-  searchParams,
-}: {
-  searchParams?: {
-    examLevel?: string;
-    examType?: string;
-  };
-}) => {
+const ExamsPage = async ({}: {}) => {
   redirect("/vendors/amazon-exams");
   return (
     <section className="block-space big-container">

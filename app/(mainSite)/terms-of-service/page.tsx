@@ -26,7 +26,7 @@ const TermsOfServicePage = () => {
         from the date of publication.
       </p>
       <p>These Terms of Service were last updated on May 10, 2024.</p>
-      <h3>Service Offerings</h3>
+      <h3 className="mt-4">Service Offerings</h3>
       <p>
         HydraNode provides a platform that allows users to explore courses and
         improve their skills through our AI-powered exam app. The platform
@@ -37,7 +37,7 @@ const TermsOfServicePage = () => {
         educational goals. Subscription plans are available in different tiers,
         offering flexible options to match the unique requirements of each user.
       </p>
-      <h3>Limitations of Use</h3>
+      <h3 className="mt-4">Limitations of Use</h3>
       <p>
         By using this website, you warrant on behalf of yourself, your users,
         and other parties you represent that you will not:
@@ -82,7 +82,7 @@ const TermsOfServicePage = () => {
           third parties.
         </li>
       </ul>
-      <h3>Intellectual Property</h3>
+      <h3 className="mt-4">Intellectual Property</h3>
       <p>
         The intellectual property in the materials contained in this website are
         owned by or licensed to HydraNode and are protected by applicable
@@ -95,7 +95,7 @@ const TermsOfServicePage = () => {
         restrictions or the Terms of Service, and may be terminated by HydraNode
         at any time.
       </p>
-      <h3>User-Generated Content</h3>
+      <h3 className="mt-4">User-Generated Content</h3>
       <p>
         You retain your intellectual property ownership rights over content you
         submit to us for publication on our website. We will never claim
@@ -123,7 +123,7 @@ const TermsOfServicePage = () => {
         information associated with your account in a manner that is consistent
         with your privacy preferences and our Privacy Policy.
       </p>
-      <h3>Account Registration and Usage Guidelines</h3>
+      <h3 className="mt-4">Account Registration and Usage Guidelines</h3>
       <p>
         To access HydraNode&apos;s services, users must create an account,
         ensuring that all information provided is accurate and updated when
@@ -180,7 +180,7 @@ const TermsOfServicePage = () => {
         assistance is needed, our customer support team is available to provide
         guidance.
       </p>
-      <h3>Data Collection and Privacy</h3>
+      <h3 className="mt-4">Data Collection and Privacy</h3>
       <p>
         HydraNode is committed to protecting your personal information and
         employs industry-standard encryption protocols to maintain data
@@ -192,7 +192,7 @@ const TermsOfServicePage = () => {
         outlines the specific measures we take to safeguard your information and
         the conditions under which data may be shared.
       </p>
-      <h3>Disclaimer and Limitations of Liability</h3>
+      <h3 className="mt-4">Disclaimer and Limitations of Liability</h3>
       <p>
         The HydraNode platform and all associated materials are provided on an
         &quot;as is&quot; basis. To the fullest extent permitted by law,
@@ -233,7 +233,7 @@ const TermsOfServicePage = () => {
         and goals and to consider seeking independent advice before using our
         platform to ensure its suitability for their specific requirements.
       </p>
-      <h3>Accuracy of Materials</h3>
+      <h3 className="mt-4">Accuracy of Materials</h3>
       <p>
         The materials presented on the HydraNode website are intended for
         general information purposes and are not comprehensive. While we strive
@@ -253,7 +253,7 @@ const TermsOfServicePage = () => {
         their reliance on the content and should verify the suitability and
         completeness of such information for their particular needs.
       </p>
-      <h3>Additional Tools</h3>
+      <h3 className="mt-4">Additional Tools</h3>
       <p>
         Please note that our website may include third-party tools which are
         outside of our control. The access to said tools is provided on an
@@ -264,7 +264,7 @@ const TermsOfServicePage = () => {
         relevant third-party provider&rsquo;s Terms of Service. HydraNode has
         the right to offer new third-party tools in the future.
       </p>
-      <h3>Links</h3>
+      <h3 className="mt-4">Links</h3>
       <p>
         HydraNode has not reviewed all of the sites linked to its website and is
         not responsible for the contents of any such linked site. The inclusion
@@ -273,7 +273,7 @@ const TermsOfServicePage = () => {
         strongly advise you make your own investigations with respect to the
         suitability of those sites.
       </p>
-      <h3>Inaccuracies and Mistakes</h3>
+      <h3 className="mt-4">Inaccuracies and Mistakes</h3>
       <p>
         Please note that any content available on our website may contain
         typographical errors, inaccuracies, or mistakes related to the
@@ -284,7 +284,7 @@ const TermsOfServicePage = () => {
         obligated to clarify any of the information related to our website and
         service, including pricing information, except as required by law.
       </p>
-      <h3>Indemnification</h3>
+      <h3 className="mt-4">Indemnification</h3>
       <p>
         You agree to defend, indemnify, and hold us harmless, including our
         subsidiaries, affiliates, and all of our respective officers, agents,
@@ -306,19 +306,19 @@ const TermsOfServicePage = () => {
         notify you of any such claim, action, or proceeding which is subject to
         this indemnification upon becoming aware of it.
       </p>
-      <h3>Right to Terminate</h3>
+      <h3 className="mt-4">Right to Terminate</h3>
       <p>
         We may suspend or terminate your right to use our website and terminate
         these Terms of Service immediately upon written notice to you for any
         breach of these Terms of Service.
       </p>
-      <h3>Severance</h3>
+      <h3 className="mt-4">Severance</h3>
       <p>
         Any term of these Terms of Service which is wholly or partially void or
         unenforceable is severed to the extent that it is void or unenforceable.
         The validity of the remainder of these Terms of Service is not affected.
       </p>
-      <h3>Entire Agreement</h3>
+      <h3 className="mt-4">Entire Agreement</h3>
       <p>
         These Terms of Service and any policies or operating rules posted by us
         on the website or with respect to the website constitute the entire
@@ -343,7 +343,7 @@ const TermsOfServicePage = () => {
         electronic form of these Terms of Service and the lack of signing by the
         parties hereto to execute these Terms of Service.
       </p>
-      <h3>Governing Law</h3>
+      <h3 className="mt-4">Governing Law</h3>
       <p>
         These Terms of Service are governed by and construed in accordance with
         the laws of the United Kingdom. You irrevocably submit to the exclusive

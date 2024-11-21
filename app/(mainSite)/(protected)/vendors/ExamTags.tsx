@@ -37,8 +37,8 @@ const ExamTags = () => {
           key={level.value}
           onClick={() => handleTagClick(level.value)}
           className={cn(
-            "flex-1 cursor-pointer rounded-lg p-4 text-center text-base",
-            examLevel === level.value && "bg-base text-white",
+            "flex-1 cursor-pointer rounded-lg p-4 text-center text-primary",
+            examLevel === level.value && "bg-primary text-white",
           )}
         >
           {level.label}

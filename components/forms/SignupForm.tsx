@@ -115,7 +115,7 @@ const SignupForm = () => {
           </ul>
           {error && <ErrorCard urlError={error} />}
           {success && <SuccessCard success={success} />}
-          <Button type="submit" className="w-full bg-base" disabled={isPending}>
+          <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? "Creating User..." : "Sign up"}
           </Button>
         </form>

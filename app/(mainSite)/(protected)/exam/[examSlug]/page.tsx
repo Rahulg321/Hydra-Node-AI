@@ -102,26 +102,15 @@ const ExamPage = async ({
             Question For Mock:{" "}
             <span className="text-primary">{exam.questionsToShow}</span>
           </span>
+
           <span className="block font-bold text-muted-foreground">
-            Attempt: <span className="text-primary">{exam.attempts}</span>
-          </span>
-          <span className="block font-bold text-muted-foreground">
-            Exam Time:{" "}
+            Mock Exam Time:{" "}
             <span className="text-primary">{exam.timeAllowed} minutes</span>
           </span>
           <span className="block font-bold text-muted-foreground">
             Exam Level: <span className="text-primary">{exam.examLevel}</span>
           </span>
-          <div className="my-4 flex items-center gap-1">
-            <div className="flex gap-1 text-yellow-400">
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
-            </div>
-            <span>4.8 (23 reviews)</span>
-          </div>
+
           {/* logged in user may or may not exist, should check for null or better code */}
           {hasAccess ? (
             <div>

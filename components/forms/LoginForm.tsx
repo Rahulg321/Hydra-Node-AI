@@ -150,7 +150,7 @@ const LoginForm = () => {
           {success && <SuccessCard success={success} />}
           {error && <ErrorCard urlError={error} />}
 
-          <Button type="submit" className="w-full bg-base" disabled={isPending}>
+          <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? "Logging in..." : show2fa ? "Confirm" : "Log in"}
           </Button>
         </form>
