@@ -61,6 +61,7 @@ const ReviewMcq = ({
           </div>
 
           <CorrectQuestionGrid
+            totalQuestions={questions.length}
             questionLength={userAttempts.length}
             questionStatus={userAttempts.map((attempt) =>
               attempt.skipped
@@ -156,7 +157,7 @@ const ReviewMcq = ({
           {showOverallExplanation && (
             <div className="mt-6 space-y-4">
               <h4>Overall Explanation:-</h4>
-              <span className="font-semibold text-green-800">
+              <span className="mt-2 block font-medium leading-loose tracking-wide text-green-800 dark:text-green-600">
                 {currentQuestion.overallExplanation}
               </span>
             </div>
@@ -246,17 +247,19 @@ const QuestionHeader = ({
 
 type QuestionGridProps = {
   questionLength: number;
+  totalQuestions: number;
   questionStatus: (string | null)[];
 };
 
 function CorrectQuestionGrid({
   questionLength,
+  totalQuestions,
   questionStatus,
 }: QuestionGridProps) {
   return (
     <div className="bg-muted p-4">
       <div className="grid grid-cols-6 gap-2">
-        {Array.from({ length: questionLength }).map((_, index) => {
+        {Array.from({ length: totalQuestions }).map((_, index) => {
           let statusClass = "border-base";
           if (questionStatus[index] === "correct") {
             statusClass = "bg-green-500 border-green-500";
@@ -264,6 +267,8 @@ function CorrectQuestionGrid({
             statusClass = "bg-red-500 border-red-500";
           } else if (questionStatus[index] === "skipped") {
             statusClass = "bg-yellow-500 border-yellow-500";
+          } else {
+            statusClass = "bg-base border-base";
           }
 
           return (
@@ -336,20 +341,21 @@ function Option({
           {optionText}
         </label>
       </div>
-      {selected ||
-        (isShowAnswer && (
-          <div className="mt-4 space-y-4">
-            <h6 className="text-sm text-muted-foreground">Explanation</h6>
-            <span
-              className={cn("text-sm font-semibold", {
-                "text-green-800 dark:text-green-600": isCorrect,
-                "text-red-800 dark:text-red-600": !isCorrect,
-              })}
-            >
-              {optionExplanation}
-            </span>
-          </div>
-        ))}
+      {isShowAnswer && (
+        <div className="mt-4 space-y-4">
+          <h6 className="text-sm font-medium text-muted-foreground">
+            Explanation
+          </h6>
+          <span
+            className={cn("text-sm font-medium", {
+              "text-green-800 dark:text-green-600": isCorrect,
+              "text-red-800 dark:text-red-600": !isCorrect,
+            })}
+          >
+            {optionExplanation}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
