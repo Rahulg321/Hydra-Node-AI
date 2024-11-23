@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Check, X, Zap, Users, Crown, Brain } from "lucide-react";
+import { Check, X, Zap, Users, Crown, Brain, Book } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import CheckoutDialog from "@/components/CheckoutDialog";
 import { useSession } from "next-auth/react";
@@ -25,7 +25,27 @@ const PricingPage = () => {
 
   const plans = [
     {
-      name: "Yearly",
+      name: "Starter",
+      icon: Book,
+      description: "Take a demo",
+      duration: "7 days free trial",
+      priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
+      mode: "subscription",
+      price: 0,
+      features: [
+        "Acess to all the IT certifications preparation mock exam",
+        "AI-Powered question generation",
+        "AI-Powered review generation",
+        "AI-Powered explanation generation",
+        "Only practice mode is available",
+        "50 questions per exam",
+        "In depth score analysis",
+        "Full Exam History",
+      ],
+      notIncluded: ["Team collaboration", "API access"],
+    },
+    {
+      name: "Plus",
       icon: Zap,
       description: "Ideal for serious learners",
       duration: "For 1 year",
@@ -35,13 +55,9 @@ const PricingPage = () => {
       popular: true,
       features: [
         "Everything in Starter",
-        "Advanced AI features",
-        "Personalized feedback",
-        "Priority support",
-        "Advanced analytics",
-        "Custom learning paths",
-        "Certification prep",
-        "Unlimited practice tests",
+        "Both practice & mock mode",
+        "Entire question bank access",
+        "All the vendors access",
       ],
       notIncluded: ["Team collaboration", "API access"],
     },
@@ -55,18 +71,10 @@ const PricingPage = () => {
       price: 200,
       lifetime: true,
       features: [
-        "Everything in Professional",
-        "Team collaboration",
-        "Custom integrations",
-        "API access",
-        "Dedicated support",
-        "Custom reporting",
-        "SSO integration",
-        "Volume licensing",
-        "Custom contracts",
+        "Everything in Plus",
         "Lifetime updates",
         "Priority feature access",
-        "Custom AI model training",
+        "Custom AI model",
       ],
     },
   ];
@@ -97,7 +105,7 @@ const PricingPage = () => {
               className="mb-12 text-xl text-gray-600 dark:text-gray-400"
             >
               Choose the perfect plan for your learning journey. From individual
-              learners to enterprise teams.
+              exams to yearly plan or lifetime access.
             </motion.p>
           </div>
 
@@ -136,10 +144,14 @@ const PricingPage = () => {
                   <div className="mb-6">
                     <span className="text-4xl font-bold">${plan.price}</span>
                     <span className="text-gray-600 dark:text-gray-400">
-                      {plan.lifetime ? " one-time" : "/year"}
+                      {plan.lifetime
+                        ? "/one-time"
+                        : plan.price === 0
+                          ? "/7 days free trial"
+                          : "/year"}
                     </span>
                   </div>
-                  {session.data ? (
+                  {session.data && plan.price !== 0 ? (
                     <CheckoutDialog
                       priceId={plan.priceId}
                       mode={plan.mode}
@@ -202,20 +214,28 @@ const PricingPage = () => {
             <div className="space-y-6">
               {[
                 {
-                  q: "What's included in the Lifetime Access?",
-                  a: "Lifetime Access includes all current and future features, priority support, and unlimited updates for life. Once you purchase, you'll never have to pay again.",
+                  q: "What's included in the Pro Tier (Lifetime Access)?",
+                  a: "Pro Tier (Lifetime Access) includes all current and future features, priority support, and unlimited updates for life. Once you purchase, you'll never have to pay again.",
                 },
                 {
                   q: "Can I switch plans later?",
-                  a: "Yes, you can upgrade or downgrade your plan at any time. If you upgrade to Lifetime Access, your monthly subscription will be cancelled automatically.",
+                  a: "Yes, you can upgrade or downgrade your plan at any time. If you upgrade to Lifetime Access, your yearly subscription will be cancelled automatically.",
                 },
                 {
                   q: "What payment methods do you accept?",
-                  a: "We accept all major credit cards, PayPal, and bank transfers for enterprise customers.",
+                  a: "We accept all major credit cards.",
                 },
                 {
                   q: "Is there a free trial?",
-                  a: "Yes, all plans come with a 14-day free trial. No credit card required.",
+                  a: "Yes, by default all the signed-up users will get 7 days free trial, without any credit card requirement.",
+                },
+                {
+                  q: "Can I cancel my yearly plan?",
+                  a: "Yes. You can cancel it anytime. You will still have access to our platform until the expiry of your subscription.",
+                },
+                {
+                  q: "Can I buy individual exam?",
+                  a: "Yes. Every exam page will show you their individual price. You can buy individual exam and unlock everything for that exam.",
                 },
               ].map((faq, index) => (
                 <motion.div

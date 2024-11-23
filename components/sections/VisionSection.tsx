@@ -66,13 +66,22 @@ const VisionSection = () => {
               transition={{ delay: 0.3 }}
               className="mb-8 text-lg leading-relaxed text-gray-600 dark:text-gray-300"
             >
-              We envision a future where education and professional development
-              are democratized, accessible, and rewarding for all. We aim to
-              empower a global community of learners and professionals to
-              acquire, improve, and share their skills in a collaborative and
-              mutually beneficial environment, leveraging the power of AI and
-              blockchain technology to create a decentralized skill marketplace
-              that fosters innovation, progress, and economic growth.
+              We envision a world where quality education is accessible to
+              everyone, regardless of their location or background. Through our
+              innovative platform, we&apos;re breaking down traditional barriers
+              to learning and creating opportunities for global knowledge
+              sharing.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.3 }}
+              className="mb-8 text-lg leading-relaxed text-gray-600 dark:text-gray-300"
+            >
+              By utilising our own fine-tuned LLM, AI-powered personalization,
+              we&apos;re not just preparing you for clearing certifications –
+              we&apos;re also transforming how people learn, grow, and succeed
+              in their careers.
             </motion.p>
 
             <Link href="/about-us">

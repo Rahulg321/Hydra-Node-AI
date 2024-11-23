@@ -161,9 +161,8 @@ const FeaturedBlogSection = () => {
             Our <span className="text-primary">Blogs</span>
           </h2>
           <p className="mx-auto max-w-3xl text-gray-600 dark:text-gray-400">
-            We democratize & personalize education through AI & blockchain,
-            creating a global, decentralized skill marketplace for continuous
-            learning & professional growth.
+            We democratize & personalize education through AI, creating a global
+            skill marketplace for continuous learning & professional growth.
           </p>
         </motion.div>
       </div>

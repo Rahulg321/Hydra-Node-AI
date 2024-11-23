@@ -24,15 +24,7 @@ const useCases = [
       "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800",
     color: "from-[#4F46E5] to-[#7C3AED]",
   },
-  {
-    title: "Interactive Study Groups",
-    description:
-      "Form AI-moderated study groups that enhance collaboration and provide personalized insights and resources based on group dynamics and individual contributions",
-    Icon: Users,
-    image:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800",
-    color: "from-[#8B5CF6] to-[#6366F1]",
-  },
+
   {
     title: "Curriculum Development",
     description:
@@ -42,15 +34,7 @@ const useCases = [
       "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800",
     color: "from-[#6366F1] to-[#8B5CF6]",
   },
-  {
-    title: "Mentorship Matching",
-    description:
-      "AI-driven matching of professionals with mentors in their field, fostering growth through personalized guidance and support.",
-    Icon: Handshake,
-    image:
-      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800",
-    color: "from-[#7C3AED] to-[#4F46E5]",
-  },
+
   {
     title: "Partnerships",
     description:
@@ -59,15 +43,6 @@ const useCases = [
     image:
       "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=800",
     color: "from-[#4F46E5] to-[#6366F1]",
-  },
-  {
-    title: "Skill Competitions",
-    description:
-      "Participate in AI-driven skill competitions to test and showcase abilities, earning badges and recognitions that can be added to digital portfolios.",
-    Icon: Trophy,
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=800",
-    color: "from-[#6366F1] to-[#7C3AED]",
   },
 ];
 
@@ -131,14 +106,6 @@ const UseCaseCard = ({ useCase, index }: any) => {
             <p className="leading-relaxed text-gray-600 dark:text-gray-400">
               {useCase.description}
             </p>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`mt-6 rounded-xl bg-gradient-to-r px-6 py-3 ${useCase.color} w-full font-medium text-white shadow-lg transition-all duration-300 hover:shadow-xl`}
-            >
-              Learn More
-            </motion.button>
           </div>
         </div>
 
@@ -199,8 +166,8 @@ const UseCasesSection = () => {
             transition={{ duration: 0.5 }}
           >
             <h2 className="mb-4 text-4xl font-bold md:text-5xl">
-              Here are Several{" "}
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Our
+              <span className="ml-2 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                 Use Cases
               </span>
             </h2>

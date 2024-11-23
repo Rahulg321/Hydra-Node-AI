@@ -24,10 +24,6 @@ import Image from "next/image";
 const features = {
   user: [
     {
-      title: "Wallet",
-      Icon: Wallet,
-    },
-    {
       title: "Skills Marketplace",
       Icon: Rocket,
     },
@@ -44,24 +40,6 @@ const features = {
     {
       title: "Developer API",
       Icon: Layers,
-    },
-    {
-      title: "Blockchain Solutions",
-      Icon: Wrench,
-    },
-  ],
-  training: [
-    {
-      title: "Marketing Strategies",
-      Icon: Filter,
-    },
-    {
-      title: "Financial Analytics",
-      Icon: BarChart3,
-    },
-    {
-      title: "Blockchain Verification",
-      Icon: Zap,
     },
   ],
   personal: [
@@ -192,11 +170,6 @@ const Solutions = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <FeatureSection
-                title="Training Model"
-                features={features.training}
-                index={2}
-              />
               <FeatureSection
                 title="Personal Model"
                 features={features.personal}

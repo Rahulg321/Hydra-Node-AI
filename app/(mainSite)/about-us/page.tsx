@@ -24,10 +24,10 @@ const AboutPage = () => {
   });
 
   const stats = [
-    { number: "100K+", label: "Active Users" },
+    { number: "1K+", label: "Active Users" },
     { number: "95%", label: "Success Rate" },
-    { number: "200+", label: "Expert Mentors" },
-    { number: "50+", label: "Global Partners" },
+    { number: "10+", label: "Expert Mentors" },
+    { number: "1k+", label: "Global Impact" },
   ];
 
   const values = [
@@ -65,7 +65,7 @@ const AboutPage = () => {
       icon: Lock,
       title: "Trust & Security",
       description:
-        "Ensuring the highest standards of data protection and credential verification through blockchain technology.",
+        "Ensuring the highest standards of data protection and credential verification through robust technology.",
     },
   ];
 
@@ -118,9 +118,9 @@ const AboutPage = () => {
               className="mb-12 text-xl leading-relaxed text-gray-600 dark:text-gray-400"
             >
               At HydraNode, we&apos;re on a mission to democratize education
-              through innovative technology. Our platform combines artificial
-              intelligence and blockchain to create a learning experience
-              that&apos;s personalized, verifiable, and accessible to everyone.
+              through innovative AI technology. Our platform uses artificial
+              intelligence to create a learning experience that&apos;s
+              personalized and accessible to everyone.
             </motion.p>
 
             {/* Stats */}
@@ -192,10 +192,10 @@ const AboutPage = () => {
                 knowledge sharing.
               </p>
               <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-                By combining AI-powered personalization with blockchain-verified
-                credentials, we&apos;re not just teaching – we&apos;re
-                transforming how people learn, grow, and succeed in their
-                careers.
+                By utilising our own fine-tuned LLM, AI-powered personalization,
+                we&apos;re not just preparing you for clearing certifications –
+                we&apos;re also transforming how people learn, grow, and succeed
+                in their careers.
               </p>
             </motion.div>
           </div>
