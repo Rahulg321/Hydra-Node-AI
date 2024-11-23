@@ -113,7 +113,7 @@ const HeroSection = ({ session }: { session: Session | null }) => {
           >
             <div className="relative z-10">
               <Image
-                src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&q=80&w=1000"
+                src={"/illustrations/main-illust.png"}
                 width={1000}
                 height={1000}
                 alt="AI Learning Platform"
