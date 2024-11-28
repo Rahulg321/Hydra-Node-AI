@@ -7,8 +7,9 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { baseUrl } from "../sitemap";
 import { ThemeProvider } from "@/components/theme-provider";
 import Image from "next/image";
-import LoginBackground from "@/public/auth/loginSignupImage.png";
+import LoginBackground from "@/public/auth/Background.avif";
 import Head from "next/head";
+import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -65,18 +66,28 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <body className={cn("", poppins.variable, manrope.variable)}>
-        <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-          <div className="relative">
-            <Image
-              src={LoginBackground}
-              alt="blue background wavy for authentication pages"
-              className="object-cover"
-              placeholder="blur"
-              fill
-            />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+            <div className="relative hidden md:block">
+              <Image
+                src={LoginBackground}
+                alt="blue background wavy for authentication pages"
+                className="object-cover"
+                placeholder="blur"
+                fill
+              />
+            </div>
+            <main className="min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-background dark:text-gray-100">
+              <ThemeSwitchButton />
+              {children}
+            </main>
           </div>
-          <div>{children}</div>
-        </section>
+        </ThemeProvider>
       </body>
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>

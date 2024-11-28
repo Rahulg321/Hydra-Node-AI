@@ -13,7 +13,7 @@ export const metadata = {
 
 const SignUpPage = () => {
   return (
-    <div className="block-space-large relative content-center">
+    <div className="block-space-large container relative content-center">
       <div className="absolute right-4 top-4">
         <Link href={"/"}>
           <Image

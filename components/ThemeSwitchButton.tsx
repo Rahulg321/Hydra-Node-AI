@@ -13,7 +13,7 @@ const ThemeSwitchButton = () => {
       onClick={() => {
         setTheme(theme === "dark" ? "light" : "dark");
       }}
-      className="dark:bg-dark-lighter fixed bottom-6 right-6 z-50 rounded-full bg-gray-100 p-3 shadow-lg transition-transform hover:scale-110"
+      className="fixed bottom-6 right-6 z-50 rounded-full bg-gray-100 p-3 shadow-lg transition-transform hover:scale-110 dark:bg-dark-lighter"
       aria-label="Toggle theme"
     >
       <AnimatePresence mode="wait" initial={false}>

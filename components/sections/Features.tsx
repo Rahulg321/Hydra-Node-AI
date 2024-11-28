@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const TabButton = ({
   isActive,
@@ -30,79 +31,18 @@ const TabButton = ({
 }) => (
   <button
     onClick={onClick}
-    className={`rounded-lg px-6 py-3 text-sm font-medium transition-all duration-300 ${
+    className={cn(
+      "w-full rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 sm:w-auto sm:px-6 sm:py-3",
       isActive
         ? "bg-primary text-white shadow-lg shadow-primary/25"
-        : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-dark-card"
-    }`}
+        : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-dark-card",
+    )}
   >
     {children}
   </button>
 );
 
 const features = [
-  {
-    Icon: Target,
-    title: "Certification Roadmaps",
-    description:
-      "Clear, structured paths to certification success. Our AI analyzes your experience and goals to create a personalized learning journey.",
-    diagram: (
-      <div className="relative h-48 p-4">
-        <div className="absolute inset-0 flex items-center justify-between px-8">
-          <div className="absolute top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
-          {["Beginner", "Intermediate", "Expert"].map((level, index) => (
-            <motion.div
-              key={level}
-              className="relative z-10 flex flex-col items-center gap-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2 }}
-            >
-              <motion.div
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10"
-                whileHover={{ scale: 1.1 }}
-                animate={{
-                  y: [0, -5, 0],
-                  transition: {
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: index * 0.3,
-                  },
-                }}
-              >
-                {index === 0 && <BookOpen className="h-5 w-5 text-primary" />}
-                {index === 1 && <Laptop className="h-5 w-5 text-primary" />}
-                {index === 2 && <Award className="h-5 w-5 text-primary" />}
-              </motion.div>
-              <motion.div
-                className="flex h-16 w-32 flex-col items-center justify-center rounded-lg bg-primary/5 p-2"
-                whileHover={{ scale: 1.05 }}
-                animate={{
-                  boxShadow: [
-                    "0 0 0 0 rgba(0, 163, 255, 0)",
-                    "0 0 0 10px rgba(0, 163, 255, 0.1)",
-                    "0 0 0 0 rgba(0, 163, 255, 0)",
-                  ],
-                  transition: {
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: index * 0.3,
-                  },
-                }}
-              >
-                <span className="text-sm font-medium text-primary">
-                  {level}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Certification
-                </span>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    ),
-  },
   {
     Icon: LineChart,
     title: "Study Progress Tracking",
@@ -341,10 +281,13 @@ const Features = ({ session }: { session: Session | null }) => {
   const ActiveIcon = features[activeTab].Icon;
 
   return (
-    <section className="relative py-24" id="features">
+    <section
+      className="relative overflow-hidden py-12 sm:py-16 lg:py-24"
+      id="features"
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-50 to-transparent opacity-50 dark:via-dark-lighter" />
 
-      <div className="container relative mx-auto px-4">
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
           initial={{ opacity: 0 }}
@@ -353,7 +296,7 @@ const Features = ({ session }: { session: Session | null }) => {
         >
           {/* Main Section Header */}
           <motion.div
-            className="mb-16 text-center"
+            className="mb-8 text-center sm:mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -365,16 +308,16 @@ const Features = ({ session }: { session: Session | null }) => {
             >
               Your Path to Success
             </motion.span>
-            <h2 className="mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-4xl font-bold text-transparent dark:from-white dark:to-gray-300 md:text-5xl">
+            <h2 className="mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-gray-300 sm:mb-6 sm:text-4xl lg:text-5xl">
               Accelerate Your IT Career with Expert Certification Prep
             </h2>
-            <p className="mx-auto mb-12 max-w-3xl text-xl text-gray-600 dark:text-gray-400">
+            <p className="mx-auto mb-8 max-w-3xl text-base text-gray-600 dark:text-gray-400 sm:mb-12 sm:text-xl">
               Comprehensive preparation tools and resources designed for your
               certification success
             </p>
 
             {/* Tabs */}
-            <div className="mb-12 flex flex-wrap justify-center gap-2">
+            <div className="mb-8 flex flex-col gap-2 sm:mb-12 sm:flex-row sm:flex-wrap sm:justify-center">
               {features.map((feature, index) => (
                 <TabButton
                   key={index}
@@ -395,27 +338,27 @@ const Features = ({ session }: { session: Session | null }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="rounded-2xl border border-gray-200 bg-white/50 p-8 backdrop-blur-sm dark:border-gray-800 dark:bg-dark-card/50"
+              className="rounded-2xl border border-gray-200 bg-white/50 p-4 backdrop-blur-sm dark:border-gray-800 dark:bg-dark-card/50 sm:p-6 lg:p-8"
             >
-              <div className="flex flex-col items-center gap-12 lg:flex-row">
-                <div className="relative flex-1">
+              <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
+                <div className="relative w-full flex-1">
                   <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 blur-2xl" />
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                    <ActiveIcon className="h-7 w-7 text-primary" />
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 sm:h-14 sm:w-14">
+                    <ActiveIcon className="h-6 w-6 text-primary sm:h-7 sm:w-7" />
                   </div>
-                  <h3 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+                  <h3 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white sm:mb-4 sm:text-2xl">
                     {features[activeTab].title}
                   </h3>
-                  <p className="mb-6 text-lg leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="mb-6 text-base leading-relaxed text-gray-600 dark:text-gray-400 sm:text-lg">
                     {features[activeTab].description}
                   </p>
                 </div>
                 <motion.div
-                  className="flex-1"
-                  whileHover={{ scale: 1.05 }}
+                  className="w-full flex-1"
+                  whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xl transition-colors duration-300 hover:border-primary/50 dark:border-gray-800 dark:bg-dark-card dark:hover:border-primary/50">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-xl transition-colors duration-300 hover:border-primary/50 dark:border-gray-800 dark:bg-dark-card dark:hover:border-primary/50 sm:p-6">
                     {features[activeTab].diagram}
                   </div>
                 </motion.div>
@@ -427,10 +370,10 @@ const Features = ({ session }: { session: Session | null }) => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-24 text-center"
+            className="mt-12 text-center sm:mt-16 lg:mt-24"
           >
             <button
-              className="transform rounded-xl bg-primary px-8 py-4 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
+              className="w-full transform rounded-xl bg-primary px-6 py-3 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-xl sm:w-auto sm:px-8 sm:py-4"
               onClick={() => {
                 if (session) {
                   router.push("/vendors");

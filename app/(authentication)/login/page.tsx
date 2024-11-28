@@ -15,15 +15,9 @@ export const metadata: Metadata = {
   description: "Login to your hydranode account",
 };
 
-const LoginPage = async () => {
-  const session = await auth();
-  if (session) {
-    console.log("logged in users accessing the login page");
-    return redirect(DEFAULT_LOGIN_REDIRECT);
-  }
-
+const LoginPage = () => {
   return (
-    <div className="block-space-large relative content-center">
+    <div className="block-space-large container relative content-center">
       <div className="absolute right-4 top-4">
         <Link href={"/"}>
           <Image

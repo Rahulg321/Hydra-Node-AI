@@ -135,7 +135,7 @@ const LoginForm = () => {
             </React.Fragment>
           )}
 
-          <Link href={"/auth/reset"} className="mt-4 px-0 text-baseC">
+          <Link href={"/auth/reset"} className="mt-4 px-0 hover:underline">
             Forgot Password
           </Link>
           {/* <div className="flex items-center space-x-2">
