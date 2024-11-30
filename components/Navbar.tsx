@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Menu, Router, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { get } from "http";
 import { Session } from "next-auth";
@@ -54,7 +54,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
 
   return (
     <nav
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
         isScrolled
           ? "bg-white/80 shadow-lg backdrop-blur-lg dark:bg-black/80"
           : ""

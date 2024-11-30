@@ -10,11 +10,36 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="">
       <div className="grid min-h-screen grid-cols-[220px_1fr]">
-        <div className="space-y-4 border-r-2 p-4">
-          {vendors.map((vendor) => (
-            <VendorButton key={vendor.id} vendor={vendor} />
-          ))}
-        </div>
+        <aside className="fixed top-14 z-30 hidden h-[calc(100vh-5rem)] w-full shrink-0 border-r border-border/40 dark:border-border md:sticky md:block">
+          <div className="no-scrollbar h-full overflow-auto py-6 pr-6 lg:py-8">
+            <div className="w-full">
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+              {vendors.map((vendor) => (
+                <VendorButton key={vendor.id} vendor={vendor} />
+              ))}
+            </div>
+          </div>
+        </aside>
         <div>{children}</div>
       </div>
     </div>

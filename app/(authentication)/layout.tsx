@@ -10,6 +10,7 @@ import Image from "next/image";
 import LoginBackground from "@/public/auth/Background.avif";
 import Head from "next/head";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
+import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -65,7 +66,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <body className={cn("", poppins.variable, manrope.variable)}>
+      <body className={cn("", GeistSans.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

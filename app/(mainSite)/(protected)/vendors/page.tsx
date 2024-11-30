@@ -2,6 +2,7 @@ import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
+import VendorsOverviewSection from "./VendorsSection";
 
 export async function generateMetadata() {
   return {
@@ -11,15 +12,10 @@ export async function generateMetadata() {
 }
 
 const ExamsPage = async ({}: {}) => {
-  redirect("/vendors/amazon-exams");
   return (
-    <section className="block-space big-container">
-      <h2>Select an Exam to view its Particulars</h2>
-      <p>
-        We have a list of vendors on the left, select a vendor from the list and
-        then select an exam to undertake
-      </p>
-    </section>
+    <>
+      <VendorsOverviewSection />
+    </>
   );
 };
 

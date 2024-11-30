@@ -115,24 +115,8 @@
   }
 }
 
-*,
-ul,
-li,
-p,
-span,
-label,
-input,
-textarea {
-  font-family: var(--font-manrope);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-poppins);
+* {
+  font-family: var(--font-geist-sans);
 }
 
 /* Smooth scrolling behavior */

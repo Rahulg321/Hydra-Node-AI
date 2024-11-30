@@ -17,6 +17,8 @@ import { Moon, Sun } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import Head from "next/head";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -78,7 +80,7 @@ export default async function RootLayout({
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <body className={clsx("", poppins.variable, manrope.variable)}>
+      <body className={clsx("", GeistSans.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
