@@ -18,14 +18,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import LogoDark from "@/public/logo-dark.svg";
-import LogoLight from "@/public/logo-light.svg";
+import LogoDark from "./LogoDark";
+import LogoLight from "./LogoLight";
 
 const menuItems = ["Product", "About Us", "Pricing", "Contact Us"];
 
 const Navbar = ({ session }: { session: Session | null }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
   const router = useRouter();
 
@@ -35,6 +36,10 @@ const Navbar = ({ session }: { session: Session | null }) => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsLogoLoaded(true);
   }, []);
 
   const getItemHref = (item: string) => {
@@ -68,20 +73,14 @@ const Navbar = ({ session }: { session: Session | null }) => {
             className="flex items-center gap-2"
           >
             <Link href={"/"}>
-              <Image
-                src={LogoDark}
-                alt="Hydranode"
-                width={150}
-                height={150}
-                className="h-8 dark:hidden"
-              />
-              <Image
-                src={LogoLight}
-                width={150}
-                height={150}
-                alt="Hydranode"
-                className="hidden h-8 dark:block"
-              />
+              {isLogoLoaded ? (
+                <>
+                  <LogoDark className="h-8 w-auto dark:hidden" />
+                  <LogoLight className="hidden h-8 w-auto dark:block" />
+                </>
+              ) : (
+                <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
+              )}
             </Link>
           </motion.div>
 

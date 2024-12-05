@@ -58,8 +58,6 @@ const McqQuizPage = async ({
 
   const sliceQuestions = questions.slice(0, questionsLimit);
 
-  console.log("shuffled quesitons length", sliceQuestions.length);
-
   return (
     <div>
       <MCQ quizSession={quizSession} exam={exam} questions={sliceQuestions} />

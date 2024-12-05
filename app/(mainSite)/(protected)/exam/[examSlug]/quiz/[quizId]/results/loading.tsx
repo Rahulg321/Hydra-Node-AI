@@ -1,40 +1,43 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const Loading = () => {
+const QuizResultsPageSkeleton = () => {
   return (
-    <div className="flex min-h-screen">
-      {/* Left Column (1/4 of the screen) */}
-      <div className="w-1/4 space-y-4 p-4">
-        <Skeleton className="h-8 w-3/4" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-6 w-1/2" />
-      </div>
-
-      {/* Right Column (3/4 of the screen) */}
-      <div className="w-3/4 space-y-6 p-6">
-        {/* Question skeleton */}
-        <Skeleton className="h-10 w-full" />
-
-        {/* Options skeletons */}
+    <section className="container animate-pulse py-4">
+      <Skeleton className="mb-4 h-10 w-48" />
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-4">
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-6 w-64" />
+          <Skeleton className="h-6 w-40" />
+          <div className="mb-4 mt-2 flex items-center gap-1">
+            <Skeleton className="h-10 w-32" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+          <Skeleton className="h-6 w-56" />
+          <div className="grid grid-cols-2 gap-4">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Skeleton className="h-10 w-10 rounded-lg" />
+                <div>
+                  <Skeleton className="mb-1 h-4 w-24" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center justify-center">
+          <Skeleton className="h-64 w-64 rounded-full" />
         </div>
       </div>
-    </div>
+      <div className="mt-4 flex justify-between">
+        <Skeleton className="h-12 w-32 rounded-full" />
+        <div className="space-x-4">
+          <Skeleton className="inline-block h-12 w-32 rounded-full" />
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default Loading;
+export default QuizResultsPageSkeleton;

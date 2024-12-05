@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import HtmlContent from "@/components/html-content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Question, QuizSession, UserAttempt } from "@prisma/client";
 import { CircleCheckBig, CircleX } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ReviewMcq = ({
   userAttempts = [],
@@ -22,171 +23,145 @@ const ReviewMcq = ({
   examName: string;
   examSlug: string;
 }) => {
-  const [userAttemptIndex, setUserAttemptIndex] = React.useState(0);
-  const [questionIndex, setQuestionIndex] = React.useState(0);
-  const [showOverallExplanation, setShowOverallExplanation] =
-    React.useState(false);
+  const [userAttemptIndex, setUserAttemptIndex] = useState(0);
+  const [showOverallExplanation, setShowOverallExplanation] = useState(false);
 
-  let currentAttempt = userAttempts[userAttemptIndex];
-  let currentQuestion = questions[questionIndex];
+  const currentAttempt = userAttempts[userAttemptIndex];
+  const currentQuestion = questions[userAttemptIndex];
 
-  const calculateScore = () => {
-    const correctQuestions = userAttempts.filter(
-      (attempt) => attempt.isCorrect,
-    ).length;
-    return (correctQuestions / userAttempts.length) * 100;
-  };
-
-  const handleNext = () => {
-    setUserAttemptIndex((prev) => prev + 1);
-    setQuestionIndex((prev) => prev + 1);
-  };
-
-  const handlePrevious = () => {
-    setUserAttemptIndex((prev) => prev - 1);
-    setQuestionIndex((prev) => prev - 1);
-  };
+  const handleNext = () =>
+    setUserAttemptIndex((prev) => Math.min(prev + 1, questions.length - 1));
+  const handlePrevious = () =>
+    setUserAttemptIndex((prev) => Math.max(prev - 1, 0));
 
   return (
-    <section className="">
-      <div className="grid grid-cols-1 md:grid-cols-5">
-        <div className="container col-span-1 space-y-4">
-          <h4 className="text-baseC">Exam Content</h4>
-
-          {/* Correct/Incorrect/Skipped Markers */}
-          <div className="space-y-2">
-            <Legend color="bg-green-400" label="Correct" />
-            <Legend color="bg-red-400" label="Incorrect" />
-            <Legend color="bg-yellow-400" label="Skipped" />
-          </div>
-
-          <CorrectQuestionGrid
-            totalQuestions={questions.length}
-            questionLength={userAttempts.length}
-            questionStatus={userAttempts.map((attempt) =>
-              attempt.skipped
-                ? "skipped"
-                : attempt.isCorrect
-                  ? "correct"
-                  : "incorrect",
-            )}
-          />
-
-          {/* Summary Section */}
-          <Summary
-            totalQuestions={questions.length}
-            correctQuestions={quizSession.correctAnswers}
-            incorrectQuestions={quizSession.incorrectAnswers}
-            skippedQuestions={quizSession.skippedAnswers}
-            score={quizSession.percentageScored!}
-          />
-
-          <Button asChild variant={"hydraPrimary"}>
-            <Link href={`/exam/${examSlug}/quiz/${quizSession.id}/results`}>
-              See Results
-            </Link>
-          </Button>
+    <section className="container py-8">
+      <h1 className="mb-8 text-3xl font-bold">{examName} Review</h1>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <div className="space-y-6 lg:col-span-1">
+          <Card>
+            <CardHeader>
+              <CardTitle>Exam Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <CorrectQuestionGrid
+                totalQuestions={questions.length}
+                questionStatus={userAttempts.map((attempt) =>
+                  attempt.skipped
+                    ? "skipped"
+                    : attempt.isCorrect
+                      ? "correct"
+                      : "incorrect",
+                )}
+              />
+              <Summary
+                totalQuestions={questions.length}
+                correctQuestions={quizSession.correctAnswers}
+                incorrectQuestions={quizSession.incorrectAnswers}
+                skippedQuestions={quizSession.skippedAnswers}
+                score={quizSession.percentageScored!}
+              />
+              <Button asChild className="w-full">
+                <Link href={`/exam/${examSlug}/quiz/${quizSession.id}/results`}>
+                  See Results
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-        <div className="container col-span-4 py-4">
-          <h2>{examName}</h2>
-          <div className="mt-4 flex justify-between">
-            <span className="font-medium">
-              Exam Mode{" "}
-              <span className="font-bold">{quizSession.examMode}</span>
-            </span>
-            <span className="font-medium">
-              Question <span className="font-bold">{userAttemptIndex + 1}</span>
-            </span>
-            <span className="font-medium">
-              Total Questions{" "}
-              <span className="font-bold">{questions.length}</span>
-            </span>
-          </div>
-
-          <span>Question Type: {currentQuestion.questionType}</span>
-          <div className="my-4 md:my-8">
-            <HtmlContent content={currentQuestion.question} />
-          </div>
-          {!currentAttempt || currentAttempt.skipped ? (
-            <div className="mb-4">
-              <Badge variant={"destructive"}>Skipped</Badge>
-            </div>
-          ) : (
-            <div className="mb-4">
-              <Badge variant={"success"}>Attempted</Badge>
-            </div>
-          )}
-          <div className="space-y-4 md:space-y-6">
-            {/* TODO:-  figure out why this does not work */}
-            {[...Array(6)].map((_, i) => {
-              let userSelections: number[] = [];
-
-              if (!currentAttempt) {
-                userSelections = [];
-              } else {
-                userSelections = currentAttempt.userAnswer
-                  ? currentAttempt.userAnswer.split(",").map(Number)
-                  : [];
-              }
-
-              // @ts-ignore
-              let optionText = currentQuestion[`answerOption${i + 1}`];
-
-              // @ts-ignore
-              let optionExplanation = currentQuestion[`explanation${i + 1}`];
-
-              let correctAnswers = currentQuestion.correctAnswers;
-              let correctAnswersArray = correctAnswers.split(",").map(Number);
-              let isCorrect = correctAnswersArray.includes(i + 1);
-
-              let isOptionSelected = userSelections.includes(i + 1);
-
-              return (
-                <Option
-                  key={i}
-                  optionText={optionText}
-                  optionExplanation={optionExplanation}
-                  isCorrect={isCorrect!}
-                  isUserOptionSelected={isOptionSelected}
-                  isShowAnswer={showOverallExplanation}
-                />
-              );
-            })}
-          </div>
-          {/* Show/Hide Answer Button */}
-          {showOverallExplanation && (
-            <div className="mt-6 space-y-4">
-              <h4>Overall Explanation:-</h4>
-              <span className="mt-2 block font-medium leading-loose tracking-wide text-green-800 dark:text-green-600">
-                {currentQuestion.overallExplanation}
+        <Card className="lg:col-span-3">
+          <CardContent className="space-y-6 pt-6">
+            <div className="flex items-center justify-between">
+              <span className="font-medium">
+                Question{" "}
+                <span className="font-bold">{userAttemptIndex + 1}</span> of{" "}
+                <span className="font-bold">{questions.length}</span>
+              </span>
+              <span className="font-medium">
+                Exam Mode:{" "}
+                <span className="font-bold">{quizSession.examMode}</span>
               </span>
             </div>
-          )}
-          <div className="mt-4 flex justify-between">
-            <Button
-              variant={"hydraPrimary"}
-              onClick={() => setShowOverallExplanation((prev) => !prev)}
-            >
-              {showOverallExplanation ? "Hide" : "Get Explanation"}
-            </Button>
-            <div className="space-x-4">
-              <Button
-                variant={"hydraPrimary"}
-                onClick={handlePrevious}
-                disabled={questionIndex === 0}
-              >
-                Previous Question
-              </Button>
-              <Button
-                variant={"hydraPrimary"}
-                onClick={handleNext}
-                disabled={questionIndex === questions.length - 1}
-              >
-                Next Question
-              </Button>
+            <div>
+              <span className="text-sm font-medium text-muted-foreground">
+                Question Type: {currentQuestion.questionType}
+              </span>
+              <div className="mt-2">
+                <HtmlContent content={currentQuestion.question} />
+              </div>
             </div>
-          </div>
-        </div>
+            {!currentAttempt || currentAttempt.skipped ? (
+              <Badge variant="destructive">Skipped</Badge>
+            ) : (
+              <Badge variant="secondary">Attempted</Badge>
+            )}
+            <div className="space-y-4">
+              {[...Array(6)].map((_, i) => {
+                const optionText =
+                  currentQuestion[`answerOption${i + 1}` as keyof Question];
+                if (!optionText) return null;
+
+                const optionExplanation = currentQuestion[
+                  `explanation${i + 1}` as keyof Question
+                ] as string;
+                const correctAnswers = currentQuestion.correctAnswers
+                  .split(",")
+                  .map(Number);
+                const isCorrect = correctAnswers.includes(i + 1);
+                const userSelections =
+                  currentAttempt?.userAnswer?.split(",").map(Number) || [];
+                const isUserOptionSelected = userSelections.includes(i + 1);
+
+                return (
+                  <Option
+                    key={i}
+                    optionText={optionText as string}
+                    optionExplanation={optionExplanation}
+                    isCorrect={isCorrect}
+                    isUserOptionSelected={isUserOptionSelected}
+                    isShowAnswer={showOverallExplanation}
+                  />
+                );
+              })}
+            </div>
+            {showOverallExplanation && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Overall Explanation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm leading-relaxed">
+                    {currentQuestion.overallExplanation}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+            <div className="flex items-center justify-between pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowOverallExplanation((prev) => !prev)}
+              >
+                {showOverallExplanation
+                  ? "Hide Explanation"
+                  : "Show Explanation"}
+              </Button>
+              <div className="space-x-4">
+                <Button
+                  onClick={handlePrevious}
+                  disabled={userAttemptIndex === 0}
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={handleNext}
+                  disabled={userAttemptIndex === questions.length - 1}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
@@ -194,13 +169,10 @@ const ReviewMcq = ({
 
 export default ReviewMcq;
 
-// Helper Components for Legends, Summary, and Question Header
 const Legend = ({ color, label }: { color: string; label: string }) => (
   <div className="flex items-center gap-2">
-    <div
-      className={`size-6 rounded-lg border ${color} text-center text-white`}
-    ></div>
-    <span className="font-semibold text-baseC">{label}</span>
+    <div className={`h-4 w-4 rounded ${color}`}></div>
+    <span className="text-sm font-medium">{label}</span>
   </div>
 );
 
@@ -217,145 +189,107 @@ const Summary = ({
   skippedQuestions: number;
   score: number;
 }) => (
-  <div className="space-y-2">
-    <h5>Total Questions: {totalQuestions}</h5>
-    <h5>Correct Questions: {correctQuestions}</h5>
-    <h5>Incorrect Questions: {incorrectQuestions}</h5>
-    <h5>Skipped Questions: {skippedQuestions}</h5>
-    <h5>Exam Score: {score.toFixed(2)}%</h5>
+  <div className="space-y-2 text-sm">
+    <p>
+      Total Questions: <span className="font-bold">{totalQuestions}</span>
+    </p>
+    <p>
+      Correct:{" "}
+      <span className="font-bold text-green-600">{correctQuestions}</span>
+    </p>
+    <p>
+      Incorrect:{" "}
+      <span className="font-bold text-red-600">{incorrectQuestions}</span>
+    </p>
+    <p>
+      Skipped:{" "}
+      <span className="font-bold text-yellow-600">{skippedQuestions}</span>
+    </p>
+    <p>
+      Score: <span className="font-bold">{score.toFixed(2)}%</span>
+    </p>
   </div>
 );
 
-const QuestionHeader = ({
-  currentQuestionIndex,
-  totalQuestions,
-}: {
-  currentQuestionIndex: number;
-  totalQuestions: number;
-}) => (
-  <div className="mb-4 flex justify-between">
-    <h5>
-      Question{" "}
-      <span className="font-semibold text-baseC">{currentQuestionIndex}</span>
-    </h5>
-    <h5>
-      Total Questions{" "}
-      <span className="font-semibold text-baseC">{totalQuestions}</span>
-    </h5>
-  </div>
-);
-
-type QuestionGridProps = {
-  questionLength: number;
-  totalQuestions: number;
-  questionStatus: (string | null)[];
-};
-
-function CorrectQuestionGrid({
-  questionLength,
+const CorrectQuestionGrid = ({
   totalQuestions,
   questionStatus,
-}: QuestionGridProps) {
-  return (
-    <div className="bg-muted p-4">
-      <div className="grid grid-cols-6 gap-2">
-        {Array.from({ length: totalQuestions }).map((_, index) => {
-          let statusClass = "border-base";
-          if (questionStatus[index] === "correct") {
-            statusClass = "bg-green-500 border-green-500";
-          } else if (questionStatus[index] === "incorrect") {
-            statusClass = "bg-red-500 border-red-500";
-          } else if (questionStatus[index] === "skipped") {
-            statusClass = "bg-yellow-500 border-yellow-500";
-          } else {
-            statusClass = "bg-base border-base";
-          }
+}: {
+  totalQuestions: number;
+  questionStatus: (string | null)[];
+}) => (
+  <div className="grid grid-cols-5 gap-2">
+    {Array.from({ length: totalQuestions }).map((_, index) => {
+      let statusClass = "bg-gray-200";
+      if (questionStatus[index] === "correct") {
+        statusClass = "bg-green-500";
+      } else if (questionStatus[index] === "incorrect") {
+        statusClass = "bg-red-500";
+      } else if (questionStatus[index] === "skipped") {
+        statusClass = "bg-yellow-500";
+      }
 
-          return (
-            <div
-              key={index}
-              className={`size-8 rounded-lg border text-center text-white ${statusClass}`}
-            >
-              {index + 1}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+      return (
+        <div
+          key={index}
+          className={`pt-full w-full rounded-sm ${statusClass} relative`}
+        >
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+            {index + 1}
+          </span>
+        </div>
+      );
+    })}
+  </div>
+);
 
-function Option({
+const Option = ({
   optionText,
   optionExplanation,
   isCorrect,
   isUserOptionSelected,
   isShowAnswer,
 }: {
+  optionText: string;
   optionExplanation: string;
-  optionText: string | null;
   isCorrect: boolean;
-  isShowAnswer: boolean;
   isUserOptionSelected: boolean;
-}) {
-  const [selected, setSelected] = React.useState(false);
-
-  const onSelect = () => setSelected((prev) => !prev);
-
-  if (!optionText) return null;
-
-  console.log({ optionText, selected, isCorrect });
-
-  return (
-    <div
-      className={cn("border-2 border-base p-4", {
-        "border-green-500": isCorrect,
-        "border-red-500": !isCorrect,
-      })}
-      onClick={onSelect}
-    >
-      <div className={`flex cursor-pointer items-center gap-2 rounded-lg`}>
-        <div className="flex flex-col items-center justify-center">
-          {isCorrect ? (
-            <div>
-              <CircleCheckBig className="text-green-600" />
-            </div>
-          ) : (
-            <div>
-              <CircleX className="text-red-800" />
-            </div>
-          )}
-          {isUserOptionSelected && isCorrect && (
-            <div>
-              <Badge variant="success">Selected</Badge>
-            </div>
-          )}
-
-          {isUserOptionSelected && !isCorrect && (
-            <div>
-              <Badge variant="destructive">Selected</Badge>
-            </div>
-          )}
-        </div>
-        <label className="cursor-pointer text-sm font-semibold">
-          {optionText}
-        </label>
+  isShowAnswer: boolean;
+}) => (
+  <div
+    className={cn(
+      "rounded-lg border p-4",
+      isCorrect ? "border-green-500" : "border-red-500",
+      isUserOptionSelected && "bg-blue-50",
+    )}
+  >
+    <div className="flex items-start gap-4">
+      <div className="mt-1">
+        {isCorrect ? (
+          <CircleCheckBig className="text-green-600" />
+        ) : (
+          <CircleX className="text-red-600" />
+        )}
       </div>
-      {isShowAnswer && (
-        <div className="mt-4 space-y-4">
-          <h6 className="text-sm font-medium text-muted-foreground">
-            Explanation
-          </h6>
-          <span
-            className={cn("text-sm font-medium", {
-              "text-green-800 dark:text-green-600": isCorrect,
-              "text-red-800 dark:text-red-600": !isCorrect,
-            })}
+      <div className="flex-1">
+        <p className="font-medium">{optionText}</p>
+        {isUserOptionSelected && (
+          <Badge
+            variant={isCorrect ? "success" : "destructive"}
+            className="mt-2"
           >
-            {optionExplanation}
-          </span>
-        </div>
-      )}
+            Your Selection
+          </Badge>
+        )}
+        {isShowAnswer && (
+          <div className="mt-2">
+            <h6 className="text-sm font-medium text-muted-foreground">
+              Explanation
+            </h6>
+            <p className="mt-1 text-sm">{optionExplanation}</p>
+          </div>
+        )}
+      </div>
     </div>
-  );
-}
+  </div>
+);

@@ -31,17 +31,24 @@ const ExamTags = () => {
   };
 
   return (
-    <div className="flex w-full gap-2 rounded-md bg-[#E5E6FF] dark:bg-dark-card">
+    <div className="flex w-full rounded-md bg-[#E5E6FF] dark:bg-dark-card">
       {examLevels.map((level) => (
         <div
           key={level.value}
           onClick={() => handleTagClick(level.value)}
           className={cn(
-            "flex-1 cursor-pointer rounded-lg p-4 text-center text-primary",
+            "flex-1 cursor-pointer rounded-lg p-2 text-center text-primary md:p-4",
             examLevel === level.value && "bg-primary text-white",
           )}
         >
-          {level.label}
+          <span
+            className={cn("text-xs md:text-sm lg:text-xl", {
+              "text-white": examLevel === level.value,
+              "text-primary-dark": examLevel !== level.value,
+            })}
+          >
+            {level.label}
+          </span>
         </div>
       ))}
     </div>

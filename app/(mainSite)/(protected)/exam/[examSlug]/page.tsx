@@ -1,31 +1,25 @@
-import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
-import { Button } from "@/components/ui/button";
+import { notFound, redirect } from "next/navigation";
+import { auth } from "@/auth";
+import db from "@/lib/db";
 import {
   checkIfUserHasAccessToExam,
   checkIfUserHasTrialAccess,
-  cn,
 } from "@/lib/utils";
-import React from "react";
-import { FaStar } from "react-icons/fa6";
-import db from "@/lib/db";
-import { notFound, redirect } from "next/navigation";
-import { auth } from "@/auth";
-import StartExamDialog from "@/components/Dialogs/start-exam-dialog";
-import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
-import { getAllExams, getExamWithSlug } from "@/data/exam";
 import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
+import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";
 import RefreshCourseButton from "@/components/WebButtons/RefreshCourseButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ExamPricingCard } from "./ExamPricingCard";
+import { ExamDetails } from "./ExamDetails";
+import { ExamInstructions } from "./ExamInstructions";
 
 export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
-  let exams = await getAllExams();
-
-  return exams!.map((e) => ({
-    examSlug: e.slug,
-  }));
+  const exams = await db.exam.findMany();
+  return exams.map((exam) => ({ examSlug: exam.slug }));
 }
 
 export async function generateMetadata({
@@ -33,272 +27,122 @@ export async function generateMetadata({
 }: {
   params: { examSlug: string };
 }) {
-  let post = await getExamWithSlug(params.examSlug);
-
-  return {
-    title: post!.name,
-    description: post!.description,
-  };
+  const exam = await db.exam.findUnique({ where: { slug: params.examSlug } });
+  return { title: exam?.name, description: exam?.description };
 }
 
-const ExamPage = async ({
+export default async function ExamPage({
   params,
-  searchParams,
 }: {
-  params: {
-    examSlug: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
-  const loggedInUser = await auth();
+  params: { examSlug: string };
+}) {
+  const session = await auth();
+  if (!session) return redirect("/login");
 
-  if (!loggedInUser) {
-    console.log("user is not logged in");
-    return redirect("/login");
-  }
-
-  const exam = await db.exam.findFirst({
-    where: {
-      slug: params.examSlug,
-    },
-    include: {
-      questions: true,
-    },
+  const exam = await db.exam.findUnique({
+    where: { slug: params.examSlug },
+    include: { questions: true },
   });
+  if (!exam) return notFound();
 
-  if (!exam) {
-    console.log("could not find exam");
-    return notFound();
-  }
-  const { hasAccess, message } = await checkIfUserHasAccessToExam(
-    loggedInUser.user.id as string,
+  const { hasAccess } = await checkIfUserHasAccessToExam(
+    session.user.id as string,
     exam.id,
   );
-
-  if (hasAccess) {
-    console.log("user has access");
-  } else {
-    console.log("user does not have access");
-  }
-
-  const hasTrialAccess = await checkIfUserHasTrialAccess(
-    loggedInUser.user.id as string,
+  const { status: hasTrialAccess } = await checkIfUserHasTrialAccess(
+    session.user.id as string,
   );
 
-  console.log("user has trial access", hasTrialAccess);
-
   return (
-    <section className="block-space-large">
-      <div className="container grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div>
-          <h2 className="mb-4">{exam.name}</h2>
-          <span className="block font-bold underline">Certificate Details</span>
-          <span className="block font-bold text-muted-foreground">
-            Total Question Bank:{" "}
-            <span className="text-primary">{exam.questions.length}</span>
-          </span>
-
-          <span className="block font-bold text-muted-foreground">
-            Question For Mock:{" "}
-            <span className="text-primary">{exam.questionsToShow}</span>
-          </span>
-
-          <span className="block font-bold text-muted-foreground">
-            Mock Exam Time:{" "}
-            <span className="text-primary">{exam.timeAllowed} minutes</span>
-          </span>
-          <span className="block font-bold text-muted-foreground">
-            Exam Level: <span className="text-primary">{exam.examLevel}</span>
-          </span>
-
-          {/* logged in user may or may not exist, should check for null or better code */}
+    <section className="container py-12">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-6">
+          <ExamDetails exam={exam} />
+          <Card>
+            <CardHeader>
+              <CardTitle>Exam Description</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{exam.description}</p>
+            </CardContent>
+          </Card>
+          <ExamInstructions />
+        </div>
+        <div className="space-y-6">
           {hasAccess ? (
-            <div>
-              <h3>Exam Purchased!!!!</h3>
+            <>
+              <Alert variant="default">
+                <AlertTitle>Exam Available! 🎉</AlertTitle>
+                <AlertDescription>
+                  You have access to this exam. Take it now to test your
+                  knowledge.
+                </AlertDescription>
+              </Alert>
               <MultiStepExamDialog
                 examId={exam.id}
                 examSlug={exam.slug}
-                currentUserId={loggedInUser.user.id as string}
+                currentUserId={session.user.id as string}
                 examTime={exam.timeAllowed}
                 examLevel={exam.examLevel}
                 examName={exam.name}
                 examLength={exam.questions.length}
                 questionsToShow={exam.questionsToShow}
               />
-              {/* <StartExamDialog
-                examId={exam.id}
-                examSlug={exam.slug}
-                currentUserId={loggedInUser.user.id as string}
-                examTime={exam.timeAllowed}
-              /> */}
-            </div>
+            </>
           ) : (
-            <ExamCheckoutDialog exam={exam} session={loggedInUser} />
+            <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <ExamPricingCard
+                  heading="For 1 year"
+                  headingTag="Yearly Billing"
+                  tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
+                  price="$100"
+                  duration="year"
+                  isFeatured
+                />
+                <ExamPricingCard
+                  heading="For Life time"
+                  headingTag="Lifetime Billing"
+                  tagline="Gain unlimited access to HydraNode's platform and resources for life."
+                  price="$200"
+                  duration="week"
+                />
+              </div>
+              <ExamCheckoutDialog exam={exam} session={session} />
+              {hasTrialAccess && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Trial Access Available</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4">You have trial access to this exam.</p>
+                    <StartTrialExamDialog
+                      examId={exam.id}
+                      examSlug={exam.slug}
+                      userId={session.user.id as string}
+                      examTime={exam.timeAllowed}
+                      examLength={exam.questions.length}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+            </>
           )}
-
-          {hasTrialAccess.status && !hasAccess ? (
-            <div className="mt-4 md:mt-6">
-              <h3 className="mb-2">You have trial access to this exam</h3>
-              <StartTrialExamDialog
-                examId={exam.id}
-                examSlug={exam.slug}
-                userId={loggedInUser.user.id as string}
-                examTime={exam.timeAllowed}
-                examLength={exam.questions.length}
-              />
-            </div>
-          ) : (
-            <div></div>
-          )}
-
-          <div className="my-4">
-            <span className="block text-lg font-bold">Exam Description</span>
-            <span className="block text-lg font-semibold text-mutedText">
-              {exam.description}
-            </span>
-          </div>
-          <h4>Examination Instructions</h4>
-          <ul className="list-inside list-disc px-2 py-4 text-lg font-semibold text-mutedText">
-            <li>You can pause the test at any time and resume later.</li>
-            <li>
-              You can retake the test as many times as you would like. The
-              progress bar at the top of the screen will show your progress as
-              well as the time remaining in the test. If you run out of time,
-              don’t worry; you will still be able to finish the test.
-            </li>
-            <li>
-              You can skip a question to come back to at the end of the exam.
-            </li>
-            <li>
-              You can also use “Mark for review” to come back to questions you
-              are unsure about before you submit your test.
-            </li>
-            <li>
-              If you want to finish the test and see your results immediately,
-              press the stop button.
-            </li>
-          </ul>
+          <Card>
+            <CardHeader>
+              <CardTitle>Don&apos;t See Your Purchased Exam?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-muted-foreground">
+                If your purchased exam isn&apos;t appearing, try refreshing the
+                page or clearing your browser cache. Still having trouble? Feel
+                free to contact our support team for further assistance.
+              </p>
+              <RefreshCourseButton />
+            </CardContent>
+          </Card>
         </div>
-        {hasAccess ? (
-          <div
-            className="rounded-md border-l-4 border-green-500 bg-green-100 p-4 text-green-700 shadow-md"
-            role="alert"
-          >
-            <p className="text-xl font-bold">
-              Exam Available! <span className="ml-2">🎉</span>
-            </p>
-            <p className="text-lg">You have access to this exam.</p>
-            <p className="text-lg">Take this exam and test your knowledge</p>
-            <div>
-              <p>{exam.description}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <PricingCard
-              heading="For 1 year"
-              headingTag="Yearly Billing"
-              tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
-              price="$100"
-              isFeatured
-              duration="year"
-            />
-            <PricingCard
-              heading="For Life time"
-              headingTag="Lifetime Billing"
-              tagline="Gain unlimited access to HydraNode’s platform and resources for life."
-              price="$200"
-              duration="week"
-            />
-            <Card className="col-span-2 h-fit">
-              <CardHeader>
-                <CardTitle>
-                  <h3 className="text-lg font-semibold">
-                    Don&apos;t See Your Purchased Exam?
-                  </h3>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="">
-                  <p className="mb-4 text-gray-600">
-                    If your purchased exam isn&apos;t appearing, try refreshing
-                    the page or clearing your browser cache. Still having
-                    trouble? Feel free to contact our support team for further
-                    assistance.
-                  </p>
-                  <RefreshCourseButton />
-                </div>
-              </CardContent>
-            </Card>
-            <div></div>
-            <div></div>
-          </div>
-        )}
       </div>
     </section>
-  );
-};
-
-export default ExamPage;
-
-function PricingCard({
-  classname,
-  price,
-  duration,
-  tagline,
-  heading,
-  isFeatured = false,
-  headingTag,
-}: {
-  classname?: string;
-  price: string;
-  duration: string;
-  tagline: string;
-  heading: string;
-  headingTag: string;
-  isFeatured?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "flex h-fit flex-col justify-between gap-4 rounded-lg border p-4",
-        classname,
-        {
-          "bg-base": isFeatured,
-        },
-      )}
-    >
-      <span
-        className={cn("block font-semibold text-mutedText", {
-          "text-[#D9DBE9]": isFeatured,
-        })}
-      >
-        {headingTag}
-      </span>
-      <div>
-        <h4
-          className={cn("mb-2 text-base", {
-            "text-white": isFeatured,
-          })}
-        >
-          {heading}
-        </h4>
-
-        <h4
-          className={cn("flex items-center gap-1", {
-            "my-4 text-white": isFeatured,
-          })}
-        >
-          {price}/{duration}
-        </h4>
-      </div>
-      <Button
-        className={cn("mb-4 rounded-full bg-base p-6 text-lg font-bold", {
-          "bg-white text-baseC": isFeatured,
-        })}
-      >
-        Learn More
-      </Button>
-    </div>
   );
 }

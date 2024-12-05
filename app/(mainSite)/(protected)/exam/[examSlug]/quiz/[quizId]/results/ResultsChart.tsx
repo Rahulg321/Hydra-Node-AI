@@ -1,24 +1,21 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { Pie, PieChart } from "recharts";
+import React from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTheme } from "next-themes";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+const COLORS = {
+  light: ["#4ade80", "#f87171", "#fbbf24"],
+  dark: ["#22c55e", "#ef4444", "#f59e0b"],
+};
 
 export function ResultsChart({
   correct,
@@ -29,53 +26,71 @@ export function ResultsChart({
   incorrect: number;
   skipped: number;
 }) {
-  const chartData = [
-    { browser: "correct", score: correct, fill: "var(--color-correct)" },
-    { browser: "incorrect", score: incorrect, fill: "var(--color-incorrect)" },
-    { browser: "skipped", score: skipped, fill: "var(--color-skipped)" },
+  const { theme } = useTheme();
+  const currentColors = theme === "dark" ? COLORS.dark : COLORS.light;
+
+  const data = [
+    { name: "Correct", value: correct },
+    { name: "Incorrect", value: incorrect },
+    { name: "Skipped", value: skipped },
   ];
 
-  const chartConfig = {
-    visitors: {
-      label: "Results",
-    },
-    correct: {
-      label: "Correct",
-      color: "hsl(var(--chart-1))",
-    },
-    incorrect: {
-      label: "Incorrect",
-      color: "hsl(var(--chart-2))",
-    },
-    skipped: {
-      label: "Skipped",
-      color: "hsl(var(--chart-3))",
-    },
-  } satisfies ChartConfig;
+  const total = correct + incorrect + skipped;
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Exam Results</CardTitle>
-        <CardDescription>Total Score</CardDescription>
+    <Card className="dark:bg-gray-800">
+      <CardHeader>
+        <CardTitle className="text-gray-900 dark:text-gray-100">
+          Exam Results Breakdown
+        </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
-        >
-          <PieChart>
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Pie data={chartData} dataKey="score" label nameKey="browser" />
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="leading-none text-muted-foreground">
-          Showing total score of your exam
+      <CardContent>
+        <div className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                label={({ name, percent }) =>
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={currentColors[index % currentColors.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value: number) => [
+                  `${value} (${((value / total) * 100).toFixed(1)}%)`,
+                  "Count",
+                ]}
+                contentStyle={{
+                  backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+                  borderColor: theme === "dark" ? "#374151" : "#e5e7eb",
+                  color: theme === "dark" ? "#fffff" : "#1f2937",
+                }}
+              />
+              <Legend
+                formatter={(value, entry, index) => (
+                  <span
+                    style={{ color: theme === "dark" ? "#f3f4f6" : "#1f2937" }}
+                  >
+                    {value}
+                  </span>
+                )}
+              />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }

@@ -53,8 +53,8 @@ const VendorPage = async ({
   });
 
   return (
-    <section className="big-container">
-      <div className="mb-12">
+    <section className="big-container block-space-mini">
+      <div className="mb-6 md:mb-8 lg:mb-12">
         <Suspense>
           <ExamTags />
         </Suspense>

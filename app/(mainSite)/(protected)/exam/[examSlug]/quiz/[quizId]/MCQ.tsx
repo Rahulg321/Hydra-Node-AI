@@ -239,8 +239,8 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   };
 
   return (
-    <section className="grid min-h-screen grid-cols-5">
-      <div className="block-space container col-span-1 space-y-6">
+    <section className="grid min-h-screen grid-cols-1 gap-4 lg:grid-cols-5">
+      <div className="space-y-6 rounded-lg bg-gray-100 p-4 dark:bg-gray-800 lg:col-span-1">
         <CountDownTimer
           initialTime={totalQuizTime}
           quizSessionId={quizSession.id}
@@ -254,13 +254,12 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
         />
         <div className="flex flex-col gap-4">
           <span className="font-medium">
-            Skipped Answers
-            <span className="font-bold">{skippedAnswers}</span>
+            Skipped Answers: <span className="font-bold">{skippedAnswers}</span>
           </span>
         </div>
 
         {!hasEnded && (
-          <div className="content-end">
+          <div className="mt-auto">
             <EndQuizButton
               quizSessionId={quizSession.id}
               setHasEnded={setHasEnded}
@@ -269,30 +268,32 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           </div>
         )}
       </div>
-      <div className="container col-span-4 space-y-4 bg-[#F5F4FA] py-4 dark:bg-dark">
+      <div className="rounded-lg bg-white p-4 dark:bg-gray-900 lg:col-span-4">
         {hasEnded ? (
-          <div className="flex flex-col items-center justify-center gap-4">
-            <h2>Your {exam.name} Exam has Ended</h2>
-            <h3>Check Your Score here 👇</h3>
-            <Button className="mb-4 rounded-full px-10 py-6" asChild>
+          <div className="flex h-full flex-col items-center justify-center gap-4">
+            <h2 className="mb-2 text-2xl font-bold">
+              Your {exam.name} Exam has Ended
+            </h2>
+            <h3 className="mb-4 text-lg">Check Your Score here 👇</h3>
+            <Button className="rounded-full px-10 py-6 text-lg" asChild>
               <Link href={`/exam/${exam.slug}/quiz/${quizSession.id}/results`}>
-                Score
+                View Score
               </Link>
             </Button>
           </div>
         ) : (
           <div>
             <h2>{exam.name}</h2>
-            <div className="mt-4 flex justify-between">
+            <div className="flex flex-wrap justify-between gap-4 text-sm">
               <span className="font-medium">
-                Exam Mode{" "}
+                Exam Mode:{" "}
                 <span className="font-bold">{quizSession.examMode}</span>
               </span>
               <span className="font-medium">
-                Question <span className="font-bold">{questionIndex + 1}</span>
+                Question: <span className="font-bold">{questionIndex + 1}</span>
               </span>
               <span className="font-medium">
-                Total Questions{" "}
+                Total Questions:{" "}
                 <span className="font-bold">{questions.length}</span>
               </span>
             </div>
@@ -337,48 +338,44 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 })}
               </div>
             </div>
-            <div>
-              {showAnswer ? (
-                <div className="mt-4">
-                  <p className="text-sm font-semibold leading-loose text-green-800 dark:text-green-600">
-                    {currentQuestion.overallExplanation}
-                  </p>
-                </div>
-              ) : null}
-            </div>
+            {showAnswer && (
+              <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900">
+                <p className="text-sm font-semibold leading-relaxed text-green-800 dark:text-green-200">
+                  {currentQuestion.overallExplanation}
+                </p>
+              </div>
+            )}
             <div className="mt-4 flex justify-between">
-              <div className="">
-                {quizSession.examMode === "PRACTICE" ? (
+              <div>
+                {quizSession.examMode === "PRACTICE" && (
                   <Button
-                    className="mb-4 rounded-full px-10 py-6"
-                    onClick={() => {
-                      setShowAnswer(!showAnswer);
-                    }}
+                    className="rounded-full px-6 py-2"
+                    onClick={() => setShowAnswer(!showAnswer)}
                   >
                     {showAnswer ? "Hide Answer" : "Show Answer"}
                   </Button>
-                ) : null}
+                )}
               </div>
               <div className="space-x-4">
                 <Button
-                  className="mb-4 rounded-full px-10 py-6"
+                  className="rounded-full px-6 py-2"
                   onClick={handlePrevious}
                   disabled={questionIndex === 0}
                 >
-                  Previous Question
+                  Previous
                 </Button>
                 <Button
-                  className="mb-4 rounded-full px-10 py-6"
+                  className="rounded-full px-6 py-2"
                   onClick={handleNext}
                   disabled={isPending}
                 >
                   {isPending ? (
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Checking answer
+                      Checking
                     </div>
                   ) : (
-                    "Next Question"
+                    "Next"
                   )}
                 </Button>
               </div>

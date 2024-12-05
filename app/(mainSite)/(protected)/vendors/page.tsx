@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
 import VendorsOverviewSection from "./VendorsSection";
+import VendorsSheet from "@/components/Sheets/VendorsSheet";
 
 export async function generateMetadata() {
   return {
@@ -11,11 +12,11 @@ export async function generateMetadata() {
   };
 }
 
-const ExamsPage = async ({}: {}) => {
+const ExamsPage = async () => {
   return (
-    <>
+    <div className="">
       <VendorsOverviewSection />
-    </>
+    </div>
   );
 };
 
