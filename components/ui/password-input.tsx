@@ -13,6 +13,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
 
     return (
       <Input
+        // @ts-ignore
         suffix={
           showPassword ? (
             <EyeIcon
