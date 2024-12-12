@@ -66,7 +66,7 @@ const StartTrialExamDialog = ({
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant="hydraPrimary">Start Trial Exam</Button>
+        <Button>Start Trial Exam</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -85,7 +85,6 @@ const StartTrialExamDialog = ({
         </DialogHeader>
         <div className="mt-4 flex justify-end space-x-4">
           <Button
-            variant="hydraPrimary"
             onClick={handleStartTrial}
             disabled={isPending}
             className="w-full"
