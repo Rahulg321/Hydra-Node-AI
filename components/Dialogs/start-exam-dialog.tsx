@@ -28,7 +28,7 @@ const StartExamDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="" variant={"hydraPrimary"} size={"lg"}>
+        <Button className="" size={"lg"}>
           {buttonLabel}
         </Button>
       </DialogTrigger>
