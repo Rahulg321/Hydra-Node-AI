@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import { Exam, Vendor } from "@prisma/client";
 import { Award, Book, Clock, DollarSign } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 
 export const metadata = {
@@ -40,16 +41,41 @@ const MarketPlacePage = async () => {
 
 export default MarketPlacePage;
 
-type ExamWithVendor = Exam & { vendor: Vendor };
+type ExamWithVendor = Exam & {
+  vendor: Vendor;
+};
 
 const MarketplaceExamCard = ({ exam }: { exam: ExamWithVendor }) => {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow duration-300 hover:shadow-lg dark:bg-muted">
+      <div className="relative aspect-video w-full">
+        {exam.coverImage ? (
+          <Image
+            src={exam.coverImage}
+            alt={exam.name}
+            layout="fill"
+            objectFit="cover"
+          />
+        ) : exam.coverVideo ? (
+          <video
+            src={exam.coverVideo}
+            className="h-full w-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <Image
+            src="/placeholder.svg"
+            alt="Placeholder"
+            layout="fill"
+            objectFit="cover"
+          />
+        )}
+      </div>
       <div className="p-6">
         <h2 className="mb-2 text-xl font-semibold">{exam.name}</h2>
-        {/* <p className="mb-4 text-sm text-gray-600">
-          {exam.subtitle || "No subtitle available"}
-        </p> */}
         <div className="mb-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
           <Award className="mr-2 h-4 w-4" />
           <span>{exam.examLevel}</span>

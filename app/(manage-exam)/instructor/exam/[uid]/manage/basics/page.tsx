@@ -1,11 +1,35 @@
-import React from "react";
-import CourseEditor from "./course-editor";
+import React, { Suspense } from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import ExamEditor from "./exam-editor";
+import db from "@/lib/db";
 
-const ManageBasicsPage = () => {
+const ManageBasicsPage = async ({
+  params,
+}: {
+  params: {
+    uid: string;
+  };
+}) => {
+  const session = await auth();
+  const examId = params.uid;
+
+  if (!session) {
+    return redirect("/login");
+  }
+
   return (
-    <div>
-      <CourseEditor />
-    </div>
+    <section>
+      <Suspense
+        fallback={
+          <div>
+            <h2>Loading...</h2>
+          </div>
+        }
+      >
+        <ExamEditor examId={examId} />
+      </Suspense>
+    </section>
   );
 };
 

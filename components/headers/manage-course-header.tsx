@@ -19,7 +19,7 @@ export default function ManageCourseHeader({
   title,
   subtitle,
   backLink = "/",
-  backText = "Back to courses",
+  backText = "Back to exams",
   isDraft = false,
   className,
 }: HeaderProps) {

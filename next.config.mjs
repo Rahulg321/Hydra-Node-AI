@@ -35,6 +35,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "placehold.co",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "seeklogo.com",
         port: "",
         pathname: "/**",

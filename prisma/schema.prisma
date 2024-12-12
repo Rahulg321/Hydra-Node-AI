@@ -207,6 +207,8 @@ model Exam {
   questionsToShow Int        @default(10) // Default value, can be adjusted
   description     String? // Description of the exam
   subtitle        String? // subtitle of the exam
+  coverImage      String? // image of the exam
+  coverVideo      String? // video of the exam
   Purchase        Purchase[]
 }
 

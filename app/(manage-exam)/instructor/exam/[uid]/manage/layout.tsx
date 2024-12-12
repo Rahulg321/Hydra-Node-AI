@@ -36,7 +36,11 @@ const layout = async ({
 
   return (
     <div className="">
-      <ManageCourseHeader title={examName} isDraft={true} />
+      <ManageCourseHeader
+        title={examName}
+        isDraft={true}
+        backLink={`/instructor/exams`}
+      />
       <div className="grid min-h-screen md:grid-cols-[220px_1fr]">
         <ManageExamSidebar examId={examId} />
         <div>{children}</div>
