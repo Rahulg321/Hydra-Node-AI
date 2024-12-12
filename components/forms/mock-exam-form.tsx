@@ -169,12 +169,7 @@ const MockExamForm = ({
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          variant={"hydraPrimary"}
-          className="w-full"
-          disabled={isPending}
-        >
+        <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? "Creating Exam" : buttonLabel}
         </Button>
       </form>

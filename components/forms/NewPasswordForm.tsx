@@ -81,7 +81,7 @@ const NewPasswordForm = () => {
           </Button>
         </form>
       </Form>
-      <Button className="w-full" variant={"hydraPrimary"} asChild>
+      <Button className="w-full" asChild>
         <Link href={"/login"}>Login</Link>
       </Button>
     </div>

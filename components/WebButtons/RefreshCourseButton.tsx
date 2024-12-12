@@ -9,7 +9,6 @@ const RefreshCourseButton = () => {
 
   return (
     <Button
-      variant={"hydraPrimary"}
       onClick={() => {
         // router.refresh();
         window.location.reload();

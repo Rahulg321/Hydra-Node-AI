@@ -75,7 +75,7 @@ const NewVerificationForm = () => {
               Please ensure your verification link is correct, or try requesting
               a new one.
             </p>
-            <Button variant="hydraPrimary" asChild className="mt-4">
+            <Button asChild className="mt-4">
               <Link href={"/signup"}>Signup</Link>
             </Button>
           </div>
