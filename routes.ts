@@ -24,9 +24,17 @@ export const PROTECTED_ROUTES = [
   "/exam",
   "/dashboard",
   "/profile",
+  "/instructor/exams",
+  "/exam/create",
 ];
 
-export const PROTECTED_BASE_ROUTES = ["/vendors", "/exam", "/profile"];
+export const PROTECTED_BASE_ROUTES = [
+  "/vendors",
+  "/exam",
+  "/profile",
+  "/instructor",
+  "/instructor/exam",
+];
 
 /**
  *

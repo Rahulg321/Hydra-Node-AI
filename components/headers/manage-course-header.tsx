@@ -8,6 +8,7 @@ import Link from "next/link";
 
 interface HeaderProps {
   title: string;
+  examId: string;
   subtitle?: string;
   backLink?: string;
   backText?: string;
@@ -17,6 +18,7 @@ interface HeaderProps {
 
 export default function ManageCourseHeader({
   title,
+  examId,
   subtitle,
   backLink = "/",
   backText = "Back to exams",
@@ -90,8 +92,10 @@ export default function ManageCourseHeader({
         >
           Preview
         </Button>
-        <Button variant="secondary" size="sm" className="w-full lg:w-auto">
-          Save
+        <Button className="w-full lg:w-auto" asChild>
+          <Link href={`/instructor/exam/${examId}/questions`}>
+            Manage Questions
+          </Link>
         </Button>
         <Button
           variant="ghost"

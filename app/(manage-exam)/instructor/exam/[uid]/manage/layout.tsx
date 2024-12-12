@@ -40,6 +40,7 @@ const layout = async ({
         title={examName}
         isDraft={true}
         backLink={`/instructor/exams`}
+        examId={examId}
       />
       <div className="grid min-h-screen md:grid-cols-[220px_1fr]">
         <ManageExamSidebar examId={examId} />

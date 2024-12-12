@@ -38,7 +38,7 @@ export function QuestionsHeader({
   return (
     <header
       className={cn(
-        "sticky top-0 z-10 flex flex-col items-center justify-between border-b bg-background px-4 py-2 transition-all duration-200 ease-in-out dark:bg-gray-950 sm:flex-row",
+        "sticky top-0 z-10 flex flex-col items-center justify-between border-b bg-background px-4 py-2 transition-all duration-200 ease-in-out sm:flex-row",
         isSticky && "shadow-md",
         className,
       )}
