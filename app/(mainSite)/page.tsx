@@ -12,6 +12,8 @@ import Features from "@/components/sections/Features";
 import Solutions from "@/components/sections/Solutions";
 import SocialProof from "@/components/sections/SocialProof";
 import { auth } from "@/auth";
+import PushNotificationManager from "@/components/PushNotificationManager";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -22,6 +24,8 @@ export default async function Home() {
   const userSession = await auth();
   return (
     <React.Fragment>
+      {/* <PushNotificationManager />
+      <InstallPrompt /> */}
       <HeroSection session={userSession} />
       <OurPartners />
       <Features session={userSession} />

@@ -48,6 +48,7 @@ model User {
   Purchase              Purchase[]
 
   trialEndsAt DateTime? @map(name: "trial_ends_at") // Tracks when the user's free trial ends
+  Vendor      Vendor?
 }
 
 model Payment {
@@ -147,6 +148,34 @@ model Vendor {
   exams     Exam[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  isUserVendor   Boolean  @default(false)
+  commissionRate Float?
+  bio            String?
+  Payout         Payout[]
+}
+
+model Payout {
+  id          String       @id @default(cuid())
+  vendorId    String
+  vendor      Vendor       @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  amount      Float
+  currency    String
+  status      PayoutStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  processedAt DateTime?
+
+  // Possibly link to payments or purchases that composed this payout
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+  FAILED
 }
 
 enum ExamLevel {
@@ -165,6 +194,7 @@ model Exam {
   updatedAt       DateTime      @updatedAt
   timeAllowed     Int
   price           Float         @default(0)
+  category        String?
   stripeProductId String?
   stripePriceId   String?
   attempts        Int
@@ -176,6 +206,7 @@ model Exam {
   // questions to show to the user
   questionsToShow Int        @default(10) // Default value, can be adjusted
   description     String? // Description of the exam
+  subtitle        String? // subtitle of the exam
   Purchase        Purchase[]
 }
 

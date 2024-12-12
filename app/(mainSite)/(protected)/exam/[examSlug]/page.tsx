@@ -43,6 +43,7 @@ export default async function ExamPage({
     where: { slug: params.examSlug },
     include: { questions: true },
   });
+
   if (!exam) return notFound();
 
   const { hasAccess } = await checkIfUserHasAccessToExam(

@@ -21,7 +21,14 @@ import Image from "next/image";
 import LogoDark from "./LogoDark";
 import LogoLight from "./LogoLight";
 
-const menuItems = ["Product", "About Us", "Pricing", "Contact Us"];
+const menuItems = [
+  "Product",
+  "Community",
+  "Create",
+  "Marketplace",
+  "About Us",
+  "Contact Us",
+];
 
 const Navbar = ({ session }: { session: Session | null }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,8 +53,14 @@ const Navbar = ({ session }: { session: Session | null }) => {
     switch (item) {
       case "About Us":
         return "/about-us";
+      case "Community":
+        return "/community";
       case "Pricing":
         return "/pricing";
+      case "Marketplace":
+        return "/marketplace";
+      case "Create":
+        return "/create";
       case "Contact Us":
         return "/contact-us";
       case "Product":
