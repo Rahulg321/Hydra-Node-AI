@@ -4,6 +4,7 @@ import { examInfoFormSchemaType } from "@/app/(manage-exam)/instructor/exam/[uid
 import { auth } from "@/auth";
 import { TransformedQuestion } from "@/components/Dialogs/bulk-import-dialog";
 import db from "@/lib/db";
+import { ExamLevel } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import slugify from "slugify";
 
@@ -42,7 +43,7 @@ export default async function UpdateExamInformation(
         }),
         subtitle,
         category,
-        examLevel: level,
+        examLevel: level as ExamLevel,
         description,
       },
     });
