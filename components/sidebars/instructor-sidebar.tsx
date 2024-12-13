@@ -115,25 +115,6 @@ export default function InstructorSidebar({
 
   return (
     <Sidebar collapsible="icon" variant="inset">
-      <SidebarHeader>
-        <div className="flex items-center px-4 py-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-6 w-6 shrink-0"
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          <h1 className="ml-2 text-lg font-bold transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">
-            HydraNode
-          </h1>
-        </div>
-      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>

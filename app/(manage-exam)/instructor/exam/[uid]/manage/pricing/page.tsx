@@ -1,5 +1,4 @@
 import { AlertTriangle } from "lucide-react";
-import { useState } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -10,24 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+
 import ChangeExamPriceForm from "./exam-price-form";
 import db from "@/lib/db";
 
-export default async function CoursePricingPage(
-  props: {
-    params: Promise<{
-      uid: string;
-    }>;
-  }
-) {
+export default async function CoursePricingPage(props: {
+  params: Promise<{
+    uid: string;
+  }>;
+}) {
   const params = await props.params;
   const examId = params.uid;
   let examPrice = 0;
