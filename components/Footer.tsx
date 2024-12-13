@@ -33,27 +33,27 @@ const Footer = () => {
                 Certifications
               </p>
               <div className="flex gap-4">
-                <a
+                <Link
                   href="#"
                   className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   aria-label="Twitter"
                 >
                   <Twitter className="h-5 w-5" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#"
                   className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#"
                   className="text-gray-600 transition-colors hover:text-primary dark:text-gray-400 dark:hover:text-primary"
                   aria-label="Medium"
                 >
                   <CircleDot className="h-5 w-5" />
-                </a>
+                </Link>
               </div>
             </div>
 
