@@ -31,6 +31,9 @@ import Image from "next/image";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import NotebookIllustration from "@/public/illustrations/notebook.svg";
+import QuestionsIllustration from "@/public/illustrations/questions.svg";
+import OnlineLearningIllustration from "@/public/illustrations/online-learning.svg";
 
 export default async function ExamsPage() {
   const session = await auth();
@@ -146,7 +149,7 @@ export default async function ExamsPage() {
           <CardContent className="flex items-center gap-8 p-6">
             <div className="w-1/3">
               <Image
-                src="/placeholder.svg?height=200&width=200"
+                src={NotebookIllustration}
                 width={200}
                 height={200}
                 alt="Create exam illustration"
@@ -177,7 +180,7 @@ export default async function ExamsPage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-6">
                 <Image
-                  src="/placeholder.svg?height=150&width=150"
+                  src={QuestionsIllustration}
                   width={150}
                   height={150}
                   alt="Create question banks illustration"
@@ -205,7 +208,7 @@ export default async function ExamsPage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-6">
                 <Image
-                  src="/placeholder.svg?height=150&width=150"
+                  src={QuestionsIllustration}
                   width={150}
                   height={150}
                   alt="Audience building illustration"
@@ -266,7 +269,7 @@ export default async function ExamsPage() {
           <CardContent className="flex items-center gap-8 p-6">
             <div className="w-1/4">
               <Image
-                src="/placeholder.svg?height=200&width=200"
+                src={OnlineLearningIllustration}
                 width={150}
                 height={150}
                 alt="Instructor challenge illustration"

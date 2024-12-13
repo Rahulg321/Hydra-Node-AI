@@ -79,6 +79,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarProvider>
             <InstructorSidebar />
             <main className="">
+              <ThemeSwitchButton />
               <SidebarTrigger />
               {children}
             </main>

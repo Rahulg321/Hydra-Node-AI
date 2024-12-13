@@ -3,7 +3,10 @@ import { Exam, Vendor } from "@prisma/client";
 import { Award, Book, Clock, DollarSign } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
+
+import ExamCardPlaceholder from "@/public/placeholder/exam-card-placeholder.webp";
+import { MarketplaceExamCardSkeleton } from "@/components/skeletons/marketplace-exam-card-skeleton";
 
 export const metadata = {
   title: "Marketplace",
@@ -11,6 +14,39 @@ export const metadata = {
 };
 
 const MarketPlacePage = async () => {
+  return (
+    <section className="py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h1 className="mb-6 text-3xl font-extrabold">Hydranode Marketplace</h1>
+        <p className="mb-8 text-xl text-gray-600 dark:text-gray-400">
+          Explore a wide range of exams from our trusted vendors.
+        </p>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <MarketplaceExamCardSkeleton />
+              <MarketplaceExamCardSkeleton />
+              <MarketplaceExamCardSkeleton />
+              <MarketplaceExamCardSkeleton />
+              <MarketplaceExamCardSkeleton />
+              <MarketplaceExamCardSkeleton />
+            </div>
+          }
+        >
+          <FetchMarketplaceExams />
+        </Suspense>
+      </div>
+    </section>
+  );
+};
+
+export default MarketPlacePage;
+
+type ExamWithVendor = Exam & {
+  vendor: Vendor;
+};
+
+async function FetchMarketplaceExams() {
   const marketplaceExams = await db.exam.findMany({
     where: {
       vendor: {
@@ -23,27 +59,13 @@ const MarketPlacePage = async () => {
   });
 
   return (
-    <section className="py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h1 className="mb-6 text-3xl font-extrabold">Hydranode Marketplace</h1>
-        <p className="mb-8 text-xl text-gray-600 dark:text-gray-400">
-          Explore a wide range of exams from our trusted vendors.
-        </p>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {marketplaceExams.map((exam) => (
-            <MarketplaceExamCard key={exam.id} exam={exam} />
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {marketplaceExams.map((exam) => (
+        <MarketplaceExamCard key={exam.id} exam={exam} />
+      ))}
+    </div>
   );
-};
-
-export default MarketPlacePage;
-
-type ExamWithVendor = Exam & {
-  vendor: Vendor;
-};
+}
 
 const MarketplaceExamCard = ({ exam }: { exam: ExamWithVendor }) => {
   return (
@@ -67,7 +89,7 @@ const MarketplaceExamCard = ({ exam }: { exam: ExamWithVendor }) => {
           />
         ) : (
           <Image
-            src="/placeholder.svg"
+            src={ExamCardPlaceholder}
             alt="Placeholder"
             layout="fill"
             objectFit="cover"
