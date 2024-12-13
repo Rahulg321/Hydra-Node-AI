@@ -3,13 +3,14 @@ import BulkUploadQuestionsDialog from "@/components/Dialogs/bulk-upload-question
 import AddNewQuestionForm from "@/components/forms/new-question-form";
 import React from "react";
 
-const NewQuestionPage = ({
-  params,
-}: {
-  params: {
-    uid: string;
-  };
-}) => {
+const NewQuestionPage = async (
+  props: {
+    params: Promise<{
+      uid: string;
+    }>;
+  }
+) => {
+  const params = await props.params;
   const examId = params.uid;
 
   return (

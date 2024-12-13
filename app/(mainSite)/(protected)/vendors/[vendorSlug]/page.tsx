@@ -5,11 +5,12 @@ import Link from "next/link";
 import { ExamLevel } from "@prisma/client";
 import { Suspense } from "react";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { vendorSlug: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ vendorSlug: string }>;
+  }
+) {
+  const params = await props.params;
   let { vendorSlug } = params;
   const singleVendor = await db.vendor.findFirst({
     where: {
@@ -23,17 +24,18 @@ export async function generateMetadata({
   };
 }
 
-const VendorPage = async ({
-  params,
-  searchParams,
-}: {
-  params: {
-    vendorSlug: string;
-  };
-  searchParams: {
-    examLevel?: ExamLevel;
-  };
-}) => {
+const VendorPage = async (
+  props: {
+    params: Promise<{
+      vendorSlug: string;
+    }>;
+    searchParams: Promise<{
+      examLevel?: ExamLevel;
+    }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const vendorSlug = params.vendorSlug;
   const examLevel: ExamLevel = searchParams.examLevel || "ASSOCIATE";
 

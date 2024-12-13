@@ -4,11 +4,12 @@ import { useRouter } from "next/navigation"; // For navigation
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const AfterExamPaymentPage = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+const AfterExamPaymentPage = async (
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   const sessionId = searchParams.session_id || "";
 
   const currentStripeCheckoutSession = await getSession(sessionId as string);

@@ -23,7 +23,7 @@ export async function UpdateExamCoverVideo(formData: FormData, examId: string) {
       };
     }
 
-    const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+    const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
 
     const {
       remaining,

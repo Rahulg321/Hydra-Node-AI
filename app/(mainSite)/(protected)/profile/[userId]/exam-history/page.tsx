@@ -9,13 +9,14 @@ export const metadata: Metadata = {
   description: "View your complete exam history. Filter and sort exams.",
 };
 
-const CompleteExamHistoryPage = async ({
-  params,
-}: {
-  params: {
-    userId: string;
-  };
-}) => {
+const CompleteExamHistoryPage = async (
+  props: {
+    params: Promise<{
+      userId: string;
+    }>;
+  }
+) => {
+  const params = await props.params;
   const userId = params.userId;
 
   const userQuizSessions = await db.quizSession.findMany({

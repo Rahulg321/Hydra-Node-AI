@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "httpdev": "next dev --experimental-https",
     "build": "prisma generate && next build",
     "start": "next start",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",
     "@hookform/resolvers": "^3.9.0",
-    "@next/third-parties": "^14.2.14",
+    "@next/third-parties": "15.1.0",
     "@prisma/client": "^5.17.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
@@ -70,14 +70,14 @@
     "lodash": "^4.17.21",
     "lowlight": "^3.2.0",
     "lucide-react": "^0.427.0",
-    "next": "14.2.4",
+    "next": "15.1.0",
     "next-auth": "^5.0.0-beta.19",
     "next-pwa": "^5.6.0",
     "next-themes": "^0.3.0",
     "papaparse": "^5.4.1",
     "plaiceholder": "^3.0.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-dropzone": "^14.2.9",
     "react-fast-marquee": "^1.6.5",
     "react-google-recaptcha": "^3.1.0",
@@ -106,10 +106,10 @@
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.11",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.1.0",
     "postcss": "^8",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
@@ -118,5 +118,9 @@
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
+  },
+  "overrides": {
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2"
   }
 }

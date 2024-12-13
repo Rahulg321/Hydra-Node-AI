@@ -10,10 +10,10 @@ import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type props = {
-  params: {
+  params: Promise<{
     examSlug: string;
     quizId: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -21,7 +21,8 @@ export const metadata: Metadata = {
   description: "View the results of your quiz session",
 };
 
-const QuizResultsPage = async ({ params }: props) => {
+const QuizResultsPage = async (props0: props) => {
+  const params = await props0.params;
   const currentQuizSession = await db.quizSession.findFirst({
     where: {
       id: params.quizId,

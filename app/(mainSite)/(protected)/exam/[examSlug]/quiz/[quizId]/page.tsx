@@ -5,11 +5,12 @@ import { getExamWithSlug } from "@/data/exam";
 
 // export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { examSlug: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ examSlug: string }>;
+  }
+) {
+  const params = await props.params;
   const post = await getExamWithSlug(params.examSlug);
 
   return {
@@ -18,14 +19,15 @@ export async function generateMetadata({
   };
 }
 
-const McqQuizPage = async ({
-  params,
-}: {
-  params: {
-    examSlug: string;
-    quizId: string;
-  };
-}) => {
+const McqQuizPage = async (
+  props: {
+    params: Promise<{
+      examSlug: string;
+      quizId: string;
+    }>;
+  }
+) => {
+  const params = await props.params;
   // Fetch the quiz session
   const quizSession = await db.quizSession.findUnique({
     where: {

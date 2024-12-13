@@ -5,17 +5,18 @@ import ReviewMcq from "./ReviewMcq";
 import { getExamWithSlug } from "@/data/exam";
 
 type ReviewExamPageProps = {
-  params: {
+  params: Promise<{
     examSlug: string;
     quizId: string;
-  };
+  }>;
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { examSlug: string; quizId: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ examSlug: string; quizId: string }>;
+  }
+) {
+  const params = await props.params;
   let slug = params.examSlug;
 
   let post = await db.exam.findFirst({
@@ -34,9 +35,14 @@ export async function generateMetadata({
   };
 }
 
-const ReviewExamPage = async ({
-  params: { examSlug, quizId },
-}: ReviewExamPageProps) => {
+const ReviewExamPage = async (props: ReviewExamPageProps) => {
+  const params = await props.params;
+
+  const {
+    examSlug,
+    quizId
+  } = params;
+
   // Fetch quiz session first
   const quizSession = await db.quizSession.findUnique({
     where: { id: quizId },

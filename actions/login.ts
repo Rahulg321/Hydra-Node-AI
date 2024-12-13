@@ -30,7 +30,7 @@ const rateLimit = new Ratelimit({
 });
 
 export async function LoginUser(values: LoginFormSchema) {
-  const ip = headers().get("x-real-ip") || headers().get("x-forwarded-for");
+  const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
 
   const {
     remaining,

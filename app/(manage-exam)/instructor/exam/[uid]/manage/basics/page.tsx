@@ -4,13 +4,14 @@ import { redirect } from "next/navigation";
 import ExamEditor from "./exam-editor";
 import db from "@/lib/db";
 
-const ManageBasicsPage = async ({
-  params,
-}: {
-  params: {
-    uid: string;
-  };
-}) => {
+const ManageBasicsPage = async (
+  props: {
+    params: Promise<{
+      uid: string;
+    }>;
+  }
+) => {
+  const params = await props.params;
   const session = await auth();
   const examId = params.uid;
 

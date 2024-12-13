@@ -15,27 +15,23 @@ import { ExamPricingCard } from "./ExamPricingCard";
 import { ExamDetails } from "./ExamDetails";
 import { ExamInstructions } from "./ExamInstructions";
 
-export const dynamic = "force-dynamic";
-
 export async function generateStaticParams() {
   const exams = await db.exam.findMany();
   return exams.map((exam) => ({ examSlug: exam.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { examSlug: string };
+export async function generateMetadata(props: {
+  params: Promise<{ examSlug: string }>;
 }) {
+  const params = await props.params;
   const exam = await db.exam.findUnique({ where: { slug: params.examSlug } });
   return { title: exam?.name, description: exam?.description };
 }
 
-export default async function ExamPage({
-  params,
-}: {
-  params: { examSlug: string };
+export default async function ExamPage(props: {
+  params: Promise<{ examSlug: string }>;
 }) {
+  const params = await props.params;
   const session = await auth();
   if (!session) return redirect("/login");
 

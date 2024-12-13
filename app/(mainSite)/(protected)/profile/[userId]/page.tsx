@@ -25,10 +25,8 @@ import ProfileSidebar from "./ProfileSidebar";
 
 // Types remain unchanged
 
-export async function generateMetadata(
-  { params }: { params: { userId: string } },
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ userId: string }> }, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const userId = params.userId;
   const user = await db.user.findUnique({
     where: { id: userId },

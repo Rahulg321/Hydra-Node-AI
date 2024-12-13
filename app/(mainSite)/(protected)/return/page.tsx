@@ -26,13 +26,13 @@ async function getCustomer(customerId: string) {
   return customer;
 }
 
-const ProductConfirmationPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+const ProductConfirmationPage = async (
+  props: {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   const currentAuthSession = await auth();
   const sessionId = searchParams.session_id || "";
 

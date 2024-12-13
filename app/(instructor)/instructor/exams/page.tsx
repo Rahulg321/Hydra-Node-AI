@@ -8,6 +8,9 @@ import {
   HelpCircle,
   Plus,
   ArrowRight,
+  Clock,
+  FileQuestion,
+  DollarSign,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +19,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -34,7 +38,9 @@ import db from "@/lib/db";
 import NotebookIllustration from "@/public/illustrations/notebook.svg";
 import QuestionsIllustration from "@/public/illustrations/questions.svg";
 import OnlineLearningIllustration from "@/public/illustrations/online-learning.svg";
-
+import { Suspense } from "react";
+import { Exam } from "@prisma/client";
+import { VendorExamCardSkeleton } from "@/components/skeletons/vendor-exam-card-skeleton";
 export default async function ExamsPage() {
   const session = await auth();
 
@@ -44,27 +50,6 @@ export default async function ExamsPage() {
   }
 
   const userId = session.user.id;
-
-  // Determine if user is a vendor
-  const userVendor = await db.vendor.findUnique({
-    where: {
-      userId: userId,
-    },
-    select: {
-      id: true,
-      name: true,
-      isUserVendor: true,
-    },
-  });
-
-  // If user is a vendor, fetch their exams; otherwise, empty array.
-  const vendorExams = userVendor?.isUserVendor
-    ? await db.exam.findMany({
-        where: {
-          vendorId: userVendor.id,
-        },
-      })
-    : [];
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -110,37 +95,17 @@ export default async function ExamsPage() {
         </Alert>
       </div>
 
-      {/* Vendor Exams Section */}
-      {userVendor?.isUserVendor ? (
-        <div className="mb-8">
-          <h2 className="mb-4 text-xl font-bold">Your Exams</h2>
-          {vendorExams.length > 0 ? (
-            vendorExams.map((exam) => (
-              <div
-                key={exam.id}
-                className="mb-2 flex justify-between border p-2"
-              >
-                <h3 className="text-lg font-medium">{exam.name}</h3>
-                <Button asChild>
-                  <Link href={`/instructor/exam/${exam.id}/manage/basics`}>
-                    Manage Exam
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            ))
-          ) : (
-            <p>No exams found. Create your first exam!</p>
-          )}
-        </div>
-      ) : (
-        <div className="mb-8">
-          <p className="text-muted-foreground">
-            You are not currently registered as a vendor. If you&apos;d like to
-            create and manage exams, please create new exam.
-          </p>
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <VendorExamCardSkeleton />
+            <VendorExamCardSkeleton />
+            <VendorExamCardSkeleton />
+          </div>
+        }
+      >
+        <FetchUserVendorExams userId={userId!} />
+      </Suspense>
 
       {/* Main Content */}
       <div className="space-y-8">
@@ -294,6 +259,95 @@ export default async function ExamsPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+async function FetchUserVendorExams({ userId }: { userId: string }) {
+  const userVendor = await db.vendor.findUnique({
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      isUserVendor: true,
+    },
+  });
+
+  // If user is a vendor, fetch their exams; otherwise, empty array.
+  const vendorExams = userVendor?.isUserVendor
+    ? await db.exam.findMany({
+        where: {
+          vendorId: userVendor.id,
+        },
+      })
+    : [];
+
+  return (
+    <div>
+      {/* Vendor Exams Section */}
+      {userVendor?.isUserVendor ? (
+        <div className="mb-8">
+          <h2 className="mb-4 text-xl font-bold">Your Exams</h2>
+          {vendorExams.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {vendorExams.map((exam) => (
+                <VendorExamCard key={exam.id} exam={exam} />
+              ))}
+            </div>
+          ) : (
+            <p>No exams found. Create your first exam!</p>
+          )}
+        </div>
+      ) : (
+        <div className="mb-8">
+          <p className="text-muted-foreground">
+            You are not currently registered as a vendor. If you&apos;d like to
+            create and manage exams, please create new exam.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface ExamCardProps {
+  exam: Exam;
+}
+
+function VendorExamCard({ exam }: ExamCardProps) {
+  return (
+    <Card className="flex flex-col dark:bg-muted">
+      <CardHeader>
+        <CardTitle>{exam.name}</CardTitle>
+        {exam.subtitle && (
+          <p className="text-sm text-muted-foreground">{exam.subtitle}</p>
+        )}
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <div className="space-y-2">
+          <div className="flex items-center text-sm">
+            <Clock className="mr-2 h-4 w-4" />
+            {exam.timeAllowed} minutes
+          </div>
+          <div className="flex items-center text-sm">
+            <FileQuestion className="mr-2 h-4 w-4" />
+            {exam.questionsToShow} questions
+          </div>
+          <div className="flex items-center text-sm">
+            <DollarSign className="mr-2 h-4 w-4" />${exam.price.toFixed(2)}
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button asChild className="w-full">
+          <Link href={`/instructor/exam/${exam.id}/manage/basics`}>
+            Manage Exam
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 

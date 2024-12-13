@@ -3,15 +3,20 @@ import ManageQuestionsSidebar from "@/components/sidebars/manage-questions-sideb
 import db from "@/lib/db";
 import React from "react";
 
-const layout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: {
-    uid: string;
-  };
-}) => {
+const layout = async (
+  props: {
+    children: React.ReactNode;
+    params: Promise<{
+      uid: string;
+    }>;
+  }
+) => {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const examId = params.uid;
 
   const currentExam = await db.exam.findUnique({

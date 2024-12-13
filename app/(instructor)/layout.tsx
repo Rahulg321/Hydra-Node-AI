@@ -11,9 +11,15 @@ import LoginBackground from "@/public/auth/Background.avif";
 import Head from "next/head";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import { GeistSans } from "geist/font/sans";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { InstructorSidebar } from "@/components/sidebars/instructor-sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import InstructorSidebar from "@/components/sidebars/instructor-sidebar";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -50,9 +56,15 @@ export const metadata: Metadata = {
     google: "4RCrNU4mc2UMomzqwPASL7m0L_Mv_fePZrGOPHe0MIU",
   },
 };
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const userSession = await auth();
+
+  if (!userSession) {
+    redirect("/login");
+  }
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <Head>
         <link
           rel="icon"
@@ -77,12 +89,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           disableTransitionOnChange
         >
           <SidebarProvider>
-            <InstructorSidebar />
-            <main className="">
-              <ThemeSwitchButton />
-              <SidebarTrigger />
-              {children}
-            </main>
+            <InstructorSidebar userSession={userSession} />
+            <SidebarInset>
+              <main className="">
+                <ThemeSwitchButton />
+                {children}
+              </main>
+            </SidebarInset>
           </SidebarProvider>
           <Toaster />
         </ThemeProvider>

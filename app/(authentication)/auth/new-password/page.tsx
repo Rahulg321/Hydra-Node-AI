@@ -4,13 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
 
-const ResetPasswordPage = async ({
-  params,
-  searchParams,
-}: {
-  params: {};
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+const ResetPasswordPage = async (
+  props: {
+    params: Promise<{}>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   let paramsToken = searchParams?.token;
   let dbToken;
 

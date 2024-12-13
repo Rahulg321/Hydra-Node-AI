@@ -21,13 +21,14 @@ import { Input } from "@/components/ui/input";
 import ChangeExamPriceForm from "./exam-price-form";
 import db from "@/lib/db";
 
-export default async function CoursePricingPage({
-  params,
-}: {
-  params: {
-    uid: string;
-  };
-}) {
+export default async function CoursePricingPage(
+  props: {
+    params: Promise<{
+      uid: string;
+    }>;
+  }
+) {
+  const params = await props.params;
   const examId = params.uid;
   let examPrice = 0;
   let fetchedExam = await db.exam.findUnique({
