@@ -1,18 +1,15 @@
 import React from "react";
-import { manrope, poppins } from "../fonts";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import "../globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { baseUrl } from "../sitemap";
 import { ThemeProvider } from "@/components/theme-provider";
-import Image from "next/image";
-import LoginBackground from "@/public/auth/Background.avif";
+
 import Head from "next/head";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import { GeistSans } from "geist/font/sans";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { InstructorSidebar } from "@/components/sidebars/instructor-sidebar";
+
 import CreateExamHeader from "@/components/headers/create-exam-header";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
