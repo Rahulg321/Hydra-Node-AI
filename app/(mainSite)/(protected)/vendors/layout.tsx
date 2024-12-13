@@ -6,7 +6,11 @@ import VendorButton from "./VendorButton";
 import VendorsSheet from "@/components/Sheets/VendorsSheet";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  const vendors = await db.vendor.findMany();
+  const vendors = await db.vendor.findMany({
+    where: {
+      isUserVendor: false,
+    },
+  });
 
   return (
     <div className="">
