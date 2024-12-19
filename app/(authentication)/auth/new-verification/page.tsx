@@ -9,13 +9,7 @@ export const metadata: Metadata = {
   description: "Verify your email address",
 };
 
-const NewVerificationPage = ({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+const NewVerificationPage = () => {
   return (
     <section className="block-space container">
       <div className="absolute right-4 top-4">
