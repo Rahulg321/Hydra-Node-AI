@@ -11,7 +11,7 @@ import {
   sendSubscriptionStartEmail,
 } from "@/lib/mail";
 
-export const POST = auth(async function POST(req) {
+export async function POST(req: Request) {
   const body = await req.text();
   const signature = (await headers()).get("Stripe-Signature");
 
@@ -167,7 +167,7 @@ export const POST = auth(async function POST(req) {
       { status: 400 },
     );
   }
-});
+}
 
 // Helper function to handle subscription updates
 async function updateUserWithSubscription(
