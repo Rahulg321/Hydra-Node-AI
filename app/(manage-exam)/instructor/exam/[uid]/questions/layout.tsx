@@ -1,21 +1,18 @@
 import { QuestionsHeader } from "@/components/headers/questions-header";
 import ManageQuestionsSidebar from "@/components/sidebars/manage-questions-sidebar";
 import db from "@/lib/db";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const layout = async (
-  props: {
-    children: React.ReactNode;
-    params: Promise<{
-      uid: string;
-    }>;
-  }
-) => {
+const layout = async (props: {
+  children: React.ReactNode;
+  params: Promise<{
+    uid: string;
+  }>;
+}) => {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const examId = params.uid;
 
@@ -28,6 +25,9 @@ const layout = async (
     },
   });
 
+  if (!currentExam) {
+    redirect("/instructor");
+  }
   // Fetch all questions related to the instructor exam
   const examQuestions = await db.question.findMany({
     where: {
@@ -35,21 +35,13 @@ const layout = async (
     },
   });
 
-  if (!currentExam) {
-    return (
-      <div>
-        <h2>Could not find Exam</h2>
-        <p>Something went wrong</p>
-      </div>
-    );
-  }
-
   const examName = currentExam.name;
   const questionsLength = examQuestions.length;
 
   return (
     <div>
       <QuestionsHeader
+        examId={examId}
         examName={examName}
         questionCount={questionsLength}
         backLink="/instructor/exams"

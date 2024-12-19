@@ -8,21 +8,15 @@ import db from "@/lib/db";
 import CoverImagePlaceholder from "@/public/placeholder/cover-image-placeholder.webp";
 import CoverVideoPlaceholder from "@/public/placeholder/cover-video-placeholder.webp";
 import { ExamLevel } from "@prisma/client";
+import { ExamTagForm } from "@/components/forms/exam-tag-form";
 
 export default async function ExamEditor({ examId }: { examId: string }) {
   const currentExam = await db.exam.findUnique({
     where: {
       id: examId,
     },
-    select: {
-      id: true,
-      name: true,
-      subtitle: true,
-      description: true,
-      category: true,
-      examLevel: true,
-      coverImage: true,
-      coverVideo: true,
+    include: {
+      tags: true,
     },
   });
 
@@ -45,6 +39,8 @@ export default async function ExamEditor({ examId }: { examId: string }) {
     category,
     subtitle,
   } = currentExam;
+
+  const examTags = currentExam.tags.map((e) => e.name);
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 p-6">
@@ -128,6 +124,8 @@ export default async function ExamEditor({ examId }: { examId: string }) {
           </div>
         </div>
       </div>
+
+      <ExamTagForm examId={examId} tags={examTags} />
 
       <Alert>
         <InfoIcon className="h-4 w-4" />

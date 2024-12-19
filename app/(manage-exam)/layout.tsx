@@ -12,7 +12,6 @@ import Head from "next/head";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import { GeistSans } from "geist/font/sans";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { InstructorSidebar } from "@/components/sidebars/instructor-sidebar";
 import CreateExamHeader from "@/components/headers/create-exam-header";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";

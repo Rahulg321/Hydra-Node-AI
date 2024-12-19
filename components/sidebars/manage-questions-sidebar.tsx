@@ -8,6 +8,7 @@ import { Question } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import HtmlContent from "../html-content";
 
 const ManageQuestionsSidebar = ({
   examId,
@@ -24,8 +25,13 @@ const ManageQuestionsSidebar = ({
 
   const handleSort = () => {
     const updatedQuestions = [...questions];
-    const [draggedQuestion] = updatedQuestions.splice(dragQuestion.current, 1);
-    updatedQuestions.splice(draggedOverQuestion.current, 0, draggedQuestion);
+    // Get the actual element that was dragged (not an array containing the element)
+    const draggedItem = updatedQuestions.splice(dragQuestion.current, 1)[0];
+
+    console.log("dragged item", draggedItem);
+    // Insert the dragged item into its new position
+    updatedQuestions.splice(draggedOverQuestion.current, 0, draggedItem);
+
     setQuestions(updatedQuestions);
     setIsDragging(false);
   };
@@ -64,11 +70,8 @@ const ManageQuestionsSidebar = ({
                   onDragEnd={handleSort}
                   onDragOver={(e) => e.preventDefault()}
                 >
-                  <div className="flex items-center space-x-3">
-                    <span>Q:</span>
-                    <span className="flex size-4 items-center justify-center rounded-full bg-muted-foreground/20 p-2 text-xs font-medium">
-                      {index + 1}
-                    </span>
+                  <div className="truncate">
+                    <HtmlContent content={question.question} />
                   </div>
                   <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
                 </Link>

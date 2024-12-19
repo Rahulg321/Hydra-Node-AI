@@ -3,14 +3,18 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import ExamEditor from "./exam-editor";
 import db from "@/lib/db";
+import { Metadata } from "next";
 
-const ManageBasicsPage = async (
-  props: {
-    params: Promise<{
-      uid: string;
-    }>;
-  }
-) => {
+export const metadata: Metadata = {
+  title: "Manage Exam",
+  description: "",
+};
+
+const ManageBasicsPage = async (props: {
+  params: Promise<{
+    uid: string;
+  }>;
+}) => {
   const params = await props.params;
   const session = await auth();
   const examId = params.uid;

@@ -41,6 +41,7 @@ import OnlineLearningIllustration from "@/public/illustrations/online-learning.s
 import { Suspense } from "react";
 import { Exam } from "@prisma/client";
 import { VendorExamCardSkeleton } from "@/components/skeletons/vendor-exam-card-skeleton";
+
 export default async function ExamsPage() {
   const session = await auth();
 
@@ -263,56 +264,57 @@ export default async function ExamsPage() {
 }
 
 async function FetchUserVendorExams({ userId }: { userId: string }) {
-  const userVendor = await db.vendor.findUnique({
+  // If user is a vendor, fetch their exams; otherwise, empty array.
+  const vendorExams = await db.exam.findMany({
     where: {
-      userId: userId,
+      vendor: {
+        isUserVendor: true,
+        userId,
+      },
     },
+
     select: {
-      id: true,
       name: true,
-      isUserVendor: true,
+      subtitle: true,
+      id: true,
+      price: true,
+      timeAllowed: true,
     },
   });
-
-  // If user is a vendor, fetch their exams; otherwise, empty array.
-  const vendorExams = userVendor?.isUserVendor
-    ? await db.exam.findMany({
-        where: {
-          vendorId: userVendor.id,
-        },
-      })
-    : [];
 
   return (
     <div>
       {/* Vendor Exams Section */}
-      {userVendor?.isUserVendor ? (
-        <div className="mb-8">
-          <h2 className="mb-4 text-xl font-bold">Your Exams</h2>
-          {vendorExams.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {vendorExams.map((exam) => (
-                <VendorExamCard key={exam.id} exam={exam} />
-              ))}
-            </div>
-          ) : (
-            <p>No exams found. Create your first exam!</p>
-          )}
-        </div>
-      ) : (
-        <div className="mb-8">
-          <p className="text-muted-foreground">
-            You are not currently registered as a vendor. If you&apos;d like to
-            create and manage exams, please create new exam.
-          </p>
-        </div>
-      )}
+      <div className="mb-8">
+        <h2 className="mb-4 text-xl font-bold">Your Exams</h2>
+        {vendorExams.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {vendorExams.map((exam) => (
+              <VendorExamCard key={exam.id} exam={exam} />
+            ))}
+          </div>
+        ) : (
+          <p>No exams found. Create your first exam!</p>
+        )}
+      </div>
+      {/* <div className="mb-8">
+        <p className="text-muted-foreground">
+          You are not currently registered as a vendor. If you&apos;d like to
+          create and manage exams, please create new exam.
+        </p>
+      </div> */}
     </div>
   );
 }
 
 interface ExamCardProps {
-  exam: Exam;
+  exam: {
+    id: string;
+    name: string;
+    timeAllowed: number;
+    price: number;
+    subtitle: string | null;
+  };
 }
 
 function VendorExamCard({ exam }: ExamCardProps) {
@@ -330,10 +332,7 @@ function VendorExamCard({ exam }: ExamCardProps) {
             <Clock className="mr-2 h-4 w-4" />
             {exam.timeAllowed} minutes
           </div>
-          <div className="flex items-center text-sm">
-            <FileQuestion className="mr-2 h-4 w-4" />
-            {exam.questionsToShow} questions
-          </div>
+
           <div className="flex items-center text-sm">
             <DollarSign className="mr-2 h-4 w-4" />${exam.price.toFixed(2)}
           </div>

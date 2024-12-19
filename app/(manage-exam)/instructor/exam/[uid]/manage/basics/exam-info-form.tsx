@@ -30,6 +30,7 @@ import { useRouter } from "next/navigation";
 import UpdateExamInformation from "@/actions/update-exam-information";
 import { useToast } from "@/hooks/use-toast";
 import { ExamLevel } from "@prisma/client";
+import { Label } from "@/components/ui/label";
 
 const examLevels = Object.values(ExamLevel) as [string, ...string[]];
 
@@ -153,34 +154,36 @@ export default function ExamInformationForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="sr-only">Question</FormLabel>
-              <FormControl>
-                <MinimalTiptapEditor
-                  {...field}
-                  throttleDelay={0}
-                  className={cn("w-full", {
-                    "border-destructive focus-within:border-destructive":
-                      form.formState.errors.description,
-                  })}
-                  editorContentClassName="some-class"
-                  output="html"
-                  placeholder="Type your description here here..."
-                  autofocus={true}
-                  editable={true}
-                  injectCSS={true}
-                  editorClassName="focus:outline-none p-5"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+        <div>
+          <Label>Exam Description</Label>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">Description</FormLabel>
+                <FormControl>
+                  <MinimalTiptapEditor
+                    {...field}
+                    throttleDelay={0}
+                    className={cn("w-full", {
+                      "border-destructive focus-within:border-destructive":
+                        form.formState.errors.description,
+                    })}
+                    editorContentClassName="some-class"
+                    output="html"
+                    placeholder="Type your description here here..."
+                    autofocus={true}
+                    editable={true}
+                    injectCSS={true}
+                    editorClassName="focus:outline-none p-5"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="subtitle"

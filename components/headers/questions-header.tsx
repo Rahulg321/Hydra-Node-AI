@@ -7,18 +7,18 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 interface QuestionsHeaderProps {
+  examId: string;
   examName: string;
   questionCount: number;
   backLink?: string;
-  onManageExam?: () => void;
   className?: string;
 }
 
 export function QuestionsHeader({
+  examId,
   examName,
   questionCount,
   backLink = "/",
-  onManageExam,
   className,
 }: QuestionsHeaderProps) {
   const [isSticky, setIsSticky] = useState(false);
@@ -61,16 +61,11 @@ export function QuestionsHeader({
         <span className="text-sm text-muted-foreground">
           {questionCount} question{questionCount !== 1 ? "s" : ""}
         </span>
-        {onManageExam && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onManageExam}
-            className="bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-          >
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/instructor/exam/${examId}/manage/basics`}>
             Manage Exam
-          </Button>
-        )}
+          </Link>
+        </Button>
       </div>
     </header>
   );

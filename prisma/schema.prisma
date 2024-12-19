@@ -152,10 +152,13 @@ model Vendor {
   userId String? @unique
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // might be a user vendor
   isUserVendor   Boolean  @default(false)
   commissionRate Float?
   bio            String?
   Payout         Payout[]
+
+  @@index([isUserVendor])
 }
 
 model Payout {
@@ -184,6 +187,12 @@ enum ExamLevel {
   EXPERT
 }
 
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  exams Exam[]
+}
+
 // each individual exam, it can belong to a vendor
 model Exam {
   id              String        @id @default(cuid())
@@ -210,6 +219,7 @@ model Exam {
   coverImage      String? // image of the exam
   coverVideo      String? // video of the exam
   Purchase        Purchase[]
+  tags            Tag[]
 }
 
 model Purchase {
