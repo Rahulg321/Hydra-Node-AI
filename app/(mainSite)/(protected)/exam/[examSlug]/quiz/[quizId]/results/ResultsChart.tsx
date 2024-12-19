@@ -47,6 +47,7 @@ export function ResultsChart({
       <CardContent>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
+            {/* @ts-ignore */}
             <PieChart>
               <Pie
                 data={data}
