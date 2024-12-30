@@ -1,17 +1,20 @@
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
-import { getExamWithSlug } from "@/data/exam";
 
 // export const dynamic = "force-dynamic";
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ examSlug: string }>;
-  }
-) {
+export async function generateMetadata(props: {
+  params: Promise<{ examId: string }>;
+}) {
   const params = await props.params;
-  const post = await getExamWithSlug(params.examSlug);
+  const post = await db.exam.findUnique({
+    where: { id: params.examId },
+    select: {
+      name: true,
+      description: true,
+    },
+  });
 
   return {
     title: `${post?.name} Quiz`,
@@ -19,14 +22,12 @@ export async function generateMetadata(
   };
 }
 
-const McqQuizPage = async (
-  props: {
-    params: Promise<{
-      examSlug: string;
-      quizId: string;
-    }>;
-  }
-) => {
+const McqQuizPage = async (props: {
+  params: Promise<{
+    examId: string;
+    quizId: string;
+  }>;
+}) => {
   const params = await props.params;
   // Fetch the quiz session
   const quizSession = await db.quizSession.findUnique({

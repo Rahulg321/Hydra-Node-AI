@@ -1,5 +1,5 @@
 import React from "react";
-import { ResultsChart } from "./ResultsChart";
+import ResultsChart from "./ResultsChart";
 import { Check, CircleOff, Timer, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type props = {
   params: Promise<{
-    examSlug: string;
+    examId: string;
     quizId: string;
   }>;
 };
@@ -21,13 +21,21 @@ export const metadata: Metadata = {
   description: "View the results of your quiz session",
 };
 
-const QuizResultsPage = async (props0: props) => {
-  const params = await props0.params;
-  const currentQuizSession = await db.quizSession.findFirst({
-    where: {
-      id: params.quizId,
-    },
-    include: {
+const QuizResultsPage = async (props: props) => {
+  const params = await props.params;
+  const currentQuizSession = await db.quizSession.findUnique({
+    where: { id: params.quizId },
+    select: {
+      id: true,
+      examTime: true,
+      questionCount: true,
+      startTime: true,
+      endTime: true,
+      correctAnswers: true,
+      incorrectAnswers: true,
+      skippedAnswers: true,
+      percentageScored: true,
+      passFailStatus: true,
       exam: {
         select: {
           slug: true,
@@ -80,7 +88,7 @@ const QuizResultsPage = async (props0: props) => {
         {currentQuizSession.exam.name} Results
       </h1>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <Card className="dark:bg-gray-800">
+        <Card className="">
           <CardHeader>
             <CardTitle className="text-gray-900 dark:text-gray-100">
               Exam Summary
@@ -105,7 +113,7 @@ const QuizResultsPage = async (props0: props) => {
                 </span>
                 <span
                   className={cn("rounded px-3 py-1 text-lg font-semibold", {
-                    "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100":
+                    "bg-green-100 text-green-800 dark:bg-green-900/80 dark:text-green-100":
                       passFailStatus,
                     "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100":
                       !passFailStatus,
@@ -157,13 +165,13 @@ const QuizResultsPage = async (props0: props) => {
       <div className="mt-8 flex justify-between">
         <Button className="rounded-full px-6 py-2" asChild>
           <Link
-            href={`/exam/${currentQuizSession.exam.slug}/quiz/${params.quizId}/review`}
+            href={`/exam/${params.examId}/quiz/${currentQuizSession.id}/review`}
           >
             Review Exam
           </Link>
         </Button>
         <Button className="rounded-full px-6 py-2" variant="outline" asChild>
-          <Link href={`/exam/${params.examSlug}`}>Retake Exam</Link>
+          <Link href={`/exam/${params.examId}`}>Retake Exam</Link>
         </Button>
       </div>
     </section>

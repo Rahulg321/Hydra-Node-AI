@@ -25,12 +25,23 @@ const stripePromise = loadStripe(
 );
 
 type CheckoutDialogProps = {
-  exam: Exam;
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  stripePriceId: string;
   session: Session;
 };
 
-const ExamCheckoutDialog = ({ exam, session }: CheckoutDialogProps) => {
-  const { stripePriceId: priceId } = exam;
+const ExamCheckoutDialog = ({
+  id,
+  name,
+  slug,
+  price,
+  session,
+  stripePriceId,
+}: CheckoutDialogProps) => {
+  const priceId = stripePriceId;
 
   const fetchClientSecret = useCallback(() => {
     return fetch("/api/exam-checkout", {
@@ -41,28 +52,28 @@ const ExamCheckoutDialog = ({ exam, session }: CheckoutDialogProps) => {
       body: JSON.stringify({
         priceId,
         userId: session.user.id,
-        examId: exam.id,
-        examSlug: exam.slug,
+        examId: id,
+        examSlug: slug,
         userEmail: session.user.email,
         mode: "payment",
       }),
     })
       .then((res) => res.json())
       .then((data) => data.client_secret);
-  }, [session, priceId, exam.id, exam.slug]);
+  }, [session, priceId, id, slug]);
 
   const options = { fetchClientSecret };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={cn("bg-baseC")}>Buy ${exam.price}</Button>
+        <Button className={cn("bg-baseC")}>Buy ${price}</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] w-full max-w-6xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{exam.name}</DialogTitle>
+          <DialogTitle>{name}</DialogTitle>
           <DialogDescription>
-            Get the {exam.name} for ${exam.price}
+            Get the {name} for ${price}
           </DialogDescription>
         </DialogHeader>
         <div className="w-full">

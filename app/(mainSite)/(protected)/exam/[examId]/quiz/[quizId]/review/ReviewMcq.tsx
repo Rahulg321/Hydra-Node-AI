@@ -15,13 +15,13 @@ const ReviewMcq = ({
   questions,
   quizSession,
   examName,
-  examSlug,
+  examId,
 }: {
   userAttempts?: UserAttempt[];
   questions: Question[];
   quizSession: QuizSession;
   examName: string;
-  examSlug: string;
+  examId: string;
 }) => {
   const [userAttemptIndex, setUserAttemptIndex] = useState(0);
   const [showOverallExplanation, setShowOverallExplanation] = useState(false);
@@ -62,7 +62,7 @@ const ReviewMcq = ({
                 score={quizSession.percentageScored!}
               />
               <Button asChild className="w-full">
-                <Link href={`/exam/${examSlug}/quiz/${quizSession.id}/results`}>
+                <Link href={`/exam/${examId}/quiz/${quizSession.id}/results`}>
                   See Results
                 </Link>
               </Button>
@@ -220,7 +220,8 @@ const CorrectQuestionGrid = ({
 }) => (
   <div className="grid grid-cols-5 gap-2">
     {Array.from({ length: totalQuestions }).map((_, index) => {
-      let statusClass = "bg-gray-200";
+      let statusClass = "bg-gray-400 dark:bg-muted";
+
       if (questionStatus[index] === "correct") {
         statusClass = "bg-green-500";
       } else if (questionStatus[index] === "incorrect") {
@@ -234,7 +235,7 @@ const CorrectQuestionGrid = ({
           key={index}
           className={`pt-full w-full rounded-sm ${statusClass} relative`}
         >
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+          <span className="flex items-center justify-center text-xs font-bold text-white">
             {index + 1}
           </span>
         </div>
@@ -260,7 +261,7 @@ const Option = ({
     className={cn(
       "rounded-lg border p-4",
       isCorrect ? "border-green-500" : "border-red-500",
-      isUserOptionSelected && "bg-blue-50",
+      isUserOptionSelected && "bg-blue-200 dark:bg-blue-900",
     )}
   >
     <div className="flex items-start gap-4">

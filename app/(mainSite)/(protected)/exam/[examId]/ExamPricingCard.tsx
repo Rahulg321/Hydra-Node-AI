@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-interface ExamPricingCardProps {
+type ExamPricingCardProps =  {
   heading: string;
   headingTag: string;
   tagline: string;

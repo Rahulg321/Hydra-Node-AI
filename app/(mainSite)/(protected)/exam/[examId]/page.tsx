@@ -14,38 +14,76 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ExamPricingCard } from "./ExamPricingCard";
 import { ExamDetails } from "./ExamDetails";
 import { ExamInstructions } from "./ExamInstructions";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export async function generateStaticParams() {
-  const exams = await db.exam.findMany();
-  return exams.map((exam) => ({ examSlug: exam.slug }));
+  const exams = await db.exam.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  return exams.map((exam) => ({ examId: exam.id }));
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{ examSlug: string }>;
+  params: Promise<{ examId: string }>;
 }) {
   const params = await props.params;
-  const exam = await db.exam.findUnique({ where: { slug: params.examSlug } });
+  const exam = await db.exam.findUnique({
+    where: { id: params.examId },
+    select: {
+      name: true,
+      description: true,
+    },
+  });
   return { title: exam?.name, description: exam?.description };
 }
 
 export default async function ExamPage(props: {
-  params: Promise<{ examSlug: string }>;
+  params: Promise<{ examId: string }>;
 }) {
   const params = await props.params;
   const session = await auth();
   if (!session) return redirect("/login");
 
   const exam = await db.exam.findUnique({
-    where: { slug: params.examSlug },
-    include: { questions: true },
+    where: { id: params.examId },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+      stripePriceId: true,
+      description: true,
+      timeAllowed: true,
+      examLevel: true,
+      questionsToShow: true,
+      questions: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
 
-  if (!exam) return notFound();
+  if (!exam)
+    return (
+      <section className="block-space big-container">
+        <h2>Could not find Exam you were looking for</h2>
+        <p>Please try again later</p>
+        <Button asChild>
+          <Link href="/vendors">Go Back</Link>
+        </Button>
+      </section>
+    );
 
   const { hasAccess } = await checkIfUserHasAccessToExam(
     session.user.id as string,
     exam.id,
   );
+
   const { status: hasTrialAccess } = await checkIfUserHasTrialAccess(
     session.user.id as string,
   );
@@ -54,7 +92,13 @@ export default async function ExamPage(props: {
     <section className="container py-12">
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-6">
-          <ExamDetails exam={exam} />
+          <ExamDetails
+            name={exam.name}
+            examLevel={exam.examLevel}
+            questions={exam.questions}
+            questionsToShow={exam.questionsToShow}
+            timeAllowed={exam.timeAllowed}
+          />
           <Card>
             <CardHeader>
               <CardTitle>Exam Description</CardTitle>
@@ -105,7 +149,14 @@ export default async function ExamPage(props: {
                   duration="week"
                 />
               </div>
-              <ExamCheckoutDialog exam={exam} session={session} />
+              <ExamCheckoutDialog
+                id={exam.id}
+                name={exam.name}
+                price={exam.price}
+                slug={exam.slug}
+                stripePriceId={exam.stripePriceId!}
+                session={session}
+              />
               {hasTrialAccess && (
                 <Card>
                   <CardHeader>

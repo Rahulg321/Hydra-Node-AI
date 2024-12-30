@@ -9,13 +9,11 @@ export const metadata: Metadata = {
   description: "View your complete exam history. Filter and sort exams.",
 };
 
-const CompleteExamHistoryPage = async (
-  props: {
-    params: Promise<{
-      userId: string;
-    }>;
-  }
-) => {
+const CompleteExamHistoryPage = async (props: {
+  params: Promise<{
+    userId: string;
+  }>;
+}) => {
   const params = await props.params;
   const userId = params.userId;
 
@@ -26,10 +24,16 @@ const CompleteExamHistoryPage = async (
     orderBy: {
       createdAt: "desc",
     },
-    include: {
+    select: {
+      id: true,
+      createdAt: true,
+      examMode: true,
       exam: {
-        include: {
+        select: {
+          id: true,
+          name: true,
           questions: true,
+          examLevel: true,
         },
       },
     },
@@ -49,7 +53,7 @@ const CompleteExamHistoryPage = async (
       examMode: e.examMode,
       totalQuestions: e.exam.questions.length,
       difficultyLevel: e.exam.examLevel,
-      link: `/exam/${e.id}/quiz/${e.id}/results`,
+      link: `/exam/${e.exam.id}/quiz/${e.id}/results`,
     };
   });
   return (

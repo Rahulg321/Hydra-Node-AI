@@ -89,7 +89,7 @@
     "react-medium-image-zoom": "^5.2.12",
     "react-spinners": "^0.14.1",
     "react-tsparticles": "^2.12.2",
-    "recharts": "^2.12.7",
+    "recharts": "^2.15.0",
     "resend": "^4.0.0",
     "sharp": "^0.33.5",
     "slugify": "^1.6.6",

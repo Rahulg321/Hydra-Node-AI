@@ -276,7 +276,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             </h2>
             <h3 className="mb-4 text-lg">Check Your Score here 👇</h3>
             <Button className="rounded-full px-10 py-6 text-lg" asChild>
-              <Link href={`/exam/${exam.slug}/quiz/${quizSession.id}/results`}>
+              <Link href={`/exam/${exam.id}/quiz/${quizSession.id}/results`}>
                 View Score
               </Link>
             </Button>

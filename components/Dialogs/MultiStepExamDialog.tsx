@@ -106,7 +106,12 @@ export const MultiStepExamDialog = ({
             <div>
               {examMode === "PRACTICE" && (
                 <div className="mt-4 space-y-2">
-                  <Label>Time for Exam</Label>
+                  <div>
+                    <span className="text-xs text-muted-foreground">
+                      When in practice mode you can set the time for the exam
+                    </span>
+                  </div>
+                  <Label>Time for Exam (in minutes)</Label>
                   <Input
                     type="number"
                     placeholder="Exam Time......"
@@ -256,7 +261,7 @@ export const MultiStepExamDialog = ({
             description: response.message || "Successfully started Quiz",
           });
 
-          router.push(`/exam/${examSlug}/quiz/${response.quizSessionId}`);
+          router.push(`/exam/${examId}/quiz/${response.quizSessionId}`);
         }
 
         console.log("exam mode is", examMode);

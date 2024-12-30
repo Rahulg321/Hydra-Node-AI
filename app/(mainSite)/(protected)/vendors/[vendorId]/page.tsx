@@ -5,16 +5,17 @@ import Link from "next/link";
 import { ExamLevel } from "@prisma/client";
 import { Suspense } from "react";
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ vendorSlug: string }>;
-  }
-) {
+export async function generateMetadata(props: {
+  params: Promise<{ vendorId: string }>;
+}) {
   const params = await props.params;
-  let { vendorSlug } = params;
+  let { vendorId } = params;
   const singleVendor = await db.vendor.findFirst({
     where: {
-      slug: vendorSlug,
+      id: vendorId,
+    },
+    select: {
+      name: true,
     },
   });
 
@@ -24,33 +25,39 @@ export async function generateMetadata(
   };
 }
 
-const VendorPage = async (
-  props: {
-    params: Promise<{
-      vendorSlug: string;
-    }>;
-    searchParams: Promise<{
-      examLevel?: ExamLevel;
-    }>;
-  }
-) => {
+const VendorPage = async (props: {
+  params: Promise<{
+    vendorId: string;
+  }>;
+  searchParams: Promise<{
+    examLevel?: ExamLevel;
+  }>;
+}) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
-  const vendorSlug = params.vendorSlug;
+  const vendorId = params.vendorId;
   const examLevel: ExamLevel = searchParams.examLevel || "ASSOCIATE";
 
   // querying for the current vendor as to further query by vendorId as to improve performance
   const currentVendor = await db.vendor.findUnique({
     where: {
-      slug: vendorSlug,
+      id: vendorId,
+    },
+    select: {
+      name: true,
+      id: true,
     },
   });
 
   // we are using the current vendor id so as to improve performance
   const allExams = await db.exam.findMany({
     where: {
-      vendorId: currentVendor?.id,
+      vendorId,
       examLevel: examLevel,
+    },
+    select: {
+      id: true,
+      name: true,
     },
   });
 
@@ -66,7 +73,7 @@ const VendorPage = async (
           {allExams.map((exam) => {
             return (
               <Link
-                href={`/exam/${exam.slug}`}
+                href={`/exam/${exam.id}`}
                 key={exam.id}
                 className="cursor-pointer underline-offset-2 transition-all duration-300 ease-in-out hover:underline"
               >

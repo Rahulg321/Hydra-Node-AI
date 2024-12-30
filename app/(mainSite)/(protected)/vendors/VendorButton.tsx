@@ -14,8 +14,8 @@ export default function VendorButton({
   };
 }) {
   const pathname = usePathname();
-  const examSlug = pathname.split("/").pop();
-  const isActive = examSlug === vendor.slug;
+  const currentVendorId = pathname.split("/").pop();
+  const isActive = currentVendorId === vendor.id;
 
   return (
     <Link
@@ -25,7 +25,7 @@ export default function VendorButton({
           "border-l-4 border-base bg-[#F5F8FE] dark:bg-dark-card": isActive,
         },
       )}
-      href={`/vendors/${vendor.slug}`}
+      href={`/vendors/${vendor.id}`}
     >
       {vendor.name}
     </Link>

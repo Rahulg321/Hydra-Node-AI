@@ -6,22 +6,21 @@ import { getExamWithSlug } from "@/data/exam";
 
 type ReviewExamPageProps = {
   params: Promise<{
-    examSlug: string;
+    examId: string;
     quizId: string;
   }>;
 };
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ examSlug: string; quizId: string }>;
-  }
-) {
+export async function generateMetadata(props: {
+  params: Promise<{ examId: string; quizId: string }>;
+}) {
   const params = await props.params;
-  let slug = params.examSlug;
 
-  let post = await db.exam.findFirst({
+  console.log("first log", params);
+
+  let post = await db.exam.findUnique({
     where: {
-      slug,
+      id: params.examId,
     },
     select: {
       name: true,
@@ -29,19 +28,23 @@ export async function generateMetadata(
     },
   });
 
+  if (!post) {
+    return {
+      title: "Review Exam",
+      description: "Review your exam",
+    };
+  }
+
   return {
-    title: `Review ${post!.name}`,
-    description: `Review of your exam:- ${post!.description}`,
+    title: `Review ${post.name}`,
+    description: `Review of your exam:- ${post.description}`,
   };
 }
 
 const ReviewExamPage = async (props: ReviewExamPageProps) => {
   const params = await props.params;
 
-  const {
-    examSlug,
-    quizId
-  } = params;
+  const { examId, quizId } = params;
 
   // Fetch quiz session first
   const quizSession = await db.quizSession.findUnique({
@@ -54,7 +57,7 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
     },
   });
 
-  console.log("quizSession", quizSession);
+  //   console.log("quizSession", quizSession);
 
   if (!quizSession || !quizSession.isCompleted) {
     console.log("Quiz session not found or not completed");
@@ -76,7 +79,7 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
         quizSession={quizSession}
         userAttempts={userAttempts}
         examName={quizSession.exam.name}
-        examSlug={examSlug}
+        examId={examId}
         questions={sliceQuestions}
       />
     </section>
