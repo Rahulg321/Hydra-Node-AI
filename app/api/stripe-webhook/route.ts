@@ -9,6 +9,7 @@ import {
   sendLifetimeAccessEmail,
   sendSubscriptionEndedEmail,
   sendSubscriptionStartEmail,
+  sendVendorExamPurchasedEmail,
 } from "@/lib/mail";
 
 export async function POST(req: Request) {
@@ -234,6 +235,20 @@ async function processExamPurchase(
   // Fetch the exam details from the database
   const exam = await db.exam.findUnique({
     where: { id: examId },
+    select: { name: true, slug: true, price: true, vendor:{
+        select:{
+            id:true,
+            isUserVendor:true,
+            userId:true,
+            commissionRate:true,
+            name:true,
+            user:{
+               select:{
+                email:true,
+               }
+            }
+        }
+    } },
   });
 
   if (!exam) {
@@ -278,7 +293,42 @@ async function processExamPurchase(
       "User has already purchased this exam, skipping purchase and payment creation.",
     );
   }
+  // *** Check for User Vendor AFTER creating purchase and payment records ***
+  if (exam.vendor.isUserVendor && exam.vendor.userId) {
+    // Create a new payout record for the vendor (user)
+    await db.payout.create({
+      data: {
+        vendorId: exam.vendor.id,
+        amount: exam.price, // Calculate payout amount
+        currency: paymentIntent.currency,
+        status:"PAID"
+      }
+    });
+
+    // send email to vendor for successful exam purchase
+    await sendVendorExamPurchasedEmail(
+      exam.vendor.name,
+      exam.vendor.user?.email || "Contact@hydranode.ai",
+        exam.name,
+        new Date().toLocaleDateString(), // Purchase date
+        exam.price.toString(),
+        user.firstName,
+        user.lastName,
+    );
+
+  }
 }
+
+// Helper function to calculate payout amount based on commission
+function calculatePayoutAmount(price: number, commissionRate: number): number {
+    // Calculate the payout amount after deducting the commission
+    const commissionAmount = price * (commissionRate / 100);
+    const payoutAmount = price - commissionAmount;
+    return payoutAmount;
+  }
+
+
+
 
 // Helper function to create a payment record
 async function createPaymentRecord(

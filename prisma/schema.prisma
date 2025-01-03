@@ -157,6 +157,8 @@ model Vendor {
 
   // might be a user vendor
   isUserVendor   Boolean  @default(false)
+
+
   commissionRate Float?
   bio            String?
   Payout         Payout[]
