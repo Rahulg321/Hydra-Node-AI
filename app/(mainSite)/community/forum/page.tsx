@@ -1,5 +1,6 @@
 import ForumQuestionDialog from "@/components/Dialogs/forum-question-dialog";
 import ForumQuestion from "@/components/forum-question";
+import Pagination from "@/components/pagination";
 import ForumCategories from "@/components/sections/forum/ForumCategories";
 import ForumHeader from "@/components/sections/forum/ForumHeader";
 import PopularTags from "@/components/sections/forum/PopularTags";
@@ -14,12 +15,27 @@ export const metadata: Metadata = {
     description: "Ask questions and get your doubts cleared by the community.",
 };
 
-export default async function ForumPage() {
+// After
+type SearchParams = Promise<{ [key: string]: string | undefined }>;
+
+
+
+export default async function ForumPage(props: { searchParams: SearchParams }) {
+
+    const searchParams = await props.searchParams;
+
+
+    const search = searchParams?.query || "";
+    const currentPage = Number(searchParams?.page) || 1;
+    const limit = Number(searchParams?.limit) || 20;
+    const offset = (currentPage - 1) * limit;
+
     const data = await db.forumQuestion.findMany({
+        skip: offset,
         orderBy: {
             createdAt: "desc",
         },
-        take: 10,
+        take: limit,
         select: {
             id: true,
             title: true,
@@ -42,6 +58,12 @@ export default async function ForumPage() {
         },
     })
 
+    const totalCount = await db.forumQuestion.count();
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+
+
     const questionsWithMetrics = data.map(question => ({
         ...question,
         metrics: {
@@ -55,6 +77,11 @@ export default async function ForumPage() {
 
     return (
         <section className="block-space big-container">
+            <div>
+                <p>Total Pages:- {totalPages}</p>
+                <p>Total Questions Available:- {totalCount}</p>
+            </div>
+            <Pagination totalPages={totalPages} />
             <div className="flex justify-between items-center">
                 <div>
                     <h1>Questions</h1>

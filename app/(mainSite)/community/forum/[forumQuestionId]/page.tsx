@@ -90,8 +90,11 @@ export default ForumQuestionPage
 
 
 async function FetchQuestionReplies({ questionId }: { questionId: string }) {
+    // only fetch the latest top 10 results
+
     const replies = await db.reply.findMany({
         where: { questionId },
+        take: 10,
         select: {
             id: true,
             content: true,
