@@ -37,7 +37,6 @@ const ForumQuestionPage = async (props: {
         }
     })
 
-
     if (!specificForumQuestion) return <p>Question not found</p>
 
     const { id, title, tags, createdAt, author, content } = specificForumQuestion
@@ -90,7 +89,6 @@ export default ForumQuestionPage
 
 
 async function FetchQuestionReplies({ questionId }: { questionId: string }) {
-    // only fetch the latest top 10 results
 
     const replies = await db.reply.findMany({
         where: { questionId },
