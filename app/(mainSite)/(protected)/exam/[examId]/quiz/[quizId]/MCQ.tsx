@@ -304,7 +304,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                         <span>Question Type: {currentQuestion.questionType}</span>
                         <div>
                             <div className="my-4 md:my-6 lg:my-8">
-                                <MarkdownQuestion questionString={currentQuestion.question} />
+                                <RenderMarkdown source={currentQuestion.question} />
                             </div>
                             <div className="space-y-4">
                                 {/* TODO:-  figure out why this does not work */}
