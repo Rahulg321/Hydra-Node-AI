@@ -20,6 +20,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import HydranodeLogo2 from "@/public/logos/HNLOGO1.svg"
 import HydranodeLogo1 from "@/public/logos/h_logo.svg"
+import LightLogo from "@/public/logos/light_logo.jpg"
+import DarkLogo from "@/public/logos/dark_logo.jpg"
+
+
 
 const menuItems = [
     "Product",
