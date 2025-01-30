@@ -18,11 +18,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import HydranodeLogo2 from "@/public/logos/HNLOGO1.svg"
 import HydranodeLogo1 from "@/public/logos/h_logo.svg"
-import LightLogo from "@/public/logos/light_logo.jpg"
-import DarkLogo from "@/public/logos/dark_logo.jpg"
-
+import LightLogo from "@/public/logos/light_logo.png"
 
 
 const menuItems = [
@@ -89,8 +86,8 @@ const Navbar = ({ session }: { session: Session | null }) => {
                         <Link href={"/"}>
                             {isLogoLoaded ? (
                                 <>
-                                    <Image src={HydranodeLogo1} alt="hydranode logo" width={300} height={200} className="object-cover" />
-                                    {/* <Image src={HydranodeLogo1} alt="hydranode logo" width={300} height={200} className="object-cover dark:hidden" /> */}
+                                    <Image src={HydranodeLogo1} alt="hydranode logo" width={300} height={200} className="object-cover hidden dark:block" />
+                                    <Image src={LightLogo} alt="hydranode logo" width={300} height={200} className="object-cover dark:hidden" />
                                 </>
                             ) : (
                                 <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
