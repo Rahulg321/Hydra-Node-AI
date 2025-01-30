@@ -16,6 +16,7 @@ import { ExamDetails } from "./ExamDetails";
 import { ExamInstructions } from "./ExamInstructions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 
 export async function generateStaticParams() {
     const exams = await db.exam.findMany({
@@ -27,46 +28,49 @@ export async function generateStaticParams() {
     return exams.map((exam) => ({ examId: exam.id }));
 }
 
+const getCachedExamInfo = unstable_cache(
+    async (examId: string) => {
+        return await db.exam.findUnique({
+            where: { id: examId },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                price: true,
+                stripePriceId: true,
+                description: true,
+                timeAllowed: true,
+                examLevel: true,
+                questionsToShow: true,
+                questions: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+    },
+    ['exam'],
+    { revalidate: 3600, tags: ['exam'] }
+)
 export async function generateMetadata(props: {
     params: Promise<{ examId: string }>;
 }) {
     const params = await props.params;
-    const exam = await db.exam.findUnique({
-        where: { id: params.examId },
-        select: {
-            name: true,
-            description: true,
-        },
-    });
+    const exam = await getCachedExamInfo(params.examId);
+
     return { title: exam?.name, description: exam?.description };
 }
+
 
 export default async function ExamPage(props: {
     params: Promise<{ examId: string }>;
 }) {
     const params = await props.params;
+    const examId = params.examId;
     const session = await auth();
     if (!session) return redirect("/login");
-
-    const exam = await db.exam.findUnique({
-        where: { id: params.examId },
-        select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            stripePriceId: true,
-            description: true,
-            timeAllowed: true,
-            examLevel: true,
-            questionsToShow: true,
-            questions: {
-                select: {
-                    id: true,
-                },
-            },
-        },
-    });
+    const exam = await getCachedExamInfo(examId)
 
     if (!exam)
         return (
