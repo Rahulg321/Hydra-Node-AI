@@ -64,7 +64,7 @@ const getUserPaymentHistoryUnstableCache = unstable_cache(
     { revalidate: 3600, tags: ['user_payment', "user"] }
 );
 
-export const getUserQuizSessionsUnstableCache = unstable_cache(
+const getUserQuizSessionsUnstableCache = unstable_cache(
     async (userId: string) => {
         return await db.quizSession.findMany({
             where: { userId },

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description: "View your complete exam history. Filter and sort exams.",
 };
 
-export const getUserQuizSessionsCompleteHistoryUnstableCache = unstable_cache(
+const getUserQuizSessionsCompleteHistoryUnstableCache = unstable_cache(
     async (userId: string) => {
         return await db.quizSession.findMany({
             where: {
