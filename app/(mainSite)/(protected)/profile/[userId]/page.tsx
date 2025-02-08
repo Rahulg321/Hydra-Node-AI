@@ -33,12 +33,6 @@ import { unstable_cache } from "next/cache";
 //     }))
 // }
 
-export async function generateStaticParams() {
-    const users = await getAllUsersWithUnstableCache()
-    return users.map((user: User) => ({
-        id: String(user.id),
-    }))
-}
 // Define the cached function outside
 const getUserByIdUnstableCache = unstable_cache(
     async (userId: string) => {
