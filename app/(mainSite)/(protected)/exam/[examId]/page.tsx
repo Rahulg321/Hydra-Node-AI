@@ -18,16 +18,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
 
-export async function generateStaticParams() {
-    const exams = await db.exam.findMany({
-        select: {
-            id: true,
-        },
-    });
-
-    return exams.map((exam) => ({ examId: exam.id }));
-}
-
 const getCachedExamInfo = unstable_cache(
     async (examId: string) => {
         return await db.exam.findUnique({
