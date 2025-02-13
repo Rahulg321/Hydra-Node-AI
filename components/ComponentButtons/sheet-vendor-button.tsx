@@ -19,7 +19,7 @@ const VendorSheetButton: React.FC<VendorButtonProps> = ({
 
   const handleClick = () => {
     onClose();
-    router.push(`/vendors/${vendor.slug}`);
+    router.push(`/vendors/${vendor.id}`);
   };
 
   return (
