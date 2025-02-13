@@ -2,8 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import {
-    checkIfUserHasAccessToExam,
-    checkIfUserHasTrialAccess,
+  checkIfUserHasAccessToExam,
+  checkIfUserHasTrialAccess,
 } from "@/lib/utils";
 import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
@@ -19,174 +19,196 @@ import Link from "next/link";
 import { unstable_cache } from "next/cache";
 
 const getCachedExamInfo = unstable_cache(
-    async (examId: string) => {
-        return await db.exam.findUnique({
-            where: { id: examId },
-            select: {
-                id: true,
-                name: true,
-                slug: true,
-                price: true,
-                stripePriceId: true,
-                description: true,
-                timeAllowed: true,
-                examLevel: true,
-                questionsToShow: true,
-                questions: {
-                    select: {
-                        id: true,
-                    },
-                },
-            },
-        });
-    },
-    ['exam'],
-    { revalidate: 3600, tags: ['exam'] }
-)
-export async function generateMetadata(props: {
-    params: Promise<{ examId: string }>;
-}) {
-    const params = await props.params;
-    const exam = await getCachedExamInfo(params.examId);
+  async (examId: string) => {
+    return await db.exam.findUnique({
+      where: { id: examId },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        price: true,
+        stripePriceId: true,
+        description: true,
+        timeAllowed: true,
+        examLevel: true,
+        questionsToShow: true,
+        questions: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+  },
+  ["exam"],
+  { revalidate: 3600, tags: ["exam"] },
+);
 
-    return { title: exam?.name, description: exam?.description };
+const getExamInfo = async (examId: string) => {
+  return await db.exam.findUnique({
+    where: { id: examId },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+      stripePriceId: true,
+      description: true,
+      timeAllowed: true,
+      examLevel: true,
+      questionsToShow: true,
+      questions: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+};
+
+export async function generateMetadata(props: {
+  params: Promise<{ examId: string }>;
+}) {
+  const params = await props.params;
+  const exam = await getCachedExamInfo(params.examId);
+
+  return { title: exam?.name, description: exam?.description };
 }
 
-
 export default async function ExamPage(props: {
-    params: Promise<{ examId: string }>;
+  params: Promise<{ examId: string }>;
 }) {
-    const params = await props.params;
-    const examId = params.examId;
-    const session = await auth();
-    if (!session) return redirect("/login");
-    const exam = await getCachedExamInfo(examId)
+  const params = await props.params;
+  const examId = params.examId;
+  const session = await auth();
+  if (!session) return redirect("/login");
+  const exam = await getCachedExamInfo(examId);
 
-    if (!exam)
-        return (
-            <section className="block-space big-container">
-                <h2>Could not find Exam you were looking for</h2>
-                <p>Please try again later</p>
-                <Button asChild>
-                    <Link href="/vendors">Go Back</Link>
-                </Button>
-            </section>
-        );
-
-    const { hasAccess } = await checkIfUserHasAccessToExam(
-        session.user.id as string,
-        exam.id,
-    );
-
-    const { status: hasTrialAccess } = await checkIfUserHasTrialAccess(
-        session.user.id as string,
-    );
-
+  if (!exam)
     return (
-        <section className="container py-12">
-            <div className="grid gap-6 lg:grid-cols-2">
-                <div className="space-y-6">
-                    <ExamDetails
-                        name={exam.name}
-                        examLevel={exam.examLevel}
-                        questions={exam.questions}
-                        questionsToShow={exam.questionsToShow}
-                        timeAllowed={exam.timeAllowed}
-                    />
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Exam Description</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{exam.description}</p>
-                        </CardContent>
-                    </Card>
-                    <ExamInstructions />
-                </div>
-                <div className="space-y-6">
-                    {hasAccess ? (
-                        <div className="">
-                            <Alert variant="default">
-                                <AlertTitle>Exam Available! 🎉</AlertTitle>
-                                <AlertDescription>
-                                    You have access to this exam. Take it now to test your
-                                    knowledge.
-                                </AlertDescription>
-                                <div className="mt-4">
-                                    <MultiStepExamDialog
-                                        examId={exam.id}
-                                        examSlug={exam.slug}
-                                        currentUserId={session.user.id as string}
-                                        examTime={exam.timeAllowed}
-                                        examLevel={exam.examLevel}
-                                        examName={exam.name}
-                                        examLength={exam.questions.length}
-                                        questionsToShow={exam.questionsToShow}
-                                    />
-                                </div>
-                            </Alert>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="grid gap-4 sm:grid-cols-2">
-                                <ExamPricingCard
-                                    heading="For 1 year"
-                                    headingTag="Yearly Billing"
-                                    tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
-                                    price="$100"
-                                    duration="year"
-                                    isFeatured
-                                />
-                                <ExamPricingCard
-                                    heading="For Life time"
-                                    headingTag="Lifetime Billing"
-                                    tagline="Gain unlimited access to HydraNode's platform and resources for life."
-                                    price="$200"
-                                    duration="week"
-                                />
-                            </div>
-                            <ExamCheckoutDialog
-                                id={exam.id}
-                                name={exam.name}
-                                price={exam.price}
-                                slug={exam.slug}
-                                stripePriceId={exam.stripePriceId!}
-                                session={session}
-                            />
-                            {hasTrialAccess && (
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Trial Access Available</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="mb-4">You have trial access to this exam.</p>
-                                        <StartTrialExamDialog
-                                            examId={exam.id}
-                                            examSlug={exam.slug}
-                                            userId={session.user.id as string}
-                                            examTime={exam.timeAllowed}
-                                            examLength={exam.questions.length}
-                                        />
-                                    </CardContent>
-                                </Card>
-                            )}
-                        </>
-                    )}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Don&apos;t See Your Purchased Exam?</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="mb-4 text-muted-foreground">
-                                If your purchased exam isn&apos;t appearing, try refreshing the
-                                page or clearing your browser cache. Still having trouble? Feel
-                                free to contact our support team for further assistance.
-                            </p>
-                            <RefreshCourseButton />
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-        </section>
+      <section className="block-space big-container">
+        <h2>Could not find Exam you were looking for</h2>
+        <p>Please try again later</p>
+        <Button asChild>
+          <Link href="/vendors">Go Back</Link>
+        </Button>
+      </section>
     );
+
+  const { hasAccess } = await checkIfUserHasAccessToExam(
+    session.user.id as string,
+    exam.id,
+  );
+
+  const { status: hasTrialAccess } = await checkIfUserHasTrialAccess(
+    session.user.id as string,
+  );
+
+  return (
+    <section className="container py-12">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-6">
+          <ExamDetails
+            name={exam.name}
+            examLevel={exam.examLevel}
+            questions={exam.questions}
+            questionsToShow={exam.questionsToShow}
+            timeAllowed={exam.timeAllowed}
+          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Exam Description</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{exam.description}</p>
+            </CardContent>
+          </Card>
+          <ExamInstructions />
+        </div>
+        <div className="space-y-6">
+          {hasAccess ? (
+            <div className="">
+              <Alert variant="default">
+                <AlertTitle>Exam Available! 🎉</AlertTitle>
+                <AlertDescription>
+                  You have access to this exam. Take it now to test your
+                  knowledge.
+                </AlertDescription>
+                <div className="mt-4">
+                  <MultiStepExamDialog
+                    examId={exam.id}
+                    examSlug={exam.slug}
+                    currentUserId={session.user.id as string}
+                    examTime={exam.timeAllowed}
+                    examLevel={exam.examLevel}
+                    examName={exam.name}
+                    examLength={exam.questions.length}
+                    questionsToShow={exam.questionsToShow}
+                  />
+                </div>
+              </Alert>
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <ExamPricingCard
+                  heading="For 1 year"
+                  headingTag="Yearly Billing"
+                  tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
+                  price="$100"
+                  duration="year"
+                  isFeatured
+                />
+                <ExamPricingCard
+                  heading="For Life time"
+                  headingTag="Lifetime Billing"
+                  tagline="Gain unlimited access to HydraNode's platform and resources for life."
+                  price="$200"
+                  duration="week"
+                />
+              </div>
+              <ExamCheckoutDialog
+                id={exam.id}
+                name={exam.name}
+                price={exam.price}
+                slug={exam.slug}
+                stripePriceId={exam.stripePriceId!}
+                session={session}
+              />
+              {hasTrialAccess && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Trial Access Available</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4">You have trial access to this exam.</p>
+                    <StartTrialExamDialog
+                      examId={exam.id}
+                      examSlug={exam.slug}
+                      userId={session.user.id as string}
+                      examTime={exam.timeAllowed}
+                      examLength={exam.questions.length}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+          <Card>
+            <CardHeader>
+              <CardTitle>Don&apos;t See Your Purchased Exam?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-muted-foreground">
+                If your purchased exam isn&apos;t appearing, try refreshing the
+                page or clearing your browser cache. Still having trouble? Feel
+                free to contact our support team for further assistance.
+              </p>
+              <RefreshCourseButton />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </section>
+  );
 }

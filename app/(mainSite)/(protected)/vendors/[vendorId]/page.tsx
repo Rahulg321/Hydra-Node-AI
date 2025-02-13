@@ -7,91 +7,113 @@ import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
 
 export async function generateMetadata(props: {
-    params: Promise<{ vendorId: string }>;
+  params: Promise<{ vendorId: string }>;
 }) {
-    const params = await props.params;
-    let { vendorId } = params;
-    const singleVendor = await db.vendor.findFirst({
-        where: {
-            id: vendorId,
-        },
-        select: {
-            name: true,
-        },
-    });
+  const params = await props.params;
+  let { vendorId } = params;
 
-    return {
-        title: `${singleVendor?.name} Exams`,
-        description: `See the exams for Vendor ${singleVendor?.name} and pick the one which you like`,
-    };
+  const singleVendor = await db.vendor.findFirst({
+    where: {
+      id: vendorId,
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  return {
+    title: `${singleVendor?.name} Exams`,
+    description: `See the exams for Vendor ${singleVendor?.name} and pick the one which you like`,
+  };
 }
 
-
-const getAllCurrentExams = unstable_cache(async (vendorId: string, examLevel: ExamLevel) => {
+const getAllCurrentCachedExams = unstable_cache(
+  async (vendorId: string, examLevel: ExamLevel) => {
     return await db.exam.findMany({
-        where: {
-            vendorId,
-            examLevel: examLevel,
-        },
-        select: {
-            id: true,
-            name: true,
-        },
+      where: {
+        vendorId,
+        examLevel: examLevel,
+      },
+      select: {
+        id: true,
+        name: true,
+      },
     });
-}, ["exams"], { revalidate: 3600, tags: ["exams"] });
+  },
+  ["vendor-exams"],
+  { revalidate: 3600, tags: ["vendor-exams"] },
+);
 
+const getCurrentVendorExams = async (
+  vendorId: string,
+  examLevel: ExamLevel,
+) => {
+  let exams = await db.exam.findMany({
+    where: {
+      vendorId,
+      examLevel: examLevel,
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
+  return exams;
+};
 
 const VendorPage = async (props: {
-    params: Promise<{
-        vendorId: string;
-    }>;
-    searchParams: Promise<{
-        examLevel?: ExamLevel;
-    }>;
+  params: Promise<{
+    vendorId: string;
+  }>;
+  searchParams: Promise<{
+    examLevel?: ExamLevel;
+  }>;
 }) => {
-    const searchParams = await props.searchParams;
-    const params = await props.params;
-    const vendorId = params.vendorId;
-    const examLevel: ExamLevel = searchParams.examLevel || "ASSOCIATE";
-    // we are using the current vendor id so as to improve performance
-    const allExams = await getAllCurrentExams(vendorId, examLevel);
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const vendorId = params.vendorId;
+  const examLevel: ExamLevel = searchParams.examLevel || "ASSOCIATE";
+  // we are using the current vendor id so as to improve performance
+  const allExams = await getCurrentVendorExams(vendorId, examLevel);
+  console.log({ allExams, vendorId, examLevel });
 
-    return (
-        <section className="big-container block-space-mini">
-            <div className="mb-6 md:mb-8 lg:mb-12">
-                <Suspense>
-                    <ExamTags />
-                </Suspense>
-            </div>
-            {allExams && allExams.length > 0 && (
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
-                    {allExams.map((exam) => {
-                        return (
-                            <Link
-                                href={`/exam/${exam.id}`}
-                                key={exam.id}
-                                className="cursor-pointer underline-offset-2 transition-all duration-300 ease-in-out hover:underline"
-                            >
-                                {exam.name}
-                            </Link>
-                        );
-                    })}
-                </div>
-            )}
+  return (
+    <section className="big-container block-space-mini">
+      <div className="mb-6 md:mb-8 lg:mb-12">
+        <Suspense>
+          <ExamTags />
+        </Suspense>
+      </div>
+      {allExams && allExams.length > 0 && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+          {allExams.map((exam) => {
+            return (
+              <Link
+                href={`/exam/${exam.id}`}
+                key={exam.id}
+                className="cursor-pointer underline-offset-2 transition-all duration-300 ease-in-out hover:underline"
+              >
+                {exam.name}
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
-            {allExams.length === 0 && (
-                <div>
-                    <h2>
-                        No{" "}
-                        <span className="via-[#AF89EE]/80.89% ml-2 bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
-                            Exams Found
-                        </span>
-                    </h2>
-                    <p>Try Again Later.....</p>
-                </div>
-            )}
-        </section>
-    );
+      {allExams.length === 0 && (
+        <div>
+          <h2>
+            No{" "}
+            <span className="via-[#AF89EE]/80.89% ml-2 bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+              Exams Found
+            </span>
+          </h2>
+          <p>Try Again Later.....</p>
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default VendorPage;
