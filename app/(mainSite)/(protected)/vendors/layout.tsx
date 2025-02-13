@@ -19,7 +19,12 @@ const getAllSystemVendors = unstable_cache(
 );
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  const vendors = await getAllSystemVendors();
+  //   const vendors = await getAllSystemVendors();
+  const vendors = await db.vendor.findMany({
+    where: {
+      isUserVendor: false,
+    },
+  });
 
   return (
     <div className="">
