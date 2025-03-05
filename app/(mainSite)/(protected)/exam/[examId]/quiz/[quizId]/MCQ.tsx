@@ -7,10 +7,16 @@ import { useExamModeContext } from "@/lib/exam-mode-context";
 import { cn, formatTime } from "@/lib/utils";
 import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, Menu, TableOfContents } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import React, {
   useCallback,
   useEffect,
@@ -51,6 +57,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   const totalQuizTime = quizSession.examTime * 60;
 
+  const [open, setOpen] = React.useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<number[]>([]);
@@ -60,7 +67,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   const [questionStatus, setQuestionStatus] = useState(
     Array(questions.length).fill(null),
   );
-
   const currentQuestion = questions[questionIndex];
 
   useEffect(() => {
@@ -243,8 +249,55 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   return (
     <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-10">
-      <div className="border-grid fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 border-r md:sticky md:block">
-        <div className="no-scrollbar h-full overflow-auto py-2 pr-4 lg:py-8">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button className="mt-2 w-fit md:hidden">
+            <TableOfContents className="mr-2 size-4" />
+            View Questions
+          </Button>
+        </SheetTrigger>
+        <SheetContent
+          side="left"
+          className="max-h-[calc(100vh)] overflow-y-auto"
+        >
+          <SheetHeader>
+            <SheetTitle>MCQ Sidebar</SheetTitle>
+          </SheetHeader>
+          <div className="mt-4">
+            <CountDownTimer
+              initialTime={totalQuizTime}
+              quizSessionId={quizSession.id}
+              mcqQuizEnded={hasEnded}
+              setMcqQuizEnded={setHasEnded}
+              mcqQuestionsLength={questions.length}
+            />
+            <CorrectQuestionGrid
+              questionLength={questions.length}
+              questionStatus={questionStatus}
+            />
+            <div className="flex flex-col gap-4">
+              <span className="font-medium">
+                Skipped Answers:{" "}
+                <span className="font-bold">{skippedAnswers}</span>
+              </span>
+            </div>
+
+            {!hasEnded && (
+              <div className="mt-auto">
+                <EndQuizButton
+                  quizSessionId={quizSession.id}
+                  setHasEnded={setHasEnded}
+                  mcqQuestionLength={questions.length}
+                />
+              </div>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+      <div
+        className={`border-grid fixed z-50 hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r bg-background transition-transform duration-300 md:sticky md:top-14 md:block md:translate-x-0 md:transition-none`}
+      >
+        <div className="no-scrollbar h-full overflow-auto py-2">
           <CountDownTimer
             initialTime={totalQuizTime}
             quizSessionId={quizSession.id}
@@ -313,7 +366,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             </div>
           </div>
         ) : (
-          <div>
+          <div className="p-2">
             <h2>{exam.name}</h2>
             <div className="flex flex-wrap justify-between gap-4 text-sm">
               <span className="font-medium">
