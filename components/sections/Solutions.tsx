@@ -130,8 +130,6 @@ const Solutions = () => {
   });
   return (
     <div className="relative min-h-screen" id="technology">
-      <ParticleBackground />
-
       <section className="relative py-20">
         <div className="container relative z-10 mx-auto px-4">
           <motion.div

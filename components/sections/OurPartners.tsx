@@ -42,10 +42,6 @@ const OurPartners = () => {
       </div>
 
       <div className="relative">
-        {/* Gradient Overlays */}
-        <div className="absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent dark:from-dark"></div>
-        <div className="absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-white to-transparent dark:from-dark"></div>
-
         {/* Single Scrolling Row */}
         <div className="flex overflow-hidden">
           <motion.div
