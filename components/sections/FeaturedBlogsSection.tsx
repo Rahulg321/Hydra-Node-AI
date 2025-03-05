@@ -168,9 +168,6 @@ const FeaturedBlogSection = () => {
       </div>
 
       <div className="relative">
-        <div className="absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent dark:from-black" />
-        <div className="absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-white to-transparent dark:from-black" />
-
         <Marquee
           gradient={false}
           speed={40}

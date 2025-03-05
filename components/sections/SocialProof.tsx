@@ -51,7 +51,7 @@ const testimonials = [
 ];
 
 const TestimonialCard = ({ testimonial }: any) => (
-  <div className="dark:bg-dark-card mx-4 w-[400px] rounded-xl border border-gray-100 bg-white p-6 shadow-lg dark:border-gray-800">
+  <div className="mx-4 w-[400px] rounded-xl border border-gray-100 bg-white p-6 shadow-lg dark:border-gray-800 dark:bg-dark-card">
     <div className="flex items-center gap-4">
       <img
         src={testimonial.image}
@@ -98,20 +98,11 @@ const SocialProof = () => {
       </div>
 
       <div className="relative">
-        <div className="dark:from-dark absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent" />
-        <div className="dark:from-dark absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-white to-transparent" />
-
         <Marquee gradient={false} speed={40} pauseOnHover={true}>
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={index} testimonial={testimonial} />
           ))}
         </Marquee>
-      </div>
-
-      {/* Background Elements */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-1/4 -top-1/2 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-1/2 -left-1/4 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
       </div>
     </section>
   );

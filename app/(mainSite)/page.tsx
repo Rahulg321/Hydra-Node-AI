@@ -29,7 +29,7 @@ export default async function Home() {
       {/* <PushNotificationManager />
       <InstallPrompt /> */}
       <HeroSection session={userSession} />
-      {/* <OurPartners /> */}
+      {/* <OurPartner /> */}
       <Features session={userSession} />
       <VisionSection />
       <Solutions />

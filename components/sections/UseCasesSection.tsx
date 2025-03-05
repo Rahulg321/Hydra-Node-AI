@@ -151,8 +151,6 @@ const UseCasesSection = () => {
 
   return (
     <section className="relative overflow-hidden py-24" id="use-cases">
-      <ParticleBackground />
-
       <div className="container relative z-10 mx-auto px-4">
         <motion.div
           ref={ref}
