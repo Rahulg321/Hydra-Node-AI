@@ -1,6 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, useTransition } from "react";
+import type React from "react";
+import { useState, useTransition } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  CheckCircle,
+  Clock,
+  BookOpen,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +17,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
-import MockExamForm from "../forms/mock-exam-form";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -20,28 +29,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useExamModeContext } from "@/lib/exam-mode-context";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { Progress } from "@/components/ui/progress";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { checkIfUserHasAccessToExam } from "@/lib/utils";
-import { ToastAction } from "../ui/toast";
-import { useToast } from "../ui/use-toast";
-import Link from "next/link";
-import CreateCustomExam from "@/actions/custom-exam";
 import CreateMultiStepExam from "@/actions/create-multistep-exam";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 
-export const MultiStepExamDialog = ({
-  examId,
-  examSlug,
-  examTime,
-  examLevel,
-  examName,
-  currentUserId,
-  buttonLabel = "Start Exam",
-  examLength,
-  questionsToShow,
-}: {
+interface MultiStepExamDialogProps {
   examId: string;
   examSlug: string;
   examTime: number;
@@ -51,135 +57,41 @@ export const MultiStepExamDialog = ({
   buttonLabel?: string;
   examLength: number;
   questionsToShow: number;
+}
+
+export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
+  examId,
+  examSlug,
+  examTime,
+  examLevel,
+  examName,
+  currentUserId,
+  buttonLabel = "Start Exam",
+  examLength,
+  questionsToShow,
 }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [timeForExam, setExamForTime] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [timeForExam, setTimeForExam] = useState(examTime);
   const [step, setStep] = useState(1);
   const [isPending, startTransition] = useTransition();
-  let totalSteps = 3;
-  const [examMode, setExamMode] = useState<string>("PRACTICE"); // Track selected mode
+  const [examMode, setExamMode] = useState<string>("PRACTICE");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
+
+  const totalSteps = 3;
 
   const handleModeSelect = (value: string) => {
-    setExamMode(value); // Update local state
+    setExamMode(value);
+    if (value === "MOCK") {
+      setTimeForExam(examTime);
+    }
   };
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value); // Convert string to number
-    setExamForTime(isNaN(value) ? 0 : value); // Handle NaN case
-  };
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <div>
-            <DialogDescription>
-              Welcome to the exam onboarding process. Please enter your name to
-              continue.
-            </DialogDescription>
-            <div>
-              <span className="text-sm">
-                Please answer the following questions to continue
-              </span>
-            </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="w-full">
-            <DialogDescription>Please provide the exam mode.</DialogDescription>
-            <div>
-              <Select onValueChange={handleModeSelect} value={examMode}>
-                <SelectTrigger className="">
-                  <SelectValue placeholder="Select an Exam Mode" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Exam Mode</SelectLabel>
-                    <SelectItem value="PRACTICE">Practice</SelectItem>
-                    <SelectItem value="MOCK">Mock</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              {examMode === "PRACTICE" && (
-                <div className="mt-4 space-y-2">
-                  <div>
-                    <span className="text-xs text-muted-foreground">
-                      When in practice mode you can set the time for the exam
-                    </span>
-                  </div>
-                  <Label>Time for Exam (in minutes)</Label>
-                  <Input
-                    type="number"
-                    placeholder="Exam Time......"
-                    value={timeForExam}
-                    onChange={handleTimeChange}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div>
-            <DialogDescription>
-              Review the details below and start the exam when you&apos;re
-              ready.
-            </DialogDescription>
-
-            <div className="mt-4 rounded-md bg-card p-4 shadow-sm">
-              <h3 className="mb-4 text-lg font-semibold">Exam Details</h3>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <span className="block text-sm font-bold text-muted-foreground">
-                    Exam Name
-                  </span>
-                  <span className="block text-base">{examName}</span>
-                </div>
-
-                <div>
-                  <span className="block text-sm font-bold text-muted-foreground">
-                    Time Allowed
-                  </span>
-                  <span className="block text-base">
-                    {examMode === "PRACTICE" ? (
-                      <div>
-                        <span>{timeForExam} minutes</span>
-                      </div>
-                    ) : (
-                      <div>
-                        <span>{examTime} minutes</span>
-                      </div>
-                    )}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="block text-sm font-bold text-muted-foreground">
-                    Exam Mode
-                  </span>
-                  <span className="block text-base capitalize">{examMode}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <p className="text-sm text-muted-foreground">
-                Please make sure you are ready to begin the exam. Once you
-                start, the timer will begin...
-              </p>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
+    const value = Number.parseInt(e.target.value);
+    setTimeForExam(isNaN(value) ? 0 : value);
   };
 
   const showSubscriptionToast = () => {
@@ -209,30 +121,29 @@ export const MultiStepExamDialog = ({
   };
 
   const handleExamStartButton = async () => {
-    startTransition(async () => {
-      console.log("exam mode values", examMode);
-      console.log("time for exam", timeForExam);
+    setIsGenerating(true);
 
+    // Simulate progress for better UX
+    const progressInterval = setInterval(() => {
+      setGenerationProgress((prev) => {
+        const newProgress = prev + Math.random() * 15;
+        return newProgress > 90 ? 90 : newProgress;
+      });
+    }, 500);
+
+    startTransition(async () => {
       try {
         const hasAccessResponse = await checkIfUserHasAccessToExam(
           currentUserId,
           examId,
         );
 
-        console.log("user has access to exam");
-
         if (!hasAccessResponse) {
+          clearInterval(progressInterval);
+          setIsGenerating(false);
           showSubscriptionToast();
           return;
         }
-
-        console.log(
-          "creating session",
-          examMode,
-          examTime,
-          examId,
-          timeForExam,
-        );
 
         const response = await CreateMultiStepExam(
           examMode,
@@ -243,66 +154,354 @@ export const MultiStepExamDialog = ({
           questionsToShow,
         );
 
-        console.log("recieved response");
+        clearInterval(progressInterval);
+        setGenerationProgress(100);
 
         if (response.type === "error") {
-          console.log("could not start quiz session from dialog");
+          setIsGenerating(false);
           toast({
-            title: "Could not Start Quiz 🥲",
+            title: "Could not Start Exam",
             variant: "destructive",
             description: response.message || "Could not find your account",
           });
         }
 
         if (response.type === "success") {
-          console.log("successfully started quiz session from dialog");
           toast({
-            title: "Quiz Created🎉",
-            description: response.message || "Successfully started Quiz",
+            title: "Exam Created Successfully",
+            description: response.message || "Successfully started exam",
           });
 
-          router.push(`/exam/${examId}/quiz/${response.quizSessionId}`);
+          // Short delay to show 100% progress before redirecting
+          setTimeout(() => {
+            setOpen(false);
+            router.push(`/exam/${examId}/quiz/${response.quizSessionId}`);
+          }, 500);
         }
-
-        console.log("exam mode is", examMode);
       } catch (error) {
-        console.error("error in quiz session form", error);
+        clearInterval(progressInterval);
+        setIsGenerating(false);
         toast({
-          title: "Could not Start Quiz 🥲",
+          title: "Could not Start Exam",
           variant: "destructive",
-          description: "An error occured, please try again later!!",
+          description: "An error occurred, please try again later",
         });
       }
     });
   };
 
+  const renderStepIndicator = () => (
+    <div className="mb-6">
+      <div className="mb-2 flex justify-between">
+        {[1, 2, 3].map((stepNumber) => (
+          <div key={stepNumber} className="flex flex-col items-center">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
+                step >= stepNumber
+                  ? "text-primary-foreground border-primary bg-primary"
+                  : "border-muted-foreground bg-muted text-muted-foreground"
+              }`}
+            >
+              {stepNumber}
+            </div>
+            <span
+              className={`mt-1 text-xs ${step >= stepNumber ? "text-primary" : "text-muted-foreground"}`}
+            >
+              {stepNumber === 1
+                ? "Welcome"
+                : stepNumber === 2
+                  ? "Settings"
+                  : "Review"}
+            </span>
+          </div>
+        ))}
+      </div>
+      <Progress value={(step / totalSteps) * 100} className="h-2" />
+    </div>
+  );
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Welcome to {examName}</CardTitle>
+                <CardDescription>
+                  You&apos;re about to start your exam preparation journey
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <BookOpen className="mt-0.5 h-5 w-5 text-primary" />
+                  <div>
+                    <h4 className="font-medium">Exam Overview</h4>
+                    <p className="text-sm text-muted-foreground">
+                      This is a {examLevel} level exam with {examLength}{" "}
+                      questions. You&apos;ll be shown {questionsToShow}{" "}
+                      questions.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <Clock className="mt-0.5 h-5 w-5 text-primary" />
+                  <div>
+                    <h4 className="font-medium">Time Allocation</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Standard time for this exam is {examTime} minutes, but you
+                      can adjust this in Practice mode.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        );
+      case 2:
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Exam Settings</CardTitle>
+                <CardDescription>
+                  Customize how you want to take this exam
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="exam-mode">Exam Mode</Label>
+                  <Select onValueChange={handleModeSelect} value={examMode}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select an Exam Mode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Exam Mode</SelectLabel>
+                        <SelectItem value="PRACTICE">
+                          <div className="flex items-center">
+                            <span>Practice Mode</span>
+                            <Badge variant="outline" className="ml-2">
+                              Flexible
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="MOCK">
+                          <div className="flex items-center">
+                            <span>Mock Exam</span>
+                            <Badge variant="outline" className="ml-2">
+                              Realistic
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {examMode === "PRACTICE"
+                      ? "Practice mode allows you to customize time and review answers as you go."
+                      : "Mock exam simulates real exam conditions with standard timing."}
+                  </p>
+                </div>
+
+                {examMode === "PRACTICE" && (
+                  <div className="space-y-2 pt-2">
+                    <Label htmlFor="exam-time">Time for Exam (minutes)</Label>
+                    <Input
+                      id="exam-time"
+                      type="number"
+                      min="1"
+                      placeholder="Enter time in minutes"
+                      value={timeForExam}
+                      onChange={handleTimeChange}
+                    />
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Recommended time: {examTime} minutes
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        );
+
+      case 3:
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4"
+          >
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Ready to Begin</CardTitle>
+                <CardDescription>
+                  Review your exam settings before starting
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-md bg-muted/50 p-4">
+                  <h3 className="mb-3 font-medium">Exam Summary</h3>
+                  <div className="grid grid-cols-2 gap-y-3 text-sm">
+                    <div className="text-muted-foreground">Exam Name:</div>
+                    <div className="font-medium">{examName}</div>
+
+                    <div className="text-muted-foreground">
+                      Difficulty Level:
+                    </div>
+                    <div className="font-medium capitalize">{examLevel}</div>
+
+                    <div className="text-muted-foreground">Exam Mode:</div>
+                    <div className="font-medium">
+                      <Badge
+                        variant={
+                          examMode === "PRACTICE" ? "outline" : "secondary"
+                        }
+                      >
+                        {examMode === "PRACTICE" ? "Practice" : "Mock Exam"}
+                      </Badge>
+                    </div>
+
+                    <div className="text-muted-foreground">Time Allowed:</div>
+                    <div className="font-medium">
+                      {examMode === "PRACTICE" ? timeForExam : examTime} minutes
+                    </div>
+
+                    <div className="text-muted-foreground">Questions:</div>
+                    <div className="font-medium">
+                      {questionsToShow} of {examLength}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm dark:border-amber-800 dark:bg-amber-950/20">
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-500" />
+                  <div className="text-amber-800 dark:text-amber-300">
+                    Once you start the exam, the timer will begin immediately.
+                    Make sure you&apos;re ready to proceed.
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderGeneratingState = () => (
+    <div className="space-y-6 py-8">
+      <div className="space-y-3 text-center">
+        <div className="mb-4 flex justify-center">
+          <div className="relative">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xs font-medium">
+                {Math.round(generationProgress)}%
+              </span>
+            </div>
+          </div>
+        </div>
+        <h3 className="text-lg font-medium">Generating Your Exam</h3>
+        <p className="mx-auto max-w-md text-sm text-muted-foreground">
+          We&apos;re preparing your personalized exam experience. This may take
+          a moment as we set up your questions and timer.
+        </p>
+      </div>
+
+      <Progress value={generationProgress} className="mx-auto h-2 max-w-md" />
+
+      <div className="animate-pulse text-center text-sm text-muted-foreground">
+        Please don&apos;t close this window
+      </div>
+    </div>
+  );
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="text-white hover:bg-primary-dark">
+        <Button
+          className="text-white transition-colors hover:bg-primary/90"
+          size="lg"
+        >
           {buttonLabel}
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {step < totalSteps ? `Step ${step}` : "Start Exam"}
-          </DialogTitle>
-        </DialogHeader>
-        <div>{renderStep()}</div>
-        <div className="mt-4 flex items-center justify-between">
-          {step > 1 && <Button onClick={handlePrevious}>Previous</Button>}
+      <DialogContent className="sm:max-w-md md:max-w-lg">
+        {!isGenerating ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>
+                {step < totalSteps
+                  ? `Step ${step} of ${totalSteps}`
+                  : "Start Exam"}
+              </DialogTitle>
+              <DialogDescription>
+                {step === 1
+                  ? "Welcome to the exam setup process"
+                  : step === 2
+                    ? "Configure your exam preferences"
+                    : "Review and start your exam"}
+              </DialogDescription>
+            </DialogHeader>
 
-          {step < totalSteps ? (
-            <Button onClick={handleNext} className="justify-end">
-              Next
-            </Button>
-          ) : (
-            <Button disabled={isPending} onClick={handleExamStartButton}>
-              {isPending ? "Creating Exam" : "Start Exam"}
-            </Button>
-          )}
-        </div>
+            {renderStepIndicator()}
+
+            <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
+
+            <DialogFooter className="mt-6 flex gap-2 sm:justify-between">
+              <div>
+                {step > 1 && (
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={isPending}
+                  >
+                    Back
+                  </Button>
+                )}
+              </div>
+              <div>
+                {step < totalSteps ? (
+                  <Button onClick={handleNext}>Continue</Button>
+                ) : (
+                  <Button
+                    onClick={handleExamStartButton}
+                    disabled={isPending}
+                    className="min-w-[120px]"
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Starting...
+                      </>
+                    ) : (
+                      "Start Exam"
+                    )}
+                  </Button>
+                )}
+              </div>
+            </DialogFooter>
+          </>
+        ) : (
+          renderGeneratingState()
+        )}
       </DialogContent>
     </Dialog>
   );
