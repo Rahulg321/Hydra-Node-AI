@@ -49,9 +49,6 @@ const ContactForm = () => {
 
   return (
     <div className="relative min-h-screen pt-20">
-      <ParticleBackground />
-
-      {/* Contact Form Section */}
       <section className="relative py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl">

@@ -22,6 +22,8 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const userSession = await auth();
+  console.log("user session", userSession);
+
   return (
     <React.Fragment>
       {/* <PushNotificationManager />

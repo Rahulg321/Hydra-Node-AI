@@ -285,8 +285,6 @@ const Features = ({ session }: { session: Session | null }) => {
       className="relative overflow-hidden py-12 sm:py-16 lg:py-24"
       id="features"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-50 to-transparent opacity-50 dark:via-dark-lighter" />
-
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}

@@ -13,8 +13,6 @@ const PricingCards = () => {
   const session = useSession();
   const router = useRouter();
 
-  console.log("session in pricing page", session);
-
   const userId = session.data?.user.id;
   const userEmail = session.data?.user.email;
 
@@ -81,9 +79,6 @@ const PricingCards = () => {
 
   return (
     <div className="relative min-h-screen pt-12">
-      <ParticleBackground />
-
-      {/* Header Section */}
       <section className="relative py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
@@ -204,7 +199,6 @@ const PricingCards = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="relative py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl">

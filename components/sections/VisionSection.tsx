@@ -18,8 +18,6 @@ const VisionSection = () => {
       className="relative flex min-h-screen items-center overflow-hidden py-24"
       id="mission"
     >
-      <ParticleBackground />
-
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
           {/* Left side - 3D Image */}

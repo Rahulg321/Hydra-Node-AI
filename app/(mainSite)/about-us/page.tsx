@@ -3,7 +3,7 @@ import AboutSection from "./AboutSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us!",
+  title: "About Us",
   description: "Learn more about HydraNode and our beginnings",
 };
 

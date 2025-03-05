@@ -7,6 +7,8 @@ export const metadata = {
 };
 
 const PricingPage = async () => {
+  console.log("inside pricing page");
+
   return (
     <div>
       <PricingCards />

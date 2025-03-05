@@ -13,8 +13,6 @@ const HeroSection = ({ session }: { session: Session | null }) => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      <ParticleBackground />
-
       <div className="container relative z-10 mx-auto px-4 py-32">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <motion.div
