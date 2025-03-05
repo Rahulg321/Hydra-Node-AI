@@ -198,7 +198,7 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
                 step >= stepNumber
-                  ? "text-primary-foreground border-primary bg-primary"
+                  ? "border-primary bg-primary text-white"
                   : "border-muted-foreground bg-muted text-muted-foreground"
               }`}
             >
