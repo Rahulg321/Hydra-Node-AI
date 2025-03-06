@@ -53,7 +53,7 @@ export const FeatureModal: React.FC<FeatureModalProps> = ({
       title: "Real-Time Exam Engine",
       description:
         "Experience the actual exam interface, time limits, and question formats to build confidence and reduce test anxiety.",
-      image: "/dist/assets/Real-Time-Exam-Engine.png",
+      image: "/assets/Real-Time-Exam-Engine.png",
       color:
         "from-blue-100/50 to-blue-200/30 dark:from-blue-500/20 dark:to-blue-600/10",
     },
@@ -62,7 +62,7 @@ export const FeatureModal: React.FC<FeatureModalProps> = ({
       title: "AI-Curated Exam Materials",
       description:
         "Our AI constantly analyzes exam trends and updates our question bank to ensure you're studying the most relevant content.",
-      image: "/dist/assets/AI-Curated-Exam-Materials.png",
+      image: "/assets/AI-Curated-Exam-Materials.png",
       color:
         "from-purple-100/50 to-purple-200/30 dark:from-purple-500/20 dark:to-purple-600/10",
     },
@@ -73,7 +73,7 @@ export const FeatureModal: React.FC<FeatureModalProps> = ({
       title: "Detailed Explanations",
       description:
         "Every question comes with clear, concise explanations for each answer option, helping you grasp the underlying concepts.",
-      image: "/dist/assets/Detailed_Explanations.png",
+      image: "/assets/Detailed_Explanations.png",
       color:
         "from-yellow-100/50 to-yellow-200/30 dark:from-yellow-500/20 dark:to-yellow-600/10",
     },
@@ -82,7 +82,7 @@ export const FeatureModal: React.FC<FeatureModalProps> = ({
       title: "GraphRAG Based Q&A Generation",
       description:
         "Leveraging advanced GraphRAG technology, we provide intelligent and contextually relevant questions, enhancing your understanding and retention.",
-      image: "/dist/assets/GraphRAG-Based-QA.png",
+      image: "/assets/GraphRAG-Based-QA.png",
       color:
         "from-cyan-100/50 to-cyan-200/30 dark:from-cyan-500/20 dark:to-cyan-600/10",
     },

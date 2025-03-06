@@ -10,6 +10,7 @@ import { ProblemStatement } from "@/components/sections/ProblemStatement";
 import TechStack from "@/components/sections/TechStack";
 import { ArrowBigRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PricingCards from "./pricing/pricing-cards";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -44,9 +45,10 @@ export default async function Home() {
       <ProblemStatement />
 
       <Features />
-      <TechStack />
-      <VisionSection />
-      <section className="">
+      {/* <TechStack /> */}
+      <PricingCards />
+      <FeaturedBlogsSection />
+      <section className="block-space">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-6 text-2xl font-bold md:text-3xl">
             Ready to Accelerate Your IT Career?
@@ -61,8 +63,6 @@ export default async function Home() {
           </Button>
         </div>
       </section>
-
-      <FeaturedBlogsSection />
     </React.Fragment>
   );
 }

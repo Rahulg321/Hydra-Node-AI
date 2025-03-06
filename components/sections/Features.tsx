@@ -296,10 +296,10 @@ const Features = () => {
       </div>
 
       {/* Feature Modal */}
-      {/* <FeatureModal
+      <FeatureModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      /> */}
+      />
     </section>
   );
 };
