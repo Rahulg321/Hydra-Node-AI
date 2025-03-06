@@ -101,9 +101,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 {description}
               </p>
               <div className="items-center justify-center gap-x-3 space-y-3 sm:flex sm:space-y-0">
-                <Button className="text-white">
+                <RainbowButton className="text-white dark:text-black">
                   Start your free practice exam
-                </Button>
+                </RainbowButton>
               </div>
             </div>
             {/* <div className="relative z-10 mx-4 mt-16 md:mx-10 md:mt-32">
