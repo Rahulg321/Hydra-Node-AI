@@ -1,14 +1,10 @@
 import React from "react";
-import UseCasesSection from "@/components/sections/UseCasesSection";
 import VisionSection from "@/components/sections/VisionSection";
 
 import FeaturedBlogsSection from "@/components/sections/FeaturedBlogsSection";
 
 import { Metadata } from "next";
 import Features from "@/components/sections/Features";
-import Solutions from "@/components/sections/Solutions";
-import SocialProof from "@/components/sections/SocialProof";
-import { auth } from "@/auth";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemStatement } from "@/components/sections/ProblemStatement";
 import TechStack from "@/components/sections/TechStack";

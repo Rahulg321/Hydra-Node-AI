@@ -81,7 +81,11 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     ref,
   ) => {
     return (
-      <div className={cn("relative", className)} ref={ref} {...props}>
+      <div
+        className={cn("relative overflow-hidden overflow-x-hidden", className)}
+        ref={ref}
+        {...props}
+      >
         <div className="0 absolute top-0 z-[0] h-screen w-screen" />
         <section className="z-1 relative mx-auto overflow-x-hidden">
           <RetroGrid {...gridOptions} />
@@ -89,7 +93,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
             <div className="leading-0 mx-auto max-w-3xl space-y-5 text-center lg:leading-5">
               <h2 className="mx-auto text-3xl tracking-tighter text-gray-900 dark:text-white md:text-4xl lg:text-6xl">
                 {subtitle.regular}
-                <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-purple-300 dark:to-orange-200">
+                <span className="bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent dark:from-purple-300 dark:to-orange-200">
                   {subtitle.gradient}
                 </span>
               </h2>
@@ -102,7 +106,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 </Button>
               </div>
             </div>
-            <div className="relative z-10 mx-4 mt-16 md:mx-10 md:mt-32">
+            {/* <div className="relative z-10 mx-4 mt-16 md:mx-10 md:mt-32">
               <HeroVideoDialog
                 animationStyle="from-center"
                 videoSrc="https://www.youtube.com/embed/EqCpT3bLgBM?si=trg5SHJbgq0cme2H"
@@ -110,7 +114,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 thumbnailAlt="Watch Demo Video"
                 className="w-full"
               />
-            </div>
+            </div> */}
           </div>
         </section>
       </div>
