@@ -74,11 +74,14 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [timeForExam, setTimeForExam] = useState(examTime);
+  const [numberOfQuestions, setNumberOfQuestions] = useState(5);
   const [step, setStep] = useState(1);
   const [isPending, startTransition] = useTransition();
   const [examMode, setExamMode] = useState<string>("PRACTICE");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+
+  console.log("exam length");
 
   const totalSteps = 3;
 
@@ -87,6 +90,13 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
     if (value === "MOCK") {
       setTimeForExam(examTime);
     }
+  };
+
+  const handleNumberOfQuestionsChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = Number.parseInt(e.target.value);
+    setNumberOfQuestions(isNaN(value) ? 0 : value);
   };
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,6 +162,7 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
           currentUserId,
           examLength,
           questionsToShow,
+          numberOfQuestions,
         );
 
         clearInterval(progressInterval);
@@ -319,18 +330,37 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
 
                 {examMode === "PRACTICE" && (
                   <div className="space-y-2 pt-2">
-                    <Label htmlFor="exam-time">Time for Exam (minutes)</Label>
-                    <Input
-                      id="exam-time"
-                      type="number"
-                      min="1"
-                      placeholder="Enter time in minutes"
-                      value={timeForExam}
-                      onChange={handleTimeChange}
-                    />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Recommended time: {examTime} minutes
-                    </p>
+                    <div>
+                      <Label htmlFor="number-questions">
+                        Select Number of Questions
+                      </Label>
+                      <Input
+                        id="number-questions"
+                        type="number"
+                        min="1"
+                        maxLength={examLength}
+                        placeholder="Select Number of questions"
+                        value={numberOfQuestions}
+                        onChange={handleNumberOfQuestionsChange}
+                      />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Total Questions Available ({examLength})
+                      </p>
+                    </div>
+                    <div>
+                      <Label htmlFor="exam-time">Time for Exam (minutes)</Label>
+                      <Input
+                        id="exam-time"
+                        type="number"
+                        min="1"
+                        placeholder="Enter time in minutes"
+                        value={timeForExam}
+                        onChange={handleTimeChange}
+                      />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Recommended time: {examTime} minutes
+                      </p>
+                    </div>
                   </div>
                 )}
               </CardContent>

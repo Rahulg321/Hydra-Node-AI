@@ -10,7 +10,7 @@ import db from "@/lib/db";
  * @param {string} currentUserId - The unique identifier of the user taking the exam.
  * @param {number} examLength - The total number of questions in the exam.
  * @param {number} questionsToShow - The total number of questions that will be shown to the user as per admin.
- *
+ *@param {number} numberOfQuestions number of question as selected by the user in admin mode
  * @returns {Promise<QuizSessionResponse>} - A promise that resolves to an object containing the success or error status, message, and quiz session ID if successful.
  *
  * @typedef {Object} QuizSessionResponse
@@ -36,6 +36,7 @@ export default async function CreateMultiStepExam(
   currentUserId: string,
   examLength: number,
   questionsToShow: number,
+  numberOfQuestions?: number,
 ) {
   // start and create a new quiz session and send the value of the quiz session back to the frontend for redirecting
   try {
@@ -54,7 +55,11 @@ export default async function CreateMultiStepExam(
     if (examMode === "PRACTICE") {
       // if it is a practice exam, the total length of questions is the total length of the exam
 
-      totalLengthOfQuestions = examLength;
+      if (numberOfQuestions) {
+        totalLengthOfQuestions = numberOfQuestions;
+      } else {
+        totalLengthOfQuestions = examLength;
+      }
     }
 
     if (examMode === "MOCK") {
