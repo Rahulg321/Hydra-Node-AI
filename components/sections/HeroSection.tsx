@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Brain, GraduationCap } from "lucide-react";
+import { Brain, GraduationCap } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { RainbowButton } from "../rainbow-button";
@@ -12,7 +12,7 @@ const HeroSection = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      <div className="container relative z-10 mx-auto px-4 py-32">
+      <div className="py:16 container relative z-10 mx-auto px-4 lg:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
