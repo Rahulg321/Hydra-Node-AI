@@ -80,8 +80,9 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
   const [examMode, setExamMode] = useState<string>("PRACTICE");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-
-  console.log("exam length");
+  const [loadingMessage, setLoadingMessage] = useState<string>(
+    "Initializing your exam...",
+  );
 
   const totalSteps = 3;
 
@@ -130,77 +131,6 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
     }
   };
 
-  const handleExamStartButton = async () => {
-    setIsGenerating(true);
-
-    // Simulate progress for better UX
-    const progressInterval = setInterval(() => {
-      setGenerationProgress((prev) => {
-        const newProgress = prev + Math.random() * 15;
-        return newProgress > 90 ? 90 : newProgress;
-      });
-    }, 500);
-
-    startTransition(async () => {
-      try {
-        const hasAccessResponse = await checkIfUserHasAccessToExam(
-          currentUserId,
-          examId,
-        );
-
-        if (!hasAccessResponse) {
-          clearInterval(progressInterval);
-          setIsGenerating(false);
-          showSubscriptionToast();
-          return;
-        }
-
-        const response = await CreateMultiStepExam(
-          examMode,
-          examMode === "PRACTICE" ? timeForExam : examTime,
-          examId,
-          currentUserId,
-          examLength,
-          questionsToShow,
-          numberOfQuestions,
-        );
-
-        clearInterval(progressInterval);
-        setGenerationProgress(100);
-
-        if (response.type === "error") {
-          setIsGenerating(false);
-          toast({
-            title: "Could not Start Exam",
-            variant: "destructive",
-            description: response.message || "Could not find your account",
-          });
-        }
-
-        if (response.type === "success") {
-          toast({
-            title: "Exam Created Successfully",
-            description: response.message || "Successfully started exam",
-          });
-
-          // Short delay to show 100% progress before redirecting
-          setTimeout(() => {
-            setOpen(false);
-            router.push(`/exam/${examId}/quiz/${response.quizSessionId}`);
-          }, 500);
-        }
-      } catch (error) {
-        clearInterval(progressInterval);
-        setIsGenerating(false);
-        toast({
-          title: "Could not Start Exam",
-          variant: "destructive",
-          description: "An error occurred, please try again later",
-        });
-      }
-    });
-  };
-
   const renderStepIndicator = () => (
     <div className="mb-6">
       <div className="mb-2 flex justify-between">
@@ -231,6 +161,108 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
     </div>
   );
 
+  const handleExamStartButton = async () => {
+    setIsGenerating(true);
+    setGenerationProgress(0);
+    setLoadingMessage("Initializing your exam...");
+
+    // Array of loading messages to display sequentially
+    const loadingMessages = [
+      "Generating questions using AI...",
+      "Crawling live documentation...",
+      "Analyzing difficulty patterns...",
+      "Personalizing your exam experience...",
+      "Generating your custom exam...",
+      "Finalizing exam setup...",
+    ];
+
+    // Show each message sequentially with delays
+    let messageIndex = 0;
+    const messageInterval = setInterval(() => {
+      if (messageIndex < loadingMessages.length) {
+        setLoadingMessage(loadingMessages[messageIndex]);
+        messageIndex++;
+      } else {
+        clearInterval(messageInterval);
+      }
+    }, 2000); // Change message every 2 seconds
+
+    // Simulate progress for better UX with slower initial progress
+    const progressInterval = setInterval(() => {
+      setGenerationProgress((prev) => {
+        // Slower progress at the beginning, faster towards the end
+        const increment = prev < 30 ? 3 : prev < 60 ? 5 : 8;
+        const newProgress = prev + Math.random() * increment;
+        return newProgress > 90 ? 90 : newProgress;
+      });
+    }, 800);
+
+    startTransition(async () => {
+      try {
+        const hasAccessResponse = await checkIfUserHasAccessToExam(
+          currentUserId,
+          examId,
+        );
+
+        if (!hasAccessResponse) {
+          clearInterval(progressInterval);
+          clearInterval(messageInterval);
+          setIsGenerating(false);
+          showSubscriptionToast();
+          return;
+        }
+
+        // Add artificial delay to ensure loading animation is visible
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        const response = await CreateMultiStepExam(
+          examMode,
+          examMode === "PRACTICE" ? timeForExam : examTime,
+          examId,
+          currentUserId,
+          examLength,
+          questionsToShow,
+          numberOfQuestions,
+        );
+
+        clearInterval(progressInterval);
+        clearInterval(messageInterval);
+        setGenerationProgress(100);
+        setLoadingMessage("Exam ready! Redirecting...");
+
+        if (response.type === "error") {
+          setIsGenerating(false);
+          toast({
+            title: "Could not Start Exam",
+            variant: "destructive",
+            description: response.message || "Could not find your account",
+          });
+        }
+
+        if (response.type === "success") {
+          toast({
+            title: "Exam Created Successfully",
+            description: response.message || "Successfully started exam",
+          });
+
+          // Short delay to show 100% progress before redirecting
+          setTimeout(() => {
+            setOpen(false);
+            router.push(`/exam/${examId}/quiz/${response.quizSessionId}`);
+          }, 1000);
+        }
+      } catch (error) {
+        clearInterval(progressInterval);
+        clearInterval(messageInterval);
+        setIsGenerating(false);
+        toast({
+          title: "Could not Start Exam",
+          variant: "destructive",
+          description: "An error occurred, please try again later",
+        });
+      }
+    });
+  };
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -414,7 +446,7 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
 
                     <div className="text-muted-foreground">Questions:</div>
                     <div className="font-medium">
-                      {questionsToShow} of {examLength}
+                      {numberOfQuestions} of {examLength}
                     </div>
                   </div>
                 </div>
@@ -450,8 +482,7 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
         </div>
         <h3 className="text-lg font-medium">Generating Your Exam</h3>
         <p className="mx-auto max-w-md text-sm text-muted-foreground">
-          We&apos;re preparing your personalized exam experience. This may take
-          a moment as we set up your questions and timer.
+          {loadingMessage}
         </p>
       </div>
 

@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 const PricingCards = () => {
   const session = useSession();
   const router = useRouter();
-
   const userId = session.data?.user.id;
   const userEmail = session.data?.user.email;
 
@@ -104,7 +103,6 @@ const PricingCards = () => {
             </motion.p>
           </div>
 
-          {/* Pricing Cards */}
           <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-3">
             {plans.map((plan, index) => (
               <motion.div

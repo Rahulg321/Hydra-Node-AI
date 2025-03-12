@@ -295,9 +295,10 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
         </SheetContent>
       </Sheet>
       <div
-        className={`border-grid fixed z-50 hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r bg-background transition-transform duration-300 md:sticky md:top-14 md:block md:translate-x-0 md:transition-none`}
+        className={`border-grid hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r bg-background transition-transform duration-300 md:sticky md:top-14 md:block md:translate-x-0 md:transition-none`}
       >
-        <div className="no-scrollbar h-full overflow-auto py-2">
+        <div className="no-scrollbar h-full overflow-auto px-4 py-2 md:sticky md:top-14">
+          <h3 className="mb-4">{exam.name}</h3>
           <CountDownTimer
             initialTime={totalQuizTime}
             quizSessionId={quizSession.id}
@@ -309,7 +310,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             questionLength={questions.length}
             questionStatus={questionStatus}
           />
-          <div className="flex flex-col gap-4">
+          <div className="my-4 flex flex-col gap-4">
             <span className="font-medium">
               Skipped Answers:{" "}
               <span className="font-bold">{skippedAnswers}</span>
@@ -367,7 +368,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           </div>
         ) : (
           <div className="p-2">
-            <h2>{exam.name}</h2>
             <div className="flex flex-wrap justify-between gap-4 text-sm">
               <span className="font-medium">
                 Exam Mode:{" "}
