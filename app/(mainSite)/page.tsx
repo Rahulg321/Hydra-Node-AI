@@ -5,12 +5,13 @@ import FeaturedBlogsSection from "@/components/sections/FeaturedBlogsSection";
 
 import { Metadata } from "next";
 import Features from "@/components/sections/Features";
-import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemStatement } from "@/components/sections/ProblemStatement";
 import TechStack from "@/components/sections/TechStack";
 import { ArrowBigRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PricingCards from "./pricing/pricing-cards";
+import HeroSection from "@/components/sections/HeroSection";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -18,11 +19,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  const userSession = await auth();
   return (
     <React.Fragment>
       {/* <PushNotificationManager />
       <InstallPrompt /> */}
-      <HeroSection
+      {/* <HeroSection
         subtitle={{
           regular: "Ace your certifications with ",
           gradient: "AI-powered precision",
@@ -41,7 +43,8 @@ export default async function Home() {
           lightLineColor: "#4a4a4a",
           darkLineColor: "#2a2a2a",
         }}
-      />
+      /> */}
+      <HeroSection />
       <ProblemStatement />
 
       <Features />
