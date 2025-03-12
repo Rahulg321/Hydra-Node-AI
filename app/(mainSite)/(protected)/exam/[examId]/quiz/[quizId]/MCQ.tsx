@@ -423,7 +423,8 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               </div>
             </div>
             {showAnswer && (
-              <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900">
+              <div className="mt-4 rounded-lg bg-green-50 p-4 dark:bg-green-900">
+                <h3 className="my-4">Overall Explanation</h3>
                 <RenderMarkdown source={currentQuestion.overallExplanation} />
               </div>
             )}
@@ -613,8 +614,22 @@ function Option({
           <RenderMarkdown source={optionText!} className="bg-none" />
         </div>
         {isShowAnswer && (
-          <div>
-            <RenderMarkdown source={optionExplanation!} />
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-sm font-bold text-muted-foreground">
+              Option Explanation
+            </span>
+            <div className={cn("", isCorrect && "text-white")}>
+              {isCorrect ? (
+                <RenderMarkdown
+                  source={optionExplanation!}
+                  contentStyle={{
+                    color: "white",
+                  }}
+                />
+              ) : (
+                <RenderMarkdown source={optionExplanation!} contentStyle={{}} />
+              )}
+            </div>
           </div>
         )}
       </div>

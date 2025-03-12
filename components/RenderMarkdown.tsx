@@ -4,7 +4,7 @@ import React from "react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { getCodeString } from "rehype-rewrite";
 import katex from "katex";
-import "katex/dist/katex.css";
+// import "katex/dist/katex.css";
 import { useTheme } from "next-themes";
 
 interface RenderMarkdownProps {
@@ -30,6 +30,7 @@ const RenderMarkdown = ({
         source={source}
         style={{
           padding: 16,
+          background: "none",
           fontSize: "1rem",
           ...contentStyle,
         }}
