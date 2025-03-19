@@ -11,75 +11,68 @@ import LoginBackground from "@/public/auth/Background.avif";
 import Head from "next/head";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import { GeistSans } from "geist/font/sans";
+import localFont from "next/font/local";
+// Font files can be colocated inside of `app`
+const transducerFont = localFont({
+  src: "../fonts/transducer-test-regular.otf",
+  variable: "--font-transducer",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-    metadataBase: new URL(baseUrl),
-    title: {
-        default: "Hydronode AI",
-        template: "%s | Hydronode AI",
-    },
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Hydronode AI",
+    template: "%s | Hydronode AI",
+  },
+  description: "AI Powered Remote Learning Platform",
+  openGraph: {
+    title: "Hydronode AI",
     description: "AI Powered Remote Learning Platform",
-    openGraph: {
-        title: "Hydronode AI",
-        description: "AI Powered Remote Learning Platform",
-        url: baseUrl,
-        siteName: "Hydronode AI",
-        locale: "en_US",
-        type: "website",
+    url: baseUrl,
+    siteName: "Hydronode AI",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-        },
-    },
-    twitter: {
-        title: "HydraNode AI",
+  },
+  twitter: {
+    title: "HydraNode AI",
 
-        card: "summary_large_image",
-    },
-    verification: {
-        google: "4RCrNU4mc2UMomzqwPASL7m0L_Mv_fePZrGOPHe0MIU",
-    },
+    card: "summary_large_image",
+  },
+  verification: {
+    google: "4RCrNU4mc2UMomzqwPASL7m0L_Mv_fePZrGOPHe0MIU",
+  },
 };
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <html lang="en" suppressHydrationWarning>
-            <Head>
-                <meta name="HydraNode" content="HydraNode" />
-            </Head>
-            <body className={cn("", GeistSans.variable)}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-                        <div className="relative hidden md:block">
-                            <Image
-                                src={LoginBackground}
-                                alt="blue background wavy for authentication pages"
-                                className="object-cover"
-                                placeholder="blur"
-                                fill
-                            />
-                        </div>
-                        <main className="min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-background dark:text-gray-100">
-                            <ThemeSwitchButton />
-                            {children}
-                        </main>
-                    </div>
-                </ThemeProvider>
-            </body>
-            <GoogleAnalytics gaId="G-TTB31XWF1N" />
-        </html>
-    );
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <Head>
+        <meta name="HydraNode" content="HydraNode" />
+      </Head>
+      <body className={cn("", GeistSans.variable, transducerFont.variable)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main>{children}</main>
+        </ThemeProvider>
+      </body>
+      <GoogleAnalytics gaId="G-TTB31XWF1N" />
+    </html>
+  );
 };
 
 export default RootLayout;

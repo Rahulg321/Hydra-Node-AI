@@ -27,6 +27,7 @@ import { useToast } from "@/components/ui/use-toast";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
 import { PasswordInput } from "../ui/password-input";
+import { GradientButton } from "../buttons/gradient-button";
 
 const SignupForm = () => {
   const [error, setError] = useState("");
@@ -115,9 +116,9 @@ const SignupForm = () => {
           </ul>
           {error && <ErrorCard urlError={error} />}
           {success && <SuccessCard success={success} />}
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <GradientButton type="submit" className="w-full" disabled={isPending}>
             {isPending ? "Creating User..." : "Sign up"}
-          </Button>
+          </GradientButton>
         </form>
       </Form>
       <div className="my-4 flex items-center">

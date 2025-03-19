@@ -9,50 +9,43 @@ import React, { Suspense } from "react";
 import LoginBackground from "@/public/auth/loginSignupImage.png";
 import LogoDark from "@/public/logos/h_logo.svg";
 import LogoLight from "@/public/logos/light_logo.png";
-
+import AuthHeroSection from "../auth-hero-section";
+import SigninGoogle from "@/components/ComponentButtons/SigninGoogle";
 
 export const metadata: Metadata = {
-    title: "Login",
-    description: "Login to your hydranode account",
+  title: "Login",
+  description: "Login to your hydranode account",
 };
 
 const LoginPage = () => {
-    return (
-        <div className="block-space-large container relative content-center">
-            <div className="absolute right-4 top-4">
-                <Link href={"/"}>
-                    <Image
-                        src={LogoDark}
-                        alt="Hydranode"
-                        width={150}
-                        height={150}
-                        className="h-8 hidden dark:block"
-                    />
-                    <Image
-                        src={LogoLight}
-                        width={150}
-                        height={150}
-                        alt="Hydranode"
-                        className="h-8 dark:hidden"
-                    />
-                </Link>
+  return (
+    <div className="flex min-h-screen flex-col md:flex-row">
+      <AuthHeroSection />
+
+      <div className="flex flex-1 flex-col items-center justify-center p-8 md:p-12">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold">Login to your Account</h2>
+            <p className="mt-2 text-sm text-gray-400">
+              Enter your email & password to login to your account
+            </p>
+          </div>
+          <SigninGoogle />
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-gray-700"></span>
             </div>
-            <div className="mx-auto max-w-xl">
-                <h3>Welcome to Hydranode </h3>
-                <Suspense>
-                    <LoginForm />
-                </Suspense>
-                <div className="mt-4 text-center">
-                    <p>
-                        Need an account?
-                        <Link href="/signup" className="ml-1 text-blue-500 underline">
-                            Create one
-                        </Link>
-                    </p>
-                </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-black px-2 text-gray-400">Or</span>
             </div>
+          </div>
+          <Suspense>
+            <LoginForm />
+          </Suspense>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default LoginPage;

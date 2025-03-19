@@ -101,10 +101,10 @@ const AboutSection = () => {
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 text-4xl font-bold md:text-5xl"
+              className="transducer-font mb-6 text-4xl font-bold"
             >
               Revolutionizing Education Through{" "}
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              <span className="text-gradient bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-white">
                 AI
               </span>
             </motion.h1>
@@ -112,7 +112,7 @@ const AboutSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="mb-12 text-xl leading-relaxed text-gray-600 dark:text-gray-400"
+              className="mb-12 leading-relaxed"
             >
               At HydraNode, we&apos;re on a mission to democratize education
               through innovative AI technology. Our platform uses artificial
@@ -130,7 +130,7 @@ const AboutSection = () => {
                   transition={{ delay: 0.3 + index * 0.1 }}
                   className="rounded-xl bg-white p-6 text-center shadow-lg ring-2 ring-primary dark:bg-dark-card dark:ring-primary/40"
                 >
-                  <div className="mb-2 text-3xl font-bold text-primary">
+                  <div className="text-mainYellow mb-2 text-3xl font-bold">
                     {stat.number}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -178,7 +178,7 @@ const AboutSection = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               className="relative"
             >
-              <h2 className="mb-6 text-3xl font-bold md:text-4xl">
+              <h2 className="text-gradient mb-6 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-3xl font-bold text-white md:text-4xl">
                 Our Mission
               </h2>
               <p className="mb-6 text-lg leading-relaxed text-gray-600 dark:text-gray-400">
@@ -208,7 +208,10 @@ const AboutSection = () => {
             className="mb-16 text-center"
           >
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Our Core Values
+              Our Core{" "}
+              <span className="text-gradient bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-white">
+                Values
+              </span>
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
               The principles that guide our mission to transform education
@@ -222,7 +225,7 @@ const AboutSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className="rounded-xl bg-white p-6 shadow-lg ring-2 ring-primary transition-shadow hover:shadow-xl dark:bg-dark-card dark:ring-primary/40"
+                className="rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-6 shadow-lg transition-shadow hover:shadow-xl"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <value.icon className="h-6 w-6 text-primary" />

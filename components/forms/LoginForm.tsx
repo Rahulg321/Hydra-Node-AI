@@ -28,6 +28,7 @@ import SigninGoogle from "../ComponentButtons/SigninGoogle";
 import { SuccessCard, ErrorCard } from "@/components/FormInfoCards";
 import { set } from "zod";
 import { PasswordInput } from "../ui/password-input";
+import { GradientButton } from "../buttons/gradient-button";
 
 const LoginForm = () => {
   const [show2fa, setShow2fa] = useState(false);
@@ -135,7 +136,10 @@ const LoginForm = () => {
             </React.Fragment>
           )}
 
-          <Link href={"/auth/reset"} className="mt-4 px-0 hover:underline">
+          <Link
+            href={"/auth/reset"}
+            className="mt-4 px-0 text-xs text-gray-400 hover:underline md:mt-6"
+          >
             Forgot Password
           </Link>
           {/* <div className="flex items-center space-x-2">
@@ -150,20 +154,23 @@ const LoginForm = () => {
           {success && <SuccessCard success={success} />}
           {error && <ErrorCard urlError={error} />}
 
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <GradientButton type="submit" className="w-full" disabled={isPending}>
             {isPending ? "Logging in..." : show2fa ? "Confirm" : "Log in"}
-          </Button>
+          </GradientButton>
         </form>
       </Form>
       <div className="mt-4">
         <ErrorCard urlError={urlError} />
       </div>
-      <div className="flex items-center">
-        <div className="flex-grow border-t border-gray-300" />
-        <span className="mx-4 text-gray-500">or</span>
-        <div className="flex-grow border-t border-gray-300" />
-      </div>
-      <SigninGoogle />
+      <p className="text-center text-sm text-gray-400">
+        Create new account{" "}
+        <Link
+          href="/signup"
+          className="font-medium text-orange-400 hover:text-orange-300"
+        >
+          Register
+        </Link>
+      </p>
     </div>
   );
 };

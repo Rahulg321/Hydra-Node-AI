@@ -6,6 +6,7 @@ import { Send } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import { useToast } from "@/hooks/use-toast";
 import submitContactForm from "@/actions/contact-email";
+import { GradientButton } from "@/components/buttons/gradient-button";
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -59,7 +60,7 @@ const ContactForm = () => {
             >
               <h1 className="mb-6 text-4xl font-bold md:text-5xl">
                 Get in{" "}
-                <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                <span className="text-gradient bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-white">
                   Touch
                 </span>
               </h1>
@@ -73,7 +74,7 @@ const ContactForm = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="rounded-2xl bg-white p-8 shadow-xl dark:bg-dark-card md:p-12"
+              className="rounded-2xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-8 shadow-xl md:p-12"
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
@@ -90,7 +91,7 @@ const ContactForm = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-dark-lighter"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700"
                       required
                     />
                   </div>
@@ -107,7 +108,7 @@ const ContactForm = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-dark-lighter"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700"
                       required
                     />
                   </div>
@@ -126,7 +127,7 @@ const ContactForm = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-dark-lighter"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700"
                       required
                     />
                   </div>
@@ -144,33 +145,25 @@ const ContactForm = () => {
                     value={formData.message}
                     onChange={handleChange}
                     rows={6}
-                    className="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-dark-lighter"
+                    className="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700 dark:bg-dark-lighter"
                     required
                   ></textarea>
                 </div>
                 <div className="flex justify-end">
-                  <motion.button
+                  <GradientButton
                     type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 font-medium text-white transition-colors hover:bg-primary-dark"
                     disabled={isPending}
+                    size={"lg"}
                   >
                     <Send className="h-5 w-5" />
                     {isPending ? "Sending..." : "Send Message"}
-                  </motion.button>
+                  </GradientButton>
                 </div>
               </form>
             </motion.div>
           </div>
         </div>
       </section>
-
-      {/* Background Elements */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
-      </div>
     </div>
   );
 };

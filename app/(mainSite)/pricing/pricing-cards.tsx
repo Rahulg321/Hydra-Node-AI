@@ -1,13 +1,11 @@
 "use client";
-
-import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Check, X, Zap, Users, Crown, Brain, Book } from "lucide-react";
-import ParticleBackground from "@/components/ParticleBackground";
-import CheckoutDialog from "@/components/CheckoutDialog";
+import { Check, X, Zap, Crown, Book } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import CheckoutDialog from "@/components/CheckoutDialog";
+import { GradientButton } from "@/components/buttons/gradient-button";
 
 const PricingCards = () => {
   const session = useSession();
@@ -22,15 +20,15 @@ const PricingCards = () => {
 
   const plans = [
     {
-      name: "Starter",
+      name: "7 days Free Trial",
       icon: Book,
-      description: "Take a demo",
+      description: "Start your learning journey",
       duration: "7 days free trial",
       priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
       mode: "subscription",
       price: 0,
       features: [
-        "Acess to all the IT certifications preparation mock exam",
+        "Access to all the IT certifications preparation mock exam",
         "AI-Powered question generation",
         "AI-Powered review generation",
         "AI-Powered explanation generation",
@@ -40,6 +38,8 @@ const PricingCards = () => {
         "Full Exam History",
       ],
       notIncluded: [],
+      buttonText: "Get Started",
+      subText: "No credit card required",
     },
     {
       name: "Plus",
@@ -48,7 +48,7 @@ const PricingCards = () => {
       duration: "For 1 year",
       priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
       mode: "subscription",
-      price: 100,
+      price: 99,
       popular: true,
       features: [
         "Everything in Starter",
@@ -57,15 +57,17 @@ const PricingCards = () => {
         "All the vendors access",
       ],
       notIncluded: [],
+      buttonText: "Get Started",
+      subText: "Billed yearly",
     },
     {
-      name: "Lifetime Billing",
+      name: "Lifetime Access",
       icon: Crown,
-      description: "For lifetime access",
+      description: "Ideal for working professionals",
       duration: "For lifetime",
       mode: "payment",
       priceId: "price_1PsgMGIbE21KKZM9fg2dyVJ6",
-      price: 200,
+      price: 199,
       lifetime: true,
       features: [
         "Everything in Plus",
@@ -73,37 +75,25 @@ const PricingCards = () => {
         "Priority feature access",
         "Custom AI model",
       ],
+      buttonText: "Get Started",
+      subText: "One-time billing",
     },
   ];
 
   return (
-    <div className="relative min-h-screen pt-12">
+    <div className="relative min-h-screen bg-black text-white">
       <section className="relative py-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 text-4xl font-bold md:text-5xl"
-            >
-              Simple,{" "}
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                Transparent
-              </span>{" "}
-              Pricing
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="mb-12 text-xl text-gray-600 dark:text-gray-400"
-            >
-              Choose the perfect plan for your learning journey. From individual
-              exams to yearly plan or lifetime access.
-            </motion.p>
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <h1 className="mb-4 text-4xl font-bold uppercase tracking-wider md:text-5xl">
+              Choose the right plan for you
+            </h1>
+            <p className="text-lg text-gray-400">
+              Simple, Affordable Plans to Fit Your Needs
+            </p>
           </div>
 
-          <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-3">
+          <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.name}
@@ -111,88 +101,88 @@ const PricingCards = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className={`relative overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-dark-card ${
-                  plan.popular ? "ring-2 ring-primary" : ""
-                }`}
+                className="relative overflow-hidden rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-8"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to bottom, #111111, #1a1a1a)",
+                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.3)",
+                }}
               >
-                {plan.popular && (
-                  <div className="absolute right-0 top-0 rounded-bl-lg bg-primary px-4 py-1 text-sm font-medium text-white">
-                    Most Popular
-                  </div>
-                )}
-                {plan.lifetime && (
-                  <div className="absolute right-0 top-0 rounded-bl-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-1 text-sm font-medium text-white">
-                    Lifetime Access
-                  </div>
-                )}
-
-                <div className="p-8">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                    <plan.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="mb-2 text-2xl font-bold">{plan.name}</h3>
-                  <p className="mb-6 text-gray-600 dark:text-gray-400">
-                    {plan.description}
-                  </p>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold">${plan.price}</span>
-                    <span className="text-gray-600 dark:text-gray-400">
-                      {plan.lifetime
-                        ? "/one-time"
-                        : plan.price === 0
-                          ? "/7 days free trial"
-                          : "/year"}
+                <h3 className="mb-6 text-xl font-medium text-gray-300">
+                  {plan.name}
+                </h3>
+                <div className="mb-4">
+                  <span className="text-5xl font-bold text-[#f08e67]">
+                    ${plan.price}
+                  </span>
+                  {plan.price > 0 && (
+                    <span className="ml-1 text-gray-400">
+                      {plan.lifetime ? "" : "/year"}
                     </span>
-                  </div>
-                  {session.data && plan.price !== 0 ? (
-                    <CheckoutDialog
-                      priceId={plan.priceId}
-                      mode={plan.mode}
-                      popular={plan.popular}
-                      lifetime={plan.lifetime}
-                      name={plan.name}
-                      userId={userId as string}
-                      email={userEmail as string}
-                    />
-                  ) : (
-                    <button
-                      className={`mb-8 w-full rounded-lg px-6 py-3 font-medium transition-all duration-300 ${
-                        plan.popular || plan.lifetime
-                          ? "bg-primary text-white hover:bg-primary-dark"
-                          : "bg-gray-100 hover:bg-gray-200 dark:bg-dark-lighter dark:hover:bg-dark-card"
-                      }`}
+                  )}
+                </div>
+                <p className="mb-6 text-gray-400">{plan.description}</p>
+
+                {session.data && plan.price !== 0 ? (
+                  <CheckoutDialog
+                    priceId={plan.priceId}
+                    mode={plan.mode}
+                    popular={plan.popular}
+                    lifetime={plan.lifetime}
+                    name={plan.name}
+                    userId={userId as string}
+                    email={userEmail as string}
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    <GradientButton
+                      className="w-full"
+                      size={"lg"}
                       onClick={() => {
                         router.push("/login");
                       }}
                     >
                       Get Started
-                    </button>
-                  )}
-
-                  <div className="space-y-4">
-                    {plan.features.map((feature) => (
-                      <div key={feature} className="flex items-center gap-3">
-                        <Check className="h-5 w-5 flex-shrink-0 text-primary" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {feature}
-                        </span>
-                      </div>
-                    ))}
-                    {plan.notIncluded?.map((feature) => (
-                      <div
-                        key={feature}
-                        className="flex items-center gap-3 opacity-50"
-                      >
-                        <X className="h-5 w-5 flex-shrink-0 text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {feature}
-                        </span>
-                      </div>
-                    ))}
+                    </GradientButton>
+                    <p className="text-center text-sm text-gray-500">
+                      {plan.subText}
+                    </p>
                   </div>
+                )}
+
+                <div className="mt-8 space-y-4">
+                  {plan.features.map((feature) => (
+                    <div key={feature} className="flex items-start gap-3">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#f08e67]" />
+                      <span className="text-sm text-gray-300">{feature}</span>
+                    </div>
+                  ))}
+                  {plan.notIncluded?.map((feature) => (
+                    <div
+                      key={feature}
+                      className="flex items-center gap-3 opacity-50"
+                    >
+                      <X className="h-5 w-5 flex-shrink-0 text-gray-400" />
+                      <span className="text-sm text-gray-400">{feature}</span>
+                    </div>
+                  ))}
                 </div>
               </motion.div>
             ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mx-auto max-w-3xl"
+            >
+              <GradientButton size={"lg"} className="w-full">
+                If you don&apos;t commit for subscription, you can also buy
+                individual exam!
+              </GradientButton>
+            </motion.div>
           </div>
         </div>
       </section>

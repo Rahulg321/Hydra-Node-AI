@@ -20,6 +20,7 @@ import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
+import { GradientButton } from "./buttons/gradient-button";
 
 type CheckoutDialogProps = {
   priceId: string;
@@ -70,15 +71,9 @@ const CheckoutDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
-          className={`mb-8 w-full rounded-lg px-6 py-3 font-medium transition-all duration-300 ${
-            popular || lifetime
-              ? "bg-primary text-white hover:bg-primary-dark"
-              : "bg-gray-100 hover:bg-gray-200 dark:bg-dark-lighter dark:hover:bg-dark-card"
-          }`}
-        >
+        <GradientButton className="w-full" size={"lg"}>
           Get Started
-        </button>
+        </GradientButton>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] w-full max-w-6xl overflow-y-auto">
         <DialogHeader>

@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
 @layer base {
   :root {
     --base: #5d5fef;
@@ -28,7 +39,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
 
-    --primary: 0 0% 9%;
+    --primary: 23 100% 62% 1;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 0 0% 96.1%;
@@ -95,7 +106,7 @@
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 98%;
+    --primary: 27, 96%, 61%;
     --primary-foreground: 0 0% 9%;
 
     --secondary: 0 0% 14.9%;
@@ -155,8 +166,12 @@
   }
 }
 
-* {
+body {
   font-family: var(--font-geist-sans);
+}
+
+.transducer-font {
+  font-family: var(--font-transducer) !important;
 }
 
 /* Smooth scrolling behavior */
@@ -166,6 +181,10 @@ html {
 
 .gradient-text {
   @apply bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent;
+}
+
+.hsl-white {
+  color: hsla(0, 0%, 100%, 1);
 }
 
 .perspective {
@@ -182,23 +201,6 @@ html {
 
 .backface-hidden {
   backface-visibility: hidden;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-100;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-gray-300 dark:bg-gray-700;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-600;
 }
 
 .bg-gradient-radial-sunset {

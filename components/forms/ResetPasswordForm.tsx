@@ -30,6 +30,7 @@ import {
 } from "@/lib/schemas/ResetPasswordFormSchema";
 import { resetPassword } from "@/actions/reset-password";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
+import { GradientButton } from "../buttons/gradient-button";
 
 const ResetPasswordForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -60,7 +61,7 @@ const ResetPasswordForm = () => {
   }
 
   return (
-    <div className="mt-4">
+    <div className="">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -78,9 +79,13 @@ const ResetPasswordForm = () => {
           />
           <ErrorCard urlError={error} />
           <SuccessCard success={success} />
-          <Button type="submit" className="bg-base" disabled={isPending}>
+          <GradientButton
+            type="submit"
+            className="bg-base"
+            disabled={isPending}
+          >
             {isPending ? "Resetting....." : "Send Reset Email"}
-          </Button>
+          </GradientButton>
         </form>
       </Form>
     </div>

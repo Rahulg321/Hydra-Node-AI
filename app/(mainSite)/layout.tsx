@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Manrope, Poppins } from "next/font/google";
 import "../globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,18 +6,21 @@ import clsx from "clsx";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import { manrope, poppins } from "../fonts";
-import { ExamModeProvider } from "@/lib/exam-mode-context";
 import { baseUrl } from "../sitemap";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { AnimatePresence } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import Head from "next/head";
 import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import localFont from "next/font/local";
+
+// Font files can be colocated inside of `app`
+const transducerFont = localFont({
+  src: "../fonts/transducer-test-regular.otf",
+  variable: "--font-transducer",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -67,16 +69,15 @@ export default async function RootLayout({
       <Head>
         <meta name="HydraNode" content="HydraNode" />
       </Head>
-      <body className={clsx("", GeistSans.variable)}>
+      <body className={clsx("", GeistSans.variable, transducerFont.variable)}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
           <SessionProvider>
-            <div className="min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-background dark:text-gray-100">
-              <ThemeSwitchButton />
+            <div className="">
               {/* <Header session={session} /> */}
               <Navbar session={session} />
               {children}

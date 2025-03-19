@@ -17,65 +17,65 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-    metadataBase: new URL(baseUrl),
-    title: {
-        default: "Hydronode AI",
-        template: "%s | Hydronode AI",
-    },
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Hydronode AI",
+    template: "%s | Hydronode AI",
+  },
+  description: "AI Powered Remote Learning Platform",
+  openGraph: {
+    title: "Hydronode AI",
     description: "AI Powered Remote Learning Platform",
-    openGraph: {
-        title: "Hydronode AI",
-        description: "AI Powered Remote Learning Platform",
-        url: baseUrl,
-        siteName: "Hydronode AI",
-        locale: "en_US",
-        type: "website",
+    url: baseUrl,
+    siteName: "Hydronode AI",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-        },
-    },
-    twitter: {
-        title: "HydraNode AI",
+  },
+  twitter: {
+    title: "HydraNode AI",
 
-        card: "summary_large_image",
-    },
-    verification: {
-        google: "4RCrNU4mc2UMomzqwPASL7m0L_Mv_fePZrGOPHe0MIU",
-    },
+    card: "summary_large_image",
+  },
+  verification: {
+    google: "4RCrNU4mc2UMomzqwPASL7m0L_Mv_fePZrGOPHe0MIU",
+  },
 };
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <html lang="en" suppressHydrationWarning>
-            <Head>
-                <meta name="HydraNode" content="HydraNode" />
-            </Head>
-            <body className={cn("", GeistSans.variable)}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <main>
-                        <TooltipProvider>
-                            <ThemeSwitchButton />
-                            {children}
-                        </TooltipProvider>
-                    </main>
-                </ThemeProvider>
-                <Toaster />
-            </body>
-            <GoogleAnalytics gaId="G-TTB31XWF1N" />
-        </html>
-    );
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <Head>
+        <meta name="HydraNode" content="HydraNode" />
+      </Head>
+      <body className={cn("", GeistSans.variable)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main>
+            <TooltipProvider>
+              <ThemeSwitchButton />
+              {children}
+            </TooltipProvider>
+          </main>
+        </ThemeProvider>
+        <Toaster />
+      </body>
+      <GoogleAnalytics gaId="G-TTB31XWF1N" />
+    </html>
+  );
 };
 
 export default RootLayout;

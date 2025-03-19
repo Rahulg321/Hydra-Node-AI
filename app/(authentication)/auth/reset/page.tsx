@@ -2,29 +2,26 @@ import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
+import AuthHeroSection from "../../auth-hero-section";
 
 const PasswordResetPage = () => {
   return (
-    <section className="block-space big-container">
-      <div className="absolute right-4 top-4">
-        <Link href={"/"}>
-          <Image
-            src={"/hydranode_logo.png"}
-            alt="official logo for hydranode"
-            className="object-cover"
-            width={200}
-            height={200}
-          />
-        </Link>
-      </div>
-      <h1>Reset Your Password</h1>
-      <p>Enter your email address below to reset your password.</p>
-
-      <div>
-        <span className="text-muted-foreground">Forgot your password?</span>
-        <Suspense>
-          <ResetPasswordForm />
-        </Suspense>
+    <section className="flex min-h-screen flex-col md:flex-row">
+      <AuthHeroSection />
+      <div className="flex flex-1 flex-col items-center justify-center p-8 md:p-12">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center">
+            <h2>Reset Your Password</h2>
+            <span className="mt-2 block font-semibold text-gray-400">
+              Enter your email address below to reset your password.
+            </span>
+            <div className="mt-4">
+              <Suspense>
+                <ResetPasswordForm />
+              </Suspense>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
