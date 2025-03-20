@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Testimonial data
 const testimonials = [
@@ -85,13 +86,10 @@ export default function TestimonialGrid() {
 
               <div className="flex items-center">
                 <div className="mr-4">
-                  <Image
-                    src={testimonial.avatar || "/placeholder.svg"}
-                    width={48}
-                    height={48}
-                    alt={`${testimonial.name}'s avatar`}
-                    className="rounded-full grayscale"
-                  />
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
                 </div>
                 <div>
                   <h4 className="font-medium">{testimonial.name}</h4>

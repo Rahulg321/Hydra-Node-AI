@@ -21,28 +21,28 @@ const domain =
     ? process.env.NEXT_PUBLIC_PROD_URL
     : process.env.NEXT_PUBLIC_APP_URL;
 
-    // this email will be sent to the user when one of their exams was purchased in the marketplace
+// this email will be sent to the user when one of their exams was purchased in the marketplace
 export const sendVendorExamPurchasedEmail = async (
-    vendorName: string | null,
-    vendorEmail: string, // Vendor's email address
-    examName: string, // Name of the purchased exam
-    purchaseDate: string, // Date when the purchase was made
-    examPrice: string, // Price of the exam
-    buyerFirstName: string | null, // Buyer's first name (optional)
-    buyerLastName: string | null, // Buyer's last name (optional)
+  vendorName: string | null,
+  vendorEmail: string, // Vendor's email address
+  examName: string, // Name of the purchased exam
+  purchaseDate: string, // Date when the purchase was made
+  examPrice: string, // Price of the exam
+  buyerFirstName: string | null, // Buyer's first name (optional)
+  buyerLastName: string | null, // Buyer's last name (optional)
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [vendorEmail],
     subject: "Your Exam was Purchased in the Marketplace",
     react: React.createElement(VendorExamPurchasedEmail, {
-        vendorName,
-        vendorEmail, // Vendor's email address
-        examName, // Name of the purchased exam
-        purchaseDate, // Date when the purchase was made
-        examPrice, // Price of the exam
-        buyerFirstName, // Buyer's first name (optional)
-        buyerLastName, // Buyer's last name (optional)
+      vendorName,
+      vendorEmail, // Vendor's email address
+      examName, // Name of the purchased exam
+      purchaseDate, // Date when the purchase was made
+      examPrice, // Price of the exam
+      buyerFirstName, // Buyer's first name (optional)
+      buyerLastName, // Buyer's last name (optional)
     }),
   });
 
@@ -55,7 +55,6 @@ export const sendVendorExamPurchasedEmail = async (
 
   return { data };
 };
-
 
 export const sendPaymentErrorEmail = async (
   customerName: string,
@@ -344,8 +343,6 @@ export const sendContactFormEmail = async (
       message,
     }),
   });
-
-  console.log("sending contact form email", data, error);
 
   if (error) {
     console.log("error sending email", error.name, error.message);

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import HowItWorkss from "@/public/illustrations/how-it-works.png";
 
 export default function HowItWorks() {
   return (
@@ -15,10 +16,8 @@ export default function HowItWorks() {
           {/* Left side - This will be replaced with the provided image */}
           <div className="relative">
             <Image
-              src="/placeholder.svg?height=600&width=400"
+              src={HowItWorkss}
               alt="How it works flow diagram"
-              width={400}
-              height={600}
               className="mx-auto"
             />
           </div>

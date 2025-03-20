@@ -21,6 +21,8 @@ import Image from "next/image";
 import HydranodeLogo1 from "@/public/logos/h_logo.svg";
 import LightLogo from "@/public/logos/light_logo.png";
 
+import BestHydranodeLogo from "@/public/illustrations/new_hydranode_logo.png";
+
 const menuItems = ["Product", "Pricing", "About Us", "Contact Us"];
 
 const Navbar = ({ session }: { session: Session | null }) => {
@@ -82,19 +84,19 @@ const Navbar = ({ session }: { session: Session | null }) => {
               {isLogoLoaded ? (
                 <>
                   <Image
-                    src={HydranodeLogo1}
+                    src={BestHydranodeLogo}
                     alt="hydranode logo"
                     width={200}
                     height={200}
                     className="hidden object-cover dark:block"
                   />
-                  <Image
+                  {/* <Image
                     src={LightLogo}
                     alt="hydranode logo"
                     width={200}
                     height={200}
                     className="object-cover dark:hidden"
-                  />
+                  /> */}
                 </>
               ) : (
                 <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
@@ -117,7 +119,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
             ) : (
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                className="rounded-lg bg-primary px-6 py-2 text-white transition-colors hover:bg-primary-dark"
+                className="hover:bg-primary-dark rounded-lg bg-primary px-6 py-2 text-white transition-colors"
                 onClick={() => {
                   router.push("/login");
                 }}
@@ -160,7 +162,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
                 <ProfileMenu session={session} />
               ) : (
                 <button
-                  className="mt-4 w-full rounded-lg bg-primary px-6 py-2 text-white transition-colors hover:bg-primary-dark"
+                  className="hover:bg-primary-dark mt-4 w-full rounded-lg bg-primary px-6 py-2 text-white transition-colors"
                   onClick={() => {
                     router.push("/login");
                   }}

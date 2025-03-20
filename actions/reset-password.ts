@@ -6,14 +6,12 @@ import {
   ResetPasswordFormSchema,
   ResetPasswordFormZodType,
 } from "@/lib/schemas/ResetPasswordFormSchema";
-import {
-  generatePasswordResetToken,
-  generatePasswordVerificationToken,
-} from "@/lib/tokens";
+import { generatePasswordResetToken } from "@/lib/tokens";
 
 export async function resetPassword(values: ResetPasswordFormZodType) {
   try {
     const validatedFields = ResetPasswordFormSchema.safeParse(values);
+
     if (!validatedFields.success) {
       return {
         error: "invalid email!!",

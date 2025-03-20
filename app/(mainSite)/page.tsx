@@ -2,14 +2,9 @@ import React from "react";
 import FeaturedBlogsSection from "@/components/sections/FeaturedBlogsSection";
 import { Metadata } from "next";
 import Features from "@/components/sections/Features";
-import TechStack from "@/components/sections/TechStack";
-import { ArrowBigRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import PricingCards from "./pricing/pricing-cards";
-import { auth } from "@/auth";
 import ProblemStatement from "@/components/sections/ProblemStatement";
 import HowItWorks from "@/components/sections/how-it-works";
-import HeroSection from "@/components/sections/HeroSection";
 import ExamPrepFeatures from "@/components/sections/exam-prep-features";
 import TestimonialGrid from "@/components/sections/testimonial-grid";
 import CTASection from "@/components/sections/cta-section";
@@ -17,6 +12,12 @@ import FAQHydranodeSection from "@/components/sections/faq-hydranode";
 import CTABanner from "@/components/sections/cta-banner";
 import CertificationsLogo from "@/components/sections/certifications-logos";
 import CertificationsChallenges from "@/components/sections/certifications-challenges";
+import CertificationHero from "@/components/sections/HeroSection";
+import Image from "next/image";
+import Flash from "@/public/illustrations/flash.png";
+import Popup1 from "@/public/illustrations/popup-1.png";
+import Popup2 from "@/public/illustrations/popup-2.png";
+import Popup3 from "@/public/illustrations/popup-3.png";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -24,10 +25,22 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const userSession = await auth();
   return (
     <React.Fragment>
-      <HeroSection />
+      {/* <LampDemo /> */}
+      <CertificationHero />
+      <div className="big-container block-space relative z-0">
+        <Image src={Flash} alt="flash" />
+        <div className="absolute right-[-138] top-48 z-10">
+          <Image src={Popup1} alt="popup1" width={250} height={250} />
+        </div>
+        <div className="absolute left-[-164] top-72 z-10">
+          <Image src={Popup2} alt="popup1" width={250} height={250} />
+        </div>
+        <div className="absolute bottom-48 right-[-138] z-10">
+          <Image src={Popup3} alt="popup1" width={250} height={300} />
+        </div>
+      </div>
       <CertificationsLogo />
       <CertificationsChallenges />
 

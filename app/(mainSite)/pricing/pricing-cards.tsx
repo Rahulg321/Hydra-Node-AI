@@ -1,15 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Check, X, Zap, Crown, Book } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CheckoutDialog from "@/components/CheckoutDialog";
-import { GradientButton } from "@/components/buttons/gradient-button";
 
 const PricingCards = () => {
   const session = useSession();
   const router = useRouter();
+
   const userId = session.data?.user.id;
   const userEmail = session.data?.user.email;
 
@@ -21,12 +20,11 @@ const PricingCards = () => {
   const plans = [
     {
       name: "7 days Free Trial",
-      icon: Book,
       description: "Start your learning journey",
-      duration: "7 days free trial",
       priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
       mode: "subscription",
       price: 0,
+      billing: "No credit card required",
       features: [
         "Access to all the IT certifications preparation mock exam",
         "AI-Powered question generation",
@@ -37,18 +35,14 @@ const PricingCards = () => {
         "In depth score analysis",
         "Full Exam History",
       ],
-      notIncluded: [],
-      buttonText: "Get Started",
-      subText: "No credit card required",
     },
     {
       name: "Plus",
-      icon: Zap,
       description: "Ideal for serious learners",
-      duration: "For 1 year",
       priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
       mode: "subscription",
       price: 99,
+      billing: "Billed yearly",
       popular: true,
       features: [
         "Everything in Starter",
@@ -56,18 +50,14 @@ const PricingCards = () => {
         "Entire question bank access",
         "All the vendors access",
       ],
-      notIncluded: [],
-      buttonText: "Get Started",
-      subText: "Billed yearly",
     },
     {
       name: "Lifetime Access",
-      icon: Crown,
       description: "Ideal for working professionals",
-      duration: "For lifetime",
-      mode: "payment",
       priceId: "price_1PsgMGIbE21KKZM9fg2dyVJ6",
+      mode: "payment",
       price: 199,
+      billing: "One-time billing",
       lifetime: true,
       features: [
         "Everything in Plus",
@@ -75,25 +65,34 @@ const PricingCards = () => {
         "Priority feature access",
         "Custom AI model",
       ],
-      buttonText: "Get Started",
-      subText: "One-time billing",
     },
   ];
 
   return (
     <div className="relative min-h-screen bg-black text-white">
-      <section className="relative py-20">
+      {/* Header Section */}
+      <section className="relative py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h1 className="mb-4 text-4xl font-bold uppercase tracking-wider md:text-5xl">
-              Choose the right plan for you
-            </h1>
-            <p className="text-lg text-gray-400">
+          <div className="mx-auto max-w-3xl text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="transducer-font mb-4 text-4xl font-bold uppercase tracking-wider md:text-5xl"
+            >
+              CHOOSE THE RIGHT PLAN FOR YOU
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mb-12 text-gray-400"
+            >
               Simple, Affordable Plans to Fit Your Needs
-            </p>
+            </motion.p>
           </div>
 
-          <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
+          {/* Pricing Cards */}
+          <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.name}
@@ -101,88 +100,82 @@ const PricingCards = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className="relative overflow-hidden rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-8"
+                className="relative overflow-hidden rounded-lg bg-[#121212] bg-gradient-to-b from-[#121212] to-[#121212]/80"
                 style={{
                   backgroundImage:
-                    "linear-gradient(to bottom, #111111, #1a1a1a)",
-                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.3)",
+                    index === 1
+                      ? "linear-gradient(to bottom, #121212, rgba(232, 113, 33, 0.2))"
+                      : "linear-gradient(to bottom, #121212, rgba(18, 18, 18, 0.8))",
                 }}
               >
-                <h3 className="mb-6 text-xl font-medium text-gray-300">
-                  {plan.name}
-                </h3>
-                <div className="mb-4">
-                  <span className="text-5xl font-bold text-[#f08e67]">
-                    ${plan.price}
-                  </span>
-                  {plan.price > 0 && (
-                    <span className="ml-1 text-gray-400">
-                      {plan.lifetime ? "" : "/year"}
+                <div className="p-8">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium text-gray-300">
+                      {plan.name}
+                    </h3>
+                  </div>
+                  <div className="mb-6">
+                    <span className="text-5xl font-bold text-[#e87121]">
+                      ${plan.price}
                     </span>
-                  )}
-                </div>
-                <p className="mb-6 text-gray-400">{plan.description}</p>
+                    {plan.price > 0 && plan.price === 99 && (
+                      <span className="ml-1 text-gray-400">/year</span>
+                    )}
+                  </div>
+                  <p className="mb-4 text-sm text-gray-400">
+                    {plan.description}
+                  </p>
 
-                {session.data && plan.price !== 0 ? (
-                  <CheckoutDialog
-                    priceId={plan.priceId}
-                    mode={plan.mode}
-                    popular={plan.popular}
-                    lifetime={plan.lifetime}
-                    name={plan.name}
-                    userId={userId as string}
-                    email={userEmail as string}
-                  />
-                ) : (
-                  <div className="space-y-2">
-                    <GradientButton
-                      className="w-full"
-                      size={"lg"}
+                  {session.data && plan.price !== 0 ? (
+                    <CheckoutDialog
+                      priceId={plan.priceId}
+                      mode={plan.mode}
+                      popular={plan.popular}
+                      lifetime={plan.lifetime}
+                      name={plan.name}
+                      userId={userId as string}
+                      email={userEmail as string}
+                    />
+                  ) : (
+                    <button
+                      className={`mb-4 w-full rounded-full px-6 py-3 font-medium transition-all duration-300 ${
+                        index === 1
+                          ? "bg-[#e87121] text-white hover:bg-[#d86010]"
+                          : "bg-[#1e1e1e] text-white hover:bg-[#2a2a2a]"
+                      }`}
                       onClick={() => {
-                        router.push("/login");
+                        if (!session.data) {
+                          router.push("/login");
+                        }
                       }}
                     >
                       Get Started
-                    </GradientButton>
-                    <p className="text-center text-sm text-gray-500">
-                      {plan.subText}
-                    </p>
-                  </div>
-                )}
+                    </button>
+                  )}
 
-                <div className="mt-8 space-y-4">
-                  {plan.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-3">
-                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#f08e67]" />
-                      <span className="text-sm text-gray-300">{feature}</span>
-                    </div>
-                  ))}
-                  {plan.notIncluded?.map((feature) => (
-                    <div
-                      key={feature}
-                      className="flex items-center gap-3 opacity-50"
-                    >
-                      <X className="h-5 w-5 flex-shrink-0 text-gray-400" />
-                      <span className="text-sm text-gray-400">{feature}</span>
-                    </div>
-                  ))}
+                  <p className="mb-6 text-center text-xs text-gray-500">
+                    {plan.billing}
+                  </p>
+
+                  <div className="space-y-3">
+                    {plan.features.map((feature) => (
+                      <div key={feature} className="flex items-start gap-2">
+                        <span className="mt-1 text-xs text-[#e87121]">•</span>
+                        <span className="text-sm text-gray-400">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          <div className="mt-10 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mx-auto max-w-3xl"
-            >
-              <GradientButton size={"lg"} className="w-full">
-                If you don&apos;t commit for subscription, you can also buy
-                individual exam!
-              </GradientButton>
-            </motion.div>
+          {/* Bottom Banner */}
+          <div className="mx-auto mt-8 max-w-6xl">
+            <div className="rounded-full bg-[#e87121] p-4 text-center text-white">
+              If you don&apos;t commit for subscription, you can also buy
+              individual exam!
+            </div>
           </div>
         </div>
       </section>

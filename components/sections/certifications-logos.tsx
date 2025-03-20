@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 const certifications = [
-  { name: "Cisco", width: 100 },
-  { name: "Microsoft", width: 120 },
-  { name: "NVIDIA", width: 120 },
-  { name: "Google", width: 110 },
-  { name: "Oracle", width: 130 },
-  { name: "AWS", width: 90 },
+  { name: "Cisco", width: 100, logoSrc: "/logos/cisco-logo.png" },
+  { name: "AWS", width: 100, logoSrc: "/logos/aws-logo.png" },
+  { name: "NVIDIA", width: 120, logoSrc: "/logos/nvidia-logo.png" },
+  { name: "Google", width: 110, logoSrc: "/logos/google-logo.png" },
+  { name: "Oracle", width: 90, logoSrc: "/logos/oracle-logo.png" },
+  { name: "Microsoft", width: 90, logoSrc: "/logos/microsoft-logo.png" },
 ];
 
 export default function CertificationsLogo() {
@@ -24,7 +24,7 @@ export default function CertificationsLogo() {
               className="flex h-12 items-center justify-center"
             >
               <Image
-                src={`/placeholder.svg?height=48&width=${cert.width}&text=${cert.name}`}
+                src={cert.logoSrc || ""}
                 alt={`${cert.name} logo`}
                 width={cert.width}
                 height={48}
