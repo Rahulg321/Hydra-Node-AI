@@ -29,38 +29,40 @@ export default async function Home() {
   return (
     <React.Fragment>
       <CertificationHero />
-      <div className="container relative z-0 mx-auto overflow-hidden px-4 py-12">
-        <Image src={Flash} alt="flash" className="mx-auto w-full max-w-5xl" />
+      <div className="relative z-0 mx-auto overflow-hidden px-4 py-12">
+        <div className="big-container">
+          <Image src={Flash} alt="flash" className="mx-auto w-full max-w-5xl" />
 
-        <div className="absolute right-[-5%] top-1/4 z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[5%] lg:top-[15%] lg:w-[250px] lg:scale-100">
-          <Image
-            src={Popup1}
-            alt="popup1"
-            width={220}
-            height={220}
-            className="h-auto w-full"
-          />
-        </div>
+          <div className="absolute right-[-5%] top-1/4 z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[5%] lg:top-[15%] lg:w-[250px] lg:scale-100">
+            <Image
+              src={Popup1}
+              alt="popup1"
+              width={220}
+              height={220}
+              className="h-auto w-full"
+            />
+          </div>
 
-        {/* Popup 2 - Left side */}
-        <div className="absolute left-[-5%] top-1/3 z-10 w-[150px] scale-75 transform md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[5%] lg:w-[250px] lg:scale-100">
-          <Image
-            src={Popup2}
-            alt="popup2"
-            width={250}
-            height={250}
-            className="h-auto w-full"
-          />
-        </div>
+          {/* Popup 2 - Left side */}
+          <div className="absolute left-[-5%] top-1/3 z-10 w-[150px] scale-75 transform md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[5%] lg:w-[250px] lg:scale-100">
+            <Image
+              src={Popup2}
+              alt="popup2"
+              width={220}
+              height={220}
+              className="h-auto w-full"
+            />
+          </div>
 
-        <div className="absolute bottom-1/4 right-[-5%] z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:w-[250px] lg:scale-100">
-          <Image
-            src={Popup3}
-            alt="popup3"
-            width={250}
-            height={300}
-            className="h-auto w-full"
-          />
+          <div className="absolute bottom-1/4 right-[-5%] z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:w-[250px] lg:scale-100">
+            <Image
+              src={Popup3}
+              alt="popup3"
+              width={220}
+              height={220}
+              className="h-auto w-full"
+            />
+          </div>
         </div>
       </div>
       <CertificationsLogo />

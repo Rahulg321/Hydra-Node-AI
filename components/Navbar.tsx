@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { get } from "http";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -18,8 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import HydranodeLogo1 from "@/public/logos/h_logo.svg";
-import LightLogo from "@/public/logos/light_logo.png";
+import HydranodeWhiteLogo from "@/public/logos/hydranode-white-logo.svg";
 
 import BestHydranodeLogo from "@/public/illustrations/new_hydranode_logo.png";
 
@@ -66,115 +63,145 @@ const Navbar = ({ session }: { session: Session | null }) => {
   };
 
   return (
-    <nav
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/80 shadow-lg backdrop-blur-lg dark:bg-black/80"
-          : ""
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex h-20 items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2"
-          >
-            <Link href={"/"}>
-              {isLogoLoaded ? (
-                <>
-                  <Image
-                    src={BestHydranodeLogo}
-                    alt="hydranode logo"
-                    width={200}
-                    height={200}
-                    className="hidden object-cover dark:block"
-                  />
-                  {/* <Image
-                    src={LightLogo}
-                    alt="hydranode logo"
-                    width={200}
-                    height={200}
-                    className="object-cover dark:hidden"
-                  /> */}
-                </>
-              ) : (
-                <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
-              )}
-            </Link>
-          </motion.div>
-
-          <div className="hidden items-center gap-8 md:flex">
-            {menuItems.map((item) => (
-              <Link
-                key={item}
-                href={getItemHref(item)}
-                className="text-gray-600 transition-colors hover:text-primary dark:text-gray-300 dark:hover:text-primary"
-              >
-                <motion.span whileHover={{ scale: 1.05 }}>{item}</motion.span>
-              </Link>
-            ))}
-            {session ? (
-              <ProfileMenu session={session} />
-            ) : (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                className="hover:bg-primary-dark rounded-lg bg-primary px-6 py-2 text-white transition-colors"
-                onClick={() => {
-                  router.push("/login");
-                }}
-              >
-                Login
-              </motion.button>
-            )}
-          </div>
-
-          <button
-            className="md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </button>
+    <>
+      {/* Free trial announcement bar */}
+      <div className="w-full bg-orange-700 py-2 text-center text-white">
+        <div className="container mx-auto flex items-center justify-center">
+          <span className="mr-2">🔔</span>
+          <span>Get your 7 days free trial</span>
         </div>
       </div>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t bg-white dark:border-gray-800 dark:bg-dark-lighter md:hidden"
-          >
-            <div className="container mx-auto px-4 py-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item}
-                  href={getItemHref(item)}
-                  className="block py-3 text-gray-600 transition-colors hover:text-primary dark:text-gray-300 dark:hover:text-primary"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item}
-                </Link>
-              ))}
+      {/* Main navigation */}
+      <nav
+        className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/80 shadow-lg backdrop-blur-lg dark:bg-black/80"
+            : "bg-black dark:bg-black"
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex h-20 items-center justify-between">
+            {/* Left menu items */}
+            <div className="hidden items-center md:flex">
+              <Link
+                href={getItemHref("About Us")}
+                className="mr-8 text-gray-300 transition-colors hover:text-white"
+              >
+                <motion.span whileHover={{ scale: 1.05 }}>About Us</motion.span>
+              </Link>
+              <Link
+                href={getItemHref("Product")}
+                className="mr-8 text-gray-300 transition-colors hover:text-white"
+              >
+                <motion.span whileHover={{ scale: 1.05 }}>Products</motion.span>
+              </Link>
+              <Link
+                href={getItemHref("Pricing")}
+                className="text-gray-300 transition-colors hover:text-white"
+              >
+                <motion.span whileHover={{ scale: 1.05 }}>Pricing</motion.span>
+              </Link>
+            </div>
+
+            {/* Logo */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-2"
+            >
+              <Link href={"/"}>
+                {isLogoLoaded ? (
+                  <div className="">
+                    <Image
+                      src={HydranodeWhiteLogo || BestHydranodeLogo}
+                      alt="hydranode logo"
+                      className="block object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
+                )}
+              </Link>
+            </motion.div>
+
+            {/* Right menu items */}
+            <div className="hidden items-center md:flex">
+              <Link
+                href={getItemHref("Contact Us")}
+                className="mr-8 text-gray-300 transition-colors hover:text-white"
+              >
+                <motion.span whileHover={{ scale: 1.05 }}>
+                  Contact us
+                </motion.span>
+              </Link>
+
               {session ? (
                 <ProfileMenu session={session} />
               ) : (
-                <button
-                  className="hover:bg-primary-dark mt-4 w-full rounded-lg bg-primary px-6 py-2 text-white transition-colors"
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  className="text-gray-300 transition-colors hover:text-white"
                   onClick={() => {
                     router.push("/login");
                   }}
                 >
                   Login
-                </button>
+                </motion.button>
               )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+
+            {/* Mobile menu button */}
+            <button
+              className="text-white md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="border-t bg-black dark:border-gray-800 md:hidden"
+            >
+              <div className="container mx-auto px-4 py-4">
+                {menuItems.map((item) => (
+                  <Link
+                    key={item}
+                    href={getItemHref(item)}
+                    className="block py-3 text-gray-300 transition-colors hover:text-white"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item}
+                  </Link>
+                ))}
+                {session ? (
+                  <div className="mt-4 py-3">
+                    <ProfileMenu session={session} />
+                  </div>
+                ) : (
+                  <button
+                    className="mt-4 w-full rounded-lg bg-primary px-6 py-2 text-white transition-colors hover:bg-primary/90"
+                    onClick={() => {
+                      router.push("/login");
+                    }}
+                  >
+                    Login
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </>
   );
 };
 
@@ -191,7 +218,7 @@ function ProfileMenu({ session }: { session: Session }) {
           />
           <AvatarFallback>HN</AvatarFallback>
         </Avatar>
-        <span className="flex items-center font-medium text-primary">
+        <span className="flex items-center font-medium text-gray-300">
           Account <ChevronDown />
         </span>
       </DropdownMenuTrigger>

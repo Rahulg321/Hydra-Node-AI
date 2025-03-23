@@ -73,11 +73,11 @@ const PricingCards = () => {
     <div className="relative min-h-screen bg-black text-white">
       {/* Header Section */}
       <section className="relative py-16">
-        <div className="container mx-auto px-4">
+        <div className="big-container mx-auto px-4">
           <div className="text-center">
-            <h1 className="transducer-font mb-4 font-bold uppercase tracking-wider">
+            <h2 className="transducer-font mb-4 font-bold uppercase tracking-wider">
               CHOOSE THE RIGHT PLAN FOR YOU
-            </h1>
+            </h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -97,7 +97,7 @@ const PricingCards = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className="relative overflow-hidden rounded-lg bg-[#121212] bg-gradient-to-b from-[#121212] to-[#121212]/80"
+                className="relative overflow-hidden rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10"
                 style={{
                   backgroundImage:
                     index === 1
@@ -105,6 +105,7 @@ const PricingCards = () => {
                       : "linear-gradient(to bottom, #121212, rgba(18, 18, 18, 0.8))",
                 }}
               >
+                <div className="absolute left-[-110px] top-[601.78px] h-28 w-52 rounded-full bg-amber-500 bg-opacity-40 shadow-[inset_12.896743774414062px_1.6640958786010742px_104.0059814453125px_0px_rgba(255,51,0,0.80)] blur-[94.20px]" />
                 <div className="p-8">
                   <div className="mb-4">
                     <h3 className="text-lg font-medium text-gray-300">
@@ -135,7 +136,7 @@ const PricingCards = () => {
                     />
                   ) : (
                     <button
-                      className={`mb-4 w-full rounded-full px-6 py-3 font-medium transition-all duration-300 ${
+                      className={`mb-4 block w-full rounded-full px-6 py-3 font-medium transition-all duration-300 ${
                         index === 1
                           ? "bg-[#e87121] text-white hover:bg-[#d86010]"
                           : "bg-[#1e1e1e] text-white hover:bg-[#2a2a2a]"
@@ -150,14 +151,14 @@ const PricingCards = () => {
                     </button>
                   )}
 
-                  <p className="mb-6 text-center text-xs text-gray-500">
+                  <p className="mb-6 text-center text-sm text-gray-500">
                     {plan.billing}
                   </p>
 
                   <div className="space-y-3">
                     {plan.features.map((feature) => (
                       <div key={feature} className="flex items-start gap-2">
-                        <span className="mt-1 text-xs text-[#e87121]">•</span>
+                        <span className="mt-1 text-sm text-white">•</span>
                         <span className="text-sm text-gray-400">{feature}</span>
                       </div>
                     ))}

@@ -71,7 +71,7 @@ const CheckoutDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <GradientButton className="w-full" size={"lg"}>
+        <GradientButton className="mb-4 w-full" size={"lg"}>
           Get Started
         </GradientButton>
       </DialogTrigger>

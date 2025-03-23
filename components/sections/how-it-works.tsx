@@ -5,7 +5,7 @@ export default function HowItWorks() {
   return (
     <div className="bg-black px-4 py-16 text-white md:px-8">
       <div className="mx-auto max-w-6xl">
-        <h2 className="transducer-font mb-3 text-center text-4xl font-bold md:text-5xl">
+        <h2 className="transducer-font mb-3 text-center font-bold">
           HOW IT WORKS
         </h2>
         <p className="mb-16 text-center text-gray-400">
