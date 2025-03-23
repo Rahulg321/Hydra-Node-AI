@@ -30,7 +30,7 @@ export default function ExamPrepFeatures() {
           }}
         >
           {/* Add background image div */}
-          <div className="pointer-events-none absolute inset-0 z-[-10]">
+          {/* <div className="pointer-events-none absolute inset-0 z-[-10]">
             <Image
               src={CardDotBackground}
               alt=""
@@ -45,7 +45,7 @@ export default function ExamPrepFeatures() {
                 left: 50,
               }}
             />
-          </div>
+          </div> */}
 
           {/* <div className="pointer-events-none absolute inset-0 z-[-5]">
             <Image

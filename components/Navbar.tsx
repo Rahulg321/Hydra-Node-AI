@@ -116,7 +116,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
                     <Image
                       src={HydranodeWhiteLogo || BestHydranodeLogo}
                       alt="hydranode logo"
-                      className="block object-cover"
+                      className="block object-cover lg:mr-12"
                     />
                   </div>
                 ) : (

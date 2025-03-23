@@ -33,7 +33,7 @@ export default async function Home() {
         <div className="big-container">
           <Image src={Flash} alt="flash" className="mx-auto w-full max-w-5xl" />
 
-          <div className="absolute right-[-5%] top-1/4 z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[5%] lg:top-[15%] lg:w-[250px] lg:scale-100">
+          <div className="right-[-5%] top-1/4 z-10 hidden w-[150px] scale-75 transform md:absolute md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[5%] lg:top-[15%] lg:w-[250px] lg:scale-100">
             <Image
               src={Popup1}
               alt="popup1"
@@ -44,7 +44,7 @@ export default async function Home() {
           </div>
 
           {/* Popup 2 - Left side */}
-          <div className="absolute left-[-5%] top-1/3 z-10 w-[150px] scale-75 transform md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[5%] lg:w-[250px] lg:scale-100">
+          <div className="left-[-5%] top-1/3 z-10 hidden w-[150px] scale-75 transform md:absolute md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[5%] lg:w-[250px] lg:scale-100">
             <Image
               src={Popup2}
               alt="popup2"
@@ -54,7 +54,7 @@ export default async function Home() {
             />
           </div>
 
-          <div className="absolute bottom-1/4 right-[-5%] z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:w-[250px] lg:scale-100">
+          <div className="bottom-1/4 right-[-5%] z-10 hidden w-[150px] scale-75 transform md:absolute md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:w-[250px] lg:scale-100">
             <Image
               src={Popup3}
               alt="popup3"
@@ -68,7 +68,7 @@ export default async function Home() {
       <CertificationsLogo />
       <CertificationsChallenges />
 
-      <ExamPrepFeatures />
+      {/* <ExamPrepFeatures /> */}
       <HowItWorks />
       <Features />
       <TestimonialGrid />
