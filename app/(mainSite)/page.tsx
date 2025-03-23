@@ -68,23 +68,15 @@ export default async function Home() {
       <CertificationsLogo />
       <CertificationsChallenges />
 
-      <Features />
-      <HowItWorks />
       <ExamPrepFeatures />
-      <PricingCards />
+      <HowItWorks />
+      <Features />
       <TestimonialGrid />
       <ExamPrepHero />
-      <FeaturedBlogsSection />
+      <PricingCards />
       <FAQHydranodeSection />
+      <FeaturedBlogsSection />
       <CTABanner />
     </React.Fragment>
-  );
-}
-
-function ReusableLogo(img: StaticImageData) {
-  return (
-    <div>
-      <Image src={img} alt="" />
-    </div>
   );
 }
