@@ -71,14 +71,15 @@ export default function TestimonialGrid() {
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <h2 className="transducer-font mb-16 text-center text-4xl font-bold md:text-5xl">
-          PEOPLE CANT STOP TALKING ABOUT US
+          PEOPLE CANT STOP TALKING <br />
+          ABOUT US
         </h2>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex flex-col rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-6 backdrop-blur-sm"
+              className="flex flex-col rounded-xl bg-gradient-to-br from-white/10 via-white/0 to-white/10 p-6 backdrop-blur-sm"
             >
               <p className="mb-6 flex-grow text-gray-400">
                 {testimonial.quote}

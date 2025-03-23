@@ -13,9 +13,9 @@ export default function CertificationsLogo() {
   return (
     <section className="w-full bg-black py-12 text-white md:py-16">
       <div className="container mx-auto px-4">
-        <h2 className="mb-12 text-center text-2xl font-medium md:text-3xl">
+        <h5 className="mb-12 text-center text-gray-400">
           Our popular certifications
-        </h2>
+        </h5>
 
         <div className="grid grid-cols-2 items-center justify-items-center gap-8 md:grid-cols-3 lg:grid-cols-6">
           {certifications.map((cert) => (

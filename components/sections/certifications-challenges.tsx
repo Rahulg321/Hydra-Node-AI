@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const CertificationsChallenges = () => {
   return (
     <section className="block-space-large big-container bg-mainDark overflow-hidden text-white">
-      <div className="">
+      <div className="relative">
         <div className="box mb-6 space-y-4 text-center md:mb-8 lg:mb-16">
           <span className="cursor-blink md:text-lg">What is the problem?</span>
           <h2 className="transducer-font mb-4 text-center font-bold tracking-wide">
@@ -19,6 +19,7 @@ const CertificationsChallenges = () => {
           </span>
         </div>
 
+        <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
         <div className="space-y-4">
           <div className="tech-row flex flex-col md:flex-row">
             <TextBox heading="How to handle massive Customer Support?" />
@@ -42,7 +43,7 @@ const CertificationsChallenges = () => {
           </div>
           <div className="tech-row flex flex-col md:flex-row">
             <TextBox heading="How to serve quick results?" />
-            <BlankBox classname="flex-1" />
+            <div className="flex-1"></div>
             <TextBox heading="How can I automate the communication?" />
           </div>
         </div>

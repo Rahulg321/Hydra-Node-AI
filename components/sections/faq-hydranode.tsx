@@ -56,13 +56,13 @@ export default function FAQHydranodeSection() {
           {faqItems.map((item, index) => (
             <div
               key={index}
-              className="overflow-hidden rounded-lg bg-gradient-to-b from-zinc-900 to-zinc-800"
+              className="relative overflow-hidden rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10"
             >
               <div
                 className="relative flex cursor-pointer items-center justify-between p-5"
                 onClick={() => toggleFAQ(index)}
               >
-                <h3 className="font-medium text-gray-100">{item.question}</h3>
+                <h4 className="font-medium text-gray-100">{item.question}</h4>
                 <button className="text-gray-400">
                   {openIndex === index ? <X size={20} /> : <Plus size={20} />}
                 </button>
@@ -78,7 +78,7 @@ export default function FAQHydranodeSection() {
 
               {openIndex === index && (
                 <div className="relative p-5 pt-0 text-gray-400">
-                  <p>{item.answer}</p>
+                  <span>{item.answer}</span>
                   <div className="pointer-events-none absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-orange-500/20 to-transparent" />
                 </div>
               )}

@@ -7,15 +7,14 @@ export default function CTABanner() {
       <div className="absolute bottom-0 left-1/2 h-24 w-2/3 -translate-x-1/2 rounded-full bg-orange-500/30 blur-[100px]"></div>
 
       <div className="container relative z-10 mx-auto max-w-6xl">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-12 text-center">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 via-white/0 to-white/10 p-12 text-center">
           {/* Inner glow effect */}
           <div className="absolute bottom-0 left-1/2 h-16 w-1/2 -translate-x-1/2 rounded-full bg-orange-500/20 blur-[50px]"></div>
 
-          <span className="transducer-font mb-4 block text-3xl font-bold tracking-wide md:text-4xl lg:text-5xl">
-            YOUR SUCCESS
-            <br />
+          <h2 className="transducer-font mb-4 block font-bold tracking-wide">
+            YOUR SUCCESS <br />
             STARTS HERE!
-          </span>
+          </h2>
 
           <p className="mx-auto mb-8 max-w-2xl text-gray-400">
             Don&apos;t just study – prepare smarter with AI-driven exams &

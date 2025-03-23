@@ -162,7 +162,8 @@ export default function CertificationHero() {
         <span className="text-xs">Join 1000+ users</span>
       </div>
       {/* Main heading */}
-      <h1 className="transducer-font mb-6 max-w-5xl px-4 text-center text-4xl font-bold leading-tight tracking-wide sm:text-5xl md:text-6xl">
+
+      <h1 className="transducer-font mb-6 max-w-5xl px-4 text-center text-4xl font-bold leading-tight tracking-wide">
         ACE YOUR CERTIFICATIONS
         <br />
         WITH{" "}
