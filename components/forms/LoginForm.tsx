@@ -114,7 +114,11 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
-                      <Input placeholder="johndoe@gmail.com" {...field} />
+                      <Input
+                        placeholder="johndoe@gmail.com"
+                        className="text-gray-400"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -127,7 +131,11 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <PasswordInput placeholder="*********" {...field} />
+                      <PasswordInput
+                        placeholder="*********"
+                        className="text-gray-400"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

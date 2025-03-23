@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
+import Link from "next/link";
 
 export default function CertificationHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -179,13 +180,13 @@ export default function CertificationHero() {
       </p>
 
       {/* CTA Button */}
-      <a
-        href="#"
+      <Link
+        href="/pricing"
         className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-[#ff7a50] to-[#ff9d7a] px-6 py-3 font-medium text-white transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20"
       >
         Start your free trial
         <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-      </a>
+      </Link>
 
       {/* No credit card text */}
       <p className="mt-4 text-sm text-gray-500">No credit card required</p>

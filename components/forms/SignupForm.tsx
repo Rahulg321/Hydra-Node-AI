@@ -70,7 +70,11 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="john" {...field} />
+                  <Input
+                    placeholder="john"
+                    className="text-gray-400"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -85,7 +89,12 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="test@email.com" {...field} type="email" />
+                  <Input
+                    placeholder="test@email.com"
+                    className="text-gray-400"
+                    {...field}
+                    type="email"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -98,7 +107,11 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder="**********" {...field} />
+                  <PasswordInput
+                    placeholder="**********"
+                    className="text-gray-400"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
