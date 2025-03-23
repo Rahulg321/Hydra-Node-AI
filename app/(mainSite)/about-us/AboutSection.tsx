@@ -130,7 +130,7 @@ const AboutSection = () => {
                   transition={{ delay: 0.3 + index * 0.1 }}
                   className="rounded-xl bg-white p-6 text-center shadow-lg ring-2 ring-primary dark:bg-dark-card dark:ring-primary/40"
                 >
-                  <div className="text-mainYellow mb-2 text-3xl font-bold">
+                  <div className="mb-2 text-3xl font-bold text-mainYellow">
                     {stat.number}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -178,7 +178,7 @@ const AboutSection = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               className="relative"
             >
-              <h2 className="text-gradient mb-6 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-3xl font-bold text-white md:text-4xl">
+              <h2 className="text-gradient transducer-font mb-6 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-3xl font-bold text-white md:text-4xl">
                 Our Mission
               </h2>
               <p className="mb-6 text-lg leading-relaxed text-gray-600 dark:text-gray-400">
@@ -207,7 +207,7 @@ const AboutSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             className="mb-16 text-center"
           >
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+            <h2 className="transducer-font mb-4 text-3xl font-bold md:text-4xl">
               Our Core{" "}
               <span className="text-gradient bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-white">
                 Values

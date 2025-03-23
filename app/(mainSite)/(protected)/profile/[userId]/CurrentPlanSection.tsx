@@ -1,3 +1,4 @@
+import { GradientButton } from "@/components/buttons/gradient-button";
 import { Button } from "@/components/ui/button";
 import { formatDateWithSuffix } from "@/lib/utils";
 import { User } from "@prisma/client";
@@ -18,15 +19,12 @@ export default function CurrentPlanSection({
     buttonLink: string,
   ) => {
     return (
-      <div className="container col-span-2 space-y-4 rounded-xl bg-white py-4 shadow-lg transition-shadow hover:shadow-xl dark:bg-dark-card">
-        <h3 className="font-semibold text-baseC">{title}</h3>
+      <div className="container col-span-2 space-y-4 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-6 py-4 shadow-lg backdrop-blur transition-shadow hover:shadow-xl dark:bg-dark-card">
+        <h3 className="font-semibold">{title}</h3>
         <p className="text-muted-foreground">{description}</p>
-        <Button
-          className="mb-4 w-full rounded-full border border-base bg-base px-10 py-6 text-base font-semibold text-white"
-          asChild
-        >
+        <GradientButton className="w-full" size={"lg"} asChild>
           <Link href={buttonLink}>{buttonLabel}</Link>
-        </Button>
+        </GradientButton>
       </div>
     );
   };

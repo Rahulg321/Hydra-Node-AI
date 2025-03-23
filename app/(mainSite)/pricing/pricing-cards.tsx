@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CheckoutDialog from "@/components/CheckoutDialog";
+import { GradientButton } from "@/components/buttons/gradient-button";
 
 const PricingCards = () => {
   const session = useSession();
@@ -73,14 +74,10 @@ const PricingCards = () => {
       {/* Header Section */}
       <section className="relative py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="transducer-font mb-4 text-4xl font-bold uppercase tracking-wider md:text-5xl"
-            >
+          <div className="text-center">
+            <h1 className="transducer-font mb-4 font-bold uppercase tracking-wider">
               CHOOSE THE RIGHT PLAN FOR YOU
-            </motion.h1>
+            </h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -115,7 +112,7 @@ const PricingCards = () => {
                     </h3>
                   </div>
                   <div className="mb-6">
-                    <span className="text-5xl font-bold text-[#e87121]">
+                    <span className="bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text text-5xl text-[56.69px] font-bold leading-none tracking-[-0.567px] text-transparent">
                       ${plan.price}
                     </span>
                     {plan.price > 0 && plan.price === 99 && (
@@ -172,10 +169,10 @@ const PricingCards = () => {
 
           {/* Bottom Banner */}
           <div className="mx-auto mt-8 max-w-6xl">
-            <div className="rounded-full bg-[#e87121] p-4 text-center text-white">
+            <GradientButton size={"lg"} className="w-full">
               If you don&apos;t commit for subscription, you can also buy
               individual exam!
-            </div>
+            </GradientButton>
           </div>
         </div>
       </section>

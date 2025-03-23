@@ -45,7 +45,7 @@ export default function FAQHydranodeSection() {
 
   return (
     <div className="bg-black px-4 py-20 text-white">
-      <div className="container mx-auto max-w-6xl">
+      <div className="big-container">
         <span className="transducer-font mb-12 block text-center text-3xl font-bold tracking-wide md:text-4xl lg:text-5xl">
           FREQUENTLY ASKED QUESTIONS
           <br />

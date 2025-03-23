@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ImagePlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UpdateProfilePic from "@/actions/update-profile-pic";
+import { GradientButton } from "../buttons/gradient-button";
 
 const ProfilePicUploadFormSchema = z.object({
   image: z
@@ -175,13 +176,13 @@ const ProfilePicUploadForm = ({
             </FormItem>
           )}
         />
-        <Button
+        <GradientButton
           type="submit"
           disabled={isPending}
-          className="mx-auto block h-auto rounded-lg"
+          className="mx-auto block"
         >
           {isPending ? "Uploading....." : "Upload"}
-        </Button>
+        </GradientButton>
       </form>
     </Form>
   );

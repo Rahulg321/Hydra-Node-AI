@@ -13,11 +13,12 @@ import CTABanner from "@/components/sections/cta-banner";
 import CertificationsLogo from "@/components/sections/certifications-logos";
 import CertificationsChallenges from "@/components/sections/certifications-challenges";
 import CertificationHero from "@/components/sections/HeroSection";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Flash from "@/public/illustrations/flash.png";
 import Popup1 from "@/public/illustrations/popup-1.png";
 import Popup2 from "@/public/illustrations/popup-2.png";
 import Popup3 from "@/public/illustrations/popup-3.png";
+import ExamPrepHero from "@/components/sections/exam-prep-hero";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -27,18 +28,39 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <React.Fragment>
-      {/* <LampDemo /> */}
       <CertificationHero />
-      <div className="big-container block-space relative z-0">
-        <Image src={Flash} alt="flash" />
-        <div className="absolute right-[-138] top-48 z-10">
-          <Image src={Popup1} alt="popup1" width={250} height={250} />
+      <div className="container relative z-0 mx-auto overflow-hidden px-4 py-12">
+        <Image src={Flash} alt="flash" className="mx-auto w-full max-w-5xl" />
+
+        <div className="absolute right-[-5%] top-1/4 z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[5%] lg:top-[15%] lg:w-[250px] lg:scale-100">
+          <Image
+            src={Popup1}
+            alt="popup1"
+            width={220}
+            height={220}
+            className="h-auto w-full"
+          />
         </div>
-        <div className="absolute left-[-164] top-72 z-10">
-          <Image src={Popup2} alt="popup1" width={250} height={250} />
+
+        {/* Popup 2 - Left side */}
+        <div className="absolute left-[-5%] top-1/3 z-10 w-[150px] scale-75 transform md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[5%] lg:w-[250px] lg:scale-100">
+          <Image
+            src={Popup2}
+            alt="popup2"
+            width={250}
+            height={250}
+            className="h-auto w-full"
+          />
         </div>
-        <div className="absolute bottom-48 right-[-138] z-10">
-          <Image src={Popup3} alt="popup1" width={250} height={300} />
+
+        <div className="absolute bottom-1/4 right-[-5%] z-10 w-[150px] scale-75 transform md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:w-[250px] lg:scale-100">
+          <Image
+            src={Popup3}
+            alt="popup3"
+            width={250}
+            height={300}
+            className="h-auto w-full"
+          />
         </div>
       </div>
       <CertificationsLogo />
@@ -47,13 +69,20 @@ export default async function Home() {
       <Features />
       <HowItWorks />
       <ExamPrepFeatures />
-      {/* <TechStack /> */}
       <PricingCards />
       <TestimonialGrid />
+      <ExamPrepHero />
       <FeaturedBlogsSection />
       <FAQHydranodeSection />
-      <CTASection />
       <CTABanner />
     </React.Fragment>
+  );
+}
+
+function ReusableLogo(img: StaticImageData) {
+  return (
+    <div>
+      <Image src={img} alt="" />
+    </div>
   );
 }

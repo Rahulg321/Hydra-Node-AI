@@ -145,7 +145,7 @@ export default function CertificationHero() {
       <div className="absolute top-10 h-1 w-48 rounded-full bg-orange-500/80 shadow-[0_0_15px_5px_rgba(251,191,36,0.3)]" />
 
       {/* Join users text */}
-      <div className="mb-12 flex items-center gap-1.5 text-sm">
+      <div className="mb-10 flex items-center gap-1.5 text-sm">
         <Plus className="h-4 w-4" />
         <span>Join 1000+ users</span>
       </div>
@@ -154,7 +154,11 @@ export default function CertificationHero() {
       <h1 className="transducer-font mb-6 max-w-5xl px-4 text-center text-4xl font-bold leading-tight tracking-wide sm:text-5xl md:text-6xl">
         ACE YOUR CERTIFICATIONS
         <br />
-        WITH <span className="text-[#ff9d7a]">AI-POWERED</span> PRECISION
+        WITH{" "}
+        <span className="bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text font-bold leading-none tracking-[-0.567px] text-transparent">
+          AI-POWERED
+        </span>{" "}
+        PRECISION
       </h1>
 
       {/* Subtext */}

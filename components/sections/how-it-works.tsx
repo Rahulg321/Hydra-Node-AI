@@ -26,7 +26,7 @@ export default function HowItWorks() {
           <div className="flex flex-col gap-6">
             {/* Step 1 */}
             <div className="rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-6 shadow-lg backdrop-blur">
-              <h3 className="mb-2 text-2xl font-semibold text-orange-400">
+              <h3 className="mb-2 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text text-2xl font-semibold leading-none tracking-[-0.567px] text-transparent">
                 Sign up for free
               </h3>
               <p className="text-sm leading-relaxed text-gray-300">

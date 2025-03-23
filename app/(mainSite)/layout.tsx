@@ -17,7 +17,7 @@ import localFont from "next/font/local";
 
 // Font files can be colocated inside of `app`
 const transducerFont = localFont({
-  src: "../fonts/transducer-test-regular.otf",
+  src: "../fonts/extended-transducer.otf",
   variable: "--font-transducer",
   display: "swap",
 });

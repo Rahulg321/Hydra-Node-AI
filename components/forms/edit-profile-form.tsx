@@ -27,6 +27,7 @@ import useCurrentUser from "@/hooks/use-current-user";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { GradientButton } from "../buttons/gradient-button";
 
 type ProfileFormProps = {
   userId: string;
@@ -76,9 +77,13 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="text-left text-gray-400">Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input
+                    placeholder="John Doe"
+                    className="text-gray-300"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,12 +107,14 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
               />
             </React.Fragment>
           )}
-          {/* <Button variant={"link"} className="px-0 text-baseC" asChild>
-            <Link href="/auth/reset">Forgot Password</Link>
-          </Button> */}
-          <Button type="submit" className="w-full bg-base" disabled={isPending}>
+
+          <GradientButton
+            type="submit"
+            className="w-full bg-base"
+            disabled={isPending}
+          >
             {isPending ? "Updating Profile..." : "Update Profile"}
-          </Button>
+          </GradientButton>
         </form>
       </Form>
 

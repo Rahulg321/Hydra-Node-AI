@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import ProfilePicUploadForm from "../forms/ProfilePicUploadForm";
+import { GradientButton } from "../buttons/gradient-button";
 
 export function ProfilePicUploadDialog({ userId }: { userId: string }) {
   const [open, setOpen] = React.useState(false);
@@ -32,7 +33,7 @@ export function ProfilePicUploadDialog({ userId }: { userId: string }) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>Edit Profile Pic</Button>
+          <GradientButton>Edit Profile Pic</GradientButton>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] md:max-w-2xl lg:max-w-3xl">
           <DialogHeader>
