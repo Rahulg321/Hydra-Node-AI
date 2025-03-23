@@ -85,9 +85,6 @@ export default function CertificationHero() {
         0,
         reflectionHeight,
       );
-      // reflectionGradient.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-      // reflectionGradient.addColorStop(0.8, "rgba(255, 255, 255, 0.05)");
-      // reflectionGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
 
       ctx.fillStyle = reflectionGradient;
       ctx.fillRect(0, 0, width, reflectionHeight);
@@ -100,9 +97,6 @@ export default function CertificationHero() {
         0,
         height,
       );
-      // bottomEffectGradient.addColorStop(0, "rgba(255, 255, 255, 0.04)");
-      // bottomEffectGradient.addColorStop(0.5, "rgba(255, 255, 255, 0.01)");
-      // bottomEffectGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
 
       ctx.fillStyle = bottomEffectGradient;
       ctx.fillRect(0, height - bottomEffectHeight, width, bottomEffectHeight);
@@ -134,20 +128,43 @@ export default function CertificationHero() {
 
   return (
     <div className="relative flex min-h-[600px] w-full flex-col items-center justify-center overflow-hidden text-white">
-      {/* Canvas background */}
-      <canvas
+      {/* <canvas
         ref={canvasRef}
         className="absolute inset-0 -z-10 h-full w-full"
         style={{ display: "block" }}
-      />
+      /> */}
 
-      {/* Light bar at top */}
-      <div className="absolute top-10 h-1 w-48 rounded-full bg-orange-500/80 shadow-[0_0_15px_5px_rgba(251,191,36,0.3)]" />
+      <div className="absolute left-[36.5%] top-[65.5]">
+        <span className="text-[40px] text-white">•</span>
+      </div>
+      <div className="absolute right-[36.5%] top-[65.5]">
+        <span className="text-[40px] text-white">•</span>
+      </div>
+      <div className="absolute bottom-[78.5] right-[36.5%]">
+        <span className="text-[40px] text-white">•</span>
+      </div>
+      <div className="absolute bottom-[78.5] left-[36.5%]">
+        <span className="text-[40px] text-white">•</span>
+      </div>
+
+      <div className="absolute bottom-0 left-0 z-[-10] h-20 w-full opacity-20">
+        <div className="outline-opacity-0 absolute left-0 top-[-420px] h-[0.56px] w-full outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="outline-opacity-0 absolute left-0 top-[-30px] h-[0.56px] w-full outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+      </div>
+
+      <div className="absolute bottom-0 left-[480.90px] z-[-10] h-[997.45px] w-20 opacity-20">
+        <div className="outline-opacity-0 absolute left-[81.48px] top-0 h-0 w-[997.45px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="outline-opacity-0 absolute left-0 top-0 h-0 w-[997.45px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+      </div>
+      <div className="absolute right-[480.90px] top-[1.72px] h-[1171.12px] w-20 opacity-20">
+        <div className="outline-opacity-0 absolute left-[81.48px] top-0 h-0 w-[1171.12px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="outline-opacity-0 absolute left-[2.17px] top-0 h-0 w-[1171.12px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+      </div>
 
       {/* Join users text */}
       <div className="mb-10 flex items-center gap-1.5 text-sm">
         <Plus className="h-4 w-4" />
-        <span>Join 1000+ users</span>
+        <span className="text-xs">Join 1000+ users</span>
       </div>
 
       {/* Main heading */}
