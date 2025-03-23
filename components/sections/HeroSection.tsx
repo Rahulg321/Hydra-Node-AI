@@ -135,8 +135,11 @@ export default function CertificationHero() {
         <div className="absolute inset-x-0 bottom-[20%] h-[0.56px] w-full opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
 
         {/* Vertical lines */}
-        <div className="absolute left-[30%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="absolute left-[20%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
         <div className="absolute right-[30%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        {/* Vertical lines */}
+        <div className="absolute left-[30%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="absolute right-[10%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
 
         {/* Dots at intersections */}
         <div className="absolute left-[30%] top-[20%] -translate-x-1/2 -translate-y-1/2">
