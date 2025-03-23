@@ -128,45 +128,35 @@ export default function CertificationHero() {
 
   return (
     <div className="relative flex min-h-[600px] w-full flex-col items-center justify-center overflow-hidden text-white">
-      {/* <canvas
-        ref={canvasRef}
-        className="absolute inset-0 -z-10 h-full w-full"
-        style={{ display: "block" }}
-      /> */}
+      {/* Grid container for dots and lines */}
+      <div className="absolute inset-0 z-[-10]">
+        {/* Horizontal lines */}
+        <div className="absolute inset-x-0 top-[20%] h-[0.56px] w-full opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="absolute inset-x-0 bottom-[20%] h-[0.56px] w-full opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
 
-      <div className="absolute left-[36.5%] top-[65.5]">
-        <span className="text-[40px] text-white">•</span>
-      </div>
-      <div className="absolute right-[36.5%] top-[65.5]">
-        <span className="text-[40px] text-white">•</span>
-      </div>
-      <div className="absolute bottom-[78.5] right-[36.5%]">
-        <span className="text-[40px] text-white">•</span>
-      </div>
-      <div className="absolute bottom-[78.5] left-[36.5%]">
-        <span className="text-[40px] text-white">•</span>
-      </div>
+        {/* Vertical lines */}
+        <div className="absolute left-[30%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        <div className="absolute right-[30%] top-0 h-full w-[0.56px] opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
 
-      <div className="absolute bottom-0 left-0 z-[-10] h-20 w-full opacity-20">
-        <div className="outline-opacity-0 absolute left-0 top-[-420px] h-[0.56px] w-full outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
-        <div className="outline-opacity-0 absolute left-0 top-[-30px] h-[0.56px] w-full outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
+        {/* Dots at intersections */}
+        <div className="absolute left-[30%] top-[20%] -translate-x-1/2 -translate-y-1/2">
+          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+        </div>
+        <div className="absolute right-[30%] top-[20%] -translate-y-1/2 translate-x-1/2">
+          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+        </div>
+        <div className="absolute bottom-[20%] left-[30%] -translate-x-1/2 translate-y-1/2">
+          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+        </div>
+        <div className="absolute bottom-[20%] right-[30%] translate-x-1/2 translate-y-1/2">
+          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+        </div>
       </div>
-
-      <div className="absolute bottom-0 left-[480.90px] z-[-10] h-[997.45px] w-20 opacity-20">
-        <div className="outline-opacity-0 absolute left-[81.48px] top-0 h-0 w-[997.45px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
-        <div className="outline-opacity-0 absolute left-0 top-0 h-0 w-[997.45px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
-      </div>
-      <div className="absolute right-[480.90px] top-[1.72px] h-[1171.12px] w-20 opacity-20">
-        <div className="outline-opacity-0 absolute left-[81.48px] top-0 h-0 w-[1171.12px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
-        <div className="outline-opacity-0 absolute left-[2.17px] top-0 h-0 w-[1171.12px] origin-top-left rotate-90 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
-      </div>
-
       {/* Join users text */}
-      <div className="mb-10 flex items-center gap-1.5 text-sm">
+      <div className="mb-8 flex items-center gap-1.5 text-sm">
         <Plus className="h-4 w-4" />
         <span className="text-xs">Join 1000+ users</span>
       </div>
-
       {/* Main heading */}
       <h1 className="transducer-font mb-6 max-w-5xl px-4 text-center text-4xl font-bold leading-tight tracking-wide sm:text-5xl md:text-6xl">
         ACE YOUR CERTIFICATIONS
