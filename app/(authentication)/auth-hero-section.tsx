@@ -13,7 +13,7 @@ const AuthHeroSection = ({
 }) => {
   return (
     <div
-      className="relative flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-8 text-center text-white md:p-12"
+      className="relative flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-[rgba(89,38,13,0.9)] to-[rgba(194,65,12,0.9)] p-8 text-center text-white md:p-12"
       style={{}}
     >
       <div className="relative z-10 mt-20 max-w-xl">
