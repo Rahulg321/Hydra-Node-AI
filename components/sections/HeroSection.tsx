@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
+import { LampBar } from "../ui/lamp-bar";
+import Lamp from "../ui/lamp";
 
 export default function CertificationHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -128,8 +130,8 @@ export default function CertificationHero() {
   }, []);
 
   return (
-    <div className="relative flex min-h-[600px] w-full flex-col items-center justify-center overflow-hidden text-white">
-      {/* Grid container for dots and lines */}
+    <div className="relative flex min-h-[550px] w-full flex-col items-center justify-center overflow-hidden text-white">
+      <Lamp />
       <div className="absolute inset-0 z-[-10]">
         {/* Horizontal lines */}
         <div className="absolute inset-x-0 top-[20%] h-[0.56px] w-full opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
@@ -144,16 +146,16 @@ export default function CertificationHero() {
 
         {/* Dots at intersections */}
         <div className="absolute left-[30%] top-[20%] -translate-x-1/2 -translate-y-1/2">
-          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+          <span className="block h-2 w-2 rounded-full bg-white opacity-80" />
         </div>
         <div className="absolute right-[30%] top-[20%] -translate-y-1/2 translate-x-1/2">
-          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+          <span className="block h-2 w-2 rounded-full bg-white opacity-80" />
         </div>
         <div className="absolute bottom-[20%] left-[30%] -translate-x-1/2 translate-y-1/2">
-          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+          <span className="block h-2 w-2 rounded-full bg-white opacity-80" />
         </div>
         <div className="absolute bottom-[20%] right-[30%] translate-x-1/2 translate-y-1/2">
-          <span className="block h-2 w-2 rounded-full bg-white opacity-20" />
+          <span className="block h-2 w-2 rounded-full bg-white opacity-80" />
         </div>
       </div>
       {/* Join users text */}
@@ -163,7 +165,7 @@ export default function CertificationHero() {
       </div>
       {/* Main heading */}
 
-      <h1 className="transducer-font mb-6 max-w-5xl px-4 text-center text-4xl font-bold leading-tight tracking-wide">
+      <h1 className="transducer-font mb-6 px-4 text-center font-bold leading-tight tracking-wide">
         ACE YOUR CERTIFICATIONS
         <br />
         WITH{" "}
