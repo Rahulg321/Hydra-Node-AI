@@ -2,8 +2,15 @@ import Image from "next/image";
 import React from "react";
 import HydranodeWhiteLogo from "@/public/logos/hydranode-white-logo.svg";
 import Link from "next/link";
+import AuthFlash from "@/public/illustrations/flash.png";
 
-const AuthHeroSection = () => {
+const AuthHeroSection = ({
+  headline,
+  tagline,
+}: {
+  headline: string;
+  tagline: string;
+}) => {
   return (
     <div
       className="relative flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-8 text-center text-white md:p-12"
@@ -24,22 +31,13 @@ const AuthHeroSection = () => {
           </Link>
         </div>
 
-        <h1 className="transducer-font hsl-white mb-6 font-sans text-3xl font-bold tracking-wider sm:text-4xl md:text-5xl">
-          WELCOME TO HYDRANODE
+        <h1 className="transducer-font mb-6 font-bold tracking-wider">
+          {headline}
         </h1>
 
-        <p className="mb-12 text-gray-200">
-          Experience the future of exam preparation with Hydranode&apos;s
-          advanced AI technology. Get realistic practice, instant feedback, and
-          personalized learning paths.
-        </p>
+        <p className="mb-12 text-gray-300">{tagline}</p>
 
-        <Image
-          src={"/auth/auth-hero12.png"}
-          width={600}
-          height={600}
-          alt="auth layout"
-        />
+        <Image src={AuthFlash} alt="auth layout" />
       </div>
     </div>
   );

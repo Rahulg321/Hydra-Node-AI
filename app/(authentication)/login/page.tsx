@@ -20,7 +20,10 @@ export const metadata: Metadata = {
 const LoginPage = () => {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <AuthHeroSection />
+      <AuthHeroSection
+        headline="Welcome Back To The HydraNode"
+        tagline="Experience the future of exam preparation with Hydranode's advanced AI technology. Get realistic practice, instant feedback, and personalized learning paths."
+      />
 
       <div className="flex flex-1 flex-col items-center justify-center p-8 md:p-12">
         <div className="w-full max-w-md space-y-8">

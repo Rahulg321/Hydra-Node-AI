@@ -15,8 +15,10 @@ export const metadata = {
 const SignUpPage = () => {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <AuthHeroSection />
-
+      <AuthHeroSection
+        headline="Join HydraNode - Simplify Your Certifications"
+        tagline="Experience the future of exam preparation with Hydranode's advanced AI technology. Get realistic practice, instant feedback, and personalized learning paths."
+      />
       <div className="flex flex-1 flex-col items-center justify-center p-8 md:p-12">
         <h3 className="mb-4">Sign Up For Hydranode Platform</h3>
         <SignupForm />
