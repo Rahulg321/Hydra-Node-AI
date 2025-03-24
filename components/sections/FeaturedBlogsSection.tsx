@@ -60,7 +60,7 @@ export default function FeaturesBlogsSection() {
           {blogs.map((post, index) => (
             <div
               key={index}
-              className="flex h-full flex-col overflow-hidden rounded-lg bg-gradient-to-b from-zinc-900 to-zinc-800"
+              className="flex h-full flex-col overflow-hidden rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10"
             >
               <div className="relative h-48 overflow-hidden">
                 <Image
