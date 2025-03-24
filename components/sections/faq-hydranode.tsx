@@ -46,11 +46,11 @@ export default function FAQHydranodeSection() {
   return (
     <div className="block-space">
       <div className="big-container">
-        <span className="transducer-font mb-12 block text-center text-3xl font-bold tracking-wide md:text-4xl lg:text-5xl">
+        <h2 className="transducer-font mb-12 block text-center font-bold tracking-wide">
           FREQUENTLY ASKED QUESTIONS
           <br />
           ABOUT HYDRANODE
-        </span>
+        </h2>
 
         <div className="space-y-4">
           {faqItems.map((item, index) => (
