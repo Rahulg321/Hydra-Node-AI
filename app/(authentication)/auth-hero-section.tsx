@@ -16,7 +16,7 @@ const AuthHeroSection = ({
       className="big-container relative flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-[rgba(89,38,13,0.9)] to-[rgba(194,65,12,0.9)] p-8 text-center text-white"
       style={{}}
     >
-      <div className="relative z-10 mt-20 max-w-xl">
+      <div className="relative z-10 mt-20">
         <div className="mb-4 flex justify-center">
           <Link
             className="flex items-center gap-2 text-xl font-semibold"
@@ -31,7 +31,7 @@ const AuthHeroSection = ({
           </Link>
         </div>
 
-        <h1 className="transducer-font text-center text-[31.59px] font-medium uppercase leading-[100%] tracking-[-0.01em] sm:text-[33px] md:text-[35px] lg:text-[37px]">
+        <h1 className="transducer-font text-[31.59px] font-medium uppercase leading-[100%] tracking-[-0.01em] sm:text-[33px] md:text-[35px]">
           {headline}
         </h1>
 
