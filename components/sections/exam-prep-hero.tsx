@@ -4,18 +4,14 @@ import { GradientButton } from "../buttons/gradient-button";
 
 export default function ExamPrepHero() {
   return (
-    <div className="w-full bg-black py-16 md:py-24 lg:py-32">
+    <div className="block-space w-full">
       <div className="big-container relative flex-col items-center px-4 text-center">
-        <h1
-          className="transducer-font mb-6 bg-gradient-to-r from-gray-300 to-gray-500 bg-clip-text text-3xl font-bold tracking-tight text-transparent"
-          style={{
-            lineHeight: 1.5,
-          }}
-        >
-          READY TO SUPERCHARGE YOUR EXAM <br /> PREP? GET STARTED WITH AI-
-          <br />
+        <h1 className="transducer-font mb-6 bg-gradient-to-r from-white to-transparent bg-clip-text text-center text-[24px] font-medium uppercase leading-[130%] tracking-[-0.04em] text-transparent sm:text-[32px] md:text-[36px] lg:text-[40px]">
+          READY TO SUPERCHARGE YOUR EXAM <br className="hidden sm:block" />{" "}
+          PREP? GET STARTED WITH AI-
+          <br className="hidden sm:block" />
           POWERED PRACTICE TESTS & REAL
-          <br /> EXAM SIMULATIONS!
+          <br className="hidden sm:block" /> EXAM SIMULATIONS!
         </h1>
 
         <div className="">

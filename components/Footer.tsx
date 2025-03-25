@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
+import Image from "next/image";
+
+import HydranodeWhiteLogo from "@/public/logos/hydranode-white-logo.svg";
 
 export default function Footer() {
   return (
@@ -8,11 +11,20 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
           {/* Logo and Copyright Section */}
           <div className="space-y-6 md:col-span-6">
-            <div className="flex items-center space-x-2">
-              <BookOpen className="h-6 w-6" />
-              <h2 className="text-xl font-semibold">HydraNode</h2>
+            <div className="mb-8 flex flex-col items-start gap-2">
+              <div className="h-8 w-8">
+                <Image
+                  src={HydranodeWhiteLogo}
+                  width={50}
+                  height={50}
+                  alt="HydraNode logo"
+                  className="object-contain"
+                />
+              </div>
+              <h3 className="font-semibold text-orange-300 lg:text-3xl">
+                HydraNode
+              </h3>
             </div>
-
             <p className="text-sm text-gray-400">
               © 2024 HydraNode. All Rights Reserved.
             </p>

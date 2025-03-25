@@ -13,7 +13,7 @@ const AuthHeroSection = ({
 }) => {
   return (
     <div
-      className="relative flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-[rgba(89,38,13,0.9)] to-[rgba(194,65,12,0.9)] p-8 text-center text-white md:p-12"
+      className="big-container relative flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-[rgba(89,38,13,0.9)] to-[rgba(194,65,12,0.9)] p-8 text-center text-white"
       style={{}}
     >
       <div className="relative z-10 mt-20 max-w-xl">
@@ -31,13 +31,17 @@ const AuthHeroSection = ({
           </Link>
         </div>
 
-        <h1 className="transducer-font mb-6 font-bold tracking-wider">
+        <h1 className="transducer-font text-center text-[31.59px] font-medium uppercase leading-[100%] tracking-[-0.01em] sm:text-[33px] md:text-[35px] lg:text-[37px]">
           {headline}
         </h1>
 
-        <p className="mb-12 text-gray-300">{tagline}</p>
+        <p className="mt-6 bg-[linear-gradient(174.01deg,rgba(255,223,215,0.7)_25.25%,rgba(255,223,215,0.7)_272.66%)] bg-clip-text text-center text-[20px] font-normal leading-[140%] tracking-[-0.03em] text-transparent sm:text-[22px]">
+          {tagline}
+        </p>
 
-        <Image src={AuthFlash} alt="auth layout" />
+        <div className="mt-4 md:mt-6 lg:mt-8">
+          <Image src={AuthFlash} alt="auth layout" height={500} width={900} />
+        </div>
       </div>
     </div>
   );
