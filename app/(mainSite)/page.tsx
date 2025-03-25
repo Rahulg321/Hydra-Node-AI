@@ -68,7 +68,6 @@ export default async function Home() {
       <CertificationsLogo />
       <CertificationsChallenges />
 
-      {/* <ExamPrepFeatures /> */}
       <HowItWorks />
       <Features />
       <TestimonialGrid />

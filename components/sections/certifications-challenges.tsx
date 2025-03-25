@@ -8,14 +8,17 @@ const CertificationsChallenges = () => {
     <section className="relative overflow-hidden">
       <div className="block-space-large big-container">
         <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
-        <div className="box mb-6 space-y-4 text-center md:mb-8 lg:mb-16">
+        <div className="mb-6 space-y-4 text-center md:mb-8 lg:mb-16">
           <h2 className="transducer-font mb-4 text-center text-[36px] font-medium uppercase leading-[45px] tracking-[-0.04em] sm:text-[40px] sm:leading-[50px] md:text-[44px] md:leading-[54px] lg:text-[48px] lg:leading-[58px]">
             Struggling to Pass Your IT Certifications?
           </h2>
-          <span className="block bg-clip-text text-center text-gray-400">
-            Traditional certification prep methods often fall short. Let&lsquo;s
-            look at why, and how we&lsquo;re solving these challenges.
-          </span>
+          <div className="mx-auto mt-4 max-w-xl">
+            <span className="text-[rgba(255, 255, 255, 0.6)] block text-center">
+              Traditional certification prep methods often fall short.
+              Let&lsquo;s look at why, and how we&lsquo;re solving these
+              challenges.
+            </span>
+          </div>
         </div>
 
         <div className="space-y-4">
