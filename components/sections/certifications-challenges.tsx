@@ -5,45 +5,44 @@ import { cn } from "@/lib/utils";
 
 const CertificationsChallenges = () => {
   return (
-    <section className="block-space-large big-container bg-mainDark overflow-hidden text-white">
-      <div className="relative">
+    <section className="relative overflow-hidden">
+      <div className="block-space-large big-container">
+        <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
         <div className="box mb-6 space-y-4 text-center md:mb-8 lg:mb-16">
           <h2 className="transducer-font mb-4 text-center text-[36px] font-medium uppercase leading-[45px] tracking-[-0.04em] sm:text-[40px] sm:leading-[50px] md:text-[44px] md:leading-[54px] lg:text-[48px] lg:leading-[58px]">
             Struggling to Pass Your IT Certifications?
           </h2>
           <span className="block bg-clip-text text-center text-gray-400">
-            With traditional customer support services, you can face major
-            issues like high <br /> operational cost, inconsistent quality, long
-            response time and many more.
+            Traditional certification prep methods often fall short. Let&lsquo;s
+            look at why, and how we&lsquo;re solving these challenges.
           </span>
         </div>
 
-        <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
         <div className="space-y-4">
           <div className="tech-row flex flex-col md:flex-row">
-            <ChatBubble heading="How to handle massive Customer Support?" />
+            <ChatBubble heading="Overwhelming content volume" />
             <BlankChatBubble classname="flex-1" />
-            <ChatBubble heading="How can I elevate User Experience?" />
+            <ChatBubble heading="Outdated materials" />
           </div>
           <div className="tech-row flex flex-col md:flex-row">
             <BlankChatBubble classname="flex-1" />
-            <ChatBubble heading="How can I save service cost?" />
+            <ChatBubble heading="Test anxiety & performance pressure" />
             <BlankChatBubble classname="flex-1" />
           </div>
           <div className="tech-row flex flex-col md:flex-row">
-            <ChatBubble heading="How to save my valuable time from hiring process?" />
+            <ChatBubble heading="Lack of practice" />
             <BlankChatBubble classname="flex-1" />
-            <ChatBubble heading="How can I attract more customers?" />
+            <ChatBubble heading="Generic study content" />
           </div>
           <div className="tech-row flex flex-col md:flex-row">
             <BlankChatBubble classname="flex-1" />
-            <ChatBubble heading="How can I increase engagement on my website?" />
+            <ChatBubble heading="Not aware of your weak areas in study" />
             <BlankChatBubble classname="flex-1" />
           </div>
           <div className="tech-row flex flex-col md:flex-row">
-            <ChatBubble heading="How to serve quick results?" />
-            <div className="flex-1"></div>
-            <ChatBubble heading="How can I automate the communication?" />
+            <ChatBubble heading="Complex explanations" />
+            <BlankChatBubble classname="flex-1" />
+            <ChatBubble heading="Poor time management during exams" />
           </div>
         </div>
       </div>

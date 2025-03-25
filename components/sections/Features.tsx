@@ -11,7 +11,7 @@ export default function Features() {
           <span className="text-xl md:text-2xl lg:text-4xl">?</span>
         </h2>
 
-        <p className="mx-auto mb-16 max-w-2xl text-center text-gray-400">
+        <p className="mx-auto mb-16 max-w-xl text-center text-gray-400 lg:text-lg">
           A quick comparison of Aligno&apos;s features versus other project
           management tools. See why we stand out.
         </p>
