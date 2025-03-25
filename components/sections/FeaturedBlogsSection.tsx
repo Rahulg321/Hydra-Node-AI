@@ -94,22 +94,8 @@ export default function FeaturesBlogsSection() {
                 </div>
 
                 {/* Blog title */}
-                <h3 className="mb-3 text-lg font-medium">
-                  {post.highlight ? (
-                    <span>
-                      {post.title.split(" ").map((word, i, arr) =>
-                        i >= arr.length - 3 ? (
-                          <span key={i} className="text-orange-400">
-                            {word}{" "}
-                          </span>
-                        ) : (
-                          <span key={i}>{word} </span>
-                        ),
-                      )}
-                    </span>
-                  ) : (
-                    post.title
-                  )}
+                <h3 className="mb-3 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text font-medium tracking-[-0.567px] text-transparent lg:leading-8">
+                  {post.title}
                 </h3>
               </div>
             </div>
