@@ -33,7 +33,7 @@ export default async function Home() {
         <div className="big-container">
           <Image src={Flash} alt="flash" className="mx-auto w-full max-w-5xl" />
           <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
-          <div className="right-[-5%] top-1/4 z-10 w-[150px] scale-75 transform md:absolute md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[5%] lg:top-[15%] lg:w-[250px] lg:scale-100">
+          <div className="right-[-5%] top-2/4 z-10 w-[150px] scale-75 transform md:absolute md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:top-[15%] lg:w-[250px] lg:scale-100">
             <Image
               src={Popup1}
               alt="popup1"
@@ -44,7 +44,7 @@ export default async function Home() {
           </div>
 
           {/* Popup 2 - Left side */}
-          <div className="left-[-5%] top-1/3 z-10 w-[150px] scale-75 transform md:absolute md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[5%] lg:w-[250px] lg:scale-100">
+          <div className="left-[-5%] top-1/2 z-10 w-[150px] scale-75 transform md:absolute md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[10%] lg:w-[250px] lg:scale-100">
             <Image
               src={Popup2}
               alt="popup2"

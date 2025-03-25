@@ -13,7 +13,7 @@ export default function CertificationsLogo() {
   return (
     <section className="w-full bg-black py-12 text-white md:py-16">
       <div className="container mx-auto px-4">
-        <h5 className="mb-12 text-center text-gray-400">
+        <h5 className="mb-12 bg-[linear-gradient(174.01deg,rgba(255,223,215,0.7)_25.25%,rgba(255,179,132,0.7)_272.66%)] bg-clip-text text-center text-transparent">
           Our popular certifications
         </h5>
 

@@ -1,137 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
-import { LampBar } from "../ui/lamp-bar";
 import Lamp from "../ui/lamp";
 
 export default function CertificationHero() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      const { width, height } = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-
-      ctx.scale(dpr, dpr);
-
-      drawGrid(ctx, width, height);
-    };
-
-    const drawGrid = (
-      ctx: CanvasRenderingContext2D,
-      width: number,
-      height: number,
-    ) => {
-      ctx.clearRect(0, 0, width, height);
-
-      // Create a dark background
-      ctx.fillStyle = "#0A0A0A";
-      ctx.fillRect(0, 0, width, height);
-
-      // Grid lines
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-      ctx.lineWidth = 0.5;
-      const gridSize = 70;
-
-      for (let x = 0; x <= width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-
-      for (let y = 0; y <= height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      // Lamp effect - centered, soft glow
-      const lampX = width / 2;
-      const lampY = height * 0.25;
-      const lampRadiusInner = width * 0.1;
-      const lampRadiusOuter = width * 0.5;
-      const lampGradient = ctx.createRadialGradient(
-        lampX,
-        lampY,
-        lampRadiusInner,
-        lampX,
-        lampY,
-        lampRadiusOuter,
-      );
-
-      // Use the provided gradient colors
-      lampGradient.addColorStop(0, "rgba(255,195,177,0.3)");
-      lampGradient.addColorStop(0.5, "rgba(255,140,105,0.15)");
-      lampGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-
-      ctx.fillStyle = lampGradient;
-      ctx.fillRect(0, 0, width, height);
-
-      // Top bar reflection
-      const reflectionHeight = height * 0.15;
-      const reflectionGradient = ctx.createLinearGradient(
-        0,
-        0,
-        0,
-        reflectionHeight,
-      );
-
-      ctx.fillStyle = reflectionGradient;
-      ctx.fillRect(0, 0, width, reflectionHeight);
-
-      // Bottom effect - subtle glow/mist
-      const bottomEffectHeight = height * 0.2;
-      const bottomEffectGradient = ctx.createLinearGradient(
-        0,
-        height - bottomEffectHeight,
-        0,
-        height,
-      );
-
-      ctx.fillStyle = bottomEffectGradient;
-      ctx.fillRect(0, height - bottomEffectHeight, width, bottomEffectHeight);
-    };
-
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    let animationFrameId: number;
-    const animate = () => {
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const { width, height } = canvas.getBoundingClientRect();
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          drawGrid(ctx, width, height);
-        }
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   return (
     <div className="relative flex min-h-[550px] w-full flex-col items-center justify-center overflow-hidden text-white">
       <Lamp />
+      <div className="absolute bottom-[-12rem] left-1/2 h-[20rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
+
       <div className="absolute inset-0 z-[-10]">
         {/* Horizontal lines */}
         <div className="absolute inset-x-0 top-[20%] h-[0.56px] w-full opacity-20 outline outline-[0.56px] outline-offset-[-0.28px] outline-gray-400" />
