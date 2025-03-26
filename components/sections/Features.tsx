@@ -63,7 +63,7 @@ export default function Features() {
           <div className="relative overflow-hidden">
             <div className="absolute left-1/2 top-3/4 h-[20rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
 
-            <h3 className="mb-8 text-center text-2xl font-semibold">
+            <h3 className="mb-8 text-center text-2xl font-semibold lg:text-3xl">
               Other tools
             </h3>
             <div className="-from-[6.68%] -shadow-[0px_-17px_17.8px_0px_rgba(255,255,255,0.04)] relative rounded-lg border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6 shadow-inner backdrop-blur-[12.309917449951172px]">

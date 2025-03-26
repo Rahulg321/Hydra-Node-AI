@@ -32,10 +32,10 @@ export default async function Home() {
       <div className="relative z-0 mx-auto overflow-hidden px-4 py-12">
         <div className="big-container">
           <Image src={Flash} alt="flash" className="mx-auto w-full max-w-5xl" />
-          <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
+          <div className="absolute bottom-0 left-0 z-20 h-2/4 w-full bg-gradient-to-t from-black to-transparent"></div>
           <div className="right-[-5%] top-2/4 z-10 w-[150px] scale-75 transform md:absolute md:right-[-5%] md:w-[200px] md:scale-90 lg:right-[10%] lg:top-[15%] lg:w-[250px] lg:scale-100">
             <Image
-              src={Popup1}
+              src={Popup2}
               alt="popup1"
               width={220}
               height={220}
@@ -46,7 +46,7 @@ export default async function Home() {
           {/* Popup 2 - Left side */}
           <div className="left-[-5%] top-1/2 z-10 w-[150px] scale-75 transform md:absolute md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[10%] lg:w-[250px] lg:scale-100">
             <Image
-              src={Popup2}
+              src={Popup1}
               alt="popup2"
               width={220}
               height={220}
@@ -67,6 +67,7 @@ export default async function Home() {
       </div>
       <CertificationsLogo />
       <CertificationsChallenges />
+      <ExamPrepFeatures />
 
       <HowItWorks />
       <Features />
