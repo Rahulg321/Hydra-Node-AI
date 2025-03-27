@@ -52,7 +52,7 @@ export default function FeaturesBlogsSection() {
   return (
     <div className="py-20">
       <div className="mx-auto px-4">
-        <h2 className="transducer-font mb-16 text-center text-3xl font-bold tracking-wide md:text-4xl lg:text-5xl">
+        <h2 className="transducer-font mb-16 text-center font-bold tracking-wide">
           OUR BLOGS
         </h2>
 
