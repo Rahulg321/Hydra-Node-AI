@@ -169,7 +169,7 @@ const ExamPrepFeatures = () => {
           {/* 6 */}
           <Card className="col-span-1 overflow-hidden rounded-lg border-none shadow-lg [background:linear-gradient(129deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.02)_47%,rgba(255,255,255,0.08)_100%),linear-gradient(0deg,rgba(0,0,0,0.38)_0%,rgba(0,0,0,0.38)_100%)] lg:col-span-3">
             <CardContent className="relative p-3 sm:p-4">
-              <div className="absolute left-24">
+              <div className="absolute left-24 z-[-10]">
                 <Image
                   alt="Detailed explanations"
                   src="/exam-prep-features/mask-group-4.png"
@@ -183,7 +183,7 @@ const ExamPrepFeatures = () => {
                 scoring on your practice exams.
               </p>
               <div className="mt-3 flex justify-between">
-                <Image src={Eight} alt="" width={200} height={200} />
+                <Image src={Eight} alt="" width={220} height={200} />
                 <Image src={Bars} alt="" width={200} height={200} />
               </div>
             </CardContent>
