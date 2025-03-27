@@ -44,7 +44,7 @@ export default async function Home() {
           </div>
 
           {/* Popup 2 - Left side */}
-          <div className="left-[-5%] top-1/2 z-10 w-[150px] scale-75 transform md:absolute md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[10%] lg:w-[250px] lg:scale-100">
+          <div className="left-[-5%] top-1/4 z-10 w-[150px] scale-75 transform md:absolute md:left-[-5%] md:w-[200px] md:scale-90 lg:left-[10%] lg:top-[42%] lg:w-[250px] lg:scale-100">
             <Image
               src={Popup1}
               alt="popup2"

@@ -6,14 +6,15 @@ import { cn } from "@/lib/utils";
 const CertificationsChallenges = () => {
   return (
     <section className="relative overflow-hidden">
-      <div className="block-space-large big-container">
+      <div className="block-space-large mx-auto max-w-4xl px-4">
         <div className="absolute bottom-0 left-0 z-20 h-3/4 w-full bg-gradient-to-t from-black to-transparent"></div>
         <div className="mb-6 space-y-4 text-center md:mb-8 lg:mb-16">
-          <h2 className="transducer-font mb-4 text-center text-[36px] font-medium uppercase leading-[45px] tracking-[-0.04em] sm:text-[40px] sm:leading-[50px] md:text-[44px] md:leading-[54px] lg:text-[48px] lg:leading-[58px]">
-            Struggling to Pass Your IT Certifications?
+          <h2 className="transducer-font mb-4 text-center font-medium uppercase md:text-2xl lg:text-4xl">
+            Struggling to Pass Your IT <br />
+            Certifications?
           </h2>
           <div className="mx-auto mt-4 max-w-xl">
-            <span className="text-[rgba(255, 255, 255, 0.6)] block text-center">
+            <span className="block text-center text-white opacity-60">
               Traditional certification prep methods often fall short.
               Let&lsquo;s look at why, and how we&lsquo;re solving these
               challenges.
@@ -22,27 +23,27 @@ const CertificationsChallenges = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="tech-row flex flex-col md:flex-row">
+          <div className="tech-row flex flex-col gap-2 md:flex-row">
             <ChatBubble heading="Overwhelming content volume" />
             <BlankChatBubble classname="flex-1" />
             <ChatBubble heading="Outdated materials" />
           </div>
-          <div className="tech-row flex flex-col md:flex-row">
+          <div className="tech-row flex flex-col gap-2 md:flex-row">
             <BlankChatBubble classname="flex-1" />
             <ChatBubble heading="Test anxiety & performance pressure" />
             <BlankChatBubble classname="flex-1" />
           </div>
-          <div className="tech-row flex flex-col md:flex-row">
+          <div className="tech-row flex flex-col gap-2 md:flex-row">
             <ChatBubble heading="Lack of practice" />
             <BlankChatBubble classname="flex-1" />
             <ChatBubble heading="Generic study content" />
           </div>
-          <div className="tech-row flex flex-col md:flex-row">
+          <div className="tech-row flex flex-col gap-2 md:flex-row">
             <BlankChatBubble classname="flex-1" />
             <ChatBubble heading="Not aware of your weak areas in study" />
             <BlankChatBubble classname="flex-1" />
           </div>
-          <div className="tech-row flex flex-col md:flex-row">
+          <div className="tech-row flex flex-col gap-2 md:flex-row">
             <ChatBubble heading="Complex explanations" />
             <BlankChatBubble classname="flex-1" />
             <ChatBubble heading="Poor time management during exams" />

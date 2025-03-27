@@ -138,7 +138,7 @@ const PricingCards = () => {
                     <button
                       className={`mb-4 block w-full rounded-full px-6 py-3 font-medium transition-all duration-300 ${
                         index === 1
-                          ? "bg-[#e87121] text-white hover:bg-[#d86010]"
+                          ? "bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-white hover:opacity-90"
                           : "bg-[#1e1e1e] text-white hover:bg-[#2a2a2a]"
                       }`}
                       onClick={() => {
@@ -159,7 +159,9 @@ const PricingCards = () => {
                     {plan.features.map((feature) => (
                       <div key={feature} className="flex items-start gap-2">
                         <span className="mt-1 text-sm text-white">•</span>
-                        <span className="text-sm text-gray-400">{feature}</span>
+                        <span className="text-sm text-white opacity-60">
+                          {feature}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -170,7 +172,10 @@ const PricingCards = () => {
 
           {/* Bottom Banner */}
           <div className="mx-auto mt-8 max-w-6xl">
-            <GradientButton size={"lg"} className="w-full">
+            <GradientButton
+              size={"lg"}
+              className="w-full p-4 md:p-6 md:text-xl"
+            >
               If you don&apos;t commit for subscription, you can also buy
               individual exam!
             </GradientButton>

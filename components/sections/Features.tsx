@@ -11,13 +11,13 @@ export default function Features() {
           <span className="text-xl md:text-2xl lg:text-4xl">?</span>
         </h2>
 
-        <p className="mx-auto mb-16 max-w-xl text-center text-gray-400 lg:text-lg">
+        <p className="mx-auto mb-16 max-w-xl text-center text-white opacity-60 lg:text-lg">
           A quick comparison of Aligno&apos;s features versus other project
           management tools. See why we stand out.
         </p>
 
         <div className="grid gap-8 md:grid-cols-2">
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-3xl">
             <div className="absolute left-4 top-1/2 h-[20rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
 
             <div className="mb-8 flex items-center justify-center gap-3">
@@ -34,7 +34,7 @@ export default function Features() {
                 HydraNode
               </h3>
             </div>
-            <div className="-from-[6.68%] -shadow-[0px_-17px_17.8px_0px_rgba(255,255,255,0.04)] relative rounded-lg border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6 shadow-inner backdrop-blur-[12.309917449951172px]">
+            <div className="relative overflow-hidden border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6">
               <ul className="space-y-6">
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
@@ -60,13 +60,13 @@ export default function Features() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-xl">
             <div className="absolute left-1/2 top-3/4 h-[20rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
 
             <h3 className="mb-8 text-center text-2xl font-semibold lg:text-3xl">
               Other tools
             </h3>
-            <div className="-from-[6.68%] -shadow-[0px_-17px_17.8px_0px_rgba(255,255,255,0.04)] relative rounded-lg border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6 shadow-inner backdrop-blur-[12.309917449951172px]">
+            <div className="-from-[6.68%] -shadow-[0px_-17px_17.8px_0px_rgba(255,255,255,0.04)] relative border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6 shadow-inner backdrop-blur-[12.309917449951172px]">
               <ul className="space-y-6">
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />

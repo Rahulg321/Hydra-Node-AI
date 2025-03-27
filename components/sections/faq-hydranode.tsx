@@ -77,7 +77,7 @@ export default function FAQHydranodeSection() {
               </div>
 
               {openIndex === index && (
-                <div className="relative p-5 pt-0 text-gray-400">
+                <div className="relative p-5 pt-0 text-white opacity-70">
                   <span>{item.answer}</span>
                   <div className="pointer-events-none absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-orange-500/20 to-transparent" />
                 </div>

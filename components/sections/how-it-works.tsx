@@ -26,11 +26,11 @@ export default function HowItWorks() {
 
           <div className="flex flex-col gap-6">
             {/* Step 1 */}
-            <div className="relative rounded-3xl border bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-8">
-              <h4 className="mb-2 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text font-semibold leading-none tracking-[-0.567px] text-transparent">
+            <div className="relative rounded-3xl border bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6">
+              <h3 className="mb-2 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text font-semibold leading-none tracking-[-0.567px] text-transparent">
                 Sign up for free
-              </h4>
-              <p className="text-sm leading-relaxed text-gray-300">
+              </h3>
+              <p className="text-sm leading-relaxed text-white opacity-60">
                 Get instant access to our AI-powered exam prep platform by
                 signing up in just a few clicks. No credit card required for the
                 free trial.
@@ -39,10 +39,10 @@ export default function HowItWorks() {
 
             {/* Step 2 */}
             <div className="relative rounded-3xl border bg-opacity-20 p-8">
-              <h4 className="mb-2 font-semibold text-white">
+              <h3 className="mb-2 font-semibold text-white">
                 Select any Certification
-              </h4>
-              <p className="text-sm leading-relaxed text-gray-300">
+              </h3>
+              <p className="text-sm leading-relaxed text-white opacity-60">
                 Our AI dynamically generates exam-style questions based on
                 real-time trends and latest study materials to ensure
                 you&apos;re practicing the most relevant content.
@@ -51,8 +51,8 @@ export default function HowItWorks() {
 
             {/* Step 3 */}
             <div className="relative rounded-3xl border p-8">
-              <h4 className="mb-2 font-semibold">Generates Questions</h4>
-              <p className="text-sm leading-relaxed text-gray-300">
+              <h3 className="mb-2 font-semibold">Generates Questions</h3>
+              <p className="text-sm leading-relaxed text-white opacity-60">
                 Experience a real exam interface with time limits, question
                 formats, and instant feedback - helping you build confidence and
                 reduce test anxiety.
@@ -61,8 +61,8 @@ export default function HowItWorks() {
 
             {/* Step 4 */}
             <div className="relative rounded-3xl border p-8">
-              <h4 className="mb-2 font-semibold">Start Your Exam</h4>
-              <p className="text-sm leading-relaxed text-gray-300">
+              <h3 className="mb-2 font-semibold">Start Your Exam</h3>
+              <p className="text-sm leading-relaxed text-white opacity-60">
                 Get detailed analytics, AI-powered feedback, and personalized
                 improvement suggestions to boost your exam readiness.
               </p>

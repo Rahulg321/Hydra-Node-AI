@@ -40,7 +40,7 @@ export default function CertificationHero() {
       {/* Join users text */}
       <div className="mb-8 flex items-center gap-1.5 text-sm">
         <Plus className="h-4 w-4" />
-        <span className="text-xs">Join 1000+ users</span>
+        <span className="text-xs md:text-lg">Join 1000+ users</span>
       </div>
       {/* Main heading */}
 
@@ -55,7 +55,7 @@ export default function CertificationHero() {
       </h1>
 
       {/* Subtext */}
-      <p className="mb-10 max-w-2xl px-6 text-center text-gray-300">
+      <p className="mb-10 max-w-2xl bg-[linear-gradient(174.01deg,_rgba(255,223,215,0.7)_25.25%,_rgba(255,223,215,0.7)_272.66%)] bg-clip-text px-6 text-center text-lg text-transparent md:text-xl">
         Experience the future of exam preparation with Hydranode&apos;s advanced
         AI technology. Get realistic practice, instant feedback, and
         personalized learning paths.

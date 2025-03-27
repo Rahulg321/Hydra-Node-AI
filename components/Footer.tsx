@@ -37,7 +37,7 @@ export default function Footer() {
           </div>
 
           <div className="space-y-4 md:col-span-3">
-            <h3 className="text-xl font-medium text-primary">Company</h3>
+            <h3 className="text-xl font-medium">Company</h3>
             <nav className="flex flex-col space-y-2">
               <Link
                 href="#"
@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
 
           <div className="space-y-4 md:col-span-3">
-            <h3 className="text-xl font-medium text-primary">Legal</h3>
+            <h3 className="text-xl font-medium">Legal</h3>
             <nav className="flex flex-col space-y-2">
               <Link
                 href="#"

@@ -81,7 +81,7 @@ export default function TestimonialGrid() {
               key={index}
               className="flex flex-col rounded-xl bg-gradient-to-br from-white/10 via-white/0 to-white/10 p-6 backdrop-blur-sm"
             >
-              <p className="mb-6 flex-grow text-gray-400">
+              <p className="mb-6 flex-grow text-white opacity-60">
                 {testimonial.quote}
               </p>
 
@@ -94,7 +94,9 @@ export default function TestimonialGrid() {
                 </div>
                 <div>
                   <h4 className="font-medium">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.company}</p>
+                  <p className="text-sm text-white opacity-70">
+                    {testimonial.company}
+                  </p>
                 </div>
               </div>
             </div>

@@ -1,12 +1,32 @@
 import Image from "next/image";
 
 const certifications = [
-  { name: "Cisco", width: 100, logoSrc: "/logos/cisco-logo.png" },
-  { name: "AWS", width: 100, logoSrc: "/logos/aws-logo.png" },
-  { name: "NVIDIA", width: 120, logoSrc: "/logos/nvidia-logo.png" },
-  { name: "Google", width: 110, logoSrc: "/logos/google-logo.png" },
-  { name: "Oracle", width: 90, logoSrc: "/logos/oracle-logo.png" },
-  { name: "Microsoft", width: 90, logoSrc: "/logos/microsoft-logo.png" },
+  { name: "Cisco", width: 100, logoSrc: "/logos/cisco-logo.png", height: 50 },
+  {
+    name: "Microsoft",
+    width: 150,
+    logoSrc: "/logos/microsoft-logo.png",
+    height: 150,
+  },
+  {
+    name: "NVIDIA",
+    width: 150,
+    logoSrc: "/logos/nvidia-logo.png",
+    height: 100,
+  },
+  {
+    name: "Google",
+    width: 110,
+    logoSrc: "/logos/google-logo.png",
+    height: 100,
+  },
+  {
+    name: "Oracle",
+    width: 150,
+    logoSrc: "/logos/oracle-logo.png",
+    height: 150,
+  },
+  { name: "AWS", width: 100, logoSrc: "/logos/aws-logo.png", height: 100 },
 ];
 
 export default function CertificationsLogo() {
@@ -27,7 +47,7 @@ export default function CertificationsLogo() {
                 src={cert.logoSrc || ""}
                 alt={`${cert.name} logo`}
                 width={cert.width}
-                height={48}
+                height={cert.height}
                 className="opacity-80 transition-opacity hover:opacity-100"
               />
             </div>
