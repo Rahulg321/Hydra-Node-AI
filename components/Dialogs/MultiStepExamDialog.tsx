@@ -538,7 +538,7 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
               </div>
               <div>
                 {step < totalSteps ? (
-                  <Button onClick={handleNext}>Continue</Button>
+                  <GradientButton onClick={handleNext}>Continue</GradientButton>
                 ) : (
                   <GradientButton
                     onClick={handleExamStartButton}

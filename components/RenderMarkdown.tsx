@@ -29,9 +29,9 @@ const RenderMarkdown = ({
       <MarkdownPreview
         source={source}
         style={{
-          padding: 16,
           background: "none",
-          fontSize: "1rem",
+          color: "white",
+          fontFamily: "var(--font-geist-sans)",
           ...contentStyle,
         }}
         wrapperElement={{

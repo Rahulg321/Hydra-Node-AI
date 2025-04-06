@@ -7,7 +7,13 @@ import { useExamModeContext } from "@/lib/exam-mode-context";
 import { cn, formatTime } from "@/lib/utils";
 import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
-import { CheckCircle, Loader2, Menu, TableOfContents } from "lucide-react";
+import {
+  Check,
+  CheckCircle,
+  Loader2,
+  Menu,
+  TableOfContents,
+} from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -32,6 +38,7 @@ import EndQuizAction from "@/actions/end-quiz";
 import MarkdownQuestion from "@/components/MarkdownQuestion";
 import MDEditor from "@uiw/react-md-editor";
 import RenderMarkdown from "@/components/RenderMarkdown";
+import { GradientButton } from "@/components/buttons/gradient-button";
 
 type McqProps = {
   quizSession: QuizSession;
@@ -248,7 +255,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   };
 
   return (
-    <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-10">
+    <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button className="mt-2 w-fit md:hidden">
@@ -352,40 +359,33 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              <Button className="rounded-full px-10 py-6 text-lg" asChild>
+              <GradientButton className="" asChild>
                 <Link href={`/exam/${exam.id}/quiz/${quizSession.id}/results`}>
                   View Your Score
                 </Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full px-10 py-6 text-lg"
-                asChild
-              >
+              </GradientButton>
+              <GradientButton className="" asChild>
                 <Link href={`/exam/${exam.id}`}>Back to Exam Details</Link>
-              </Button>
+              </GradientButton>
             </div>
           </div>
         ) : (
-          <div className="p-2">
+          <div className="">
             <div className="flex flex-wrap justify-between gap-4 text-sm">
-              <span className="font-medium">
-                Exam Mode:{" "}
-                <span className="font-bold">{quizSession.examMode}</span>
-              </span>
-              <span className="font-medium">
+              <p className="text-lg font-medium text-[#737373]">
                 Question: <span className="font-bold">{questionIndex + 1}</span>
-              </span>
-              <span className="font-medium">
-                Total Questions:{" "}
-                <span className="font-bold">{questions.length}</span>
-              </span>
+              </p>
             </div>
 
-            <span>Question Type: {currentQuestion.questionType}</span>
             <div>
               <div className="my-4 md:my-6 lg:my-8">
-                <RenderMarkdown source={currentQuestion.question} />
+                <RenderMarkdown
+                  source={currentQuestion.question}
+                  contentStyle={{
+                    fontSize: "1.5rem",
+                    color: "white",
+                  }}
+                />
               </div>
               <div className="space-y-4">
                 {/* TODO:-  figure out why this does not work */}
@@ -423,32 +423,38 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               </div>
             </div>
             {showAnswer && (
-              <div className="mt-4 rounded-lg bg-green-50 p-4 dark:bg-green-900">
+              <div className="mt-4 rounded-lg p-4 dark:bg-green-900">
                 <h3 className="my-4">Overall Explanation</h3>
-                <RenderMarkdown source={currentQuestion.overallExplanation} />
+                <RenderMarkdown
+                  source={currentQuestion.overallExplanation}
+                  contentStyle={{
+                    fontSize: "1.2rem",
+                    color: "white",
+                  }}
+                />
               </div>
             )}
             <div className="mt-4 flex justify-between">
               <div>
                 {quizSession.examMode === "PRACTICE" && (
-                  <Button
-                    className="rounded-full px-6 py-2"
+                  <GradientButton
+                    className=""
                     onClick={() => setShowAnswer(!showAnswer)}
                   >
                     {showAnswer ? "Hide Answer" : "Show Answer"}
-                  </Button>
+                  </GradientButton>
                 )}
               </div>
               <div className="space-x-4">
-                <Button
-                  className="rounded-full px-6 py-2"
+                <GradientButton
+                  className=""
                   onClick={handlePrevious}
                   disabled={questionIndex === 0}
                 >
                   Previous
-                </Button>
-                <Button
-                  className="rounded-full px-6 py-2"
+                </GradientButton>
+                <GradientButton
+                  className=""
                   onClick={handleNext}
                   disabled={isPending}
                 >
@@ -460,7 +466,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                   ) : (
                     "Next"
                   )}
-                </Button>
+                </GradientButton>
               </div>
             </div>
           </div>
@@ -548,7 +554,7 @@ function CountDownTimer({
 
   return (
     <div
-      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-500" : "bg-primary dark:bg-primary-dark"} text-white`}
+      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-500" : "bg-orange-700"} text-white`}
     >
       {mcqQuizEnded ? (
         <div>
@@ -557,7 +563,9 @@ function CountDownTimer({
       ) : (
         <div>
           <h4>Time Left</h4>
-          <h3>{formatTime(remainingTime)}</h3>
+          <h3 className="transducer-font mt-2 tracking-wider">
+            {formatTime(remainingTime)}
+          </h3>
         </div>
       )}
     </div>
@@ -586,48 +594,51 @@ function Option({
   return (
     <div
       className={cn(
-        "hover; flex transform cursor-pointer items-center gap-2 rounded-lg border-2 border-primary p-4",
-        selected && "bg-primary text-white dark:bg-primary-dark",
+        "flex transform cursor-pointer items-center gap-2 rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10 p-4",
+        selected && "bg-orange-700 text-white",
         isShowAnswer &&
           isCorrect &&
           "border-green-500 bg-green-600 text-white dark:bg-green-800",
       )}
       onClick={onSelect}
     >
-      {questionType === "multi_select" ? (
-        <input
-          type="checkbox"
-          checked={selected}
-          readOnly
-          className="form-checkbox h-5 w-5 cursor-pointer text-base"
-        />
-      ) : (
-        <input
-          type="radio"
-          checked={selected}
-          readOnly
-          className="form-radio h-5 w-5 cursor-pointer text-base"
-        />
-      )}
+      <div className="flex h-5 w-5 items-center justify-center rounded-full border border-white">
+        {selected && (
+          <div className="rounded-full bg-white">
+            <Check className="h-5 w-5 text-orange-700" />
+          </div>
+        )}
+      </div>
       <div className="ml-2 flex flex-col">
-        <div className="w-full">
-          <RenderMarkdown source={optionText!} className="bg-none" />
+        <div className="mb-2 w-full">
+          <RenderMarkdown
+            source={optionText!}
+            contentStyle={{
+              fontSize: "1.2rem",
+              fontFamily: "var(--font-geist-sans)",
+            }}
+          />
         </div>
         {isShowAnswer && (
-          <div className="flex items-center justify-center gap-1">
-            <span className="text-sm font-bold text-muted-foreground">
-              Option Explanation
-            </span>
+          <div className="flex flex-col gap-1 border-t border-white/20 pt-2">
+            <h4 className="">Explanation</h4>
             <div className={cn("", isCorrect && "text-white")}>
               {isCorrect ? (
                 <RenderMarkdown
                   source={optionExplanation!}
                   contentStyle={{
-                    color: "white",
+                    fontSize: "1.2rem",
                   }}
+                  className="text-white"
                 />
               ) : (
-                <RenderMarkdown source={optionExplanation!} contentStyle={{}} />
+                <RenderMarkdown
+                  source={optionExplanation!}
+                  contentStyle={{
+                    fontSize: "1.2rem",
+                  }}
+                  className="text-white"
+                />
               )}
             </div>
           </div>

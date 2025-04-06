@@ -134,9 +134,7 @@ export default async function ExamPage(props: {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-[#878593] md:text-lg lg:text-xl">
-                {exam.description}
-              </p>
+              <p className="text-[#878593] md:text-lg">{exam.description}</p>
             </CardContent>
           </Card>
         </div>
@@ -149,7 +147,7 @@ export default async function ExamPage(props: {
               </h4>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-[#878593] md:text-lg lg:text-xl">
+              <p className="mb-4 text-[#878593] md:text-lg">
                 If your purchased exam isn&apos;t appearing, try refreshing the
                 page or clearing your browser cache. Still having trouble? Feel
                 free to contact our support team for further assistance.
