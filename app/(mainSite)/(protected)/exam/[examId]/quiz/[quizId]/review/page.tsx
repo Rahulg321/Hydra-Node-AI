@@ -73,6 +73,8 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
 
   const sliceQuestions = questions.slice(0, questionsLimit);
 
+  console.log("user attempts in reveiw page", userAttempts);
+
   return (
     <section className="min-h-screen">
       <ReviewMcq

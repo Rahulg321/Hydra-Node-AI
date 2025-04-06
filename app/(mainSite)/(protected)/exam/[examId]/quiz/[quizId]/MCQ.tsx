@@ -301,38 +301,38 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           </div>
         </SheetContent>
       </Sheet>
-      <div
-        className={`border-grid hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r bg-background transition-transform duration-300 md:sticky md:top-14 md:block md:translate-x-0 md:transition-none`}
-      >
-        <div className="no-scrollbar h-full overflow-auto px-4 py-2 md:sticky md:top-14">
-          <h3 className="mb-4">{exam.name}</h3>
-          <CountDownTimer
-            initialTime={totalQuizTime}
-            quizSessionId={quizSession.id}
-            mcqQuizEnded={hasEnded}
-            setMcqQuizEnded={setHasEnded}
-            mcqQuestionsLength={questions.length}
-          />
-          <CorrectQuestionGrid
-            questionLength={questions.length}
-            questionStatus={questionStatus}
-          />
-          <div className="my-4 flex flex-col gap-4">
-            <span className="font-medium">
-              Skipped Answers:{" "}
-              <span className="font-bold">{skippedAnswers}</span>
-            </span>
-          </div>
-
-          {!hasEnded && (
-            <div className="mt-auto">
-              <EndQuizButton
-                quizSessionId={quizSession.id}
-                setHasEnded={setHasEnded}
-                mcqQuestionLength={questions.length}
-              />
+      <div className="border-grid hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r md:block">
+        <div className="no-scrollbar h-full overflow-auto px-4 py-4 md:py-6 lg:py-8">
+          <div className="sticky top-0 z-10 bg-background pb-4">
+            <h3 className="mb-4">{exam.name}</h3>
+            <CountDownTimer
+              initialTime={totalQuizTime}
+              quizSessionId={quizSession.id}
+              mcqQuizEnded={hasEnded}
+              setMcqQuizEnded={setHasEnded}
+              mcqQuestionsLength={questions.length}
+            />
+            <CorrectQuestionGrid
+              questionLength={questions.length}
+              questionStatus={questionStatus}
+            />
+            <div className="my-4 flex flex-col gap-4">
+              <span className="font-medium">
+                Skipped Answers:{" "}
+                <span className="font-bold">{skippedAnswers}</span>
+              </span>
             </div>
-          )}
+
+            {!hasEnded && (
+              <div className="mt-4">
+                <EndQuizButton
+                  quizSessionId={quizSession.id}
+                  setHasEnded={setHasEnded}
+                  mcqQuestionLength={questions.length}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="">
@@ -370,7 +370,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             </div>
           </div>
         ) : (
-          <div className="">
+          <div className="px-4 py-4 md:py-6 lg:py-8">
             <div className="flex flex-wrap justify-between gap-4 text-sm">
               <p className="text-lg font-medium text-[#737373]">
                 Question: <span className="font-bold">{questionIndex + 1}</span>
@@ -382,7 +382,8 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 <RenderMarkdown
                   source={currentQuestion.question}
                   contentStyle={{
-                    fontSize: "1.5rem",
+                    fontSize: "2rem",
+                    lineHeight: "2.5rem",
                     color: "white",
                   }}
                 />
@@ -428,7 +429,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 <RenderMarkdown
                   source={currentQuestion.overallExplanation}
                   contentStyle={{
-                    fontSize: "1.2rem",
+                    fontSize: "1rem",
                     color: "white",
                   }}
                 />
@@ -596,9 +597,7 @@ function Option({
       className={cn(
         "flex transform cursor-pointer items-center gap-2 rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10 p-4",
         selected && "bg-orange-700 text-white",
-        isShowAnswer &&
-          isCorrect &&
-          "border-green-500 bg-green-600 text-white dark:bg-green-800",
+        isShowAnswer && isCorrect && "border-green-500 bg-green-800 text-white",
       )}
       onClick={onSelect}
     >
@@ -627,7 +626,7 @@ function Option({
                 <RenderMarkdown
                   source={optionExplanation!}
                   contentStyle={{
-                    fontSize: "1.2rem",
+                    fontSize: "1rem",
                   }}
                   className="text-white"
                 />
@@ -635,7 +634,7 @@ function Option({
                 <RenderMarkdown
                   source={optionExplanation!}
                   contentStyle={{
-                    fontSize: "1.2rem",
+                    fontSize: "1rem",
                   }}
                   className="text-white"
                 />

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { QuizSession } from "@prisma/client";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useTransition } from "react";
 
 export default function EndQuizButton({
@@ -53,7 +54,14 @@ export default function EndQuizButton({
       className="w-full rounded-full px-10 py-6 text-base"
       disabled={isPending}
     >
-      {isPending ? "Ending Exam" : "End Exam"}
+      {isPending ? (
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Ending Exam
+        </div>
+      ) : (
+        "End Exam"
+      )}
     </Button>
   );
 }
