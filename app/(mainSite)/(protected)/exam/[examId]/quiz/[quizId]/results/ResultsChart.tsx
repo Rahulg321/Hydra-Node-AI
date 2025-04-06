@@ -1,7 +1,8 @@
 "use client";
 
-import { TrendingUp, TrendingDown } from "lucide-react";
-import { LabelList, Pie, PieChart } from "recharts";
+import * as React from "react";
+import { TrendingUp } from "lucide-react";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   Card,
@@ -17,100 +18,76 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
+import HydranodeWhiteLogo from "@/public/logos/hydranode-white-logo.svg";
+import Image from "next/image";
 interface ResultsChartProps {
   correct: number;
   incorrect: number;
   skipped: number;
 }
 
-const chartConfig = {
-  answers: {
-    label: "Answers",
-  },
-  correct: {
-    label: "Correct",
-    color: "hsl(var(--success))",
-  },
-  incorrect: {
-    label: "Incorrect",
-    color: "hsl(var(--destructive))",
-  },
-  skipped: {
-    label: "Skipped",
-    color: "hsl(var(--warning))",
-  },
-} satisfies ChartConfig;
-
 export default function ResultsChart({
   correct,
   incorrect,
   skipped,
 }: ResultsChartProps) {
-  const total = correct + incorrect + skipped;
-  const correctPercentage = ((correct / total) * 100).toFixed(1);
-  const trend = correct > incorrect ? "up" : "down";
-
   const chartData = [
-    { category: "correct", answers: correct, fill: "var(--color-correct)" },
-    {
-      category: "incorrect",
-      answers: incorrect,
-      fill: "var(--color-incorrect)",
-    },
-    { category: "skipped", answers: skipped, fill: "var(--color-skipped)" },
+    { category: "correct", count: correct, fill: "hsl(142, 76%, 36%)" }, // green
+    { category: "incorrect", count: incorrect, fill: "hsl(0, 84%, 60%)" }, // red
+    { category: "skipped", count: skipped, fill: "hsl(45, 93%, 47%)" }, // yellow
   ];
 
+  const chartConfig = {
+    count: {
+      label: "Questions",
+    },
+    correct: {
+      label: "Correct",
+      color: "hsl(var(--chart-1))",
+    },
+    incorrect: {
+      label: "Incorrect",
+      color: "hsl(var(--chart-2))",
+    },
+    skipped: {
+      label: "Skipped",
+      color: "hsl(var(--chart-3))",
+    },
+  } satisfies ChartConfig;
+
+  const totalQuestions = React.useMemo(() => {
+    return correct + incorrect + skipped;
+  }, [correct, incorrect, skipped]);
+
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Exam Results Breakdown</CardTitle>
-        <CardDescription>
-          Correct, Incorrect, and Skipped Answers
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 pb-0">
+    <div className="">
+      <div className="relative">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] [&_.recharts-text]:fill-background"
+          className="mx-auto aspect-square max-h-[250px] md:max-h-[300px] lg:max-h-[350px]"
         >
           <PieChart>
             <ChartTooltip
-              content={<ChartTooltipContent nameKey="answers" hideLabel />}
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <Pie data={chartData} dataKey="answers">
-              <LabelList
-                dataKey="category"
-                className="fill-background"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: keyof typeof chartConfig) =>
-                  chartConfig[value]?.label
-                }
-              />
-            </Pie>
+            <Pie
+              data={chartData}
+              dataKey="count"
+              nameKey="category"
+              innerRadius={60}
+              strokeWidth={5}
+            />
           </PieChart>
         </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          {trend === "up" ? (
-            <>
-              Trending up with {correctPercentage}% correct answers{" "}
-              <TrendingUp className="text-success h-4 w-4" />
-            </>
-          ) : (
-            <>
-              Trending down with {correctPercentage}% correct answers{" "}
-              <TrendingDown className="h-4 w-4 text-destructive" />
-            </>
-          )}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+          <Image
+            src={HydranodeWhiteLogo}
+            alt="hydranode logo"
+            className="block object-cover"
+          />
         </div>
-        <div className="leading-none text-muted-foreground">
-          Total questions: {total} | Correct: {correct} | Incorrect: {incorrect}{" "}
-          | Skipped: {skipped}
-        </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
