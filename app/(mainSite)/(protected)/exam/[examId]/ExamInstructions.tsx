@@ -4,10 +4,12 @@ export function ExamInstructions() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Examination Instructions</CardTitle>
+        <CardTitle className="transducer-font uppercase tracking-wide">
+          Examination Instructions
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="list-inside list-disc space-y-2 text-muted-foreground">
+        <ul className="list-inside list-disc space-y-2 text-[#878593] md:text-lg lg:text-xl">
           <li>You can pause the test at any time and resume later.</li>
           <li>You can retake the test as many times as you would like.</li>
           <li>You can skip questions and return to them later.</li>

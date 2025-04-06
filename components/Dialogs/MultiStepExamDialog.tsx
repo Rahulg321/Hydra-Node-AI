@@ -46,6 +46,7 @@ import { checkIfUserHasAccessToExam } from "@/lib/utils";
 import CreateMultiStepExam from "@/actions/create-multistep-exam";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GradientButton } from "../buttons/gradient-button";
 
 interface MultiStepExamDialogProps {
   examId: string;
@@ -497,12 +498,9 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          className="text-white transition-colors hover:bg-primary/90"
-          size="lg"
-        >
+        <GradientButton className="" size="xl">
           {buttonLabel}
-        </Button>
+        </GradientButton>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md md:max-w-lg">
         {!isGenerating ? (
@@ -542,10 +540,10 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
                 {step < totalSteps ? (
                   <Button onClick={handleNext}>Continue</Button>
                 ) : (
-                  <Button
+                  <GradientButton
                     onClick={handleExamStartButton}
                     disabled={isPending}
-                    className="min-w-[120px]"
+                    className=""
                   >
                     {isPending ? (
                       <>
@@ -555,7 +553,7 @@ export const MultiStepExamDialog: React.FC<MultiStepExamDialogProps> = ({
                     ) : (
                       "Start Exam"
                     )}
-                  </Button>
+                  </GradientButton>
                 )}
               </div>
             </DialogFooter>

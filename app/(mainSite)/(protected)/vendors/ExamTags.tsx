@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
@@ -13,9 +14,9 @@ const ExamTags = () => {
 
   // Array of exam levels
   const examLevels = [
-    { label: "Associate Level", value: "ASSOCIATE" },
-    { label: "Professional Level", value: "PROFESSIONAL" },
-    { label: "Expert Level", value: "EXPERT" },
+    { label: "Associate", value: "ASSOCIATE" },
+    { label: "Professional", value: "PROFESSIONAL" },
+    { label: "Expert", value: "EXPERT" },
   ];
 
   const handleTagClick = (term: string) => {
@@ -31,26 +32,24 @@ const ExamTags = () => {
   };
 
   return (
-    <div className="flex w-full rounded-md bg-[#E5E6FF] dark:bg-dark-card">
-      {examLevels.map((level) => (
-        <div
-          key={level.value}
-          onClick={() => handleTagClick(level.value)}
-          className={cn(
-            "flex-1 cursor-pointer rounded-lg p-2 text-center text-primary md:p-4",
-            examLevel === level.value && "bg-primary text-white",
-          )}
-        >
-          <span
-            className={cn("text-xs md:text-sm lg:text-xl", {
-              "text-white": examLevel === level.value,
-              "text-primary-dark": examLevel !== level.value,
-            })}
+    <div className="flex items-center gap-2">
+      <span className="mr-2 flex items-center gap-1 text-white">
+        Level <ArrowRight className="h-4 w-4 text-yellow-600" />
+      </span>
+      <div className="flex items-center rounded-lg bg-muted p-1 shadow-[0px_-3px_4px_0px_#323232_inset]">
+        {examLevels.map((level) => (
+          <div
+            key={level.value}
+            onClick={() => handleTagClick(level.value)}
+            className={cn(
+              "cursor-pointer rounded-full px-4 py-1 text-white",
+              examLevel === level.value ? "bg-[#FF8845]" : "",
+            )}
           >
-            {level.label}
-          </span>
-        </div>
-      ))}
+            <span className="text-sm">{level.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

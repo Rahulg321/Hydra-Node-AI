@@ -81,21 +81,22 @@ const VendorPage = async (props: {
   return (
     <section className="big-container block-space-mini">
       <div className="mb-6 md:mb-8 lg:mb-12">
-        <Suspense>
-          <ExamTags />
-        </Suspense>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-medium">Certificates</h3>
+          <Suspense>
+            <ExamTags />
+          </Suspense>
+        </div>
       </div>
       {allExams && allExams.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
           {allExams.map((exam) => {
             return (
-              <Link
-                href={`/exam/${exam.id}`}
+              <ExamNameComponent
                 key={exam.id}
-                className="cursor-pointer underline-offset-2 transition-all duration-300 ease-in-out hover:underline"
-              >
-                {exam.name}
-              </Link>
+                examName={exam.name}
+                examId={exam.id}
+              />
             );
           })}
         </div>
@@ -117,3 +118,19 @@ const VendorPage = async (props: {
 };
 
 export default VendorPage;
+
+function ExamNameComponent({
+  examName,
+  examId,
+}: {
+  examName: string;
+  examId: string;
+}) {
+  return (
+    <Link href={`/exam/${examId}`} className="text-sm">
+      <div className="h-fit rounded-full border border-[#242424] bg-[#19191961] p-4 text-center shadow-[0px_4px_4px_0px_#6C6C6C8A_inset,0px_-4px_4.6px_0px_#181818_inset]">
+        {examName}
+      </div>
+    </Link>
+  );
+}

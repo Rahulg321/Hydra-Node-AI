@@ -10,7 +10,6 @@ import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";
 import RefreshCourseButton from "@/components/WebButtons/RefreshCourseButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ExamPricingCard } from "./ExamPricingCard";
 import { ExamDetails } from "./ExamDetails";
 import { ExamInstructions } from "./ExamInstructions";
@@ -105,101 +104,52 @@ export default async function ExamPage(props: {
   );
 
   return (
-    <section className="container py-12">
-      <div className="grid gap-6 lg:grid-cols-2">
+    <section className="block-space-mini container">
+      <div>
+        <span>Certification Details</span>
+        <h1 className="transducer-font mt-4 tracking-wide">{exam.name}</h1>
+      </div>
+      <div className="mt-4 grid gap-6 md:mt-6 lg:mt-12 lg:grid-cols-2">
         <div className="space-y-6">
           <ExamDetails
             name={exam.name}
             examLevel={exam.examLevel}
-            questions={exam.questions}
+            examId={exam.id}
+            examName={exam.name}
+            userId={session.user.id as string}
+            examSlug={exam.slug}
             questionsToShow={exam.questionsToShow}
             timeAllowed={exam.timeAllowed}
+            examPrice={exam.price}
+            stripePriceId={exam.stripePriceId!}
+            session={session}
+            questionLength={exam.questions.length}
+            hasAccess={hasAccess}
+            hasTrialAccess={hasTrialAccess}
           />
           <Card>
             <CardHeader>
-              <CardTitle>Exam Description</CardTitle>
+              <CardTitle className="transducer-font uppercase tracking-wide">
+                Exam Description
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">{exam.description}</p>
+              <p className="text-[#878593] md:text-lg lg:text-xl">
+                {exam.description}
+              </p>
             </CardContent>
           </Card>
-          <ExamInstructions />
         </div>
         <div className="space-y-6">
-          {hasAccess ? (
-            <div className="">
-              <Alert variant="default">
-                <AlertTitle>Exam Available! 🎉</AlertTitle>
-                <AlertDescription>
-                  You have access to this exam. Take it now to test your
-                  knowledge.
-                </AlertDescription>
-                <div className="mt-4">
-                  <MultiStepExamDialog
-                    examId={exam.id}
-                    examSlug={exam.slug}
-                    currentUserId={session.user.id as string}
-                    examTime={exam.timeAllowed}
-                    examLevel={exam.examLevel}
-                    examName={exam.name}
-                    examLength={exam.questions.length}
-                    questionsToShow={exam.questionsToShow}
-                  />
-                </div>
-              </Alert>
-            </div>
-          ) : (
-            <>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <ExamPricingCard
-                  heading="For 1 year"
-                  headingTag="Yearly Billing"
-                  tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
-                  price="$100"
-                  duration="year"
-                  isFeatured
-                />
-                <ExamPricingCard
-                  heading="For Life time"
-                  headingTag="Lifetime Billing"
-                  tagline="Gain unlimited access to HydraNode's platform and resources for life."
-                  price="$200"
-                  duration="week"
-                />
-              </div>
-              <ExamCheckoutDialog
-                id={exam.id}
-                name={exam.name}
-                price={exam.price}
-                slug={exam.slug}
-                stripePriceId={exam.stripePriceId!}
-                session={session}
-              />
-              {hasTrialAccess && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Trial Access Available</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="mb-4">You have trial access to this exam.</p>
-                    <StartTrialExamDialog
-                      examId={exam.id}
-                      examSlug={exam.slug}
-                      userId={session.user.id as string}
-                      examTime={exam.timeAllowed}
-                      examLength={exam.questions.length}
-                    />
-                  </CardContent>
-                </Card>
-              )}
-            </>
-          )}
+          <ExamInstructions />
           <Card>
             <CardHeader>
-              <CardTitle>Don&apos;t See Your Purchased Exam?</CardTitle>
+              <h4 className="transducer-font uppercase tracking-wide">
+                Don&apos;t See Your Purchased Exam?
+              </h4>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-muted-foreground">
+              <p className="mb-4 text-[#878593] md:text-lg lg:text-xl">
                 If your purchased exam isn&apos;t appearing, try refreshing the
                 page or clearing your browser cache. Still having trouble? Feel
                 free to contact our support team for further assistance.
