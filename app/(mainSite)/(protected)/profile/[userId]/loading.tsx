@@ -1,99 +1,103 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2 } from "lucide-react";
 
-export default function ProfileLoading() {
+export default function Loading() {
   return (
-    <div className="min-h-screen bg-gray-50/50 px-4 py-8 dark:bg-gray-900/50">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-4">
-          {/* Profile Sidebar Skeleton */}
-          <div className="md:col-span-1">
-            <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-dark-card">
-              <div className="text-center">
-                <Skeleton className="mx-auto aspect-square h-[150px] w-[150px] rounded-full" />
-                <div className="mt-4 space-y-4">
-                  <Skeleton className="mx-auto h-9 w-full max-w-[200px]" />
-                  <div className="space-y-2">
-                    <Skeleton className="mx-auto h-5 w-40" />
-                    <Skeleton className="mx-auto h-4 w-56" />
-                  </div>
-                  <div className="space-y-3">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
-                  </div>
-                </div>
+    <div className="min-h-screen bg-black p-4 text-white">
+      {/* Header skeleton */}
+      <div className="mb-8 flex items-center justify-between">
+        <div className="h-6 w-32 animate-pulse rounded bg-zinc-800" />
+        <div className="flex gap-2">
+          <div className="h-8 w-24 animate-pulse rounded bg-zinc-800" />
+          <div className="h-8 w-24 animate-pulse rounded bg-zinc-800" />
+          <div className="h-8 w-24 animate-pulse rounded bg-zinc-800" />
+        </div>
+      </div>
+
+      {/* Exams History section */}
+      <div className="mb-10">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="h-6 w-40 animate-pulse rounded bg-zinc-800" />
+          <div className="h-8 w-20 animate-pulse rounded bg-orange-500" />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="h-44 animate-pulse rounded-lg bg-zinc-900 p-6"
+            >
+              <div className="mb-4 h-10 w-10 rounded-full bg-orange-500" />
+              <div className="mb-3 h-5 w-48 rounded bg-zinc-800" />
+              <div className="mb-3 h-4 w-32 rounded bg-zinc-800" />
+              <div className="mb-3 h-4 w-40 rounded bg-zinc-800" />
+              <div className="flex justify-end">
+                <div className="h-4 w-24 rounded bg-zinc-800" />
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* My Performance section */}
+      <div>
+        <div className="mb-6 h-6 w-40 animate-pulse rounded bg-zinc-800" />
+
+        <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* Completed Exams */}
+          <div className="h-32 animate-pulse rounded-lg bg-zinc-900 p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-5 w-5 rounded-full bg-orange-500" />
+              <div className="h-4 w-36 rounded bg-zinc-800" />
+            </div>
+            <div className="h-10 w-20 rounded bg-zinc-800" />
+          </div>
+
+          {/* Favorite Vendors */}
+          <div className="h-64 animate-pulse rounded-lg bg-zinc-900 p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-5 w-5 rounded-full bg-orange-500" />
+              <div className="h-4 w-36 rounded bg-zinc-800" />
+            </div>
+            <div className="space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <div className="h-4 w-20 rounded bg-zinc-800" />
+                  <div className="h-4 w-32 rounded-full bg-orange-500 opacity-70" />
+                  <div className="h-4 w-4 rounded bg-zinc-800" />
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Main Content Area */}
-          <div className="space-y-8 md:col-span-2 lg:col-span-3">
-            {/* Current Plan Section Skeleton */}
-            <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-dark-card">
-              <div className="space-y-4">
-                <Skeleton className="h-7 w-32" />
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-40" />
-                  <Skeleton className="h-4 w-56" />
-                </div>
-                <div className="space-y-3 pt-4">
-                  <Skeleton className="h-10 w-full sm:w-[200px]" />
-                  <Skeleton className="h-10 w-full sm:w-[240px]" />
-                </div>
-              </div>
+          {/* Success Ratio */}
+          <div className="h-64 animate-pulse rounded-lg bg-zinc-900 p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-5 w-5 rounded-full bg-orange-500" />
+              <div className="h-4 w-36 rounded bg-zinc-800" />
             </div>
+            <div className="flex h-40 items-center justify-center">
+              <div className="h-32 w-32 animate-spin rounded-full border-8 border-orange-500 border-b-green-500 border-r-green-500" />
+            </div>
+          </div>
+        </div>
 
-            {/* Purchased Exam History Section Skeleton */}
-            <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-dark-card">
-              <Skeleton className="mb-6 h-7 w-48" />
-              <div className="space-y-4">
-                {[...Array(3)].map((_, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-5 w-full max-w-[300px]" />
-                      <div className="flex gap-8">
-                        <Skeleton className="h-4 w-24" />
-                        <Skeleton className="h-4 w-20" />
-                        <Skeleton className="h-4 w-24" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {/* Average Score */}
+          <div className="h-32 animate-pulse rounded-lg bg-zinc-900 p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-5 w-5 rounded-full bg-orange-500" />
+              <div className="h-4 w-36 rounded bg-zinc-800" />
             </div>
+            <div className="h-10 w-20 rounded bg-zinc-800" />
+          </div>
 
-            {/* Exam History Section Skeleton */}
-            <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-dark-card">
-              <div className="mb-6 flex items-center justify-between">
-                <Skeleton className="h-7 w-32" />
-                <Skeleton className="h-9 w-24" />
-              </div>
-              <div className="space-y-4">
-                {[...Array(5)].map((_, index) => (
-                  <div key={index} className="grid gap-4 sm:grid-cols-4">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                  </div>
-                ))}
-              </div>
+          {/* Average Time */}
+          <div className="h-32 animate-pulse rounded-lg bg-zinc-900 p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-5 w-5 rounded-full bg-orange-500" />
+              <div className="h-4 w-36 rounded bg-zinc-800" />
             </div>
-
-            {/* Payment History Section Skeleton */}
-            <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-dark-card">
-              <Skeleton className="mb-6 h-7 w-40" />
-              <div className="space-y-4">
-                {[...Array(5)].map((_, index) => (
-                  <div key={index} className="grid gap-4 sm:grid-cols-5">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <div className="h-10 w-32 rounded bg-zinc-800" />
           </div>
         </div>
       </div>

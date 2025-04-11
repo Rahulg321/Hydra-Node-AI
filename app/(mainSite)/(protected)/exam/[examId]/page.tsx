@@ -107,7 +107,9 @@ export default async function ExamPage(props: {
     <section className="block-space-mini container">
       <div>
         <span>Certification Details</span>
-        <h1 className="transducer-font mt-4 tracking-wide">{exam.name}</h1>
+        <h1 className="transducer-font mt-4 leading-relaxed tracking-wide">
+          {exam.name}
+        </h1>
       </div>
       <div className="mt-4 grid gap-6 md:mt-6 lg:mt-12 lg:grid-cols-2">
         <div className="space-y-6">

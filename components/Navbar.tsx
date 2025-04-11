@@ -104,7 +104,6 @@ const Navbar = ({ session }: { session: Session | null }) => {
               </Link>
             </div>
 
-            {/* Logo */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -127,7 +126,6 @@ const Navbar = ({ session }: { session: Session | null }) => {
               </Link>
             </motion.div>
 
-            {/* Right menu items */}
             <div className="hidden items-center md:flex">
               <Link
                 href={getItemHref("Contact Us")}

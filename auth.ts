@@ -2,11 +2,11 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import authConfig from "./auth.config";
 import db from "@/lib/db";
-import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { addDays } from "date-fns";
 import { getAccountByUserId } from "./lib/account";
+import { getUserById } from "@/prisma/queries";
 
 declare module "next-auth" {
   /**

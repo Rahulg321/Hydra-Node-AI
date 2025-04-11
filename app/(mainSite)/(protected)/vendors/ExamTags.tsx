@@ -36,7 +36,7 @@ const ExamTags = () => {
       <span className="mr-2 flex items-center gap-1 text-white">
         Level <ArrowRight className="h-4 w-4 text-yellow-600" />
       </span>
-      <div className="flex items-center rounded-lg bg-muted p-1 shadow-[0px_-3px_4px_0px_#323232_inset]">
+      <div className="flex items-center rounded-full bg-muted p-2 shadow-[0px_-3px_4px_0px_#323232_inset]">
         {examLevels.map((level) => (
           <div
             key={level.value}

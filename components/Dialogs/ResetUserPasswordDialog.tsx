@@ -1,179 +1,187 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { useToast } from "@/hooks/use-toast";
+
+import React, { useState } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Label } from "@/components/ui/label";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "../ui/password-input";
-import { useToast } from "@/hooks/use-toast";
-import resetLoggedInUserPassword from "@/actions/reset-logged-user-password";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check } from "lucide-react";
+import { GradientButton } from "../buttons/gradient-button";
 import {
   ResetLoggedUserPasswordSchema,
   ResetLoggedUserPasswordType,
 } from "@/lib/schemas/ResetLoggedUserPassword";
+import resetLoggedInUserPassword from "@/actions/reset-logged-user-password";
 
-export function ResetUserPasswordDialog({ userId }: { userId: string }) {
-  const [open, setOpen] = React.useState(false);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+interface ResetUserPasswordDialogProps {
+  userId: string;
+}
 
-  if (isDesktop) {
+export function ResetUserPasswordDialog({
+  userId,
+}: ResetUserPasswordDialogProps) {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const ResetUserPasswordForm = () => {
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    const { toast } = useToast();
+    const [isPending, startTransition] = React.useTransition();
+
+    const form = useForm<ResetLoggedUserPasswordType>({
+      resolver: zodResolver(ResetLoggedUserPasswordSchema),
+      defaultValues: {
+        oldPassword: "",
+        newPassword: "",
+      },
+    });
+
+    // 2. Define a submit handler.
+    function onSubmit(values: ResetLoggedUserPasswordType) {
+      startTransition(async () => {
+        console.log(values);
+        const response = await resetLoggedInUserPassword(userId, values);
+        if (response.type === "error") {
+          toast({
+            title: "An error occured",
+            description: response.message,
+            variant: "destructive",
+          });
+        }
+
+        if (response.type === "success") {
+          toast({
+            title: "Success",
+            description: response.message,
+            variant: "success",
+          });
+          setIsSuccess(true);
+        }
+      });
+    }
+
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="link">Reset Password</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Reset Password</DialogTitle>
-            <DialogDescription>
-              Reset your password. Enter your updated password below.
-            </DialogDescription>
-          </DialogHeader>
-          <ResetUserPasswordForm userId={userId} setDialogOpen={setOpen} />
-        </DialogContent>
-      </Dialog>
+      <>
+        {isSuccess ? (
+          <SuccessScreen
+            title="YOUR PASSWORD IS SUCCESSFULLY UPDATED"
+            buttonText="Done"
+            onButtonClick={() => setIsSuccess(false)}
+          />
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="oldPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="newPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="New Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <GradientButton type="submit" disabled={isPending}>
+                {isPending ? "Submitting..." : "Submit"}
+              </GradientButton>
+            </form>
+          </Form>
+        )}
+      </>
     );
-  }
+  };
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Reset Password</DrawerTitle>
-          <DrawerDescription>
-            Reset your password. Enter your updated password below.
-          </DrawerDescription>
-        </DrawerHeader>
-        <ResetUserPasswordForm
-          className="px-4"
-          userId={userId}
-          setDialogOpen={setOpen}
-        />
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline">Reset Password</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Reset User Password</AlertDialogTitle>
+          <AlertDialogDescription>
+            Enter a new password for the user.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <ResetUserPasswordForm />
+        <AlertDialogFooter>
+          <Button variant="secondary" onClick={() => setDialogOpen(false)}>
+            Cancel
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
-function ResetUserPasswordForm({
-  className,
-  userId,
-  setDialogOpen,
-}: {
+interface SuccessScreenProps {
+  title: string;
+  buttonText: string;
+  onButtonClick: () => void;
   className?: string;
-  userId: string;
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const { toast } = useToast();
-  const [isPending, startTransition] = React.useTransition();
+}
 
-  const form = useForm<ResetLoggedUserPasswordType>({
-    resolver: zodResolver(ResetLoggedUserPasswordSchema),
-    defaultValues: {
-      oldPassword: "",
-      newPassword: "",
-    },
-  });
-
-  // 2. Define a submit handler.
-  function onSubmit(values: ResetLoggedUserPasswordType) {
-    startTransition(async () => {
-      console.log(values);
-      const response = await resetLoggedInUserPassword(userId, values);
-      if (response.type === "error") {
-        toast({
-          title: "An error occured",
-          description: response.message,
-          variant: "destructive",
-        });
-      }
-
-      if (response.type === "success") {
-        toast({
-          title: "Success",
-          description: response.message,
-          variant: "success",
-        });
-        setDialogOpen(false);
-      }
-    });
-  }
-
+export function SuccessScreen({
+  title,
+  buttonText,
+  onButtonClick,
+  className,
+}: SuccessScreenProps) {
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="oldPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Old Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="**********" {...field} />
-              </FormControl>
-              <FormDescription>Enter your Old Password.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="newPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="**********" {...field} />
-              </FormControl>
-              <FormDescription>Enter your New Password</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full bg-baseC" disabled={isPending}>
-          {isPending ? "Resetting..." : "Reset Password"}
-        </Button>
-      </form>
-    </Form>
+    <div
+      className={`flex flex-col items-center justify-center space-y-6 py-8 ${className}`}
+    >
+      <div className="flex items-center justify-center rounded-full bg-orange-500 p-4">
+        <Check className="h-6 w-6 text-white" />
+      </div>
+      <h2 className="text-center text-xl font-bold tracking-wider">{title}</h2>
+      <GradientButton onClick={onButtonClick} className="px-8">
+        {buttonText}
+      </GradientButton>
+    </div>
   );
 }

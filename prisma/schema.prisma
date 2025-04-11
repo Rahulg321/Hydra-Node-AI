@@ -34,6 +34,9 @@ model User {
 
   isTwoFactorEnabled Boolean? @default(false)
 
+  linkedinUrl String?
+  twitterUrl  String?
+
   // one to one relation between user and two factor confirmation
   TwoFactorConfirmation TwoFactorConfirmation?
   Payment               Payment[]
@@ -47,8 +50,8 @@ model User {
   hasActiveSubscription Boolean    @default(false)
   Purchase              Purchase[]
 
-  trialEndsAt DateTime? @map(name: "trial_ends_at") // Tracks when the user's free trial ends
-  Vendor      Vendor?
+  trialEndsAt    DateTime?       @map(name: "trial_ends_at") // Tracks when the user's free trial ends
+  Vendor         Vendor?
   forumQuestions ForumQuestion[]
   votes          Vote[]
   replies        Reply[]
@@ -156,8 +159,7 @@ model Vendor {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // might be a user vendor
-  isUserVendor   Boolean  @default(false)
-
+  isUserVendor Boolean @default(false)
 
   commissionRate Float?
   bio            String?
@@ -318,7 +320,6 @@ enum QuestionType {
   multi_select
 }
 
-
 model ForumQuestion {
   id        String   @id @default(cuid())
   title     String
@@ -333,18 +334,17 @@ model ForumQuestion {
 }
 
 model Vote {
-  id         String   @id @default(cuid())
-  value      Int      // 1 for upvote, -1 for downvote
+  id         String        @id @default(cuid())
+  value      Int // 1 for upvote, -1 for downvote
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
   questionId String
   question   ForumQuestion @relation(fields: [questionId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
   @@unique([userId, questionId])
 }
-
 
 model Reply {
   id         String        @id @default(cuid())

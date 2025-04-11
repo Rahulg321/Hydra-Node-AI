@@ -5,6 +5,9 @@ import React from "react";
 import ExamHistoryTable from "../ExamHistoryTable";
 import { unstable_cache } from "next/cache";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import { redirect } from "next/navigation";
+import { getUserById } from "@/prisma/queries";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "Complete Exam History",
@@ -114,6 +117,22 @@ const CompleteExamHistoryPage = async (props: {
   const params = await props.params;
   const userId = params.userId;
 
+  const session = await auth();
+
+  if (!session) {
+    return redirect("/login");
+  }
+
+  if (session.user.id !== userId) {
+    return redirect("/login");
+  }
+
+  const loggedInUser = await getUserById(userId);
+
+  if (!loggedInUser) {
+    return redirect("/login");
+  }
+
   const userQuizSessions =
     await getUserQuizSessionsCompleteHistoryUnstableCache(userId);
 
@@ -134,6 +153,9 @@ const CompleteExamHistoryPage = async (props: {
       link: `/exam/${e.exam.id}/quiz/${e.id}/results`,
     };
   });
+
+  console.log("exam Data", examData);
+
   return (
     <section className="block-space big-container">
       <div>

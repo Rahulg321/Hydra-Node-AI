@@ -81,7 +81,7 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
                 <FormControl>
                   <Input
                     placeholder="John Doe"
-                    className="text-gray-300"
+                    className="w-fit text-gray-300"
                     {...field}
                   />
                 </FormControl>
@@ -99,7 +99,11 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="johndoe@gmail.com" {...field} />
+                      <Input
+                        placeholder="johndoe@gmail.com"
+                        {...field}
+                        className="w-fit"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,7 +114,7 @@ const EditProfileForm = ({ userId, name, email }: ProfileFormProps) => {
 
           <GradientButton
             type="submit"
-            className="w-full bg-base"
+            className="bg-base"
             disabled={isPending}
           >
             {isPending ? "Updating Profile..." : "Update Profile"}

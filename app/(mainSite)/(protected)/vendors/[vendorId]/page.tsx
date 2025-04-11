@@ -103,14 +103,17 @@ const VendorPage = async (props: {
       )}
 
       {allExams.length === 0 && (
-        <div>
-          <h2>
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <h2 className="text-2xl font-medium">
             No{" "}
-            <span className="via-[#AF89EE]/80.89% ml-2 bg-gradient-to-r from-[#AF89EE] to-[#5153D7] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text text-transparent">
               Exams Found
             </span>
           </h2>
-          <p>Try Again Later.....</p>
+          <p className="mt-3 text-muted-foreground">
+            No exams available for this level. Please try another level or check
+            back later.
+          </p>
         </div>
       )}
     </section>

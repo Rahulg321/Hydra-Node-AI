@@ -18,6 +18,7 @@ import { ImagePlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UpdateProfilePic from "@/actions/update-profile-pic";
 import { GradientButton } from "../buttons/gradient-button";
+import Image from "next/image";
 
 const ProfilePicUploadFormSchema = z.object({
   image: z
@@ -149,10 +150,12 @@ const ProfilePicUploadForm = ({
                   className="mx-auto flex cursor-pointer flex-col items-center justify-center gap-y-2 rounded-lg border border-foreground p-8 shadow-sm shadow-foreground"
                 >
                   {preview && (
-                    <img
+                    <Image
                       src={preview as string}
                       alt="Uploaded image"
                       className="max-h-[400px] rounded-lg"
+                      width={400}
+                      height={400}
                     />
                   )}
                   <ImagePlus
