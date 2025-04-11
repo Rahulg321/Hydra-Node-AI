@@ -129,7 +129,7 @@ export default async function ExamPage(props: {
             hasAccess={hasAccess}
             hasTrialAccess={hasTrialAccess}
           />
-          <Card>
+          <Card className="border-none">
             <CardHeader>
               <CardTitle className="transducer-font uppercase tracking-wide">
                 Exam Description
@@ -142,7 +142,7 @@ export default async function ExamPage(props: {
         </div>
         <div className="space-y-6">
           <ExamInstructions />
-          <Card>
+          <Card className="border-none">
             <CardHeader>
               <h4 className="transducer-font uppercase tracking-wide">
                 Don&apos;t See Your Purchased Exam?

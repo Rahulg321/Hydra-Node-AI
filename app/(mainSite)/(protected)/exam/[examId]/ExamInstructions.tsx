@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function ExamInstructions() {
   return (
-    <Card>
+    <Card className="border-none">
       <CardHeader>
         <CardTitle className="transducer-font uppercase tracking-wide">
           Examination Instructions
