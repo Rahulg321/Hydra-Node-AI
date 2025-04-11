@@ -79,7 +79,9 @@ const VendorPage = async (props: {
   console.log({ allExams, vendorId, examLevel });
 
   return (
-    <section className="big-container block-space-mini">
+    <section className="big-container block-space-mini relative">
+      <div className="absolute left-1/2 top-3/4 h-[16rem] w-64 -translate-x-1/2 rounded-full bg-orange-500/60 opacity-40 blur-3xl" />
+
       <div className="mb-6 md:mb-8 lg:mb-12">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">Certificates</h3>

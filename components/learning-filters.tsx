@@ -163,7 +163,7 @@ export function LearningFilters({
 
   return (
     <div
-      data-pending={isPending || isResetting ? "" : undefined}
+      data-pending={isPending ? "" : undefined}
       className={cn(
         "flex w-full flex-wrap items-center justify-between gap-4 px-6 py-4",
         className,

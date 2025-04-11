@@ -115,7 +115,9 @@ const LearningsPage = async (props: {
             )}
           </div>
         </div>
-        <QuizSessionPagination totalPages={totalPages} />
+        <div className="md:mt:6 mt-4 lg:mt-8">
+          <QuizSessionPagination totalPages={totalPages} />
+        </div>
       </div>
     </section>
   );
