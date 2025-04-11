@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GradientButton } from "@/components/buttons/gradient-button";
 import CorrectQuestionGrid from "@/components/correct-question-grid";
+import ExamGridResultSheet from "@/components/Sheets/ExamGridResultSheet";
 
 type props = {
   params: Promise<{
@@ -97,6 +98,10 @@ const QuizResultsPage = async (props: props) => {
   return (
     <section className="px-2 sm:px-4">
       <div className="min-h-screen flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
+        <ExamGridResultSheet
+          userAttempts={userAttempts}
+          totalQuestions={totalQuestions}
+        />
         <div className="border-grid hidden h-full w-[85%] max-w-[300px] shrink-0 border-r md:block">
           <div className="no-scrollbar h-full overflow-auto px-2 py-4 sm:px-4 md:py-6 lg:py-8">
             <div className="flex flex-col gap-4">
@@ -114,7 +119,7 @@ const QuizResultsPage = async (props: props) => {
           </div>
         </div>
         <div className="container max-w-full py-4 md:py-6 lg:py-8">
-          <h2 className="transducer-font mb-4 text-lg font-bold uppercase tracking-wide sm:mb-6 sm:text-xl">
+          <h2 className="transducer-font mb-4 font-bold uppercase tracking-wide sm:mb-6">
             {currentQuizSession.exam.name} Results
           </h2>
           <div>
@@ -125,16 +130,15 @@ const QuizResultsPage = async (props: props) => {
                     Exam Score
                   </h3>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-                    <span className="bg-gradient-to-r from-white to-transparent bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-6xl">
+                    <span className="bg-gradient-to-r from-white to-transparent bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-6xl lg:text-7xl">
                       {percentageScored?.toFixed(2)}%
                     </span>
                     <span
                       className={cn(
-                        "rounded px-3 py-1 text-sm font-semibold sm:text-lg",
+                        "rounded-full px-4 py-2 text-sm font-semibold sm:text-lg",
                         {
-                          "bg-green-100 text-green-800 dark:bg-green-900/80 dark:text-green-100":
-                            passFailStatus,
-                          "bg-red-700 text-red-100": !passFailStatus,
+                          "bg-green-900/80 text-white": passFailStatus,
+                          "bg-red-700 text-white": !passFailStatus,
                         },
                       )}
                     >
@@ -143,38 +147,38 @@ const QuizResultsPage = async (props: props) => {
                   </div>
                 </div>
                 <div className="border-t pt-4">
-                  <h3 className="text-sm sm:text-base">{formattedEndTime}</h3>
+                  <h3 className="">{formattedEndTime}</h3>
                   <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4">
                     <InfoCard
                       title="Correct"
                       value={correctAnswers.toString()}
-                      backgroundColor=""
+                      backgroundColor="bg-green-900/80"
                       icon={
-                        <Check className="h-4 w-4 text-green-600 dark:text-green-400 sm:h-5 sm:w-5" />
+                        <Check className="h-4 w-4 text-white sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-8 lg:w-8" />
                       }
                     />
                     <InfoCard
                       title="Incorrect"
                       value={incorrectAnswers.toString()}
-                      backgroundColor=""
+                      backgroundColor="bg-red-700"
                       icon={
-                        <X className="h-4 w-4 text-red-600 dark:text-red-400 sm:h-5 sm:w-5" />
+                        <X className="h-4 w-4 text-white sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" />
                       }
                     />
                     <InfoCard
                       title="Skipped"
                       value={skippedAnswers.toString()}
-                      backgroundColor=""
+                      backgroundColor="bg-yellow-700/80"
                       icon={
-                        <CircleOff className="h-4 w-4 text-yellow-600 dark:text-yellow-400 sm:h-5 sm:w-5" />
+                        <CircleOff className="h-4 w-4 text-white sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" />
                       }
                     />
                     <InfoCard
                       title="Time Taken"
                       value={totalTimeTaken}
-                      backgroundColor=""
+                      backgroundColor="bg-blue-700/80"
                       icon={
-                        <Timer className="h-4 w-4 text-blue-600 dark:text-blue-400 sm:h-5 sm:w-5" />
+                        <Timer className="h-4 w-4 text-white sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" />
                       }
                     />
                   </div>
@@ -190,8 +194,8 @@ const QuizResultsPage = async (props: props) => {
             </div>
           </div>
           <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:justify-between">
-            <GradientButton
-              className="w-full sm:w-auto"
+            <Button
+              className="w-full rounded-full border-[#2F2F2F] sm:w-auto"
               variant={"outline"}
               size={"2xl"}
               asChild
@@ -201,15 +205,25 @@ const QuizResultsPage = async (props: props) => {
               >
                 Review Exam
               </Link>
-            </GradientButton>
-            <Button
-              className="w-full rounded-full sm:w-auto"
-              variant={"outline"}
-              size={"2xl"}
-              asChild
-            >
-              <Link href={`/exam/${params.examId}`}>Retake Exam</Link>
             </Button>
+            <div className="space-x-2">
+              <Button
+                className="w-full rounded-full sm:w-auto"
+                variant={"outline"}
+                size={"2xl"}
+                asChild
+              >
+                <Link href={`/exam/${params.examId}`}>Retake Exam</Link>
+              </Button>
+              <GradientButton
+                className="w-full rounded-full sm:w-auto"
+                variant={"outline"}
+                size={"2xl"}
+                asChild
+              >
+                <Link href={`/exam/${params.examId}`}>Finish</Link>
+              </GradientButton>
+            </div>
           </div>
         </div>
       </div>
@@ -232,12 +246,14 @@ function InfoCard({
 }) {
   return (
     <div
-      className={cn(
-        "flex items-center gap-2 rounded-lg p-2 sm:gap-3 sm:p-3",
-        backgroundColor,
-      )}
+      className={cn("flex items-center gap-2 rounded-lg p-2 sm:gap-3 sm:p-3")}
     >
-      <div className="rounded-full bg-white p-1.5 dark:bg-gray-700 sm:p-2">
+      <div
+        className={cn(
+          "rounded-2xl bg-gray-700 p-1.5 sm:p-2 md:p-4",
+          backgroundColor,
+        )}
+      >
         {icon}
       </div>
       <div>

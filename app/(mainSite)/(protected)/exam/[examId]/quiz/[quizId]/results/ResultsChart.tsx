@@ -9,8 +9,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import HydranodeWhiteLogo from "@/public/logos/hydranode-white-logo.svg";
+import HydranodeGradientLogo from "@/public/logos/hydranode-gradient-logo.png";
 import Image from "next/image";
+
 interface ResultsChartProps {
   correct: number;
   incorrect: number;
@@ -55,7 +56,7 @@ export default function ResultsChart({
       <div className="relative">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] md:max-h-[300px] lg:max-h-[350px]"
+          className="mx-auto aspect-square max-h-[250px] md:max-h-[325px] lg:max-h-[375px]"
         >
           <PieChart>
             <ChartTooltip
@@ -74,9 +75,11 @@ export default function ResultsChart({
 
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
           <Image
-            src={HydranodeWhiteLogo}
+            src={HydranodeGradientLogo}
             alt="hydranode logo"
             className="block object-cover"
+            width={75}
+            height={75}
           />
         </div>
       </div>
