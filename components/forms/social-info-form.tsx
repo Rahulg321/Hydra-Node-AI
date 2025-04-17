@@ -81,11 +81,16 @@ const SocialInfoForm = ({
             <FormItem>
               <FormLabel>Linkedin Link</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="https://www.linkedin.com/in/john-doe"
-                  {...field}
-                  className="text-white"
-                />
+                <div className="flex overflow-hidden rounded-md border border-white/10 bg-black/40">
+                  <div className="flex items-center bg-white/10 px-3 py-2 text-white/70">
+                    linkedin.com/
+                  </div>
+                  <Input
+                    placeholder="https://www.linkedin.com/in/john-doe"
+                    {...field}
+                    className="border-0 bg-transparent text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -96,13 +101,18 @@ const SocialInfoForm = ({
           name="twitterLink"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Twitter Link</FormLabel>
+              <FormLabel>X</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="https://twitter.com/john-doe"
-                  {...field}
-                  className="text-white"
-                />
+                <div className="flex overflow-hidden rounded-md border border-white/10 bg-black/40">
+                  <div className="flex items-center bg-white/10 px-3 py-2 text-white/70">
+                    linkedin.com/
+                  </div>
+                  <Input
+                    placeholder="https://twitter.com/john-doe"
+                    {...field}
+                    className="border-0 bg-transparent text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -159,7 +159,7 @@ const ProfilePicUploadForm = ({
                     />
                   )}
                   <ImagePlus
-                    className={`size-36 ${preview ? "hidden" : "block"}`}
+                    className={`size-28 ${preview ? "hidden" : "block"}`}
                   />
                   <Input {...getInputProps()} type="file" />
                   {isDragActive ? (

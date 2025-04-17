@@ -13,8 +13,10 @@ export async function SuccessRatioCard({
   userId,
   className,
 }: SuccessRatioCardProps) {
-  const totalPassedExams = await getTotalPassedExams(userId);
-  const totalExamsCompleted = await getTotalExamCompletedByUser(userId);
+  const [totalPassedExams, totalExamsCompleted] = await Promise.all([
+    getTotalPassedExams(userId),
+    getTotalExamCompletedByUser(userId),
+  ]);
 
   const totalFailedExams = totalExamsCompleted - totalPassedExams;
   const total = totalPassedExams + totalFailedExams;

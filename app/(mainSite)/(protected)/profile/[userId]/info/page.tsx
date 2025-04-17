@@ -50,18 +50,20 @@ const ProfileInfoPage = async ({
   return (
     <section className="big-container py-4 md:py-6 lg:py-8">
       <h4>My Profile</h4>
-      <div className="mt-4 grid grid-cols-1 gap-4 md:mt-6 md:grid-cols-2 md:gap-6 lg:mt-8 lg:grid-cols-5">
-        <div className="col-span-3 rounded-lg border bg-[#0C0C0C] p-4 md:p-6 lg:p-8">
-          <h3 className="transducer-font uppercase tracking-wider">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:mt-6 md:gap-6 lg:mt-8 lg:grid-cols-5">
+        <div className="rounded-lg border bg-[#0C0C0C] p-4 md:p-6 lg:col-span-3 lg:p-8">
+          <h4 className="transducer-font uppercase tracking-wider">
             Account Info
-          </h3>
-          <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 md:gap-6 lg:gap-12">
-            <AccountInfoForm
-              userId={id}
-              firstName={firstName || ""}
-              lastName={lastName || ""}
-            />
-            <div className="flex flex-col items-center justify-center gap-4">
+          </h4>
+          <div className="flex flex-col-reverse gap-4 p-4 md:flex-row md:gap-6 lg:gap-12">
+            <div className="flex-1">
+              <AccountInfoForm
+                userId={id}
+                firstName={firstName || ""}
+                lastName={lastName || ""}
+              />
+            </div>
+            <div className="relative h-fit">
               <Image
                 src={image || "https://github.com/shadcn.png"}
                 alt="profile picture of the logged in user"
@@ -70,11 +72,13 @@ const ProfileInfoPage = async ({
                 className="rounded-full"
                 blurDataURL={blurData}
               />
-              <ProfilePicUploadDialog userId={id} />
+              <div className="absolute bottom-0 right-0">
+                <ProfilePicUploadDialog userId={id} />
+              </div>
             </div>
           </div>
         </div>
-        <div className="col-span-2 rounded-lg border bg-[#0C0C0C] p-4 md:p-6 lg:p-8">
+        <div className="rounded-lg border bg-[#0C0C0C] p-4 md:p-6 lg:col-span-2 lg:p-8">
           <SocialInfoForm
             userId={id}
             linkedinLink={linkedinUrl || ""}
@@ -82,7 +86,7 @@ const ProfileInfoPage = async ({
           />
         </div>
 
-        <div className="col-span-5 border bg-[#0C0C0C] p-4 md:p-6 lg:p-8">
+        <div className="border bg-[#0C0C0C] p-4 md:p-6 lg:col-span-5 lg:p-8">
           <h4 className="transducer-font uppercase tracking-wider">
             Login Info
           </h4>
