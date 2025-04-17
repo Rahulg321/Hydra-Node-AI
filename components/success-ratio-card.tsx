@@ -1,21 +1,25 @@
 import { PieChart } from "lucide-react";
 import { CardBase } from "./card-base";
 import { Book } from "lucide-react";
+import { getTotalPassedExams } from "@/prisma/queries";
+import { getTotalExamCompletedByUser } from "@/prisma/queries";
 
 interface SuccessRatioCardProps {
-  passed: number;
-  failed: number;
+  userId: string;
   className?: string;
 }
 
-export function SuccessRatioCard({
-  passed,
-  failed,
+export async function SuccessRatioCard({
+  userId,
   className,
 }: SuccessRatioCardProps) {
-  const total = passed + failed;
-  const passedPercentage = (passed / total) * 100;
-  const failedPercentage = (failed / total) * 100;
+  const totalPassedExams = await getTotalPassedExams(userId);
+  const totalExamsCompleted = await getTotalExamCompletedByUser(userId);
+
+  const totalFailedExams = totalExamsCompleted - totalPassedExams;
+  const total = totalPassedExams + totalFailedExams;
+  const passedPercentage = (totalPassedExams / total) * 100;
+  const failedPercentage = (totalFailedExams / total) * 100;
 
   // Calculate the SVG path for the pie chart
   const radius = 80;
@@ -39,11 +43,15 @@ export function SuccessRatioCard({
         <div className="space-y-4">
           <div>
             <div className="text-green-500">Passed exam</div>
-            <div className="text-2xl font-bold text-green-500">{passed}</div>
+            <div className="text-2xl font-bold text-green-500">
+              {totalPassedExams}
+            </div>
           </div>
           <div>
             <div className="text-red-600">Failed exam</div>
-            <div className="text-2xl font-bold text-red-600">{failed}</div>
+            <div className="text-2xl font-bold text-red-600">
+              {totalFailedExams}
+            </div>
           </div>
         </div>
 

@@ -28,60 +28,48 @@ export const ExamHistoryCard = ({
   link = "/",
   className,
 }: ExamHistoryCardProps) => {
-  const words = title.split(" ");
-  const truncatedTitle =
-    words.length > 2
-      ? `${words.slice(0, 2).join(" ")} ${words.slice(2).join(" ")}`
-      : title;
-  const titleParts = truncatedTitle.split(" ");
-
   return (
     <div
       className={cn(
-        "flex w-full flex-col rounded-3xl border bg-[#0C0C0C] p-5",
+        "flex flex-shrink-0 flex-col rounded-3xl border bg-[#0C0C0C] p-5 shadow-md transition-transform hover:scale-[1.02]",
         className,
       )}
     >
       <div className="mb-4 flex justify-start">
         {icon || (
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-400 text-xl font-bold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-400 text-xl font-bold text-white shadow-sm">
             {iconLetter}
           </div>
         )}
       </div>
 
-      <h4 className="transducer-font mb-4 tracking-wider">
-        {titleParts.length > 2 ? (
-          <>
-            {titleParts.slice(0, 2).join(" ")}
-            <br />
-            {titleParts.slice(2).join(" ")}
-          </>
-        ) : (
-          title
-        )}
+      <h4 className="transducer-font mb-4 line-clamp-2 text-wrap break-words font-semibold">
+        {title}
       </h4>
-      <div className="mb-4 grid grid-cols-2 gap-x-2 gap-y-2 md:gap-x-4 md:gap-y-4">
-        <div className="text-sm text-white/30">
-          Status: <span className="">{status}</span>
+
+      <div className="mb-4 grid grid-cols-2 gap-x-3 gap-y-2">
+        <div className="text-sm text-white/50">
+          Status: <span className="font-medium text-white">{status}</span>
         </div>
-        <div className="text-sm text-white/30">
-          Marks: <span className="">{marks}</span>
+        <div className="text-sm text-white/50">
+          Marks: <span className="font-medium text-white">{marks}</span>
         </div>
-        <div className="text-sm text-white/30">
-          Date: <span className="">{date}</span>
+        <div className="text-sm text-white/50">
+          Date: <span className="font-medium text-white">{date}</span>
         </div>
-        <div className="text-sm text-white/30">
-          Mode: <span className="">{mode}</span>
+        <div className="text-sm text-white/50">
+          Mode: <span className="font-medium text-white">{mode}</span>
         </div>
       </div>
 
-      <Link
-        href={link}
-        className="mt-1 flex items-center gap-1 text-sm text-orange-400 transition-colors hover:text-orange-300"
-      >
-        View details <ArrowRight className="h-4 w-4" />
-      </Link>
+      <div className="mt-auto">
+        <Link
+          href={link}
+          className="inline-flex items-center gap-1 text-sm font-medium text-[#FF9266] transition-colors"
+        >
+          View details <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   );
 };

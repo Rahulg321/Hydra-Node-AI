@@ -55,22 +55,14 @@ const ProfilePage = async ({
             </Link>
           </div>
           <div
-            className="mt-6 flex gap-4 overflow-x-auto px-4"
-            style={{
-              scrollbarWidth: "none",
-              width: "100%",
-              whiteSpace: "nowrap",
-              scrollBehavior: "smooth",
-              maskImage:
-                "linear-gradient(to right, black 95%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to right, black 95%, transparent 100%)",
-            }}
+            className="scrollbar-hide no-scrollbar overflow-x-auto whitespace-nowrap"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {allCards.length > 0 ? (
-              allCards.map((card, index) => (
-                <div key={index} className="">
+            <div className="mt-6 inline-flex space-x-4 px-4">
+              {allCards.length > 0 ? (
+                allCards.map((card, index) => (
                   <ExamHistoryCard
+                    key={index}
                     link={card.link}
                     iconLetter={card.examName.charAt(0)}
                     title={card.examName}
@@ -78,19 +70,20 @@ const ProfilePage = async ({
                     marks={card.marks.toString()}
                     date={card.date.toLocaleDateString()}
                     mode={card.examMode}
+                    className="w-[17.5rem]"
                   />
+                ))
+              ) : (
+                <div className="flex-shrink-0">
+                  <h4>No exams taken yet</h4>
                 </div>
-              ))
-            ) : (
-              <div className="flex-shrink-0">
-                <h4>No exams taken yet</h4>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
       <div className="mt-4 px-4 md:px-6 lg:px-8">
-        <PerformanceDashboard />
+        <PerformanceDashboard userId={userId} />
       </div>
     </section>
   );

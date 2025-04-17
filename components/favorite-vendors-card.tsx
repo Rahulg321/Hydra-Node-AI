@@ -1,22 +1,18 @@
 import { BarChart3 } from "lucide-react";
 import { CardBase } from "./card-base";
-
-interface Vendor {
-  name: string;
-  count: number;
-}
+import { getTopFiveVendorsForUser } from "@/prisma/queries";
 
 interface FavoriteVendorsCardProps {
-  vendors: Vendor[];
+  userId: string;
   className?: string;
 }
 
-export function FavoriteVendorsCard({
-  vendors,
+export async function FavoriteVendorsCard({
+  userId,
   className,
 }: FavoriteVendorsCardProps) {
-  // Find the maximum count to calculate relative bar widths
-  const maxCount = Math.max(...vendors.map((v) => v.count));
+  const favoriteVendors = await getTopFiveVendorsForUser(userId);
+  const maxCount = Math.max(...favoriteVendors.map((v) => v.count));
 
   return (
     <CardBase
@@ -25,17 +21,24 @@ export function FavoriteVendorsCard({
       className={className}
     >
       <div className="mt-4 space-y-4">
-        {vendors.map((vendor) => (
+        {favoriteVendors.map((vendor) => (
           <div key={vendor.name} className="flex items-center justify-between">
             <span className="text-xl font-semibold text-white">
               {vendor.name}
             </span>
-            <div className="flex items-center gap-3">
-              <div
-                className="h-4 rounded-full bg-orange-500"
-                style={{ width: `${(vendor.count / maxCount) * 120}px` }}
-              ></div>
-              <span className="text-white">{vendor.count}</span>
+            <div className="flex w-full max-w-[200px] items-center gap-3">
+              <div className="relative w-full">
+                <div
+                  className="ml-auto h-4 rounded-full bg-orange-500"
+                  style={{
+                    width: `${(vendor.count / maxCount) * 100}%`,
+                    float: "left",
+                  }}
+                ></div>
+              </div>
+              <span className="whitespace-nowrap text-white">
+                {vendor.count}
+              </span>
             </div>
           </div>
         ))}

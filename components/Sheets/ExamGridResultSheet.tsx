@@ -19,16 +19,19 @@ import {
 import LearningButton from "../learning-button";
 import LayoutLogoutButton from "../buttons/layout-logout-button";
 import CorrectQuestionGrid from "../correct-question-grid";
+import EndTimeExamComponent from "../EndTimeExamComponent";
 
 const ExamGridResultSheet = ({
   userAttempts,
   totalQuestions,
+  totalTimeTaken,
 }: {
   userAttempts: {
     skipped: boolean | null;
     isCorrect: boolean | null;
   }[];
   totalQuestions: number;
+  totalTimeTaken: string;
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -47,6 +50,7 @@ const ExamGridResultSheet = ({
         </SheetHeader>
         <div className="mt-6 flex flex-col gap-4">
           <h4 className="transducer-font">Current Question Grid</h4>
+          <EndTimeExamComponent remainingTime={totalTimeTaken} />
           <CorrectQuestionGrid
             totalQuestions={totalQuestions}
             questionStatus={userAttempts.map((attempt) =>

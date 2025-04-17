@@ -1,17 +1,19 @@
 import { Clock } from "lucide-react";
 import { CardBase } from "./card-base";
-
+import { formatDuration } from "@/lib/utils";
+import { getAverageTimeTaken } from "@/prisma/queries";
 interface AverageTimeCardProps {
-  hours: number;
-  minutes: number;
+  userId: string;
   className?: string;
 }
 
-export function AverageTimeCard({
-  hours,
-  minutes,
+export async function AverageTimeCard({
+  userId,
   className,
 }: AverageTimeCardProps) {
+  const averageTime = await getAverageTimeTaken(userId);
+  const averageTimeFormatted = formatDuration(averageTime);
+
   return (
     <CardBase
       title="AVERAGE TIME"
@@ -19,7 +21,7 @@ export function AverageTimeCard({
       className={className}
     >
       <div className="mt-4 text-2xl font-bold md:text-4xl lg:text-5xl">
-        {hours}h {minutes}m
+        {averageTimeFormatted}
       </div>
     </CardBase>
   );

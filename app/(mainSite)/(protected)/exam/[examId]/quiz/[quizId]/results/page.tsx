@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GradientButton } from "@/components/buttons/gradient-button";
 import CorrectQuestionGrid from "@/components/correct-question-grid";
 import ExamGridResultSheet from "@/components/Sheets/ExamGridResultSheet";
+import EndTimeExamComponent from "@/components/EndTimeExamComponent";
 
 type props = {
   params: Promise<{
@@ -101,10 +102,12 @@ const QuizResultsPage = async (props: props) => {
         <ExamGridResultSheet
           userAttempts={userAttempts}
           totalQuestions={totalQuestions}
+          totalTimeTaken={totalTimeTaken}
         />
         <div className="border-grid hidden h-full w-[85%] max-w-[300px] shrink-0 border-r md:block">
           <div className="no-scrollbar h-full overflow-auto px-2 py-4 sm:px-4 md:py-6 lg:py-8">
             <div className="flex flex-col gap-4">
+              <EndTimeExamComponent remainingTime={totalTimeTaken} />
               <CorrectQuestionGrid
                 totalQuestions={totalQuestions}
                 questionStatus={userAttempts.map((attempt) =>

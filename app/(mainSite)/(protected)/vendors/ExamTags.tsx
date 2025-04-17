@@ -19,7 +19,7 @@ const ExamTags = () => {
     { label: "Expert", value: "EXPERT" },
   ];
 
-  const handleTagClick = (term: string) => {
+  const   handleTagClick = (term: string) => {
     const params = new URLSearchParams(searchParams);
 
     if (term) {

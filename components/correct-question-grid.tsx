@@ -13,7 +13,7 @@ const CorrectQuestionGrid = ({
   return (
     <div className="rounded-lg bg-muted">
       <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent max-h-[250px] overflow-y-auto">
-        <div className="grid grid-cols-4 gap-1 px-2 py-4">
+        <div className="grid grid-cols-3 gap-1 px-2 py-4 lg:grid-cols-4">
           {Array.from({ length: totalQuestions }).map((_, index) => {
             let statusClass = "bg-gray-400 dark:bg-muted";
 

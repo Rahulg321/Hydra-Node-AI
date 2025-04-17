@@ -3,7 +3,225 @@ import {
   QuizSessionHistory,
 } from "@/app/types";
 import db from "@/lib/db";
-import { Prisma } from "@prisma/client";
+import { Prisma, QuizSession } from "@prisma/client";
+
+// interface QuizSessionWithDuration extends QuizSession {
+//   durationMs: number; // Add duration in milliseconds
+// }
+
+/**
+ * Get the total average score for a user
+ * @param userId - The ID of the user
+ * @returns The total average score for the user
+ */
+export async function getTotalAverageScore(userId: string): Promise<number> {
+  try {
+    // Get the count of completed exams in a single query
+    const totalExamsCompleted = await db.quizSession.count({
+      where: {
+        userId,
+        isCompleted: true,
+      },
+    });
+
+    if (totalExamsCompleted === 0) {
+      return 0; // Return 0 if no exams completed to avoid division by zero
+    }
+
+    // Get the average percentage score directly from the database
+    const result = await db.quizSession.aggregate({
+      where: {
+        userId,
+        isCompleted: true,
+        percentageScored: { not: null },
+      },
+      _avg: {
+        percentageScored: true,
+      },
+    });
+
+    // Return the average score or 0 if null
+    return result._avg.percentageScored ?? 0;
+  } catch (error) {
+    console.error(
+      "Error occurred while calculating total average score",
+      error,
+    );
+    throw error;
+  }
+}
+
+/**
+ * Get the best overall quiz session performance for a user
+ * @param userId - The ID of the user
+ * @returns The best overall quiz session performance for the user
+ */
+export async function getBestOverallQuizSessionPerformance(userId: string) {
+  try {
+    const completedQuizSessions = await db.quizSession.findMany({
+      where: {
+        userId,
+        isCompleted: true,
+        percentageScored: {
+          not: null,
+        },
+        endTime: {
+          not: null,
+        },
+      },
+      select: {
+        id: true,
+        percentageScored: true,
+
+        startTime: true,
+        endTime: true,
+        exam: {
+          select: {
+            name: true,
+            vendor: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!completedQuizSessions || completedQuizSessions.length === 0) {
+      console.log(`No completed quiz sessions found for user ${userId}`);
+      return null; // No sessions to compare
+    }
+
+    const sessionsWithDuration = completedQuizSessions.map((session) => {
+      const durationMs =
+        session.endTime!.getTime() - session.startTime.getTime(); // endTime is checked non-null by the query
+      return {
+        ...session,
+        durationMs: durationMs,
+      };
+    });
+
+    sessionsWithDuration.sort((a, b) => {
+      if (a.percentageScored! > b.percentageScored!) {
+        return -1; // a comes first (higher score)
+      }
+      if (a.percentageScored! < b.percentageScored!) {
+        return 1; // b comes first (higher score)
+      }
+
+      // Scores are equal, compare duration (ascending)
+      if (a.durationMs < b.durationMs) {
+        return -1; // a comes first (shorter duration)
+      }
+      if (a.durationMs > b.durationMs) {
+        return 1; // b comes first (shorter duration)
+      }
+
+      return 0;
+    });
+
+    const bestSession = sessionsWithDuration[0];
+
+    console.log(
+      `Best session for user ${userId}: ID=${bestSession.id}, Score=${bestSession.percentageScored}%, Duration=${(bestSession.durationMs / 1000).toFixed(2)}s`,
+    );
+
+    return bestSession;
+  } catch (error) {
+    console.log("error calculating best session for user", error);
+    throw error;
+  }
+}
+
+/**
+ * Get the average time taken by a user to complete an exam
+ * @param userId - The ID of the user
+ * @returns The average time taken by the user to complete an exam
+ */
+export async function getAverageTimeTaken(userId: string): Promise<number> {
+  try {
+    const quizSessions = await db.quizSession.findMany({
+      where: { userId },
+      select: {
+        startTime: true,
+        endTime: true,
+      },
+    });
+
+    const totalTime = quizSessions.reduce((acc, session) => {
+      const startTime = session.startTime;
+      const endTime = session.endTime;
+
+      if (!startTime || !endTime) {
+        return acc;
+      }
+
+      let timeTakenMs =
+        new Date(endTime).getTime() - new Date(startTime).getTime();
+
+      let timeTakenMinutes = Math.floor(timeTakenMs / 60000);
+
+      return acc + timeTakenMinutes;
+    }, 0);
+
+    const averageTime = totalTime / quizSessions.length;
+    return averageTime;
+  } catch (error) {
+    console.log("error occured while calculating average time taken", error);
+    throw error;
+  }
+}
+
+/**
+ * Get the total number of exams failed by a user
+ * @param userId - The ID of the user
+ * @returns The total number of exams failed by the user
+ */
+export async function getTotalFailedExams(userId: string) {
+  try {
+    return await db.quizSession.count({
+      where: { userId, passFailStatus: false },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Get the total number of exams passed by a user
+ * @param userId - The ID of the user
+ * @returns The total number of exams passed by the user
+ */
+export async function getTotalPassedExams(userId: string) {
+  try {
+    return await db.quizSession.count({
+      where: { userId, passFailStatus: true },
+    });
+  } catch (error) {
+    console.error("error occured while calculating total passed exams", error);
+    throw error;
+  }
+}
+
+/**
+ * Get the total number of exams completed by a user
+ * @param userId - The ID of the user
+ * @returns The total number of exams completed by the user
+ */
+export async function getTotalExamCompletedByUser(userId: string) {
+  try {
+    return await db.quizSession.count({
+      where: { userId },
+    });
+  } catch (error) {
+    console.error(
+      "an error occured whilw trying to get total exams completed by user",
+      error,
+    );
+    throw error;
+  }
+}
 
 /**
  * Get the complete history of quiz sessions for a user to display on the profile page
@@ -38,6 +256,7 @@ export async function getUserQuizSessionsCompleteHistory(userId: string) {
       },
     });
   } catch (error) {
+    console.error("error getting user quiz Sessions complete history");
     throw error;
   }
 }
@@ -100,6 +319,10 @@ export const getUserById = async (userId: string) => {
   }
 };
 
+/**
+ * Get all system vendors where the vendors were created by the system
+ * @returns An array of vendors
+ */
 export const getAllSystemVendors = async () => {
   try {
     return await db.vendor.findMany({
@@ -108,6 +331,64 @@ export const getAllSystemVendors = async () => {
       },
     });
   } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ *
+ * this func returns top five vendors used by the user during their exam sessions. it first queries the databases for all the exams the user has taken.
+ * it then aggregates the vendor counts in application code and returns the top five vendors.
+ *
+ * @param userId string
+ */
+export const getTopFiveVendorsForUser = async (userId: string) => {
+  try {
+    const sessions = await db.quizSession.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        exam: {
+          select: {
+            vendor: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // 2. Aggregate vendor counts in application code
+    const vendorCounts: {
+      [vendorId: string]: { name: string; count: number };
+    } = {};
+
+    for (const session of sessions) {
+      if (session.exam && session.exam.vendor) {
+        const vendor = session.exam.vendor;
+
+        if (vendorCounts[vendor.id]) {
+          vendorCounts[vendor.id].count++;
+        } else {
+          vendorCounts[vendor.id] = {
+            name: vendor.name,
+            count: 1,
+          };
+        }
+      }
+    }
+
+    const sortedVendors = Object.values(vendorCounts).sort(
+      (a, b) => b.count - a.count,
+    );
+
+    return sortedVendors.slice(0, 5);
+  } catch (error) {
+    console.error("Error fetching top five vendors for user", error);
     throw error;
   }
 };
