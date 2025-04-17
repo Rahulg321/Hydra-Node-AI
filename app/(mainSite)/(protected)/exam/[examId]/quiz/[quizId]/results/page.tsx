@@ -126,14 +126,14 @@ const QuizResultsPage = async (props: props) => {
             {currentQuizSession.exam.name} Results
           </h2>
           <div>
-            <div className="before:opacity-1 relative grid grid-cols-1 gap-6 rounded-lg border bg-[#0C0C0C] p-3 shadow-sm before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(#222_1px,transparent_1px)] before:bg-[length:20px_20px] sm:gap-8 sm:p-4 md:p-6 lg:grid-cols-2 lg:p-10">
+            <div className="before:opacity-1 relative grid grid-cols-1 gap-6 rounded-lg border bg-[#0C0C0C] p-3 shadow-sm sm:gap-8 sm:p-4 md:p-6 lg:grid-cols-2 lg:p-10">
               <div className="space-y-4 sm:space-y-6 lg:border-r lg:pr-4">
                 <div>
                   <h3 className="transducer-font mb-2 font-bold uppercase tracking-wider">
                     Exam Score
                   </h3>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-                    <span className="bg-gradient-to-r from-white to-transparent bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-6xl lg:text-7xl">
+                    <span className="leading-trim-cap-height bg-gradient-to-r from-white to-transparent bg-clip-text text-3xl font-semibold leading-[100%] tracking-[0%] text-transparent sm:text-4xl md:text-6xl lg:text-[7rem]">
                       {percentageScored?.toFixed(2)}%
                     </span>
                     <span
@@ -171,7 +171,7 @@ const QuizResultsPage = async (props: props) => {
                     <InfoCard
                       title="Skipped"
                       value={skippedAnswers.toString()}
-                      backgroundColor="bg-yellow-700/80"
+                      backgroundColor="bg-[#E8A600]"
                       icon={
                         <CircleOff className="h-4 w-4 text-white sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" />
                       }
@@ -179,7 +179,7 @@ const QuizResultsPage = async (props: props) => {
                     <InfoCard
                       title="Time Taken"
                       value={totalTimeTaken}
-                      backgroundColor="bg-blue-700/80"
+                      backgroundColor="bg-yellow-700/20"
                       icon={
                         <Timer className="h-4 w-4 text-white sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" />
                       }
@@ -260,8 +260,8 @@ function InfoCard({
         {icon}
       </div>
       <div>
-        <h5 className="">{title}</h5>
-        <span className="">{value}</span>
+        <h5 className="text-[#A5A5A5]">{title}</h5>
+        <span className="transducer-font">{value}</span>
       </div>
     </div>
   );
