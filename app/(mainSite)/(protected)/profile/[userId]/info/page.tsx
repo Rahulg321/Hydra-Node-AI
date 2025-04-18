@@ -5,9 +5,11 @@ import AccountInfoForm from "@/components/forms/account-info-form";
 import SocialInfoForm from "@/components/forms/social-info-form";
 import { getPlaceholderForRemoteImage } from "@/lib/get-placeholder";
 import { getUserById } from "@/prisma/queries";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
+import { Label } from "@/components/ui/label";
 
 const ProfileInfoPage = async ({
   params,
@@ -90,8 +92,18 @@ const ProfileInfoPage = async ({
           <h4 className="transducer-font uppercase tracking-wider">
             Login Info
           </h4>
-          <div className="mt-4">
-            <ResetUserPasswordDialog userId={id} />
+          <div className="mt-4 space-y-4">
+            <div className="flex flex-col gap-2">
+              <Label>Email</Label>
+              <Input value={email} className="p-2 text-white" />
+            </div>
+            <div className="flex overflow-hidden rounded-md border border-white/10 bg-black/40">
+              <Input
+                className="border-0 bg-none text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                placeholder="New Password"
+              />
+              <ResetUserPasswordDialog userId={id} />
+            </div>
           </div>
         </div>
       </div>

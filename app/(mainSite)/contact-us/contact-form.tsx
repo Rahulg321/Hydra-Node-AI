@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import { useToast } from "@/hooks/use-toast";
-import submitContactForm from "@/actions/contact-email";
+import { submitContactForm } from "@/actions/contact-email";
 import { GradientButton } from "@/components/buttons/gradient-button";
 
 const ContactForm = () => {
@@ -23,17 +23,26 @@ const ContactForm = () => {
     // Handle form submission
     console.log("Form submitted:", formData);
     startTransition(async () => {
-      const response = await submitContactForm(formData);
-      if (response.status) {
-        toast({
-          title: "Submitted Contact Form ✅",
-          description: response.message,
-        });
-      } else {
+      try {
+        const response = await submitContactForm(formData);
+        if (response.status) {
+          toast({
+            title: "Submitted Contact Form ✅",
+            description: response.message,
+          });
+        } else {
+          toast({
+            title: "Submitted Contact Form ❌",
+            variant: "destructive",
+            description: response.message,
+          });
+        }
+      } catch (error) {
+        console.log("an error occured while trying to submit contact form");
         toast({
           title: "Submitted Contact Form ❌",
           variant: "destructive",
-          description: response.message,
+          description: "An error occured while trying to submit contact form",
         });
       }
     });
@@ -91,7 +100,7 @@ const ContactForm = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700 dark:bg-dark-lighter"
                       required
                     />
                   </div>
@@ -108,7 +117,7 @@ const ContactForm = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700 dark:bg-dark-lighter"
                       required
                     />
                   </div>
@@ -127,7 +136,7 @@ const ContactForm = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-transparent focus:ring-2 dark:border-gray-700 dark:bg-dark-lighter"
                       required
                     />
                   </div>

@@ -1,10 +1,10 @@
-import db from "@/lib/db";
+import { withAuth } from "@/lib/auth";
 import { checkIfUserHasPurchasedExam } from "@/lib/utils";
+import { User } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export const POST = withAuth(async (req: Request, user: User) => {
   try {
-    // Extract userId from the request body (POST request)
     const { currentUserId, examId } = await req.json();
 
     if (!currentUserId || !examId) {
@@ -14,26 +14,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fetch user data from the database
-    const user = await db.user.findUnique({
-      where: { id: currentUserId },
-      select: {
-        hasLifetimeAccess: true,
-        stripeCurrentPeriodEnd: true,
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    // Check if the user has an active subscription
-    // Check if the user has an active subscription
     const hasActiveSubscription =
       user.stripeCurrentPeriodEnd &&
       new Date(user.stripeCurrentPeriodEnd) > new Date();
 
-    // Check if the user has purchased the specific exam
     const hasPurchasedExam = await checkIfUserHasPurchasedExam(
       currentUserId,
       examId,
@@ -41,7 +25,6 @@ export async function POST(req: Request) {
 
     console.log("give user access in api he has purchased exam");
 
-    // Return access status
     return NextResponse.json(
       {
         hasAccess:
@@ -63,4 +46,4 @@ export async function POST(req: Request) {
       },
     );
   }
-}
+});

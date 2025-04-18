@@ -82,7 +82,7 @@ const SocialInfoForm = ({
               <FormLabel>Linkedin Link</FormLabel>
               <FormControl>
                 <div className="flex overflow-hidden rounded-md border border-white/10 bg-black/40">
-                  <div className="flex items-center bg-white/10 px-3 py-2 text-white/70">
+                  <div className="flex items-center bg-[#362F2C] px-3 py-2 text-white/70">
                     linkedin.com/
                   </div>
                   <Input
@@ -104,8 +104,8 @@ const SocialInfoForm = ({
               <FormLabel>X</FormLabel>
               <FormControl>
                 <div className="flex overflow-hidden rounded-md border border-white/10 bg-black/40">
-                  <div className="flex items-center bg-white/10 px-3 py-2 text-white/70">
-                    linkedin.com/
+                  <div className="flex items-center bg-[#362F2C] px-3 py-2 text-white/70">
+                    x.com/
                   </div>
                   <Input
                     placeholder="https://twitter.com/john-doe"

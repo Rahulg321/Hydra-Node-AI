@@ -138,7 +138,9 @@ export function ResetUserPasswordDialog({
   return (
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Reset Password</Button>
+        <div className="flex cursor-pointer items-center whitespace-nowrap bg-[#362F2C] px-2 py-2 text-xs text-white/70">
+          Change Password
+        </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
