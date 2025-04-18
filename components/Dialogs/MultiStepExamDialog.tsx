@@ -76,163 +76,123 @@ export const MultiStepExamDialog = ({
     switch (step) {
       case 1:
         return (
-          <div>
+          <DialogContent className="pt-12">
             <AILoadingIndicator onProgressComplete={handleNext} />
-          </div>
+          </DialogContent>
         );
 
       case 2:
         return (
-          <div className="w-full space-y-6">
-            <div className="flex flex-col items-center">
-              <div className="rounded-full bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-3">
-                <Lightbulb className="h-5 w-5 text-white md:h-6 md:w-6 lg:h-8 lg:w-8" />
-              </div>
-              <h3 className="mt-4 text-center text-lg font-semibold md:mt-5">
-                Choose Your Exam Mode
-              </h3>
-              <p className="mt-2 max-w-md text-center text-sm text-gray-400">
-                Select the mode that best fits your learning style and
-                preparation needs
-              </p>
-            </div>
-
-            <div className="mx-auto max-w-md">
-              <div className="grid grid-cols-2 gap-4">
-                <div
-                  className={`cursor-pointer rounded-lg border-2 p-4 transition-all hover:bg-gray-50/5 ${examMode === "PRACTICE" ? "border-orange-400 bg-orange-50/10" : "border-gray-200/20"}`}
-                  onClick={() => handleModeSelect("PRACTICE")}
-                >
-                  <div className="flex flex-col items-center text-center">
-                    <Lightbulb
-                      className={`mb-2 h-6 w-6 ${examMode === "PRACTICE" ? "text-orange-400" : "text-gray-400"}`}
+          <DialogContent className="pt-12 lg:max-w-6xl">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Practice Mode Form */}
+              <div className="space-y-4 rounded-lg border-t-8 border-orange-400 p-6">
+                <div className="mx-auto w-fit rounded-full bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-2">
+                  <Lightbulb className="h-4 w-4 md:h-6 md:w-6 lg:h-8 lg:w-8" />
+                </div>
+                <div className="text-center">
+                  <h3 className="mt-4 text-lg font-semibold md:mt-6">
+                    Practice Mode
+                  </h3>
+                  <span className="mt-4 block text-sm leading-tight text-[#A6A6A6]">
+                    Practice answering questions in a stress-free environment
+                    and review each response before proceeding to the next one.
+                  </span>
+                </div>
+                <div className="mt-6 grid grid-cols-3 gap-4 border-t-2 pt-4">
+                  <div className="flex flex-col items-center">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-orange-500" />
+                      <h5 className="font-medium">Total Questions</h5>
+                    </div>
+                    <p className="text-lg font-semibold">{examLength}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-orange-500" />
+                      <Label className="font-medium">Time (minutes)</Label>
+                    </div>
+                    <Input
+                      type="number"
+                      placeholder="Enter exam time..."
+                      value={timeForExam}
+                      onChange={handleTimeChange}
+                      className="mt-1 text-white"
                     />
-                    <h4 className="font-medium">Practice</h4>
-                    <p className="mt-1 text-xs text-gray-400">
-                      Learn at your own pace
-                    </p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-orange-500" />
+                      <h5 className="font-medium">Passing Marks</h5>
+                    </div>
+                    <p className="text-lg font-semibold">80%</p>
                   </div>
                 </div>
+                <div className="mt-6">
+                  <GradientButton
+                    onClick={() => {
+                      setExamMode("PRACTICE");
+                      handleExamStartButton();
+                    }}
+                    className="w-full"
+                  >
+                    Start Practice
+                  </GradientButton>
+                </div>
+              </div>
 
-                <div
-                  className={`cursor-pointer rounded-lg border-2 p-4 transition-all hover:bg-gray-50/5 ${examMode === "MOCK" ? "border-orange-400 bg-orange-50/10" : "border-gray-200/20"}`}
-                  onClick={() => handleModeSelect("MOCK")}
-                >
-                  <div className="flex flex-col items-center text-center">
-                    <Trophy
-                      className={`mb-2 h-6 w-6 ${examMode === "MOCK" ? "text-orange-400" : "text-gray-400"}`}
-                    />
-                    <h4 className="font-medium">Mock</h4>
-                    <p className="mt-1 text-xs text-gray-400">
-                      Simulate real exam conditions
-                    </p>
+              {/* Mock Mode Form */}
+              <div className="space-y-4 rounded-lg border-t-8 border-orange-400 p-6">
+                <div className="mx-auto w-fit rounded-full bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-2">
+                  <Trophy className="h-4 w-4 md:h-6 md:w-6 lg:h-8 lg:w-8" />
+                </div>
+                <div className="text-center">
+                  <h3 className="mt-4 text-lg font-semibold md:mt-6">
+                    Mock Mode
+                  </h3>
+                  <span className="mt-4 block text-sm leading-tight text-[#A6A6A6]">
+                    Experience a timed exam environment that simulates the real
+                    test. All questions must be completed within the allocated
+                    time.
+                  </span>
+                </div>
+                <div className="mt-6 grid grid-cols-3 gap-4 border-t-2 pt-4">
+                  <div className="flex flex-col items-center">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-orange-500" />
+                      <h5 className="font-medium">Total Questions</h5>
+                    </div>
+                    <p className="text-lg font-semibold">{questionsToShow}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-orange-500" />
+                      <h5 className="font-medium">Time (minutes)</h5>
+                    </div>
+                    <p className="text-lg font-semibold">{examTime}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-orange-500" />
+                      <h5 className="font-medium">Passing Marks</h5>
+                    </div>
+                    <p className="text-lg font-semibold">80%</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-4 hidden">
-                <Select onValueChange={handleModeSelect} value={examMode}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select an Exam Mode" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Exam Mode</SelectLabel>
-                      <SelectItem value="PRACTICE">Practice</SelectItem>
-                      <SelectItem value="MOCK">Mock</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 3:
-        if (examMode === "PRACTICE") {
-          return (
-            <div className="space-y-4">
-              <div className="mx-auto w-fit rounded-full bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-2">
-                <Lightbulb className="h-4 w-4 md:h-6 md:w-6 lg:h-8 lg:w-8" />
-              </div>
-              <div className="text-center">
-                <h3 className="mt-4 text-lg font-semibold md:mt-6">
-                  Practice Mode
-                </h3>
-                <span className="mt-4 block text-sm leading-tight text-[#A6A6A6]">
-                  Practice answering questions in a stress-free environment and
-                  review each response before proceeding to the next one.
-                </span>
-              </div>
-              <div className="mt-6 grid grid-cols-3 gap-4 border-t-2 pt-4">
-                <div className="flex flex-col items-center">
-                  <div className="mb-2 flex items-center gap-2">
-                    <Trophy className="h-4 w-4 text-orange-500" />
-                    <h5 className="font-medium">Total Questions</h5>
-                  </div>
-                  <p className="text-lg font-semibold">{examLength}</p>
-                </div>
-                <div className="flex flex-col">
-                  <div className="mb-2 flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-orange-500" />
-                    <Label className="font-medium">Time (minutes)</Label>
-                  </div>
-                  <Input
-                    type="number"
-                    placeholder="Enter exam time..."
-                    value={timeForExam}
-                    onChange={handleTimeChange}
-                    className="mt-1 text-white"
-                  />
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="mb-2 flex items-center gap-2">
-                    <Trophy className="h-4 w-4 text-orange-500" />
-                    <h5 className="font-medium">Passing Marks</h5>
-                  </div>
-                  <p className="text-lg font-semibold">80%</p>
+                <div className="mt-6">
+                  <GradientButton
+                    onClick={() => {
+                      setExamMode("MOCK");
+                      handleExamStartButton();
+                    }}
+                    className="w-full"
+                  >
+                    Start Mock Exam
+                  </GradientButton>
                 </div>
               </div>
             </div>
-          );
-        }
-
-        return (
-          <div className="space-y-4">
-            <div className="mx-auto w-fit rounded-full bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] p-2">
-              <Lightbulb className="h-4 w-4 md:h-6 md:w-6 lg:h-8 lg:w-8" />
-            </div>
-            <div className="text-center">
-              <h3 className="mt-4 text-lg font-semibold md:mt-6">Mock Mode</h3>
-              <span className="mt-4 block text-sm leading-tight text-[#A6A6A6]">
-                Experience a timed exam environment that simulates the real
-                test. All questions must be completed within the allocated time.
-              </span>
-            </div>
-            <div className="mt-6 grid grid-cols-3 gap-4 border-t-2 pt-4">
-              <div className="flex flex-col items-center">
-                <div className="mb-2 flex items-center gap-2">
-                  <Trophy className="h-4 w-4 text-orange-500" />
-                  <h5 className="font-medium">Total Questions</h5>
-                </div>
-                <p className="text-lg font-semibold">{questionsToShow}</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="mb-2 flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-orange-500" />
-                  <h5 className="font-medium">Time (minutes)</h5>
-                </div>
-                <p className="text-lg font-semibold">{examTime}</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="mb-2 flex items-center gap-2">
-                  <Trophy className="h-4 w-4 text-orange-500" />
-                  <h5 className="font-medium">Passing Marks</h5>
-                </div>
-                <p className="text-lg font-semibold">80%</p>
-              </div>
-            </div>
-          </div>
+          </DialogContent>
         );
       default:
         return null;
@@ -340,34 +300,18 @@ export const MultiStepExamDialog = ({
           {buttonLabel}
         </GradientButton>
       </DialogTrigger>
-      <DialogContent>
-        <div>{renderStep()}</div>
-        <div className="mt-4 flex items-center justify-between">
-          {step > 2 && (
-            <GradientButton onClick={handlePrevious} className="rounded-none">
-              Previous
-            </GradientButton>
-          )}
-
-          {step < totalSteps && step !== 1 ? (
-            <GradientButton
-              onClick={handleNext}
-              className="justify-end rounded-none"
-            >
-              Next
-            </GradientButton>
-          ) : null}
-          {step === totalSteps && (
-            <GradientButton
-              disabled={isPending}
-              onClick={handleExamStartButton}
-              className="rounded-none"
-            >
-              {isPending ? "Creating Exam" : "Start Exam"}
-            </GradientButton>
-          )}
-        </div>
-      </DialogContent>
+      <div>{renderStep()}</div>
+      <div className="mt-4 flex items-center justify-between">
+        {step === totalSteps && (
+          <GradientButton
+            disabled={isPending}
+            onClick={handleExamStartButton}
+            className="rounded-none"
+          >
+            {isPending ? "Creating Exam" : "Start Exam"}
+          </GradientButton>
+        )}
+      </div>
     </Dialog>
   );
 };

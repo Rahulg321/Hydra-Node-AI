@@ -3,7 +3,7 @@ import React from "react";
 
 const ExamAnalysingScreen = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex min-h-[80vh] flex-col items-center justify-center">
       <h1 className="transducer-font uppercase tracking-wide">
         Analyzing your performance
       </h1>

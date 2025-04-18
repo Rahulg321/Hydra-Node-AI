@@ -100,23 +100,6 @@ export function ExamDetails({
               stripePriceId={stripePriceId}
               session={session}
             />
-            {hasTrialAccess && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Trial Access Available</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="mb-4">You have trial access to this exam.</p>
-                  <StartTrialExamDialog
-                    examId={examId}
-                    examSlug={examSlug}
-                    userId={userId}
-                    examTime={timeAllowed}
-                    examLength={questionLength}
-                  />
-                </CardContent>
-              </Card>
-            )}
           </>
         )}
       </CardContent>

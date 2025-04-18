@@ -81,7 +81,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   useEffect(() => {
     const analysePerformance = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 12000));
       setIsEnding(false);
     };
 

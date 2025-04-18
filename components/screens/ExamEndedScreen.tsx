@@ -20,9 +20,7 @@ const ExamEndedScreen = ({
         <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300">
           <CheckCircle className="h-14 w-14" />
         </div>
-        <h2 className="mb-2 text-3xl font-bold">
-          Your {examName} Exam has Ended
-        </h2>
+        <h2 className="mb-2 font-bold">Your {examName} Exam has Ended</h2>
         <p className="mb-2 max-w-md text-muted-foreground">
           Congratulations on completing your exam! Your answers have been
           submitted successfully.

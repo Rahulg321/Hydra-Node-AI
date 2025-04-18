@@ -2,9 +2,9 @@ import { Loader2 } from "lucide-react";
 
 export default function QuizLoadingScreen() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center space-y-12 p-4 text-center text-gray-400">
-      <h1 className="transducer-font text-4xl font-bold uppercase tracking-wider md:text-5xl">
-        STARTING YOUR MOCK EXAM
+    <div className="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center space-y-12 p-4 text-center text-gray-400">
+      <h1 className="transducer-font bg-gradient-to-r from-white to-transparent bg-clip-text font-bold uppercase tracking-wider">
+        STARTING YOUR EXAM
       </h1>
 
       <p className="mx-auto max-w-md text-sm text-gray-500">
