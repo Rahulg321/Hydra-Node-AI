@@ -23,8 +23,8 @@ import {
   ContactFormSchemaZodType,
 } from "@/lib/schemas/ContactFormSchema";
 import { Textarea } from "../ui/textarea";
-import submitContactForm from "@/actions/contact-email";
 import { useToast } from "@/hooks/use-toast";
+import { submitContactForm } from "@/actions/contact-email";
 
 const ContactUsForm = () => {
   const { toast } = useToast();
