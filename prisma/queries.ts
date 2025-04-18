@@ -212,11 +212,11 @@ export async function getTotalPassedExams(userId: string) {
 export async function getTotalExamCompletedByUser(userId: string) {
   try {
     return await db.quizSession.count({
-      where: { userId },
+      where: { userId, isCompleted: true },
     });
   } catch (error) {
     console.error(
-      "an error occured whilw trying to get total exams completed by user",
+      "an error occured while trying to get total exams completed by user",
       error,
     );
     throw error;
@@ -426,7 +426,10 @@ export const GetFilteredQuizSessions = async ({
   sortBy?: string;
 }): Promise<GetFilteredQuizSessionsHistory> => {
   try {
+    // The userId is actually included in the where clause, but let's make it more explicit
+    // and ensure it's always included since it's a required parameter
     const whereClause = {
+      userId,
       ...(vendor && vendor.length > 0
         ? { exam: { vendor: { name: vendor } } }
         : {}),
@@ -435,6 +438,8 @@ export const GetFilteredQuizSessions = async ({
         : {}),
       ...(mode && mode.length > 0 ? { examMode: mode } : {}),
     };
+
+    console.log("whereClause", whereClause);
 
     const orderByClause =
       sortBy && sortBy.length > 0
@@ -445,8 +450,6 @@ export const GetFilteredQuizSessions = async ({
                 : Prisma.SortOrder.asc,
           }
         : { createdAt: Prisma.SortOrder.desc };
-
-    console.log("whereClause", whereClause);
 
     const [data, totalCount] = await Promise.all([
       db.quizSession.findMany({

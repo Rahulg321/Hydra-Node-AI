@@ -41,12 +41,6 @@ const LearningsPage = async (props: {
     return redirect("/login");
   }
 
-  const loggedInUser = await getUserById(userId);
-
-  if (!loggedInUser) {
-    return redirect("/login");
-  }
-
   const {
     data: userQuizSessions,
     totalCount,
@@ -88,7 +82,7 @@ const LearningsPage = async (props: {
       <div className="big-container">
         <div className="flex items-center justify-between">
           <h1 className="my-4 md:my-6 lg:my-8">Exams History</h1>
-          <h2>{examData.length} exams</h2>
+          <h2>{totalCount} exams</h2>
         </div>
         <div className="group-has-[[data-pending]]:animate-pulse">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

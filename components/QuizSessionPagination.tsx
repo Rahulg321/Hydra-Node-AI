@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
+import { GradientButton } from "./buttons/gradient-button";
 interface IPagination {
   totalPages: number;
 }
@@ -25,7 +25,7 @@ export default function QuizSessionPagination({ totalPages }: IPagination) {
   return (
     <>
       <div className="flex items-center space-x-1">
-        <Button size="icon" className="h-8 w-8" asChild>
+        <GradientButton size="icon" className="h-8 w-8" asChild>
           <Link
             href={createPageURL(currentPage - 1)}
             className={
@@ -35,8 +35,8 @@ export default function QuizSessionPagination({ totalPages }: IPagination) {
           >
             <ChevronLeft />
           </Link>
-        </Button>
-        <Button size="icon" className="h-8 w-8" asChild>
+        </GradientButton>
+        <GradientButton size="icon" className="h-8 w-8" asChild>
           <Link
             href={createPageURL(currentPage + 1)}
             className={
@@ -46,7 +46,7 @@ export default function QuizSessionPagination({ totalPages }: IPagination) {
           >
             <ChevronRight />
           </Link>
-        </Button>
+        </GradientButton>
       </div>
     </>
   );

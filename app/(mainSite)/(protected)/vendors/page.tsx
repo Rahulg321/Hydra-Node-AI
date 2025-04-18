@@ -13,6 +13,7 @@ export async function generateMetadata() {
 }
 
 const ExamsPage = async () => {
+  redirect(`/vendors/cm4ef4y9c0006ocj2zwci7sdb`);
   return (
     <div className="">
       <VendorsOverviewSection />

@@ -1,22 +1,8 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import {
-  ArrowRight,
-  BookOpen,
-  CheckCircle,
-  Trophy,
-  Users,
-  Award,
-  BarChart,
-} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function VendorsOverviewSection() {
   const [ref, inView] = useInView({
@@ -44,12 +30,6 @@ export default function VendorsOverviewSection() {
           excel with our comprehensive exam platform.
         </p>
       </motion.section>
-
-      {/* Background Elements */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
-      </div>
     </div>
   );
 }
