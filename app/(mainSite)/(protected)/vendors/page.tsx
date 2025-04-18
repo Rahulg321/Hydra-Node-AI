@@ -3,7 +3,6 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
 import VendorsOverviewSection from "./VendorsSection";
-import VendorsSheet from "@/components/Sheets/VendorsSheet";
 
 export async function generateMetadata() {
   return {

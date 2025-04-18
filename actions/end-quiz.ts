@@ -39,14 +39,6 @@ export default async function EndQuizAction(
       },
     });
 
-    // If no attempts found, return an error or handle as needed
-    // if (!userAttempts || userAttempts.length === 0) {
-    //   return {
-    //     type: "error",
-    //     message: "No user attempts found for this quiz session.",
-    //   };
-    // }
-
     const { correctQuestions, incorrectQuestions, skippedQuestions } =
       userAttempts.reduce(
         (acc, { isCorrect, skipped }) => {
@@ -87,12 +79,6 @@ export default async function EndQuizAction(
     };
   } catch (error) {
     console.log("an error occured while ending quizx", error);
-    if (error instanceof Error) {
-      return {
-        type: "error",
-        message: error.message,
-      };
-    }
 
     return {
       type: "error",

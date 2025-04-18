@@ -39,6 +39,8 @@ import MarkdownQuestion from "@/components/MarkdownQuestion";
 import MDEditor from "@uiw/react-md-editor";
 import RenderMarkdown from "@/components/RenderMarkdown";
 import { GradientButton } from "@/components/buttons/gradient-button";
+import ExamAnalysingScreen from "@/components/screens/ExamAnalysingScreen";
+import ExamEndedScreen from "@/components/screens/ExamEndedScreen";
 
 type McqProps = {
   quizSession: QuizSession;
@@ -75,16 +77,27 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     Array(questions.length).fill(null),
   );
   const currentQuestion = questions[questionIndex];
+  const [isEnding, setIsEnding] = useState(false);
+
+  useEffect(() => {
+    const analysePerformance = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 12000));
+      setIsEnding(false);
+    };
+
+    if (hasEnded) {
+      setIsEnding(true);
+      analysePerformance();
+    }
+  }, [hasEnded]);
 
   useEffect(() => {
     if (!isPending && hasEnded) return;
 
     function beforeUnload(e: BeforeUnloadEvent) {
-      // Modern browsers handle custom messages poorly, so it's better to use the default behavior
       e.preventDefault();
-      e.returnValue = ""; // Setting this makes the browser show a confirmation dialog
+      e.returnValue = "";
 
-      // If the user decides to leave, send the beacon
       window.navigator.sendBeacon(
         "/api/EndQuiz",
         JSON.stringify({
@@ -255,225 +268,206 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   };
 
   return (
-    <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button className="mt-2 w-fit md:hidden">
-            <TableOfContents className="mr-2 size-4" />
-            View Questions
-          </Button>
-        </SheetTrigger>
-        <SheetContent
-          side="left"
-          className="max-h-[calc(100vh)] overflow-y-auto"
-        >
-          <SheetHeader>
-            <SheetTitle>MCQ Sidebar</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4">
-            <CountDownTimer
-              initialTime={totalQuizTime}
-              quizSessionId={quizSession.id}
-              mcqQuizEnded={hasEnded}
-              setMcqQuizEnded={setHasEnded}
-              mcqQuestionsLength={questions.length}
-            />
-            <CorrectQuestionGrid
-              questionLength={questions.length}
-              questionStatus={questionStatus}
-            />
-            <div className="flex flex-col gap-4">
-              <span className="font-medium">
-                Skipped Answers:{" "}
-                <span className="font-bold">{skippedAnswers}</span>
-              </span>
-            </div>
-
-            {!hasEnded && (
-              <div className="mt-auto">
-                <EndQuizButton
-                  quizSessionId={quizSession.id}
-                  setHasEnded={setHasEnded}
-                  mcqQuestionLength={questions.length}
-                />
-              </div>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
-      <div className="border-grid hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r md:block">
-        <div className="no-scrollbar h-full overflow-auto px-4 py-4 md:py-6 lg:py-8">
-          <div className="sticky top-0 z-10 bg-background pb-4">
-            <h3 className="mb-4">{exam.name}</h3>
-            <CountDownTimer
-              initialTime={totalQuizTime}
-              quizSessionId={quizSession.id}
-              mcqQuizEnded={hasEnded}
-              setMcqQuizEnded={setHasEnded}
-              mcqQuestionsLength={questions.length}
-            />
-            <CorrectQuestionGrid
-              questionLength={questions.length}
-              questionStatus={questionStatus}
-            />
-            <div className="my-4 flex flex-col gap-4">
-              <span className="font-medium">
-                Skipped Answers:{" "}
-                <span className="font-bold">{skippedAnswers}</span>
-              </span>
-            </div>
-
-            {!hasEnded && (
-              <div className="mt-4">
-                <EndQuizButton
-                  quizSessionId={quizSession.id}
-                  setHasEnded={setHasEnded}
-                  mcqQuestionLength={questions.length}
-                />
-              </div>
-            )}
-          </div>
+    <div>
+      {isEnding ? (
+        <div>
+          <ExamAnalysingScreen />
         </div>
-      </div>
-      <div className="">
-        {hasEnded ? (
-          <div className="flex h-full flex-col items-center justify-center gap-6 py-10">
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300">
-                <CheckCircle className="h-14 w-14" />
+      ) : hasEnded ? (
+        <ExamEndedScreen
+          examName={exam.name}
+          questionsLength={questions.length}
+          examId={exam.id}
+          quizSessionId={quizSession.id}
+        />
+      ) : (
+        <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button className="mt-2 w-fit md:hidden">
+                <TableOfContents className="mr-2 size-4" />
+                View Questions
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="max-h-[calc(100vh)] overflow-y-auto"
+            >
+              <SheetHeader>
+                <SheetTitle>MCQ Sidebar</SheetTitle>
+              </SheetHeader>
+              <div className="mt-4">
+                <CountDownTimer
+                  initialTime={totalQuizTime}
+                  quizSessionId={quizSession.id}
+                  mcqQuizEnded={hasEnded}
+                  setMcqQuizEnded={setHasEnded}
+                  mcqQuestionsLength={questions.length}
+                />
+                <CorrectQuestionGrid
+                  questionLength={questions.length}
+                  questionStatus={questionStatus}
+                />
+                <div className="flex flex-col gap-4">
+                  <span className="font-medium">
+                    Skipped Answers:{" "}
+                    <span className="font-bold">{skippedAnswers}</span>
+                  </span>
+                </div>
+
+                {!hasEnded && (
+                  <div className="mt-auto">
+                    <EndQuizButton
+                      quizSessionId={quizSession.id}
+                      setHasEnded={setHasEnded}
+                      mcqQuestionLength={questions.length}
+                    />
+                  </div>
+                )}
               </div>
-              <h2 className="mb-2 text-3xl font-bold">
-                Your {exam.name} Exam has Ended
-              </h2>
-              <p className="mb-2 max-w-md text-muted-foreground">
-                Congratulations on completing your exam! Your answers have been
-                submitted successfully.
-              </p>
-              <div className="mt-2 grid grid-cols-2 gap-4 text-center">
-                <div className="rounded-lg border p-4">
-                  <p className="text-sm text-muted-foreground">
-                    Total Questions
-                  </p>
-                  <p className="text-2xl font-bold">{questions.length}</p>
+            </SheetContent>
+          </Sheet>
+          <div className="border-grid hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r md:block">
+            <div className="no-scrollbar h-full overflow-auto px-4 py-4 md:py-6 lg:py-8">
+              <div className="sticky top-0 z-10 bg-background pb-4">
+                <h3 className="mb-4">{exam.name}</h3>
+                <CountDownTimer
+                  initialTime={totalQuizTime}
+                  quizSessionId={quizSession.id}
+                  mcqQuizEnded={hasEnded}
+                  setMcqQuizEnded={setHasEnded}
+                  mcqQuestionsLength={questions.length}
+                />
+                <CorrectQuestionGrid
+                  questionLength={questions.length}
+                  questionStatus={questionStatus}
+                />
+                <div className="my-4 flex flex-col gap-4">
+                  <span className="font-medium">
+                    Skipped Answers:{" "}
+                    <span className="font-bold">{skippedAnswers}</span>
+                  </span>
+                </div>
+
+                {!hasEnded && (
+                  <div className="mt-4">
+                    <EndQuizButton
+                      quizSessionId={quizSession.id}
+                      setHasEnded={setHasEnded}
+                      mcqQuestionLength={questions.length}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="">
+            <div className="px-4 py-4 md:py-6 lg:py-8">
+              <div className="flex flex-wrap justify-between gap-4 text-sm">
+                <p className="text-lg font-medium text-[#737373]">
+                  Question:{" "}
+                  <span className="font-bold">{questionIndex + 1}</span>
+                </p>
+              </div>
+
+              <div>
+                <div className="my-4 md:my-6 lg:my-8">
+                  <RenderMarkdown
+                    source={currentQuestion.question}
+                    contentStyle={{
+                      fontSize: "2rem",
+                      lineHeight: "2.5rem",
+                      color: "white",
+                    }}
+                  />
+                </div>
+                <div className="space-y-4">
+                  {/* TODO:-  figure out why this does not work */}
+                  {[...Array(6)].map((_, i) => {
+                    let questionType = currentQuestion.questionType;
+
+                    // @ts-ignore
+                    let optionText = currentQuestion[`answerOption${i + 1}`];
+
+                    let correctAnswers = currentQuestion.correctAnswers;
+                    let correctAnswersArray = correctAnswers
+                      .split(",")
+                      .map(Number);
+
+                    // @ts-ignore
+                    let optionExp = currentQuestion[`explanation${i + 1}`];
+
+                    let isCorrect = correctAnswersArray.includes(i + 1);
+
+                    return (
+                      <Option
+                        key={i}
+                        questionType={questionType}
+                        optionText={optionText}
+                        isShowAnswer={showAnswer}
+                        optionExplanation={optionExp}
+                        isCorrect={isCorrect}
+                        selected={selected.includes(i + 1)}
+                        onSelect={() => {
+                          handleSelectOption(i + 1);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              {showAnswer && (
+                <div className="mt-4 rounded-lg p-4 dark:bg-green-900">
+                  <h3 className="my-4">Overall Explanation</h3>
+                  <RenderMarkdown
+                    source={currentQuestion.overallExplanation}
+                    contentStyle={{
+                      fontSize: "1rem",
+                      color: "white",
+                    }}
+                  />
+                </div>
+              )}
+              <div className="mt-4 flex justify-between">
+                <div>
+                  {quizSession.examMode === "PRACTICE" && (
+                    <GradientButton
+                      className=""
+                      onClick={() => setShowAnswer(!showAnswer)}
+                    >
+                      {showAnswer ? "Hide Answer" : "Show Answer"}
+                    </GradientButton>
+                  )}
+                </div>
+                <div className="space-x-4">
+                  <GradientButton
+                    className=""
+                    onClick={handlePrevious}
+                    disabled={questionIndex === 0}
+                  >
+                    Previous
+                  </GradientButton>
+                  <GradientButton
+                    className=""
+                    onClick={handleNext}
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Checking
+                      </div>
+                    ) : (
+                      "Next"
+                    )}
+                  </GradientButton>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <GradientButton className="" asChild>
-                <Link href={`/exam/${exam.id}/quiz/${quizSession.id}/results`}>
-                  View Your Score
-                </Link>
-              </GradientButton>
-              <GradientButton className="" asChild>
-                <Link href={`/exam/${exam.id}`}>Back to Exam Details</Link>
-              </GradientButton>
-            </div>
           </div>
-        ) : (
-          <div className="px-4 py-4 md:py-6 lg:py-8">
-            <div className="flex flex-wrap justify-between gap-4 text-sm">
-              <p className="text-lg font-medium text-[#737373]">
-                Question: <span className="font-bold">{questionIndex + 1}</span>
-              </p>
-            </div>
-
-            <div>
-              <div className="my-4 md:my-6 lg:my-8">
-                <RenderMarkdown
-                  source={currentQuestion.question}
-                  contentStyle={{
-                    fontSize: "2rem",
-                    lineHeight: "2.5rem",
-                    color: "white",
-                  }}
-                />
-              </div>
-              <div className="space-y-4">
-                {/* TODO:-  figure out why this does not work */}
-                {[...Array(6)].map((_, i) => {
-                  let questionType = currentQuestion.questionType;
-
-                  // @ts-ignore
-                  let optionText = currentQuestion[`answerOption${i + 1}`];
-
-                  let correctAnswers = currentQuestion.correctAnswers;
-                  let correctAnswersArray = correctAnswers
-                    .split(",")
-                    .map(Number);
-
-                  // @ts-ignore
-                  let optionExp = currentQuestion[`explanation${i + 1}`];
-
-                  let isCorrect = correctAnswersArray.includes(i + 1);
-
-                  return (
-                    <Option
-                      key={i}
-                      questionType={questionType}
-                      optionText={optionText}
-                      isShowAnswer={showAnswer}
-                      optionExplanation={optionExp}
-                      isCorrect={isCorrect}
-                      selected={selected.includes(i + 1)}
-                      onSelect={() => {
-                        handleSelectOption(i + 1);
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-            {showAnswer && (
-              <div className="mt-4 rounded-lg p-4 dark:bg-green-900">
-                <h3 className="my-4">Overall Explanation</h3>
-                <RenderMarkdown
-                  source={currentQuestion.overallExplanation}
-                  contentStyle={{
-                    fontSize: "1rem",
-                    color: "white",
-                  }}
-                />
-              </div>
-            )}
-            <div className="mt-4 flex justify-between">
-              <div>
-                {quizSession.examMode === "PRACTICE" && (
-                  <GradientButton
-                    className=""
-                    onClick={() => setShowAnswer(!showAnswer)}
-                  >
-                    {showAnswer ? "Hide Answer" : "Show Answer"}
-                  </GradientButton>
-                )}
-              </div>
-              <div className="space-x-4">
-                <GradientButton
-                  className=""
-                  onClick={handlePrevious}
-                  disabled={questionIndex === 0}
-                >
-                  Previous
-                </GradientButton>
-                <GradientButton
-                  className=""
-                  onClick={handleNext}
-                  disabled={isPending}
-                >
-                  {isPending ? (
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Checking
-                    </div>
-                  ) : (
-                    "Next"
-                  )}
-                </GradientButton>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
+        </section>
+      )}
+    </div>
   );
 };
 
