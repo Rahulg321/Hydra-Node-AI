@@ -3,13 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { useExamModeContext } from "@/lib/exam-mode-context";
+// import { useExamModeContext } from "@/lib/exam-mode-context"; // Not used in the provided snippet
 import { cn, formatTime } from "@/lib/utils";
 import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
 import {
   Check,
   CheckCircle,
+  ChevronLeft,
+  ChevronRight,
   Loader2,
   Menu,
   TableOfContents,
@@ -31,16 +33,164 @@ import React, {
   useTransition,
 } from "react";
 import EndQuizButton from "./EndQuizButton";
-import TimeLeft from "./TimeLeft";
+// import TimeLeft from "./TimeLeft"; // Replaced with inline CountDownTimer
 import CorrectQuestionGrid from "./CorrectQuestionGrid";
-import HtmlContent from "@/components/html-content";
+// import HtmlContent from "@/components/html-content"; // Not used in the provided snippet
 import EndQuizAction from "@/actions/end-quiz";
-import MarkdownQuestion from "@/components/MarkdownQuestion";
-import MDEditor from "@uiw/react-md-editor";
+// import MarkdownQuestion from "@/components/MarkdownQuestion"; // Not used in the provided snippet
+// import MDEditor from "@uiw/react-md-editor"; // Not used in the provided snippet
 import RenderMarkdown from "@/components/RenderMarkdown";
 import { GradientButton } from "@/components/buttons/gradient-button";
 import ExamAnalysingScreen from "@/components/screens/ExamAnalysingScreen";
-import ExamEndedScreen from "@/components/screens/ExamEndedScreen";
+// import ExamEndedScreen from "@/components/screens/ExamEndedScreen"; // Not used in the provided snippet
+
+// --- Mock Option Component (Assuming it exists elsewhere) ---
+// Added a simplified mock for Option to make the code runnable standalone
+// Replace with your actual Option component import
+function Option({
+  optionText,
+  selected,
+  onSelect,
+  isShowAnswer,
+  isCorrect,
+  questionType,
+}: {
+  questionType: "multi_select" | "multiple_choice";
+  optionText: string | null;
+  optionExplanation: string | null;
+  selected: boolean;
+  isShowAnswer: boolean;
+  isCorrect: boolean;
+  onSelect: () => void;
+}) {
+  if (!optionText) return null;
+  return (
+    <div
+      className={cn(
+        "flex transform cursor-pointer items-center gap-4 rounded-lg border border-white/20 bg-gradient-to-br from-white/5 via-transparent to-white/5 p-4 transition hover:bg-white/10",
+        selected && "border-orange-500 ring-2 ring-orange-500/50",
+        isShowAnswer &&
+          isCorrect &&
+          "border-green-500 bg-green-800/30 text-white",
+        isShowAnswer &&
+          selected &&
+          !isCorrect &&
+          "border-red-500 bg-red-800/30",
+      )}
+      onClick={onSelect}
+    >
+      {/* Basic visual indicator */}
+      <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-white">
+        {selected && <div className="h-3 w-3 rounded-full bg-orange-500"></div>}
+      </div>
+      <RenderMarkdown
+        source={optionText!}
+        contentStyle={{
+          fontSize: "1.1rem",
+          fontFamily: "var(--font-geist-sans)", // Example font
+        }}
+      />
+      {/* Add explanation rendering logic if needed based on isShowAnswer */}
+    </div>
+  );
+}
+// --- End Mock Option Component ---
+
+// --- CountDownTimer Component (as provided) ---
+function CountDownTimer({
+  initialTime,
+  quizSessionId,
+  mcqQuizEnded,
+  setMcqQuizEnded,
+  mcqQuestionsLength,
+}: {
+  initialTime: number;
+  mcqQuestionsLength: number;
+  quizSessionId: string;
+  mcqQuizEnded: boolean;
+  setMcqQuizEnded: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { toast } = useToast();
+  const [remainingTime, setRemainingTime] = useState(initialTime);
+
+  const isTimeCritical = remainingTime <= 60;
+
+  useEffect(() => {
+    if (mcqQuizEnded) return; // Stop interval if quiz has already ended
+
+    const interval = setInterval(async () => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(interval);
+          // Trigger end quiz logic only once
+          if (!mcqQuizEnded) {
+            (async () => {
+              try {
+                console.log("Timer ended, ending quiz...");
+                const response = await EndQuizAction(
+                  quizSessionId,
+                  mcqQuestionsLength,
+                );
+                if (response.type === "success") {
+                  toast({
+                    title: "Exam Time Ended",
+                    variant: "success",
+                    description:
+                      response.message || "Your exam was ended automatically.",
+                  });
+                } else {
+                  toast({
+                    title: "Could not End Exam ❌",
+                    variant: "destructive",
+                    description:
+                      response.message ||
+                      "There was an issue ending your exam automatically.",
+                  });
+                }
+                setMcqQuizEnded(true); // Update state after action
+              } catch (error) {
+                console.error("Failed to end the quiz automatically:", error);
+                toast({
+                  title: "Error",
+                  variant: "destructive",
+                  description:
+                    "An unexpected error occurred while ending the exam.",
+                });
+                setMcqQuizEnded(true); // Still set ended to true to stop timer etc.
+              }
+            })();
+          }
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [quizSessionId, mcqQuizEnded, setMcqQuizEnded, toast, mcqQuestionsLength]); // Removed remainingTime from dependencies to avoid resetting interval constantly
+
+  return (
+    <div
+      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-600/80" : "bg-orange-700/80"} text-white`}
+    >
+      {mcqQuizEnded ? (
+        <div>
+          <h3 className="font-semibold">Exam Ended</h3>
+        </div>
+      ) : (
+        <div>
+          <h4 className="text-sm font-medium uppercase tracking-wide">
+            Time Left
+          </h4>
+          <h3 className="transducer-font mt-1 text-2xl font-bold tracking-wider">
+            {formatTime(remainingTime)}
+          </h3>
+        </div>
+      )}
+    </div>
+  );
+}
+// --- End CountDownTimer Component ---
 
 type McqProps = {
   quizSession: QuizSession;
@@ -64,45 +214,69 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   const { toast } = useToast();
 
-  const totalQuizTime = quizSession.examTime * 60;
+  // Ensure examTime is used if timeAllowed isn't directly on quizSession
+  const totalQuizTime = (quizSession.examTime || exam.timeAllowed) * 60;
 
-  const [open, setOpen] = React.useState(false);
+  const [openSheet, setOpenSheet] = React.useState(false); // State for mobile sheet
+  const [sidebarOpen, setSidebarOpen] = useState(true); // State for desktop sidebar
   const [showAnswer, setShowAnswer] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<number[]>([]);
   const [questionIndex, setQuestionIndex] = useState(currentQuestionNumber - 1);
-  const [skippedAnswers, setSkippedAnswers] = useState(0);
-  const [hasEnded, setHasEnded] = useState(false);
-  const [questionStatus, setQuestionStatus] = useState(
-    Array(questions.length).fill(null),
+  const [skippedAnswers, setSkippedAnswers] = useState(0); // Consider calculating this based on questionStatus if needed elsewhere
+  const [hasEnded, setHasEnded] = useState(quizSession.isCompleted); // Initialize based on session status
+  const [questionStatus, setQuestionStatus] = useState<
+    ("attempted" | "skipped" | null)[]
+  >(
+    Array(questions.length).fill(null), // Initialize status array
   );
   const currentQuestion = questions[questionIndex];
-  const [isEnding, setIsEnding] = useState(false);
+  const [isEnding, setIsEnding] = useState(false); // Used for showing analysis screen transition
 
+  // Effect for analysis screen transition
   useEffect(() => {
-    const analysePerformance = async () => {
-      setIsEnding(false);
-    };
-
-    if (hasEnded) {
+    if (hasEnded && !isEnding) {
       setIsEnding(true);
-      analysePerformance();
+      // Optional: Add a delay before showing the analysis screen if needed
+      // const timer = setTimeout(() => setIsEnding(true), 1000);
+      // return () => clearTimeout(timer);
     }
-  }, [hasEnded]);
+  }, [hasEnded, isEnding]);
 
+  // Effect for preventing unload and sending beacon
   useEffect(() => {
-    if (!isPending && hasEnded) return;
+    if (hasEnded) return; // Don't attach listener if already ended
 
     function beforeUnload(e: BeforeUnloadEvent) {
       e.preventDefault();
-      e.returnValue = "";
+      e.returnValue =
+        "Are you sure you want to leave? Your progress might be lost if the exam hasn't finished submitting."; // Standard confirmation message
 
-      window.navigator.sendBeacon(
-        "/api/EndQuiz",
-        JSON.stringify({
-          quizSessionId: quizSession.id,
-        }),
-      );
+      // Use sendBeacon for reliable background data sending
+      // Ensure your API route /api/EndQuiz can handle potentially incomplete data
+      // or is primarily used for marking an abrupt exit.
+      // Consider if you need to send more state here.
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(
+          "/api/EndQuiz", // Make sure this endpoint exists and handles the request
+          JSON.stringify({
+            quizSessionId: quizSession.id,
+            abruptExit: true, // Flag to indicate potentially incomplete submission
+          }),
+        );
+      } else {
+        // Fallback for older browsers (less reliable)
+        axios.post(
+          "/api/EndQuiz",
+          {
+            quizSessionId: quizSession.id,
+            abruptExit: true,
+          },
+          {
+            signal: AbortSignal.timeout(5000), // 5 second timeout
+          },
+        );
+      }
     }
 
     window.addEventListener("beforeunload", beforeUnload);
@@ -110,17 +284,27 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     return () => {
       window.removeEventListener("beforeunload", beforeUnload);
     };
-  }, [isPending, hasEnded, quizSession.id]);
+  }, [hasEnded, quizSession.id]); // Rerun only if hasEnded or quizSession.id changes
 
-  // This effect updates the questionIndex when the query string changes
+  // Effect to sync questionIndex with URL query parameter
   useEffect(() => {
-    const questionNumber = parseInt(
+    const questionNumberFromURL = parseInt(
       searchParams.get("question-number") || "1",
       10,
     );
-    setQuestionIndex(questionNumber - 1); // Update the questionIndex based on query params
-  }, [searchParams]);
+    // Ensure index is within bounds
+    const newIndex = Math.max(
+      0,
+      Math.min(questions.length - 1, questionNumberFromURL - 1),
+    );
+    if (newIndex !== questionIndex) {
+      setQuestionIndex(newIndex);
+      setSelected([]); // Reset selection when question changes via URL
+      setShowAnswer(false); // Hide answer when navigating
+    }
+  }, [searchParams, questions.length, questionIndex]); // Removed questionIndex dependency to prevent potential loops
 
+  // Function to update URL query parameters
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -130,31 +314,37 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     [searchParams],
   );
 
+  // Navigate to Previous Question
   const handlePrevious = useCallback(() => {
-    const newQuestionNumber = Math.max(1, currentQuestionNumber - 1);
+    if (questionIndex === 0) return; // Already at the first question
+    const newQuestionNumber = questionIndex; // Target index is current index - 1, so number is current index
     router.push(
       `?${createQueryString("question-number", newQuestionNumber.toString())}`,
+      { scroll: false }, // Prevent page scroll on navigation
     );
-    setSelected([]);
-  }, [createQueryString, currentQuestionNumber, router]);
+    // State updates (like setSelected, setShowAnswer) will happen in the useEffect watching searchParams
+  }, [createQueryString, questionIndex, router]);
 
+  // Navigate to Next Question (or End Quiz)
   const handleNext = useCallback(() => {
+    if (isPending || hasEnded) return; // Prevent multiple submissions or actions after end
+
     startTransition(async () => {
       try {
-        if (isPending) return;
+        let status: "attempted" | "skipped" = "skipped";
+        const questionId = currentQuestion.id;
+        const quizSessionId = quizSession.id;
+        const questionType = currentQuestion.questionType;
 
-        let status = "skipped";
-        let questionId = currentQuestion.id;
-        let quizSessionId = quizSession.id;
-        let questionType = currentQuestion.questionType;
-
-        // check if any answer is selected
         if (selected.length > 0) {
-          // Make an API call to check the answer
-          const userAnswer = selected;
-
-          console.log({ questionId, quizSessionId, questionType, userAnswer });
-
+          // Attempted the question
+          const userAnswer = selected; // Use the state directly
+          console.log("Checking Answer:", {
+            questionId,
+            quizSessionId,
+            questionType,
+            userAnswer,
+          });
           const response = await axios.post("/api/CheckAnswer", {
             questionId,
             quizSessionId,
@@ -163,130 +353,175 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           });
 
           if (response.status !== 200) {
-            throw new Error("Server Side Error while submitting question");
+            console.error("CheckAnswer API Error:", response);
+            throw new Error("Server error while submitting answer.");
           }
-
+          // Optionally: update UI based on correctness immediately if desired (e.g., for practice mode)
+          // if (quizSession.examMode === "PRACTICE") { /* Update some visual feedback */ }
           status = "attempted";
+          toast({ title: "Answer Submitted", variant: "default" }); // Simple confirmation
         } else {
+          // Skipped the question
+          console.log("Skipping Answer:", { questionId, quizSessionId });
           const response = await axios.post("/api/SkipAnswer", {
             questionId,
             quizSessionId,
           });
 
           if (response.status !== 200) {
-            throw new Error("Server Side Error while skipping a question");
+            console.error("SkipAnswer API Error:", response);
+            throw new Error("Server error while skipping question.");
           }
-
           toast({
-            title: "Successfully skipped a question ⛷️",
-            description: "Made an API call to skip the question",
+            title: "Question Skipped ⛷️",
+            variant: "default",
           });
+          status = "skipped"; // Status remains skipped
         }
 
-        // Update the status of the current question
+        // Update question status locally
         setQuestionStatus((prevStatus) => {
           const updatedStatus = [...prevStatus];
           updatedStatus[questionIndex] = status;
-          return updatedStatus; // Update only the necessary index
+          return updatedStatus;
         });
 
+        // Update skipped count if necessary (though maybe better derived from questionStatus)
         if (status === "skipped") {
-          setSkippedAnswers((prev) => prev + 1);
+          // You might not need the separate skippedAnswers state
+          // if you can calculate it from questionStatus when needed.
+          // setSkippedAnswers((prev) => prev + 1); // Example: increment if tracking separately
         }
 
+        // Check if it was the last question
         if (questionIndex === questions.length - 1) {
+          console.log("Last question answered/skipped, ending quiz...");
           const response = await EndQuizAction(quizSessionId, questions.length);
-
           if (response.type === "success") {
             toast({
-              title: "Successfully Ended Mcq Exam",
+              title: "Exam Finished!",
               variant: "success",
               description:
-                response.message || "Your exam was ended successfully",
+                response.message ||
+                "Your exam has been submitted successfully.",
             });
+            setHasEnded(true); // Mark as ended
           } else {
             toast({
-              title: "Could not End Exam ❌",
+              title: "Submission Error ❌",
               variant: "destructive",
               description:
-                response.message || "There was an issue ending your exam",
+                response.message || "There was an issue finalizing your exam.",
             });
+            // Decide if hasEnded should be true even on error, maybe?
+            // setHasEnded(true);
           }
-          setHasEnded(true);
-          return;
+          return; // Stop further navigation
         }
 
-        const newQuestionNumber = Math.min(
-          questions.length,
-          currentQuestionNumber + 1,
-        );
-
+        // Navigate to the next question
+        const newQuestionNumber = questionIndex + 2; // Target index + 1 for number
         router.push(
           `?${createQueryString("question-number", newQuestionNumber.toString())}`,
+          { scroll: false },
         );
-
-        setSelected([]);
-      } catch (error) {
+        // State updates (setSelected, setShowAnswer) handled by useEffect
+      } catch (error: any) {
+        console.error("Error during next question transition:", error);
         toast({
           variant: "destructive",
-          title: "Error Clicking Next ❌",
-          description: "Error, Please try again",
+          title: "Navigation Error ❌",
+          description:
+            error.message ||
+            "Could not proceed to the next question. Please try again.",
         });
       }
     });
   }, [
-    currentQuestion.id,
-    currentQuestion.questionType,
-    currentQuestionNumber,
+    currentQuestion?.id, // Use optional chaining in case currentQuestion is briefly undefined
+    currentQuestion?.questionType,
     questionIndex,
     quizSession.id,
+    // quizSession.examMode, // Include if logic depends on it
     questions.length,
     router,
     selected,
     createQueryString,
     isPending,
+    hasEnded,
     toast,
+    startTransition, // Ensure startTransition is stable or included
   ]);
 
+  // Handle selecting/deselecting options
   const handleSelectOption = (index: number) => {
-    if (currentQuestion.questionType === "multiple_choice") {
-      // For single choice questions, deselect if already selected
-      setSelected((prevSelected) => (prevSelected[0] === index ? [] : [index]));
-    }
+    if (hasEnded || showAnswer) return; // Don't allow changes after end or when answer is shown
 
-    if (currentQuestion.questionType === "multi_select") {
-      setSelected((prevSelected) => {
-        if (prevSelected.includes(index)) {
-          // Deselect if already selected
-          return prevSelected.filter((i) => i !== index);
-        }
-        // Otherwise, add it to the selected list
-        return [...prevSelected, index];
-      });
-    }
+    setSelected((prevSelected) => {
+      if (currentQuestion.questionType === "multiple_choice") {
+        // Single choice: replace selection or deselect if clicking the same
+        return prevSelected[0] === index ? [] : [index];
+      } else {
+        // multi_select
+        // Multi choice: toggle selection
+        const newSelection = prevSelected.includes(index)
+          ? prevSelected.filter((i) => i !== index)
+          : [...prevSelected, index];
+        return newSelection.sort((a, b) => a - b); // Keep selection sorted for consistency
+      }
+    });
   };
 
+  // Calculate derived state
+  const calculatedSkippedAnswers = useMemo(() => {
+    return questionStatus.filter((s) => s === "skipped").length;
+  }, [questionStatus]);
+
+  // Render Loading or Ended State first
+  if (isEnding) {
+    // Show loading/analysing screen immediately when isEnding is true
+    return (
+      <ExamAnalysingScreen examId={exam.id} quizSessionId={quizSession.id} />
+    );
+  }
+
+  // Main Quiz UI
   return (
     <div>
-      {hasEnded ? (
-        <ExamAnalysingScreen examId={exam.id} quizSessionId={quizSession.id} />
-      ) : (
-        <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
-          <Sheet open={open} onOpenChange={setOpen}>
+      {/* Use a wrapper div if ExamAnalysingScreen needs sibling elements, otherwise fragment is fine */}
+      {/* The main layout uses grid for medium screens and up */}
+      <section
+        className={cn(
+          "flex flex-1 flex-col md:grid", // Flex layout for mobile (Sheet handles sidebar), Grid for md+
+          "min-h-screen", // Ensure it takes full height
+          // --- Dynamic Grid Columns based on sidebar state ---
+          sidebarOpen
+            ? "md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)]" // Sidebar open widths (adjust px)
+            : "md:grid-cols-[60px_minmax(0,1fr)] lg:grid-cols-[70px_minmax(0,1fr)]", // Sidebar closed widths (adjust px)
+          "transition-all duration-300 ease-in-out", // Smooth transition for grid changes
+        )}
+      >
+        {/* --- Mobile Sidebar Trigger (Sheet) --- */}
+        <div className="sticky top-0 z-30 bg-background p-2 md:hidden">
+          {/* Added a top bar for mobile trigger */}
+          <Sheet open={openSheet} onOpenChange={setOpenSheet}>
             <SheetTrigger asChild>
-              <Button className="mt-2 w-fit md:hidden">
-                <TableOfContents className="mr-2 size-4" />
-                View Questions
+              <Button variant="outline" size="sm">
+                <Menu className="mr-2 size-4" />
+                Menu / Progress
               </Button>
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="max-h-[calc(100vh)] overflow-y-auto"
+              className="flex h-full flex-col p-4 pt-8" // Added flex column layout
+              // className="max-h-[calc(100vh)] overflow-y-auto" // Original style - Keep if needed
             >
-              <SheetHeader>
-                <SheetTitle>MCQ Sidebar</SheetTitle>
+              <SheetHeader className="mb-4">
+                <SheetTitle>{exam.name}</SheetTitle>
               </SheetHeader>
-              <div className="mt-4">
+              <div className="flex-grow overflow-y-auto pr-2">
+                {" "}
+                {/* Scrollable content area */}
                 <CountDownTimer
                   initialTime={totalQuizTime}
                   quizSessionId={quizSession.id}
@@ -294,380 +529,272 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                   setMcqQuizEnded={setHasEnded}
                   mcqQuestionsLength={questions.length}
                 />
-                <CorrectQuestionGrid
-                  questionLength={questions.length}
-                  questionStatus={questionStatus}
-                />
-                <div className="flex flex-col gap-4">
-                  <span className="font-medium">
-                    Skipped Answers:{" "}
-                    <span className="font-bold">{skippedAnswers}</span>
-                  </span>
-                </div>
-
-                {!hasEnded && (
-                  <div className="mt-auto">
-                    <EndQuizButton
-                      quizSessionId={quizSession.id}
-                      setHasEnded={setHasEnded}
-                      mcqQuestionLength={questions.length}
-                    />
-                  </div>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
-          <div className="border-grid hidden h-[calc(100vh-3.5rem)] w-[85%] max-w-[300px] shrink-0 border-r md:block">
-            <div className="no-scrollbar h-full overflow-auto px-4 py-4 md:py-6 lg:py-8">
-              <div className="sticky top-0 z-10 bg-background pb-4">
-                <h3 className="mb-4">{exam.name}</h3>
-                <CountDownTimer
-                  initialTime={totalQuizTime}
-                  quizSessionId={quizSession.id}
-                  mcqQuizEnded={hasEnded}
-                  setMcqQuizEnded={setHasEnded}
-                  mcqQuestionsLength={questions.length}
-                />
-                <CorrectQuestionGrid
-                  questionLength={questions.length}
-                  questionStatus={questionStatus}
-                />
-                <div className="my-4 flex flex-col gap-4">
-                  <span className="font-medium">
-                    Skipped Answers:{" "}
-                    <span className="font-bold">{skippedAnswers}</span>
-                  </span>
-                </div>
-
-                {!hasEnded && (
-                  <div className="mt-4">
-                    <EndQuizButton
-                      quizSessionId={quizSession.id}
-                      setHasEnded={setHasEnded}
-                      mcqQuestionLength={questions.length}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="">
-            <div className="px-4 py-4 md:py-6 lg:py-8">
-              <div className="flex flex-wrap justify-between gap-4 text-sm">
-                <p className="text-lg font-medium text-[#737373]">
-                  Question:{" "}
-                  <span className="font-bold">{questionIndex + 1}</span>
-                </p>
-              </div>
-
-              <div>
-                <div className="my-4 md:my-6 lg:my-8">
-                  <RenderMarkdown
-                    source={currentQuestion.question}
-                    contentStyle={{
-                      fontSize: "2rem",
-                      lineHeight: "2.5rem",
-                      color: "white",
-                    }}
+                <div className="my-4">
+                  <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
+                    Progress
+                  </h4>
+                  <CorrectQuestionGrid
+                    questionLength={questions.length}
+                    questionStatus={questionStatus}
                   />
                 </div>
-                <div className="space-y-4">
-                  {/* TODO:-  figure out why this does not work */}
-                  {[...Array(6)].map((_, i) => {
-                    let questionType = currentQuestion.questionType;
-
-                    // @ts-ignore
-                    let optionText = currentQuestion[`answerOption${i + 1}`];
-
-                    let correctAnswers = currentQuestion.correctAnswers;
-                    let correctAnswersArray = correctAnswers
-                      .split(",")
-                      .map(Number);
-
-                    // @ts-ignore
-                    let optionExp = currentQuestion[`explanation${i + 1}`];
-
-                    let isCorrect = correctAnswersArray.includes(i + 1);
-
-                    return (
-                      <Option
-                        key={i}
-                        questionType={questionType}
-                        optionText={optionText}
-                        isShowAnswer={showAnswer}
-                        optionExplanation={optionExp}
-                        isCorrect={isCorrect}
-                        selected={selected.includes(i + 1)}
-                        onSelect={() => {
-                          handleSelectOption(i + 1);
-                        }}
-                      />
-                    );
-                  })}
+                <div className="mb-4 flex flex-col gap-1 text-sm">
+                  <span className="font-medium">
+                    Skipped:{" "}
+                    <span className="font-bold">
+                      {calculatedSkippedAnswers}
+                    </span>
+                  </span>
+                  <span className="font-medium">
+                    Attempted:{" "}
+                    <span className="font-bold">
+                      {questionStatus.filter((s) => s === "attempted").length}
+                    </span>
+                  </span>
                 </div>
               </div>
-              {showAnswer && (
-                <div className="mt-4 rounded-lg p-4 dark:bg-green-900">
-                  <h3 className="my-4">Overall Explanation</h3>
-                  <RenderMarkdown
-                    source={currentQuestion.overallExplanation}
-                    contentStyle={{
-                      fontSize: "1rem",
-                      color: "white",
-                    }}
+
+              {!hasEnded && (
+                <div className="mt-auto border-t pt-4">
+                  {" "}
+                  {/* Footer area */}
+                  <EndQuizButton
+                    quizSessionId={quizSession.id}
+                    setHasEnded={setHasEnded}
+                    mcqQuestionLength={questions.length}
                   />
                 </div>
               )}
-              <div className="mt-4 flex justify-between">
-                <div>
-                  {quizSession.examMode === "PRACTICE" && (
-                    <GradientButton
-                      className=""
-                      onClick={() => setShowAnswer(!showAnswer)}
-                    >
-                      {showAnswer ? "Hide Answer" : "Show Answer"}
-                    </GradientButton>
-                  )}
-                </div>
-                <div className="space-x-4">
-                  <GradientButton
-                    className=""
-                    onClick={handlePrevious}
-                    disabled={questionIndex === 0}
-                  >
-                    Previous
-                  </GradientButton>
-                  <GradientButton
-                    className=""
-                    onClick={handleNext}
-                    disabled={isPending}
-                  >
-                    {isPending ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Checking
-                      </div>
-                    ) : (
-                      "Next"
-                    )}
-                  </GradientButton>
-                </div>
-              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+        {/* --- Desktop Sidebar (Hidden on Mobile) --- */}
+        <div
+          className={cn(
+            "border-grid relative hidden min-h-screen border-r md:flex md:flex-col", // Use flex column for content alignment
+            "transition-all duration-300 ease-in-out", // Ensure width transition is smooth
+            !sidebarOpen && "overflow-hidden", // Hide content overflow when collapsed
+          )}
+        >
+          {/* Sidebar Content Area (Scrollable) */}
+          <div
+            className={cn(
+              "no-scrollbar flex-grow overflow-y-auto p-4 transition-opacity duration-200 ease-in-out lg:p-6",
+              sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0", // Fade content, disable interaction when hidden
+            )}
+          >
+            <h3 className="mb-4 text-lg font-semibold">{exam.name}</h3>
+            <CountDownTimer
+              initialTime={totalQuizTime}
+              quizSessionId={quizSession.id}
+              mcqQuizEnded={hasEnded}
+              setMcqQuizEnded={setHasEnded}
+              mcqQuestionsLength={questions.length}
+            />
+            <div className="my-4">
+              <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
+                Progress
+              </h4>
+              <CorrectQuestionGrid
+                questionLength={questions.length}
+                questionStatus={questionStatus}
+              />
+            </div>
+            <div className="my-4 flex flex-col gap-1 text-sm">
+              <span className="font-medium">
+                Skipped:{" "}
+                <span className="font-bold">{calculatedSkippedAnswers}</span>
+              </span>
+              <span className="font-medium">
+                Attempted:{" "}
+                <span className="font-bold">
+                  {questionStatus.filter((s) => s === "attempted").length}
+                </span>
+              </span>
             </div>
           </div>
-        </section>
-      )}
+
+          {/* Sidebar Footer (Sticky if needed, or at the bottom) */}
+          {!hasEnded && sidebarOpen && (
+            <div className="mt-auto border-t p-4 lg:p-6">
+              <EndQuizButton
+                quizSessionId={quizSession.id}
+                setHasEnded={setHasEnded}
+                mcqQuestionLength={questions.length}
+              />
+            </div>
+          )}
+
+          {/* --- Sidebar Toggle Buttons --- */}
+          {/* Close Button (Visible only when sidebar is open) */}
+          {sidebarOpen && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(false)}
+              className="absolute right-2 top-3 z-10 text-muted-foreground hover:text-foreground" // Positioned inside
+              aria-label="Collapse sidebar"
+            >
+              <ChevronLeft className="size-5" />
+            </Button>
+          )}
+
+          {/* Open Button (Visible only when sidebar is closed) */}
+          {!sidebarOpen && (
+            <Button
+              variant="outline" // Use outline or ghost
+              size="icon"
+              className="absolute left-1/2 top-6 z-20 -translate-x-1/2 transform" // Centered in the collapsed bar
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Expand sidebar"
+            >
+              <ChevronRight className="size-5" />
+            </Button>
+          )}
+        </div>
+        {/* --- Main Content Area --- */}
+        <div
+          className={cn(
+            "min-w-0 flex-1", // flex-1 allows it to take remaining space, min-w-0 prevents overflow issues
+            "transition-all duration-300 ease-in-out", // Allow smooth resizing if needed (though grid handles it)
+          )}
+        >
+          <div className="px-4 py-6 md:py-8 lg:py-10">
+            {" "}
+            {/* Constrain content width */}
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-sm md:mb-6">
+              <p className="text-base font-medium text-muted-foreground md:text-lg">
+                Question:{" "}
+                <span className="font-bold text-foreground">
+                  {questionIndex + 1}
+                </span>
+                <span className="mx-1">/</span>
+                <span>{questions.length}</span>
+              </p>
+              {/* Potentially add flags or other indicators here */}
+            </div>
+            {/* Question Display */}
+            <div className="mb-6 md:mb-8 lg:mb-10">
+              <RenderMarkdown
+                source={currentQuestion.question}
+                // Adjusted styling for better readability
+                contentStyle={{
+                  fontSize: "1.25rem", // Slightly smaller than 2rem
+                  lineHeight: "1.7", // Improved line spacing
+                  color: "var(--foreground)", // Use CSS variable
+                }}
+                className="prose prose-invert prose-p:text-foreground prose-headings:text-foreground prose-strong:text-foreground max-w-none" // Example prose styling
+              />
+            </div>
+            {/* Options */}
+            <div className="space-y-3">
+              {/* Map through potential options (assuming up to 6) */}
+              {[...Array(6)].map((_, i) => {
+                // @ts-ignore - Prisma types might not directly index like this easily
+                const optionText = currentQuestion[`answerOption${i + 1}`] as
+                  | string
+                  | null;
+                // @ts-ignore
+                const optionExp = currentQuestion[`explanation${i + 1}`] as
+                  | string
+                  | null;
+
+                if (!optionText) return null; // Don't render if option text is missing
+
+                const correctAnswersArray = currentQuestion.correctAnswers
+                  .split(",")
+                  .map(Number);
+                const isCorrect = correctAnswersArray.includes(i + 1);
+                const isSelected = selected.includes(i + 1);
+
+                return (
+                  <Option
+                    key={i}
+                    questionType={
+                      currentQuestion.questionType as
+                        | "multi_select"
+                        | "multiple_choice"
+                    }
+                    optionText={optionText}
+                    isShowAnswer={showAnswer} // Pass state to Option
+                    optionExplanation={optionExp}
+                    isCorrect={isCorrect}
+                    selected={isSelected}
+                    onSelect={() => handleSelectOption(i + 1)}
+                  />
+                );
+              })}
+            </div>
+            {/* Show Answer / Explanation Section */}
+            {showAnswer && (
+              <div className="mt-6 rounded-lg border border-green-700/50 bg-green-900/30 p-4 md:mt-8">
+                <h3 className="mb-3 text-lg font-semibold text-green-300">
+                  Overall Explanation
+                </h3>
+                <RenderMarkdown
+                  source={
+                    currentQuestion.overallExplanation ||
+                    "No overall explanation provided."
+                  }
+                  contentStyle={{
+                    fontSize: "1rem",
+                    lineHeight: "1.6",
+                    color: "var(--foreground)", // Use CSS variable
+                  }}
+                  className="prose prose-invert prose-p:text-foreground/90 max-w-none"
+                />
+              </div>
+            )}
+            {/* Action Buttons */}
+            <div className="mt-6 flex flex-col-reverse items-center justify-between gap-4 border-t border-border pt-6 md:mt-8 md:flex-row md:pt-8">
+              <div>
+                {/* Show Answer Button (Practice Mode Only) */}
+                {quizSession.examMode === "PRACTICE" && !hasEnded && (
+                  <GradientButton
+                    variant="outline" // Maybe outline style fits better here
+                    size="sm"
+                    onClick={() => setShowAnswer(!showAnswer)}
+                  >
+                    {showAnswer ? "Hide Answer" : "Show Answer"}
+                  </GradientButton>
+                )}
+              </div>
+              <div className="flex w-full justify-between space-x-3 md:w-auto">
+                <GradientButton
+                  variant="secondary" // Use secondary style for previous
+                  size="sm"
+                  onClick={handlePrevious}
+                  disabled={questionIndex === 0 || isPending || hasEnded}
+                >
+                  Previous
+                </GradientButton>
+                <GradientButton
+                  size="sm"
+                  onClick={handleNext}
+                  disabled={isPending || hasEnded} // Disable if pending or quiz ended
+                >
+                  {
+                    isPending ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Submitting...</span>
+                      </div>
+                    ) : questionIndex === questions.length - 1 ? (
+                      "Finish Exam"
+                    ) : (
+                      "Next"
+                    ) // Change text for last question
+                  }
+                </GradientButton>
+              </div>
+            </div>
+          </div>{" "}
+          {/* End Content Max Width Container */}
+        </div>{" "}
+        {/* End Main Content Area */}
+      </section>
     </div>
   );
 };
 
 export default MCQ;
-
-// after the timer has expired it automatically ends the quiz using the correct values
-function CountDownTimer({
-  initialTime,
-  quizSessionId,
-  mcqQuizEnded,
-  setMcqQuizEnded,
-  mcqQuestionsLength,
-}: {
-  initialTime: number;
-  mcqQuestionsLength: number;
-  quizSessionId: string;
-  mcqQuizEnded: boolean;
-  setMcqQuizEnded: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const { toast } = useToast();
-  const [remainingTime, setRemainingTime] = useState(initialTime);
-
-  const isTimeCritical = remainingTime <= 60;
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      setRemainingTime((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-
-      if (remainingTime <= 1 && !mcqQuizEnded) {
-        try {
-          const response = await EndQuizAction(
-            quizSessionId,
-            mcqQuestionsLength,
-          );
-
-          if (response.type === "success") {
-            toast({
-              title: "Successfully Ended Mcq Exam",
-              variant: "success",
-              description:
-                response.message || "Your exam was ended successfully",
-            });
-          } else {
-            toast({
-              title: "Could not End Exam ❌",
-              variant: "destructive",
-              description:
-                response.message || "There was an issue ending your exam",
-            });
-          }
-          setMcqQuizEnded(true);
-        } catch (error) {
-          console.error("Failed to end the quiz:", error);
-          toast({
-            title: "Error",
-            variant: "destructive",
-
-            description: "An unexpected error occurred while ending the exam.",
-          });
-        }
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [
-    quizSessionId,
-    mcqQuizEnded,
-    setMcqQuizEnded,
-    remainingTime,
-    toast,
-    mcqQuestionsLength,
-  ]);
-
-  return (
-    <div
-      className={`rounded-lg p-4 text-center ${isTimeCritical ? "bg-red-500" : "bg-orange-700"} text-white`}
-    >
-      {mcqQuizEnded ? (
-        <div>
-          <h3>Exam Ended</h3>
-        </div>
-      ) : (
-        <div>
-          <h4>Time Left</h4>
-          <h3 className="transducer-font mt-2 tracking-wider">
-            {formatTime(remainingTime)}
-          </h3>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Option({
-  questionType,
-  optionText,
-  optionExplanation,
-  selected,
-  onSelect,
-  isShowAnswer,
-  isCorrect,
-}: {
-  questionType: "multi_select" | "multiple_choice";
-  optionText: string | null;
-  optionExplanation: string | null;
-  selected: boolean;
-  isShowAnswer: boolean;
-  isCorrect: boolean;
-  onSelect: () => void;
-}) {
-  if (!optionText) return null;
-
-  return (
-    <div
-      className={cn(
-        "flex transform cursor-pointer items-center gap-2 rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10 p-4",
-        selected && "bg-orange-700 text-white",
-        isShowAnswer && isCorrect && "border-green-500 bg-green-800 text-white",
-      )}
-      onClick={onSelect}
-    >
-      <div className="flex h-5 w-5 items-center justify-center rounded-full border border-white">
-        {questionType === "multi_select" ? (
-          <div className="relative h-5 w-5">
-            <input
-              type="checkbox"
-              checked={selected}
-              readOnly
-              className="peer absolute h-0 w-0 opacity-0"
-            />
-            <span
-              className={`absolute inset-0 flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm border border-white ${selected ? "bg-white" : ""}`}
-            >
-              {selected && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  className="h-4 w-4 text-orange-500"
-                >
-                  <polyline
-                    points="20 6 9 17 4 12"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
-            </span>
-          </div>
-        ) : (
-          <div className="relative h-5 w-5">
-            <input
-              type="radio"
-              checked={selected}
-              readOnly
-              className="peer absolute h-0 w-0 opacity-0"
-            />
-            <span
-              className={`absolute inset-0 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-white ${selected ? "bg-white" : ""}`}
-            >
-              {selected && (
-                <span className="h-3 w-3 rounded-full bg-orange-500"></span>
-              )}
-            </span>
-          </div>
-        )}
-      </div>
-      <div className="ml-2 flex flex-col">
-        <div className="mb-2 w-full">
-          <RenderMarkdown
-            source={optionText!}
-            contentStyle={{
-              fontSize: "1.2rem",
-              fontFamily: "var(--font-geist-sans)",
-            }}
-          />
-        </div>
-        {isShowAnswer && (
-          <div className="flex flex-col gap-1 border-t border-white/20 pt-2">
-            <h4 className="">Explanation</h4>
-            <div className={cn("", isCorrect && "text-white")}>
-              {isCorrect ? (
-                <RenderMarkdown
-                  source={optionExplanation!}
-                  contentStyle={{
-                    fontSize: "1rem",
-                  }}
-                  className="text-white"
-                />
-              ) : (
-                <RenderMarkdown
-                  source={optionExplanation!}
-                  contentStyle={{
-                    fontSize: "1rem",
-                  }}
-                  className="text-white"
-                />
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}

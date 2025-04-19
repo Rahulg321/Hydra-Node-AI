@@ -4,7 +4,6 @@ import VendorButton from "./VendorButton";
 import VendorsSheet from "@/components/Sheets/VendorsSheet";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  //   const vendors = await getAllSystemVendors();
   const vendors = await getAllSystemVendors();
 
   return (
