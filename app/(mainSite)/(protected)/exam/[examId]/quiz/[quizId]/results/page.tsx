@@ -198,9 +198,9 @@ const QuizResultsPage = async (props: props) => {
           </div>
           <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:justify-between">
             <Button
-              className="w-full rounded-full border-[#2F2F2F] sm:w-auto"
+              className="w-full rounded-full border-[#2F2F2F] text-white sm:w-auto"
               variant={"outline"}
-              size={"2xl"}
+              size={"xl"}
               asChild
             >
               <Link
@@ -211,9 +211,9 @@ const QuizResultsPage = async (props: props) => {
             </Button>
             <div className="space-x-2">
               <Button
-                className="w-full rounded-full sm:w-auto"
+                className="w-full rounded-full text-white sm:w-auto"
                 variant={"outline"}
-                size={"2xl"}
+                size={"xl"}
                 asChild
               >
                 <Link href={`/exam/${params.examId}`}>Retake Exam</Link>
@@ -221,7 +221,7 @@ const QuizResultsPage = async (props: props) => {
               <GradientButton
                 className="w-full rounded-full sm:w-auto"
                 variant={"outline"}
-                size={"2xl"}
+                size={"xl"}
                 asChild
               >
                 <Link href={`/exam/${params.examId}`}>Finish</Link>

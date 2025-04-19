@@ -2,13 +2,19 @@ import { CircleX } from "lucide-react";
 
 import { CircleCheckBig } from "lucide-react";
 
+interface CorrectQuestionGridProps {
+  totalQuestions: number;
+  questionStatus: (string | null)[];
+  onSelectQuestion?: (index: number) => void;
+  currentQuestionIndex?: number;
+}
+
 const CorrectQuestionGrid = ({
   totalQuestions,
   questionStatus,
-}: {
-  totalQuestions: number;
-  questionStatus: (string | null)[];
-}) => {
+  onSelectQuestion,
+  currentQuestionIndex,
+}: CorrectQuestionGridProps) => {
   console.log("question status in correct question grid", questionStatus);
   return (
     <div className="rounded-lg bg-muted">
