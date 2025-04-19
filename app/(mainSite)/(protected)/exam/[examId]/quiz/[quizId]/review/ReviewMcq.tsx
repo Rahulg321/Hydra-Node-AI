@@ -401,8 +401,9 @@ const Option = ({
           {/* Explanation (Conditional) */}
           {isShowAnswer && optionExplanation && (
             <div className="mt-3 border-t border-border/50 pt-3">
-              {/* Use a subtle heading or just display */}
-              {/* <h4 className="text-sm font-semibold mb-1 text-muted-foreground">Explanation</h4> */}
+              <h4 className="mb-1 text-sm font-semibold text-muted-foreground">
+                Explanation
+              </h4>
               <div className="prose prose-sm prose-invert dark:prose-invert max-w-none text-muted-foreground">
                 <RenderMarkdown
                   source={optionExplanation}
