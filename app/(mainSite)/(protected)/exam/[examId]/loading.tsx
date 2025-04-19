@@ -1,94 +1,80 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Loading() {
+export default function CertificationLoading() {
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {/* Left column - 2/3 width on medium screens and up */}
-        <div className="space-y-6 md:col-span-2">
-          {/* Title card */}
-          <div className="rounded-lg border bg-muted p-6 shadow-sm">
-            <Skeleton className="mb-6 h-8 w-3/4" />
+    <div className="min-h-screen bg-background p-6 md:p-8">
+      {/* Certification Details Header */}
+      <div className="mb-3">
+        <Skeleton className="h-5 w-32 bg-muted/20" />
+      </div>
 
-            {/* Exam stats grid */}
+      {/* Title */}
+      <div className="mb-12">
+        <Skeleton className="h-10 w-full max-w-2xl bg-muted/20" />
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid gap-8 md:grid-cols-2">
+        {/* Left Column - Certification Details */}
+        <div className="space-y-8">
+          <div>
+            <Skeleton className="mb-6 h-8 w-48 bg-muted/20" />
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <Skeleton className="mb-2 h-5 w-1/2" />
-                <Skeleton className="h-8 w-1/3" />
+                <Skeleton className="mb-2 h-5 w-32 bg-muted/20" />
+                <Skeleton className="h-7 w-28 bg-muted/20" />
               </div>
               <div>
-                <Skeleton className="mb-2 h-5 w-1/2" />
-                <Skeleton className="h-8 w-1/3" />
+                <Skeleton className="mb-2 h-5 w-32 bg-muted/20" />
+                <Skeleton className="h-7 w-24 bg-muted/20" />
               </div>
               <div>
-                <Skeleton className="mb-2 h-5 w-1/2" />
-                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="mb-2 h-5 w-32 bg-muted/20" />
+                <Skeleton className="h-7 w-32 bg-muted/20" />
               </div>
               <div>
-                <Skeleton className="mb-2 h-5 w-1/2" />
-                <Skeleton className="h-8 w-2/3" />
+                <Skeleton className="mb-2 h-5 w-32 bg-muted/20" />
+                <Skeleton className="h-7 w-28 bg-muted/20" />
               </div>
             </div>
           </div>
 
-          {/* Exam description card */}
-          <div className="rounded-lg border bg-muted p-6 shadow-sm">
-            <Skeleton className="mb-4 h-7 w-1/2" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
+          {/* Start Exam Button */}
+          <div>
+            <Skeleton className="h-10 w-32 rounded-full bg-muted/20" />
           </div>
 
-          {/* Exam instructions card */}
-          <div className="rounded-lg border bg-muted p-6 shadow-sm">
-            <Skeleton className="mb-4 h-7 w-2/3" />
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <Skeleton className="mr-2 mt-1 h-4 w-4 rounded-full" />
-                <Skeleton className="h-4 w-3/4" />
-              </div>
-              <div className="flex items-start">
-                <Skeleton className="mr-2 mt-1 h-4 w-4 rounded-full" />
-                <Skeleton className="h-4 w-4/5" />
-              </div>
-              <div className="flex items-start">
-                <Skeleton className="mr-2 mt-1 h-4 w-4 rounded-full" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-              <div className="flex items-start">
-                <Skeleton className="mr-2 mt-1 h-4 w-4 rounded-full" />
-                <Skeleton className="h-4 w-4/5" />
-              </div>
-              <div className="flex items-start">
-                <Skeleton className="mr-2 mt-1 h-4 w-4 rounded-full" />
-                <Skeleton className="h-4 w-3/4" />
-              </div>
+          {/* Exam Description */}
+          <div>
+            <Skeleton className="mb-4 h-8 w-48 bg-muted/20" />
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full bg-muted/20" />
+              <Skeleton className="h-4 w-full bg-muted/20" />
+              <Skeleton className="h-4 w-3/4 bg-muted/20" />
             </div>
           </div>
         </div>
 
-        {/* Right column - 1/3 width on medium screens and up */}
-        <div className="space-y-6 md:col-span-1">
-          {/* Exam available card */}
-          <div className="rounded-lg border bg-muted p-6 shadow-sm">
-            <div className="mb-2 flex items-center">
-              <Skeleton className="mr-2 h-5 w-1/2" />
-              <Skeleton className="h-5 w-5 rounded-full" />
-            </div>
-            <Skeleton className="mb-4 h-4 w-full" />
-            <Skeleton className="h-10 w-full rounded-md" />
+        {/* Right Column - Examination Instructions */}
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-64 bg-muted/20" />
+          <div className="space-y-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Skeleton className="h-2 w-2 rounded-full bg-muted/20" />
+                <Skeleton className="h-4 w-full bg-muted/20" />
+              </div>
+            ))}
           </div>
 
-          {/* Troubleshooting card */}
-          <div className="rounded-lg border bg-muted p-6 shadow-sm">
-            <Skeleton className="mb-4 h-6 w-3/4" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-4 h-4 w-4/5" />
-            <Skeleton className="h-10 w-1/2 rounded-md" />
+          {/* Don't see your purchased exam section */}
+          <div className="mt-8 space-y-4">
+            <Skeleton className="h-8 w-72 bg-muted/20" />
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full bg-muted/20" />
+              <Skeleton className="h-4 w-3/4 bg-muted/20" />
+            </div>
+            <Skeleton className="mt-4 h-10 w-40 rounded-full bg-muted/20" />
           </div>
         </div>
       </div>
