@@ -18,10 +18,12 @@ import { GradientButton } from "@/components/buttons/gradient-button";
 export default function EndQuizButton({
   quizSessionId,
   mcqQuestionLength,
+  remainingQuestions,
   setHasEnded,
 }: {
   quizSessionId: string;
   mcqQuestionLength: number;
+  remainingQuestions: number;
   setHasEnded: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { toast } = useToast();
@@ -32,7 +34,11 @@ export default function EndQuizButton({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
-        <Button variant={"destructive"} className="w-full rounded-full">
+        <Button
+          variant={"destructive"}
+          size={"xl"}
+          className="w-full rounded-full"
+        >
           End Exam
         </Button>
       </DialogTrigger>
@@ -42,7 +48,7 @@ export default function EndQuizButton({
             Are you sure you want to end the exam?
           </DialogTitle>
           <DialogDescription className="mt-4 text-center text-sm md:mt-6 md:text-lg lg:mt-8">
-            You still have {mcqQuestionLength - 1} questions remaining. If you
+            You still have {remainingQuestions} questions remaining. If you
             don&apos;t want to submit this attempt now, you can always pause the
             test and return to it later. Remember that you can take this test as
             many times as you want.

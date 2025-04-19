@@ -66,10 +66,8 @@ function Option({
 }) {
   if (!optionText) return null;
 
-  // Determine visual style based on question type
   const renderIndicator = () => {
     if (questionType === "multi_select") {
-      // Checkbox style for multi-select
       return (
         <div
           className={cn(
@@ -119,12 +117,8 @@ function Option({
       onClick={onSelect}
     >
       <div className="flex items-start gap-4">
-        {" "}
-        {/* Flex container for indicator and text */}
-        {renderIndicator()} {/* Render checkbox or radio */}
+        {renderIndicator()}
         <div className="flex-1">
-          {" "}
-          {/* Text takes remaining space */}
           <RenderMarkdown
             source={optionText!}
             contentStyle={{
@@ -136,8 +130,6 @@ function Option({
         </div>
       </div>
 
-      {/* --- Individual Option Explanation --- */}
-      {/* Show only in Practice mode when 'Show Answer' is clicked AND explanation exists */}
       {isShowAnswer && optionExplanation && (
         <div className="mt-3 border-t border-white/10 pl-9 pt-3">
           <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -559,7 +551,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
           sidebarOpen
             ? "md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)]" // Sidebar open widths (adjust px)
             : "md:grid-cols-[60px_minmax(0,1fr)] lg:grid-cols-[70px_minmax(0,1fr)]", // Sidebar closed widths (adjust px)
-          "transition-all duration-300 ease-in-out", // Smooth transition for grid changes
+          "transition-all duration-300 ease-in-out",
         )}
       >
         {/* --- Mobile Sidebar Trigger (Sheet) --- */}
@@ -617,12 +609,11 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
               {!hasEnded && (
                 <div className="mt-auto border-t pt-4">
-                  {" "}
-                  {/* Footer area */}
                   <EndQuizButton
                     quizSessionId={quizSession.id}
                     setHasEnded={setHasEnded}
                     mcqQuestionLength={questions.length}
+                    remainingQuestions={questions.length - questionIndex}
                   />
                 </div>
               )}
@@ -661,33 +652,18 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 questionStatus={questionStatus}
               />
             </div>
-            <div className="my-4 flex flex-col gap-1 text-sm">
-              <span className="font-medium">
-                Skipped:{" "}
-                <span className="font-bold">{calculatedSkippedAnswers}</span>
-              </span>
-              <span className="font-medium">
-                Attempted:{" "}
-                <span className="font-bold">
-                  {questionStatus.filter((s) => s === "attempted").length}
-                </span>
-              </span>
-            </div>
+            {!hasEnded && sidebarOpen && (
+              <div className="mx-auto">
+                <EndQuizButton
+                  quizSessionId={quizSession.id}
+                  setHasEnded={setHasEnded}
+                  mcqQuestionLength={questions.length}
+                  remainingQuestions={questions.length - questionIndex}
+                />
+              </div>
+            )}
           </div>
 
-          {/* Sidebar Footer (Sticky if needed, or at the bottom) */}
-          {!hasEnded && sidebarOpen && (
-            <div className="mt-auto border-t p-4 lg:p-6">
-              <EndQuizButton
-                quizSessionId={quizSession.id}
-                setHasEnded={setHasEnded}
-                mcqQuestionLength={questions.length}
-              />
-            </div>
-          )}
-
-          {/* --- Sidebar Toggle Buttons --- */}
-          {/* Close Button (Visible only when sidebar is open) */}
           {sidebarOpen && (
             <Button
               variant="ghost"
@@ -700,7 +676,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
             </Button>
           )}
 
-          {/* Open Button (Visible only when sidebar is closed) */}
           {!sidebarOpen && (
             <Button
               variant="outline" // Use outline or ghost
@@ -813,7 +788,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 {quizSession.examMode === "PRACTICE" && !hasEnded && (
                   <GradientButton
                     variant="outline" // Maybe outline style fits better here
-                    size="sm"
+                    size="xl"
                     onClick={() => setShowAnswer(!showAnswer)}
                   >
                     {showAnswer ? "Hide Answer" : "Show Answer"}
@@ -823,14 +798,14 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
               <div className="flex w-full justify-between space-x-3 md:w-auto">
                 <GradientButton
                   variant="secondary" // Use secondary style for previous
-                  size="sm"
+                  size="xl"
                   onClick={handlePrevious}
                   disabled={questionIndex === 0 || isPending || hasEnded}
                 >
                   Previous
                 </GradientButton>
                 <GradientButton
-                  size="sm"
+                  size="xl"
                   onClick={handleNext}
                   disabled={isPending || hasEnded} // Disable if pending or quiz ended
                 >
@@ -849,10 +824,8 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 </GradientButton>
               </div>
             </div>
-          </div>{" "}
-          {/* End Content Max Width Container */}
-        </div>{" "}
-        {/* End Main Content Area */}
+          </div>
+        </div>
       </section>
     </div>
   );

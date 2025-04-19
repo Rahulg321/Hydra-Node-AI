@@ -42,7 +42,7 @@ export const MultiStepExamDialog = ({
   examLevel,
   examName,
   currentUserId,
-  buttonLabel = "Start Exam",
+  buttonLabel = "Generate Questions",
   examLength,
   questionsToShow,
 }: {
