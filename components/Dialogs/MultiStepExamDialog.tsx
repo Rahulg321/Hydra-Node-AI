@@ -33,6 +33,7 @@ import { Label } from "../ui/label";
 import AILoadingIndicator from "../AILoadingIndicator";
 import { GradientButton } from "../buttons/gradient-button";
 import { Clock, Lightbulb, Trophy } from "lucide-react";
+import { NumericInput } from "../ui/numeric-input";
 
 export const MultiStepExamDialog = ({
   examId,
@@ -58,18 +59,24 @@ export const MultiStepExamDialog = ({
   const router = useRouter();
   const { toast } = useToast();
   const [timeForExam, setExamForTime] = useState(1);
+  const [numberOfQuestions, setNumberOfQuestions] = useState(1);
   const [step, setStep] = useState(1);
   const [isPending, startTransition] = useTransition();
   let totalSteps = 3;
   const [examMode, setExamMode] = useState<string>("PRACTICE"); // Track selected mode
 
+  console.log("questions to show", questionsToShow);
+
   const handleModeSelect = (value: string) => {
     setExamMode(value); // Update local state
   };
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value); // Convert string to number
-    setExamForTime(isNaN(value) ? 0 : value); // Handle NaN case
+  const handleTimeChange = (value: number) => {
+    setExamForTime(value);
+  };
+
+  const handleNumberOfQuestionsChange = (value: number) => {
+    setNumberOfQuestions(value);
   };
 
   const renderStep = () => {
@@ -103,29 +110,35 @@ export const MultiStepExamDialog = ({
                   <div className="flex flex-col items-center">
                     <div className="mb-2 flex items-center gap-2">
                       <Trophy className="h-4 w-4 text-orange-500" />
-                      <h5 className="font-medium">Total Questions</h5>
+                      <Label className="font-medium">Total Questions</Label>
                     </div>
-                    <p className="text-lg font-semibold">{examLength}</p>
+                    <NumericInput
+                      min={1}
+                      placeholder="Enter number of questions..."
+                      value={numberOfQuestions}
+                      className="mt-1 w-full text-white"
+                      onChange={handleNumberOfQuestionsChange}
+                    />
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-center">
                     <div className="mb-2 flex items-center gap-2">
                       <Clock className="h-4 w-4 text-orange-500" />
                       <Label className="font-medium">Time (minutes)</Label>
                     </div>
-                    <Input
-                      type="number"
+                    <NumericInput
+                      min={1}
                       placeholder="Enter exam time..."
                       value={timeForExam}
                       onChange={handleTimeChange}
-                      className="mt-1 text-white"
+                      className="mt-1 w-full text-white"
                     />
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="mb-2 flex items-center gap-2">
                       <Trophy className="h-4 w-4 text-orange-500" />
-                      <h5 className="font-medium">Passing Marks</h5>
+                      <Label className="font-medium">Passing Marks</Label>
                     </div>
-                    <p className="text-lg font-semibold">80%</p>
+                    <p className="mt-1 text-lg font-semibold">80%</p>
                   </div>
                 </div>
                 <div className="mt-6">
@@ -227,30 +240,7 @@ export const MultiStepExamDialog = ({
 
   const handleExamStartButton = async () => {
     startTransition(async () => {
-      console.log("exam mode values", examMode);
-      console.log("time for exam", timeForExam);
-
       try {
-        const hasAccessResponse = await checkIfUserHasAccessToExam(
-          currentUserId,
-          examId,
-        );
-
-        console.log("user has access to exam");
-
-        if (!hasAccessResponse) {
-          showSubscriptionToast();
-          return;
-        }
-
-        console.log(
-          "creating session",
-          examMode,
-          examTime,
-          examId,
-          timeForExam,
-        );
-
         const response = await CreateMultiStepExam(
           examMode,
           examMode === "PRACTICE" ? timeForExam : examTime,
@@ -258,12 +248,10 @@ export const MultiStepExamDialog = ({
           currentUserId,
           examLength,
           questionsToShow,
+          numberOfQuestions,
         );
 
-        console.log("recieved response");
-
         if (response.type === "error") {
-          console.log("could not start quiz session from dialog");
           toast({
             title: "Could not Start Quiz 🥲",
             variant: "destructive",
@@ -272,7 +260,6 @@ export const MultiStepExamDialog = ({
         }
 
         if (response.type === "success") {
-          console.log("successfully started quiz session from dialog");
           toast({
             title: "Quiz Created🎉",
             description: response.message || "Successfully started Quiz",
@@ -280,10 +267,7 @@ export const MultiStepExamDialog = ({
 
           router.push(`/exam/${examId}/quiz/${response.quizSessionId}`);
         }
-
-        console.log("exam mode is", examMode);
       } catch (error) {
-        console.error("error in quiz session form", error);
         toast({
           title: "Could not Start Quiz 🥲",
           variant: "destructive",

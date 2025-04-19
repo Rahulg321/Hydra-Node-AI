@@ -53,8 +53,6 @@ export default async function CreateMultiStepExam(
     let totalLengthOfQuestions;
 
     if (examMode === "PRACTICE") {
-      // if it is a practice exam, the total length of questions is the total length of the exam
-
       if (numberOfQuestions) {
         totalLengthOfQuestions = numberOfQuestions;
       } else {
@@ -63,16 +61,11 @@ export default async function CreateMultiStepExam(
     }
 
     if (examMode === "MOCK") {
-      console.log("exam mode", examMode);
       if (questionsToShow > examLength) {
         // if it is a mock exam and the total number of questions is less than the allowed questions that the admin has set, then the total length of questions is the total number of questions
-        console.log("questions to show is greater than exam length");
         totalLengthOfQuestions = examLength;
-        console.log("total length of questions", totalLengthOfQuestions);
       } else {
-        console.log("questions to show is less than exam length");
         totalLengthOfQuestions = questionsToShow;
-        console.log("total length of questions", totalLengthOfQuestions);
       }
     }
 
