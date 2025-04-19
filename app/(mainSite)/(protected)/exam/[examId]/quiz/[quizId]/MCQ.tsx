@@ -51,9 +51,10 @@ function Option({
   optionText,
   selected,
   onSelect,
-  isShowAnswer,
-  isCorrect,
-  questionType,
+  isShowAnswer, // State to toggle explanation visibility (from MCQ)
+  isCorrect, // Whether this option is the correct one
+  optionExplanation, // The explanation specific to this option
+  questionType, // Type of question determines visual style
 }: {
   questionType: "multi_select" | "multiple_choice";
   optionText: string | null;
@@ -64,33 +65,93 @@ function Option({
   onSelect: () => void;
 }) {
   if (!optionText) return null;
+
+  // Determine visual style based on question type
+  const renderIndicator = () => {
+    if (questionType === "multi_select") {
+      // Checkbox style for multi-select
+      return (
+        <div
+          className={cn(
+            "flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border border-white/40 transition-colors",
+            selected ? "border-orange-500 bg-orange-600" : "bg-transparent",
+          )}
+        >
+          {selected && <Check className="h-4 w-4 text-white" />}
+        </div>
+      );
+    } else {
+      // Radio button style for multiple-choice
+      return (
+        <div
+          className={cn(
+            "flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-white/40 transition-colors",
+            selected ? "border-orange-500 ring-1 ring-orange-600" : "", // Add ring for emphasis
+          )}
+        >
+          {/* Inner dot for selection */}
+          {selected && (
+            <div className="h-2.5 w-2.5 scale-100 rounded-full bg-orange-500 transition-transform"></div>
+          )}
+        </div>
+      );
+    }
+  };
+
   return (
     <div
       className={cn(
-        "flex transform cursor-pointer items-center gap-4 rounded-lg border border-white/20 bg-gradient-to-br from-white/5 via-transparent to-white/5 p-4 transition hover:bg-white/10",
-        selected && "border-orange-500 ring-2 ring-orange-500/50",
+        "flex transform cursor-pointer flex-col rounded-lg border bg-gradient-to-br from-white/5 via-transparent to-white/5 p-4 transition hover:bg-white/10",
+        // Base border
+        "border-white/20",
+        // Selection highlight
+        selected && "border-orange-500 ring-1 ring-orange-500/60", // Adjusted ring for selection emphasis
+        // Correct answer highlight (when answers shown)
         isShowAnswer &&
           isCorrect &&
-          "border-green-500 bg-green-800/30 text-white",
+          "border-green-500 bg-green-600/10 dark:bg-green-900/30",
+        // Incorrect selection highlight (when answers shown)
         isShowAnswer &&
           selected &&
           !isCorrect &&
-          "border-red-500 bg-red-800/30",
+          "border-red-500 bg-red-600/10 dark:bg-red-900/30",
       )}
       onClick={onSelect}
     >
-      {/* Basic visual indicator */}
-      <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-white">
-        {selected && <div className="h-3 w-3 rounded-full bg-orange-500"></div>}
+      <div className="flex items-start gap-4">
+        {" "}
+        {/* Flex container for indicator and text */}
+        {renderIndicator()} {/* Render checkbox or radio */}
+        <div className="flex-1">
+          {" "}
+          {/* Text takes remaining space */}
+          <RenderMarkdown
+            source={optionText!}
+            contentStyle={{
+              fontSize: "1.1rem",
+              fontFamily: "var(--font-geist-sans)", // Example font
+            }}
+            className="prose prose-invert max-w-none [&_p]:my-0" // Ensure tight paragraph spacing
+          />
+        </div>
       </div>
-      <RenderMarkdown
-        source={optionText!}
-        contentStyle={{
-          fontSize: "1.1rem",
-          fontFamily: "var(--font-geist-sans)", // Example font
-        }}
-      />
-      {/* Add explanation rendering logic if needed based on isShowAnswer */}
+
+      {/* --- Individual Option Explanation --- */}
+      {/* Show only in Practice mode when 'Show Answer' is clicked AND explanation exists */}
+      {isShowAnswer && optionExplanation && (
+        <div className="mt-3 border-t border-white/10 pl-9 pt-3">
+          <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Explanation
+          </h4>
+          <RenderMarkdown
+            source={optionExplanation}
+            contentStyle={{
+              fontSize: "0.95rem",
+            }}
+            className="prose prose-sm prose-invert max-w-none text-muted-foreground" // Prose for formatting
+          />
+        </div>
+      )}
     </div>
   );
 }
