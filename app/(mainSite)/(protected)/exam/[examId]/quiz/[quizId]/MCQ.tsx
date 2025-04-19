@@ -268,17 +268,8 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   return (
     <div>
-      {isEnding ? (
-        <div>
-          <ExamAnalysingScreen />
-        </div>
-      ) : hasEnded ? (
-        <ExamEndedScreen
-          examName={exam.name}
-          questionsLength={questions.length}
-          examId={exam.id}
-          quizSessionId={quizSession.id}
-        />
+      {hasEnded ? (
+        <ExamAnalysingScreen examId={exam.id} quizSessionId={quizSession.id} />
       ) : (
         <section className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
           <Sheet open={open} onOpenChange={setOpen}>
@@ -595,9 +586,50 @@ function Option({
       onClick={onSelect}
     >
       <div className="flex h-5 w-5 items-center justify-center rounded-full border border-white">
-        {selected && (
-          <div className="rounded-full bg-white">
-            <Check className="h-5 w-5 text-orange-700" />
+        {questionType === "multi_select" ? (
+          <div className="relative h-5 w-5">
+            <input
+              type="checkbox"
+              checked={selected}
+              readOnly
+              className="peer absolute h-0 w-0 opacity-0"
+            />
+            <span
+              className={`absolute inset-0 flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm border border-white ${selected ? "bg-white" : ""}`}
+            >
+              {selected && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="h-4 w-4 text-orange-500"
+                >
+                  <polyline
+                    points="20 6 9 17 4 12"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </span>
+          </div>
+        ) : (
+          <div className="relative h-5 w-5">
+            <input
+              type="radio"
+              checked={selected}
+              readOnly
+              className="peer absolute h-0 w-0 opacity-0"
+            />
+            <span
+              className={`absolute inset-0 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-white ${selected ? "bg-white" : ""}`}
+            >
+              {selected && (
+                <span className="h-3 w-3 rounded-full bg-orange-500"></span>
+              )}
+            </span>
           </div>
         )}
       </div>

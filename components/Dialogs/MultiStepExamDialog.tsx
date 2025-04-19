@@ -116,6 +116,7 @@ export const MultiStepExamDialog = ({
                       min={1}
                       placeholder="Enter number of questions..."
                       value={numberOfQuestions}
+                      max={examLength}
                       className="mt-1 w-full text-white"
                       onChange={handleNumberOfQuestionsChange}
                     />

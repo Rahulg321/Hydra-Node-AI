@@ -1,7 +1,29 @@
 import { Loader2 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const ExamAnalysingScreen = () => {
+const ExamAnalysingScreen = ({
+  examId,
+  quizSessionId,
+}: {
+  examId: string;
+  quizSessionId: string;
+}) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Set a timeout to redirect after 2-4 seconds
+    const redirectTimeout = setTimeout(
+      () => {
+        router.push(`/exam/${examId}/quiz/${quizSessionId}/results`);
+      },
+      Math.floor(Math.random() * 2000) + 2000,
+    ); // Random time between 2-4 seconds
+
+    // Clean up the timeout if component unmounts
+    return () => clearTimeout(redirectTimeout);
+  }, [examId, quizSessionId, router]);
+
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center">
       <h1 className="transducer-font uppercase tracking-wide">
@@ -12,7 +34,7 @@ const ExamAnalysingScreen = () => {
         into your performance.
       </p>
       <div className="mt-4 md:mt-6">
-        <Loader2 className="h-10 w-10 animate-spin text-orange-500" />
+        <Loader2 className="size-14 animate-spin text-orange-500" />
       </div>
     </div>
   );

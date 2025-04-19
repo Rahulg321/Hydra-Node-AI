@@ -16,6 +16,9 @@ import { ExamInstructions } from "./ExamInstructions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
+import { getAllSystemVendors } from "@/prisma/queries";
+import VendorsSheet from "@/components/Sheets/VendorsSheet";
+import VendorButton from "../../vendors/VendorButton";
 
 const getCachedExamInfo = unstable_cache(
   async (examId: string) => {
@@ -43,28 +46,6 @@ const getCachedExamInfo = unstable_cache(
   { revalidate: 3600, tags: ["exam"] },
 );
 
-const getExamInfo = async (examId: string) => {
-  return await db.exam.findUnique({
-    where: { id: examId },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      price: true,
-      stripePriceId: true,
-      description: true,
-      timeAllowed: true,
-      examLevel: true,
-      questionsToShow: true,
-      questions: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
-};
-
 export async function generateMetadata(props: {
   params: Promise<{ examId: string }>;
 }) {
@@ -81,7 +62,12 @@ export default async function ExamPage(props: {
   const examId = params.examId;
   const session = await auth();
   if (!session) return redirect("/login");
-  const exam = await getCachedExamInfo(examId);
+  const examPromise = getCachedExamInfo(examId);
+
+  const [exam, vendors] = await Promise.all([
+    examPromise,
+    getAllSystemVendors(),
+  ]);
 
   if (!exam)
     return (
@@ -94,71 +80,87 @@ export default async function ExamPage(props: {
       </section>
     );
 
-  const { hasAccess } = await checkIfUserHasAccessToExam(
-    session.user.id as string,
-    exam.id,
-  );
-
-  const { status: hasTrialAccess } = await checkIfUserHasTrialAccess(
-    session.user.id as string,
-  );
+  const [{ hasAccess }, { status: hasTrialAccess }] = await Promise.all([
+    checkIfUserHasAccessToExam(session.user.id as string, exam.id),
+    checkIfUserHasTrialAccess(session.user.id as string),
+  ]);
 
   return (
-    <section className="block-space-mini container">
-      <div>
-        <span>Certification Details</span>
-        <h1 className="transducer-font mt-4 leading-relaxed tracking-wide">
-          {exam.name}
-        </h1>
+    <div>
+      <VendorsSheet vendors={vendors} />
+      <div className="grid min-h-screen md:grid-cols-[280px_1fr]">
+        <aside className="fixed top-14 z-30 hidden h-[calc(100vh-5rem)] w-full shrink-0 border-r border-border/40 dark:border-border md:sticky md:block">
+          <div className="no-scrollbar h-full overflow-auto py-6 pr-6 lg:py-8">
+            <div className="w-full px-2">
+              <h4 className="ml-2">Vendors</h4>
+              <div className="mt-6 grid grid-cols-2 gap-2 gap-y-4">
+                {vendors.map((vendor) => (
+                  <VendorButton key={vendor.id} vendor={vendor} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </aside>
+        <section className="block-space-mini container">
+          <div>
+            <span>Certification Details</span>
+            <h1 className="transducer-font mt-4 leading-relaxed tracking-wide">
+              {exam.name}
+            </h1>
+          </div>
+          <div className="mt-4 grid gap-6 md:mt-6 lg:mt-12 lg:grid-cols-2">
+            <div className="space-y-6">
+              <ExamDetails
+                name={exam.name}
+                examLevel={exam.examLevel}
+                examId={exam.id}
+                examName={exam.name}
+                userId={session.user.id as string}
+                examSlug={exam.slug}
+                questionsToShow={exam.questionsToShow}
+                timeAllowed={exam.timeAllowed}
+                examPrice={exam.price}
+                stripePriceId={exam.stripePriceId!}
+                session={session}
+                questionLength={exam.questions.length}
+                hasAccess={hasAccess}
+                hasTrialAccess={hasTrialAccess}
+              />
+              <Card className="border-none">
+                <CardHeader>
+                  <CardTitle className="transducer-font uppercase tracking-wide">
+                    Exam Description
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[#878593] md:text-lg">
+                    {exam.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="space-y-6">
+              <ExamInstructions />
+              <Card className="border-none">
+                <CardHeader>
+                  <h4 className="transducer-font uppercase tracking-wide">
+                    Don&apos;t See Your Purchased Exam?
+                  </h4>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4 text-[#878593] md:text-lg">
+                    If your purchased exam isn&apos;t appearing, try refreshing
+                    the page or clearing your browser cache. Still having
+                    trouble? Feel free to contact our support team for further
+                    assistance.
+                  </p>
+                  <RefreshCourseButton />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
       </div>
-      <div className="mt-4 grid gap-6 md:mt-6 lg:mt-12 lg:grid-cols-2">
-        <div className="space-y-6">
-          <ExamDetails
-            name={exam.name}
-            examLevel={exam.examLevel}
-            examId={exam.id}
-            examName={exam.name}
-            userId={session.user.id as string}
-            examSlug={exam.slug}
-            questionsToShow={exam.questionsToShow}
-            timeAllowed={exam.timeAllowed}
-            examPrice={exam.price}
-            stripePriceId={exam.stripePriceId!}
-            session={session}
-            questionLength={exam.questions.length}
-            hasAccess={hasAccess}
-            hasTrialAccess={hasTrialAccess}
-          />
-          <Card className="border-none">
-            <CardHeader>
-              <CardTitle className="transducer-font uppercase tracking-wide">
-                Exam Description
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-[#878593] md:text-lg">{exam.description}</p>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="space-y-6">
-          <ExamInstructions />
-          <Card className="border-none">
-            <CardHeader>
-              <h4 className="transducer-font uppercase tracking-wide">
-                Don&apos;t See Your Purchased Exam?
-              </h4>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-[#878593] md:text-lg">
-                If your purchased exam isn&apos;t appearing, try refreshing the
-                page or clearing your browser cache. Still having trouble? Feel
-                free to contact our support team for further assistance.
-              </p>
-              <RefreshCourseButton />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }
