@@ -63,7 +63,7 @@ export const MultiStepExamDialog = ({
   const [step, setStep] = useState(1);
   const [isPending, startTransition] = useTransition();
   let totalSteps = 3;
-  const [examMode, setExamMode] = useState<string>("PRACTICE"); // Track selected mode
+  const [examMode, setExamMode] = useState<string>("MOCK"); // Track selected mode
 
   console.log("questions to show", questionsToShow);
 
@@ -144,10 +144,7 @@ export const MultiStepExamDialog = ({
                 </div>
                 <div className="mt-6">
                   <GradientButton
-                    onClick={() => {
-                      setExamMode("PRACTICE");
-                      handleExamStartButton();
-                    }}
+                    onClick={() => handleExamStartButton("PRACTICE")}
                     className="w-full"
                   >
                     Start Practice
@@ -195,10 +192,7 @@ export const MultiStepExamDialog = ({
                 </div>
                 <div className="mt-6">
                   <GradientButton
-                    onClick={() => {
-                      setExamMode("MOCK");
-                      handleExamStartButton();
-                    }}
+                    onClick={() => handleExamStartButton("MOCK")}
                     className="w-full"
                   >
                     Start Mock Exam
@@ -239,12 +233,12 @@ export const MultiStepExamDialog = ({
     }
   };
 
-  const handleExamStartButton = async () => {
+  const handleExamStartButton = async (mode: "PRACTICE" | "MOCK") => {
     startTransition(async () => {
       try {
         const response = await CreateMultiStepExam(
-          examMode,
-          examMode === "PRACTICE" ? timeForExam : examTime,
+          mode,
+          mode === "PRACTICE" ? timeForExam : examTime,
           examId,
           currentUserId,
           examLength,
@@ -290,7 +284,7 @@ export const MultiStepExamDialog = ({
         {step === totalSteps && (
           <GradientButton
             disabled={isPending}
-            onClick={handleExamStartButton}
+            onClick={() => handleExamStartButton("MOCK")}
             className="rounded-none"
           >
             {isPending ? "Creating Exam" : "Start Exam"}

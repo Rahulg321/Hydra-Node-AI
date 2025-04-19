@@ -124,7 +124,7 @@ const AILoadingIndicator = ({
 
           {/* Step Title and Description */}
           <div className="text-center">
-            <h2 className="text-2xl font-bold tracking-wider text-white">
+            <h2 className="transducer-font text-2xl font-bold tracking-wider text-white">
               {currentData?.title}
             </h2>
             <p className="mt-2">{currentData?.tagline}</p>
