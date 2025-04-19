@@ -481,7 +481,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   // Handle selecting/deselecting options
   const handleSelectOption = (index: number) => {
-    if (hasEnded || showAnswer) return; // Don't allow changes after end or when answer is shown
+    if (hasEnded) return; // Don't allow changes after end or when answer is shown
 
     setSelected((prevSelected) => {
       if (currentQuestion.questionType === "multiple_choice") {
