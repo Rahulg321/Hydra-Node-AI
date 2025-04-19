@@ -34,32 +34,51 @@ const AILoadingIndicator = ({
   const totalSteps = loadingSteps.length;
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [totalLoadingTime, setTotalLoadingTime] = useState(0);
+
+  // Set a random total loading time between 30-60 seconds when component mounts
+  useEffect(() => {
+    // Generate random time between 30-60 seconds
+    const randomTime = Math.floor(Math.random() * 31) + 30; // 30-60 seconds
+    setTotalLoadingTime(randomTime * 1000); // Convert to milliseconds
+  }, []);
 
   // Start an interval on each step to increment progress
   useEffect(() => {
+    if (!totalLoadingTime) return; // Wait until totalLoadingTime is set
+
     let interval: NodeJS.Timeout;
+    const timePerStep = totalLoadingTime / totalSteps;
+    const incrementInterval = 300; // Update every 300ms
+    const totalIncrements = timePerStep / incrementInterval;
+    const avgIncrementSize = 100 / totalIncrements;
 
     const startStep = () => {
       setProgress(0);
       interval = setInterval(() => {
         setProgress((prev) => {
-          const next = prev + Math.floor(Math.random() * 11) + 5; // +5-15
+          // Add some randomness to the increment size but maintain overall timing
+          const next = prev + avgIncrementSize * (0.7 + Math.random() * 0.6);
           return next >= 100 ? 100 : next;
         });
-      }, 300);
+      }, incrementInterval);
     };
 
     startStep();
 
     return () => clearInterval(interval);
-  }, [currentStep]);
+  }, [currentStep, totalLoadingTime, totalSteps]);
 
   // When progress hits 100, move to next step or complete
   useEffect(() => {
     if (progress >= 100) {
       const timeout = setTimeout(() => {
-        if (currentStep < totalSteps) {
+        if (currentStep < totalSteps - 1) {
           setCurrentStep((prev) => prev + 1);
+        } else if (currentStep === totalSteps - 1) {
+          // Last step completed
+          setCurrentStep(totalSteps);
+          onProgressComplete();
         }
       }, 500);
 
@@ -67,7 +86,8 @@ const AILoadingIndicator = ({
     }
   }, [progress, currentStep, totalSteps, onProgressComplete]);
 
-  const currentData = loadingSteps[currentStep];
+  const currentData =
+    currentStep < totalSteps ? loadingSteps[currentStep] : null;
   const circumference = 2 * Math.PI * 45;
 
   return (
@@ -98,16 +118,16 @@ const AILoadingIndicator = ({
               />
             </svg>
             <span className="absolute text-lg font-semibold text-orange-500">
-              {progress}%
+              {Math.round(progress)}%
             </span>
           </div>
 
           {/* Step Title and Description */}
           <div className="text-center">
             <h2 className="text-2xl font-bold tracking-wider text-white">
-              {currentData.title}
+              {currentData?.title}
             </h2>
-            <p className="mt-2">{currentData.tagline}</p>
+            <p className="mt-2">{currentData?.tagline}</p>
           </div>
 
           {/* Step Indicators */}
