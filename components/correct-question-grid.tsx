@@ -1,4 +1,4 @@
-import { CircleX } from "lucide-react";
+import { Check, CircleOff, CircleX, SkipBack } from "lucide-react";
 
 import { CircleCheckBig } from "lucide-react";
 
@@ -24,16 +24,16 @@ const CorrectQuestionGrid = ({
             let statusClass = "bg-gray-400 dark:bg-muted";
 
             if (questionStatus[index] === "correct") {
-              statusClass = "bg-green-500";
+              statusClass = "bg-[#065A1D]";
             } else if (questionStatus[index] === "incorrect") {
-              statusClass = "bg-red-500";
+              statusClass = "bg-[#600000]";
             } else if (
               questionStatus[index] === "skipped" ||
               questionStatus[index] === null
             ) {
-              statusClass = "bg-yellow-500";
+              statusClass = "bg-[#E8A600]";
             } else {
-              statusClass = "bg-yellow-500";
+              statusClass = "bg-[#E8A600]";
             }
 
             return (
@@ -48,10 +48,12 @@ const CorrectQuestionGrid = ({
                     </div>
                   ) : questionStatus[index] === "correct" ? (
                     <div>
-                      <CircleCheckBig className="text-green-600" />
+                      <Check className="text-white" />
                     </div>
                   ) : (
-                    <div>{index + 1}</div>
+                    <div>
+                      <CircleOff className="text-white" />
+                    </div>
                   )}
                 </span>
               </div>

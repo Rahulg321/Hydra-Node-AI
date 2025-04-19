@@ -24,9 +24,9 @@ export default function ResultsChart({
   skipped,
 }: ResultsChartProps) {
   const chartData = [
-    { category: "correct", count: correct, fill: "hsl(142, 76%, 36%)" }, // green
-    { category: "incorrect", count: incorrect, fill: "hsl(0, 84%, 60%)" }, // red
-    { category: "skipped", count: skipped, fill: "hsl(45, 93%, 47%)" }, // yellow
+    { category: "correct", count: correct, fill: "hsla(136, 59%, 27%, 1)" }, // green
+    { category: "incorrect", count: incorrect, fill: "hsla(0, 96%, 19%, 1)" }, // red
+    { category: "skipped", count: skipped, fill: "hsla(43, 100%, 45%, 1)" }, // yellow
   ];
 
   const chartConfig = {
@@ -56,7 +56,7 @@ export default function ResultsChart({
       <div className="relative">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] md:max-h-[325px] lg:max-h-[375px]"
+          className="mx-auto aspect-square max-h-[250px] md:max-h-[325px] lg:max-h-[400px]"
         >
           <PieChart>
             <ChartTooltip
@@ -67,8 +67,8 @@ export default function ResultsChart({
               data={chartData}
               dataKey="count"
               nameKey="category"
-              innerRadius={60}
-              strokeWidth={5}
+              innerRadius={105}
+              strokeWidth={10}
             />
           </PieChart>
         </ChartContainer>
