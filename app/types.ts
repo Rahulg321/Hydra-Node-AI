@@ -12,6 +12,9 @@ export type QuizSessionHistory = {
     id: string;
     name: string;
     examLevel: string;
+    vendor: {
+      name: string;
+    };
   };
 };
 

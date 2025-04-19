@@ -67,6 +67,7 @@ const LearningsPage = async (props: {
       examMode: e.examMode,
       totalQuestions: e.questionCount,
       difficultyLevel: e.exam.examLevel,
+      vendorName: e.exam.vendor.name,
       link: `/exam/${e.exam.id}/quiz/${e.id}/results`,
     };
   });
@@ -99,6 +100,7 @@ const LearningsPage = async (props: {
                     }
                     date={card.date}
                     mode={card.examMode}
+                    vendorName={card.vendorName}
                   />
                 </div>
               ))

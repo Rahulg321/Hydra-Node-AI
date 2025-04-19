@@ -41,6 +41,7 @@ const ProfilePage = async ({
     examMode: session.examMode,
     totalQuestions: session.questionCount,
     difficultyLevel: session.exam.examLevel,
+    vendorName: session.exam.vendor.name,
     link: `/exam/${session.exam.id}/quiz/${session.id}/results`,
   }));
 
@@ -70,6 +71,7 @@ const ProfilePage = async ({
                     marks={card.marks.toString()}
                     date={card.date.toLocaleDateString()}
                     mode={card.examMode}
+                    vendorName={card.vendorName}
                     className="w-[17.5rem]"
                   />
                 ))

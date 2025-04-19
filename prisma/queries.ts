@@ -293,6 +293,11 @@ export async function getNumberedUserQuizSessions(
             id: true,
             name: true,
             examLevel: true,
+            vendor: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
@@ -465,11 +470,17 @@ export const GetFilteredQuizSessions = async ({
           percentageScored: true,
           correctAnswers: true,
           questionCount: true,
+
           exam: {
             select: {
               id: true,
               name: true,
               examLevel: true,
+              vendor: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
