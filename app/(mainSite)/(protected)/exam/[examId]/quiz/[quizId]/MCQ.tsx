@@ -33,20 +33,15 @@ import React, {
   useTransition,
 } from "react";
 import EndQuizButton from "./EndQuizButton";
-// import TimeLeft from "./TimeLeft"; // Replaced with inline CountDownTimer
 import CorrectQuestionGrid from "./CorrectQuestionGrid";
-// import HtmlContent from "@/components/html-content"; // Not used in the provided snippet
+
 import EndQuizAction from "@/actions/end-quiz";
-// import MarkdownQuestion from "@/components/MarkdownQuestion"; // Not used in the provided snippet
-// import MDEditor from "@uiw/react-md-editor"; // Not used in the provided snippet
+
 import RenderMarkdown from "@/components/RenderMarkdown";
 import { GradientButton } from "@/components/buttons/gradient-button";
 import ExamAnalysingScreen from "@/components/screens/ExamAnalysingScreen";
-// import ExamEndedScreen from "@/components/screens/ExamEndedScreen"; // Not used in the provided snippet
+import FinishExamDialog from "./finish-exam-dialog";
 
-// --- Mock Option Component (Assuming it exists elsewhere) ---
-// Added a simplified mock for Option to make the code runnable standalone
-// Replace with your actual Option component import
 function Option({
   optionText,
   selected,
@@ -441,34 +436,12 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
         // Update skipped count if necessary (though maybe better derived from questionStatus)
         if (status === "skipped") {
-          // You might not need the separate skippedAnswers state
-          // if you can calculate it from questionStatus when needed.
-          // setSkippedAnswers((prev) => prev + 1); // Example: increment if tracking separately
         }
 
         // Check if it was the last question
         if (questionIndex === questions.length - 1) {
           console.log("Last question answered/skipped, ending quiz...");
-          const response = await EndQuizAction(quizSessionId, questions.length);
-          if (response.type === "success") {
-            toast({
-              title: "Exam Finished!",
-              variant: "success",
-              description:
-                response.message ||
-                "Your exam has been submitted successfully.",
-            });
-            setHasEnded(true); // Mark as ended
-          } else {
-            toast({
-              title: "Submission Error ❌",
-              variant: "destructive",
-              description:
-                response.message || "There was an issue finalizing your exam.",
-            });
-            // Decide if hasEnded should be true even on error, maybe?
-            // setHasEnded(true);
-          }
+
           return; // Stop further navigation
         }
 
@@ -804,24 +777,36 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                 >
                   Previous
                 </GradientButton>
-                <GradientButton
-                  size="xl"
-                  onClick={handleNext}
-                  disabled={isPending || hasEnded} // Disable if pending or quiz ended
-                >
-                  {
-                    isPending ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Submitting...</span>
-                      </div>
-                    ) : questionIndex === questions.length - 1 ? (
-                      "Finish Exam"
-                    ) : (
-                      "Next"
-                    ) // Change text for last question
-                  }
-                </GradientButton>
+                {questionIndex === questions.length - 1 ? (
+                  <FinishExamDialog
+                    quizSessionId={quizSession.id}
+                    questionsLength={questions.length}
+                    setHasEnded={setHasEnded}
+                    skippedQuestions={calculatedSkippedAnswers}
+                    questionId={currentQuestion.id}
+                    questionType={currentQuestion.questionType}
+                    selectedQuestions={selected}
+                  />
+                ) : (
+                  <GradientButton
+                    size="xl"
+                    onClick={handleNext}
+                    disabled={isPending || hasEnded} // Disable if pending or quiz ended
+                  >
+                    {
+                      isPending ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Submitting...</span>
+                        </div>
+                      ) : questionIndex === questions.length - 1 ? (
+                        "Finish Exam"
+                      ) : (
+                        "Next"
+                      ) // Change text for last question
+                    }
+                  </GradientButton>
+                )}
               </div>
             </div>
           </div>

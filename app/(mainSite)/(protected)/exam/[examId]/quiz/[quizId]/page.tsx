@@ -62,7 +62,14 @@ const McqQuizPage = async (props: {
   const sliceQuestions = questions.slice(0, questionsLimit);
 
   return (
-    <MCQ quizSession={quizSession} exam={exam} questions={sliceQuestions} />
+    <MCQ
+      quizSession={{
+        ...quizSession,
+        examMode: quizSession.examMode as "PRACTICE" | "EXAM",
+      }}
+      exam={exam}
+      questions={sliceQuestions}
+    />
   );
 };
 
