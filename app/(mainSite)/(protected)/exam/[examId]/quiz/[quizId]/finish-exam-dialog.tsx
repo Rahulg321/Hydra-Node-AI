@@ -45,14 +45,14 @@ const FinishExamDialog = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
+          <AlertDialogTitle className="transducer-font text-center text-xl font-bold uppercase tracking-wider">
             Are you sure you want to finish this exam?
           </AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-center">
             You have skipped {skippedQuestions} questions.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="flex w-full justify-center">
           <AlertDialogCancel>Review Questions</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {

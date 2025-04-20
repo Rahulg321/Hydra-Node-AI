@@ -279,7 +279,9 @@ const ReviewMcq = ({
               {/* Toggle Explanation Button */}
               <Button
                 variant="outline"
+                className="text-white"
                 onClick={() => setShowOverallExplanation((prev) => !prev)}
+                size={"xl"}
                 disabled={
                   !currentQuestion.overallExplanation &&
                   ![...Array(6)].some(
@@ -298,12 +300,14 @@ const ReviewMcq = ({
                 <GradientButton
                   onClick={handlePrevious}
                   disabled={userAttemptIndex === 0}
+                  size={"xl"}
                 >
                   Previous
                 </GradientButton>
                 <GradientButton
                   onClick={handleNext}
                   disabled={userAttemptIndex === questions.length - 1}
+                  size={"xl"}
                 >
                   Next
                 </GradientButton>

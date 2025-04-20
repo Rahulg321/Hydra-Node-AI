@@ -27,7 +27,7 @@ const AILoadingIndicator = ({
     },
     {
       title: "GENERATING QUESTIONS",
-      tagline: "Generating questions from graphRAG...",
+      tagline: "Generating questions from GraphRAG...",
     },
   ];
 
@@ -78,7 +78,6 @@ const AILoadingIndicator = ({
         } else if (currentStep === totalSteps - 1) {
           // Last step completed
           setCurrentStep(totalSteps);
-          onProgressComplete();
         }
       }, 500);
 
