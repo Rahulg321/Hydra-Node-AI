@@ -209,14 +209,67 @@ export async function getTotalPassedExams(userId: string) {
  * @param userId - The ID of the user
  * @returns The total number of exams completed by the user
  */
-export async function getTotalExamCompletedByUser(userId: string) {
+export async function getTotalExamsCompletedByUser(userId: string) {
   try {
     return await db.quizSession.count({
       where: { userId, isCompleted: true },
     });
   } catch (error) {
+    console.log("error occured while calculating total exams completed", error);
+    throw error;
+  }
+}
+
+/**
+ * Get the exams completed by a user grouped by date
+ * @param userId - The ID of the user
+ * @returns An array of objects with date and count of exams completed on that date
+ */
+export async function getTotalExamAttemptedByUser(userId: string) {
+  try {
+    const quizSessions = await db.quizSession.findMany({
+      where: {
+        userId,
+        isCompleted: true,
+      },
+      select: {
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    // Group sessions by date
+    const examsByDate = quizSessions.reduce(
+      (acc: Record<string, number>, session) => {
+        const date = session.createdAt.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      },
+      {},
+    );
+
+    // Convert to array format for chart
+    const chartData = Object.entries(examsByDate).map(([date, count]) => {
+      // Format date to be more readable (e.g., "Jan 01")
+      const formattedDate = new Date(date).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "numeric",
+      });
+
+      console.log(formattedDate);
+
+      return {
+        date: formattedDate,
+        count,
+      };
+    });
+
+    return chartData;
+  } catch (error) {
     console.error(
-      "an error occured while trying to get total exams completed by user",
+      "an error occurred while trying to get exams completed by user grouped by date",
       error,
     );
     throw error;

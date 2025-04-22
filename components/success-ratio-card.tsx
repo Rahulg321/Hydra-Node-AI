@@ -1,8 +1,10 @@
 import { PieChart } from "lucide-react";
 import { CardBase } from "./card-base";
 import { Book } from "lucide-react";
-import { getTotalPassedExams } from "@/prisma/queries";
-import { getTotalExamCompletedByUser } from "@/prisma/queries";
+import {
+  getTotalPassedExams,
+  getTotalExamsCompletedByUser,
+} from "@/prisma/queries";
 
 interface SuccessRatioCardProps {
   userId: string;
@@ -15,7 +17,7 @@ export async function SuccessRatioCard({
 }: SuccessRatioCardProps) {
   const [totalPassedExams, totalExamsCompleted] = await Promise.all([
     getTotalPassedExams(userId),
-    getTotalExamCompletedByUser(userId),
+    getTotalExamsCompletedByUser(userId),
   ]);
 
   const totalFailedExams = totalExamsCompleted - totalPassedExams;

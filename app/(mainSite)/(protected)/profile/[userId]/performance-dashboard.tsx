@@ -1,18 +1,13 @@
 import { CompletedExamsCard } from "@/components/completed-exams-card";
-import { AverageScoreCard } from "@/components/average-score-card";
 import { FavoriteVendorsCard } from "@/components/favorite-vendors-card";
 import { SuccessRatioCard } from "@/components/success-ratio-card";
-import { AverageTimeCard } from "@/components/average-time-card";
 import { BestPerformanceCard } from "@/components/best-performance-card";
 
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
 import CompletedExamsCardSkeleton from "@/components/skeletons/completed-exams-skeleton";
-import AverageScoreCardSkeleton from "@/components/skeletons/average-score-skeleton";
 import FavoriteVendorsCardSkeleton from "@/components/skeletons/favorite-vendors-skeleton";
 import SuccessRatioCardSkeleton from "@/components/skeletons/success-ratio-skeleton";
 import BestPerformanceCardSkeleton from "@/components/skeletons/best-performance-skeleton";
-import AverageTimeCardSkeleton from "@/components/skeletons/average-time-skeleton";
 
 export async function PerformanceDashboard({ userId }: { userId: string }) {
   return (
@@ -27,24 +22,17 @@ export async function PerformanceDashboard({ userId }: { userId: string }) {
             </div>
           }
         >
-          <CompletedExamsCard userId={userId} className="row-span-1" />
+          <CompletedExamsCard userId={userId} className="" />
         </Suspense>
+
         <Suspense
           fallback={
             <div>
-              <AverageScoreCardSkeleton />
+              <FavoriteVendorsCardSkeleton />
             </div>
           }
         >
-          <Suspense
-            fallback={
-              <div>
-                <FavoriteVendorsCardSkeleton />
-              </div>
-            }
-          >
-            <FavoriteVendorsCard userId={userId} className="row-span-2" />
-          </Suspense>
+          <FavoriteVendorsCard userId={userId} className="" />
         </Suspense>
         <Suspense
           fallback={
@@ -53,25 +41,7 @@ export async function PerformanceDashboard({ userId }: { userId: string }) {
             </div>
           }
         >
-          <SuccessRatioCard userId={userId} className="row-span-2" />
-        </Suspense>
-        <Suspense
-          fallback={
-            <div>
-              <AverageTimeCardSkeleton />
-            </div>
-          }
-        >
-          <AverageTimeCard userId={userId} className="row-span-1" />
-        </Suspense>
-        <Suspense
-          fallback={
-            <div className="row-span-2">
-              <AverageScoreCardSkeleton />
-            </div>
-          }
-        >
-          <AverageScoreCard userId={userId} className="row-span-2" />
+          <SuccessRatioCard userId={userId} className="" />
         </Suspense>
         <Suspense
           fallback={
@@ -80,7 +50,10 @@ export async function PerformanceDashboard({ userId }: { userId: string }) {
             </div>
           }
         >
-          <BestPerformanceCard userId={userId} className="md:col-span-2" />
+          <BestPerformanceCard
+            userId={userId}
+            className="h-fit md:col-span-2 lg:col-span-3"
+          />
         </Suspense>
       </div>
     </div>

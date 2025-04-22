@@ -20,7 +20,7 @@ export async function FavoriteVendorsCard({
       icon={<BarChart3 className="h-5 w-5" />}
       className={className}
     >
-      <div className="mt-4 space-y-4">
+      <div className="mt-4 min-h-full space-y-4">
         {favoriteVendors.map((vendor) => (
           <div key={vendor.name} className="flex items-center justify-between">
             <span className="text-xl font-semibold text-white">
