@@ -22,6 +22,10 @@ export async function addTagsToExam({
       throw new Error("Exam Id is not Available");
     }
 
+    if (!tags) {
+      throw new Error("Tags are not Available");
+    }
+
     const tagRecords = await Promise.all(
       tags.map(async (tag) => {
         let tagRecord = await db.tag.findUnique({

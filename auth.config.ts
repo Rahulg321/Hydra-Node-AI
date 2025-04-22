@@ -17,15 +17,12 @@ export default {
         const validatedFields = LoginFormZodType.safeParse(credentials);
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
-          console.log("email and password in authorize", email, password);
           const user = await getUserByEmail(email);
           if (!user || !user.password) return null;
 
-          //   password entered by user against the password returned from the database
           const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (isPasswordValid) {
-            console.log("user authorized, valid credentials");
             return user;
           }
         }

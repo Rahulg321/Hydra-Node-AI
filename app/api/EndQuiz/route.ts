@@ -79,7 +79,7 @@ export async function POST(req: Request) {
         endTime: new Date(),
         isCompleted: true,
         percentageScored: examScore,
-        passFailStatus: examScore >= 50 ? true : false,
+        passFailStatus: examScore >= 70 ? true : false,
       },
     });
 

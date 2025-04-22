@@ -69,7 +69,7 @@ export default async function EndQuizAction(
         skippedAnswers: questionLength - correctQuestions - incorrectQuestions,
         endTime: new Date(),
         percentageScored: examScore,
-        passFailStatus: examScore >= 50 ? true : false,
+        passFailStatus: examScore >= 70 ? true : false,
       },
     });
 

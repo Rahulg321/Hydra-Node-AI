@@ -142,7 +142,7 @@ export const MultiStepExamDialog = ({
                       <Trophy className="h-4 w-4 text-orange-500" />
                       <Label className="font-medium">Passing Marks</Label>
                     </div>
-                    <p className="mt-1 text-lg font-semibold">80%</p>
+                    <p className="mt-1 text-lg font-semibold">70%</p>
                   </div>
                 </div>
                 <div className="mt-6">
@@ -190,7 +190,7 @@ export const MultiStepExamDialog = ({
                       <Trophy className="h-4 w-4 text-orange-500" />
                       <h5 className="font-medium">Passing Marks</h5>
                     </div>
-                    <p className="text-lg font-semibold">80%</p>
+                    <p className="text-lg font-semibold">70%</p>
                   </div>
                 </div>
                 <div className="mt-6">
