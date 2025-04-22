@@ -221,9 +221,9 @@ export async function getTotalExamsCompletedByUser(userId: string) {
 }
 
 /**
- * Get the exams completed by a user grouped by date
+ * Get the exams completed by a user grouped by month
  * @param userId - The ID of the user
- * @returns An array of objects with date and count of exams completed on that date
+ * @returns An array of objects with month and count of exams completed in that month
  */
 export async function getTotalExamAttemptedByUser(userId: string) {
   try {
@@ -240,36 +240,31 @@ export async function getTotalExamAttemptedByUser(userId: string) {
       },
     });
 
-    // Group sessions by date
-    const examsByDate = quizSessions.reduce(
+    // Group sessions by month
+    const examsByMonth = quizSessions.reduce(
       (acc: Record<string, number>, session) => {
-        const date = session.createdAt.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-        acc[date] = (acc[date] || 0) + 1;
+        const month = session.createdAt.toLocaleDateString("en-GB", {
+          month: "short",
+          year: "numeric",
+        }); // Format: "MMM YYYY" (e.g., "Jan 2024")
+        acc[month] = (acc[month] || 0) + 1;
         return acc;
       },
       {},
     );
 
     // Convert to array format for chart
-    const chartData = Object.entries(examsByDate).map(([date, count]) => {
-      // Format date to be more readable (e.g., "Jan 01")
-      const formattedDate = new Date(date).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "numeric",
-      });
+    const chartData = Object.entries(examsByMonth).map(([month, count]) => ({
+      date: month,
+      count,
+    }));
 
-      console.log(formattedDate);
-
-      return {
-        date: formattedDate,
-        count,
-      };
-    });
+    console.log("chartData", chartData);
 
     return chartData;
   } catch (error) {
     console.error(
-      "an error occurred while trying to get exams completed by user grouped by date",
+      "an error occurred while trying to get exams completed by user grouped by month",
       error,
     );
     throw error;
