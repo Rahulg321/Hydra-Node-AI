@@ -79,8 +79,8 @@ const PricingCards = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-black text-white">
-      <section className="relative py-16">
+    <div className="">
+      <section className="py-16">
         <div className="big-container mx-auto px-4">
           <div className="text-center">
             <h2 className="transducer-font mb-4 font-bold uppercase tracking-wider">
@@ -96,7 +96,6 @@ const PricingCards = () => {
             </motion.p>
           </div>
 
-          {/* Pricing Cards */}
           <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
             {plans.map((plan, index) => (
               <motion.div
@@ -105,15 +104,21 @@ const PricingCards = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.1 }}
-                className="relative overflow-hidden rounded-lg bg-gradient-to-br from-white/10 via-white/0 to-white/10"
-                style={{
-                  backgroundImage:
-                    index === 1
-                      ? "linear-gradient(to bottom, #121212, rgba(232, 113, 33, 0.2))"
-                      : "linear-gradient(to bottom, #121212, rgba(18, 18, 18, 0.8))",
-                }}
+                className="relative overflow-y-auto overflow-x-hidden rounded-lg border border-[rgba(255,255,255,0.1)] bg-[linear-gradient(0deg,rgba(0,0,0,0.2),rgba(0,0,0,0.2)),linear-gradient(112.86deg,rgba(255,255,255,0.08)_-6.68%,rgba(255,255,255,0.024)_45.63%,rgba(255,255,255,0.08)_103.45%)]"
               >
-                <div className="p-8">
+                {
+                  <div className="absolute left-[-1/2] top-3/4 h-[10rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
+                }
+                {index === 1 && billingPeriod === "yearly" && (
+                  <div className="absolute left-0 right-0 mb-4 flex justify-center">
+                    <div className="rounded-full bg-[#3A3A3A] px-6 py-2 text-center">
+                      <p className="caveat-font text-white">
+                        Get 2 months for free on annual billing
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="p-8 pt-12">
                   <div className="mb-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-medium text-gray-300">
@@ -208,17 +213,6 @@ const PricingCards = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          {/* Bottom Banner */}
-          <div className="mx-auto mt-8 max-w-6xl">
-            <GradientButton
-              size={"lg"}
-              className="w-full p-4 md:p-6 md:text-xl"
-            >
-              If you don&apos;t commit for subscription, you can also buy
-              individual exam!
-            </GradientButton>
           </div>
         </div>
       </section>

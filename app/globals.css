@@ -173,6 +173,10 @@ body {
   font-family: var(--font-transducer) !important;
 }
 
+.caveat-font {
+  font-family: var(--font-caveat) !important;
+}
+
 /* Smooth scrolling behavior */
 html {
   scroll-behavior: smooth;

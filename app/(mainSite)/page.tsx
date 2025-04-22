@@ -71,7 +71,6 @@ export default async function Home() {
 
       <HowItWorks />
       <Features />
-      {/* <TestimonialGrid /> */}
       <ExamPrepHero />
       <PricingCards />
       <FAQHydranodeSection />

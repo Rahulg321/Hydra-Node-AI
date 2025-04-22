@@ -14,6 +14,7 @@ import ThemeSwitchButton from "@/components/ThemeSwitchButton";
 import Head from "next/head";
 import { GeistSans } from "geist/font/sans";
 import localFont from "next/font/local";
+import { caveat } from "@/app/fonts";
 
 // Font files can be colocated inside of `app`
 const transducerFont = localFont({
@@ -69,7 +70,14 @@ export default async function RootLayout({
       <Head>
         <meta name="HydraNode" content="HydraNode" />
       </Head>
-      <body className={clsx("", GeistSans.variable, transducerFont.variable)}>
+      <body
+        className={clsx(
+          "",
+          GeistSans.variable,
+          transducerFont.variable,
+          caveat.variable,
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
