@@ -113,27 +113,30 @@ const Navbar = ({ session }: { session: Session | null }) => {
               </Link>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2"
-            >
-              <Link href={"/"}>
-                {isLogoLoaded ? (
-                  <div className="">
-                    <Image
-                      src={HydranodeWhiteLogo || BestHydranodeLogo}
-                      alt="hydranode logo"
-                      width={40}
-                      height={40}
-                      className="block object-cover lg:mr-12"
-                    />
-                  </div>
-                ) : (
-                  <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
-                )}
-              </Link>
-            </motion.div>
+            {/* Center logo */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center justify-center"
+              >
+                <Link href={"/"}>
+                  {isLogoLoaded ? (
+                    <div className="">
+                      <Image
+                        src={HydranodeWhiteLogo || BestHydranodeLogo}
+                        alt="hydranode logo"
+                        width={40}
+                        height={40}
+                        className="block object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-8 w-32 animate-pulse bg-gray-200 dark:bg-gray-700" />
+                  )}
+                </Link>
+              </motion.div>
+            </div>
 
             <div className="hidden items-center md:flex">
               <Link

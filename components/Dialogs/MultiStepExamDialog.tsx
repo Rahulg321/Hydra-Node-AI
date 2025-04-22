@@ -9,19 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
-import MockExamForm from "../forms/mock-exam-form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useExamModeContext } from "@/lib/exam-mode-context";
-import { checkIfUserHasAccessToExam } from "@/lib/utils";
+
 import { ToastAction } from "../ui/toast";
 import { useToast } from "../ui/use-toast";
 import Link from "next/link";

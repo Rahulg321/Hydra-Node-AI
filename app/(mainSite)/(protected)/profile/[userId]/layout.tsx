@@ -25,12 +25,12 @@ const ProfilePageLayout = async ({
             <div className="mt-6 flex flex-col items-start gap-4">
               <h4 className="">Modules</h4>
               <LearningButton
-                label="Home"
+                label="My Learnings"
                 icon={<Home />}
                 href={`/profile/${userId}`}
               />
               <LearningButton
-                label="My learnings"
+                label="Exam History"
                 icon={<GraduationCap />}
                 href={`/profile/${userId}/learnings`}
               />
