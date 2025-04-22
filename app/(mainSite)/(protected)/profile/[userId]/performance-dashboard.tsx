@@ -22,7 +22,7 @@ export async function PerformanceDashboard({ userId }: { userId: string }) {
             </div>
           }
         >
-          <CompletedExamsCard userId={userId} className="" />
+          <CompletedExamsCard userId={userId} className="row-span-2" />
         </Suspense>
 
         <Suspense
@@ -32,7 +32,7 @@ export async function PerformanceDashboard({ userId }: { userId: string }) {
             </div>
           }
         >
-          <FavoriteVendorsCard userId={userId} className="" />
+          <FavoriteVendorsCard userId={userId} className="row-span-2" />
         </Suspense>
         <Suspense
           fallback={
@@ -41,7 +41,7 @@ export async function PerformanceDashboard({ userId }: { userId: string }) {
             </div>
           }
         >
-          <SuccessRatioCard userId={userId} className="" />
+          <SuccessRatioCard userId={userId} className="row-span-2" />
         </Suspense>
         <Suspense
           fallback={
