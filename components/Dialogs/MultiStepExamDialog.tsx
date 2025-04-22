@@ -84,7 +84,10 @@ export const MultiStepExamDialog = ({
       case 1:
         return (
           <DialogContent className="pt-12">
-            <AILoadingIndicator onProgressComplete={handleNext} />
+            <AILoadingIndicator
+              onProgressComplete={handleNext}
+              examLength={examLength}
+            />
           </DialogContent>
         );
 

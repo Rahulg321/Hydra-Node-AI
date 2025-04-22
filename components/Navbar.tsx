@@ -2,9 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
-import type { Session } from "next-auth";
+import {
+  BookOpen,
+  ChevronDown,
+  CreditCard,
+  LogOut,
+  Menu,
+  Pen,
+  User,
+  X,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +27,7 @@ import Image from "next/image";
 import HydranodeWhiteLogo from "@/public/logos/hydranode-white-logo.svg";
 
 import BestHydranodeLogo from "@/public/illustrations/new_hydranode_logo.png";
+import { Session } from "next-auth";
 
 const menuItems = ["Product", "Pricing", "About Us", "Contact Us"];
 
@@ -224,10 +233,45 @@ function ProfileMenu({ session }: { session: Session }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href={`/profile/${session.user.id}`}>Profile</Link>
+          <Link
+            href={`/profile/${session.user.id}/learnings`}
+            className="flex items-center gap-2"
+          >
+            <BookOpen className="h-4 w-4" />
+            My Learnings
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/profile/${session.user.id}`}
+            className="flex items-center gap-2"
+          >
+            <User className="h-4 w-4" />
+            Profile
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/profile/${session.user.id}/subscription`}
+            className="flex items-center gap-2"
+          >
+            <CreditCard className="h-4 w-4" />
+            Subscription
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem
+          onClick={() => signOut()}
+          className="flex items-center gap-2"
+        >
+          <LogOut className="h-4 w-4" />
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

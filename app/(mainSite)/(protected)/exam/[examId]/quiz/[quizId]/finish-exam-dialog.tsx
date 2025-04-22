@@ -17,6 +17,7 @@ import { toast } from "@/components/ui/use-toast";
 
 import React, { useState, useTransition } from "react";
 import { GradientButton } from "@/components/buttons/gradient-button";
+import { Button } from "@/components/ui/button";
 
 const FinishExamDialog = ({
   quizSessionId,
@@ -52,9 +53,13 @@ const FinishExamDialog = ({
             You have skipped {skippedQuestions} questions.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="flex w-full justify-center">
-          <AlertDialogCancel>Review Questions</AlertDialogCancel>
-          <AlertDialogAction
+        <AlertDialogFooter className="justify-center">
+          <Button variant="outline" size="lg" className="rounded-full">
+            Review Questions
+          </Button>
+          <GradientButton
+            size="lg"
+            className="rounded-full"
             onClick={async () => {
               startFinishing(async () => {
                 console.log("Finishing quiz...");
@@ -125,8 +130,6 @@ const FinishExamDialog = ({
                         response.message ||
                         "There was an issue finalizing your exam.",
                     });
-                    // Decide if hasEnded should be true even on error? Maybe not.
-                    // setHasEnded(true);
                   }
                 } catch (error) {
                   console.error("Failed to end the quiz manually:", error);
@@ -140,10 +143,9 @@ const FinishExamDialog = ({
               });
             }}
             disabled={isFinishing}
-            className="bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] text-white"
           >
             {isFinishing ? "Finishing..." : "Finish Test"}
-          </AlertDialogAction>
+          </GradientButton>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
