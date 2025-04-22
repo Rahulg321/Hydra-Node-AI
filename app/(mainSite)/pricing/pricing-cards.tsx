@@ -1,14 +1,20 @@
 "use client";
+
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import CheckoutDialog from "@/components/CheckoutDialog";
 import { GradientButton } from "@/components/buttons/gradient-button";
+import { Switch } from "@/components/ui/switch";
 
 const PricingCards = () => {
   const session = useSession();
   const router = useRouter();
+  const [billingPeriod, setBillingPeriod] = useState<"yearly" | "monthly">(
+    "yearly",
+  );
 
   const userId = session.data?.user.id;
   const userEmail = session.data?.user.email;
@@ -40,10 +46,13 @@ const PricingCards = () => {
     {
       name: "Plus",
       description: "Ideal for serious learners",
-      priceId: "price_1PrzX8IbE21KKZM9E5iroLPx",
+      priceId:
+        billingPeriod === "yearly"
+          ? "price_1RGe7PIbE21KKZM94OWnAMWS"
+          : "price_1RGe2CIbE21KKZM9LvUkDVpj",
       mode: "subscription",
-      price: 99,
-      billing: "Billed yearly",
+      price: billingPeriod === "yearly" ? 149 : 15,
+      billing: `Billed ${billingPeriod}`,
       popular: true,
       features: [
         "Everything in Starter",
@@ -55,7 +64,7 @@ const PricingCards = () => {
     {
       name: "Lifetime Access",
       description: "Ideal for working professionals",
-      priceId: "price_1PsgMGIbE21KKZM9fg2dyVJ6",
+      priceId: "price_1RGe9KIbE21KKZM9HQ3YUphb",
       mode: "payment",
       price: 199,
       billing: "One-time billing",
@@ -71,7 +80,6 @@ const PricingCards = () => {
 
   return (
     <div className="relative min-h-screen bg-black text-white">
-      {/* Header Section */}
       <section className="relative py-16">
         <div className="big-container mx-auto px-4">
           <div className="text-center">
@@ -105,19 +113,51 @@ const PricingCards = () => {
                       : "linear-gradient(to bottom, #121212, rgba(18, 18, 18, 0.8))",
                 }}
               >
-                <div className="absolute left-[-110px] top-[601.78px] h-28 w-52 rounded-full bg-amber-500 bg-opacity-40 shadow-[inset_12.896743774414062px_1.6640958786010742px_104.0059814453125px_0px_rgba(255,51,0,0.80)] blur-[94.20px]" />
                 <div className="p-8">
                   <div className="mb-4">
-                    <h3 className="text-lg font-medium text-gray-300">
-                      {plan.name}
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-gray-300">
+                        {plan.name}
+                      </h3>
+                      {index === 1 && (
+                        <div className="flex items-center space-x-2">
+                          <span
+                            className={`text-sm ${billingPeriod === "monthly" ? "text-white" : "text-gray-400"}`}
+                          >
+                            Monthly
+                          </span>
+                          <Switch
+                            checked={billingPeriod === "yearly"}
+                            onCheckedChange={(checked) =>
+                              setBillingPeriod(checked ? "yearly" : "monthly")
+                            }
+                            className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-[rgba(255,195,177,0.9)] data-[state=checked]:to-[rgba(255,98,24,0.9)]"
+                          />
+                          <span
+                            className={`text-sm ${billingPeriod === "yearly" ? "text-white" : "text-gray-400"}`}
+                          >
+                            Yearly
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
+
                   <div className="mb-6">
                     <span className="bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text text-5xl text-[56.69px] font-bold leading-none tracking-[-0.567px] text-transparent">
-                      ${plan.price}
+                      $
+                      {typeof plan.price === "number"
+                        ? plan.price.toFixed(plan.price % 1 === 0 ? 0 : 2)
+                        : plan.price}
                     </span>
-                    {plan.price > 0 && plan.price === 99 && (
-                      <span className="ml-1 text-gray-400">/year</span>
+                    {plan.price > 0 && (
+                      <span className="ml-1 text-gray-400">
+                        {index === 1
+                          ? billingPeriod === "yearly"
+                            ? "/year"
+                            : "/month"
+                          : ""}
+                      </span>
                     )}
                   </div>
                   <p className="mb-4 text-sm text-gray-400">
