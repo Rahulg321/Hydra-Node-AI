@@ -95,11 +95,12 @@ export const sendLifetimeAccessEmail = async (
   accessStartDate: string,
   firstName: string | null,
   lastName: string | null,
+  invoiceLink: string,
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: "🎉 You've Got Lifetime Access! 🎉", // Updated subject line
+    subject: "🎉 You've Got Lifetime Access! 🎉",
     react: LifetimeAccessEmail({
       firstName,
       lastName,
@@ -107,6 +108,7 @@ export const sendLifetimeAccessEmail = async (
       productName,
       accessStartDate,
       dashboardLink,
+      invoiceLink,
     }),
   });
 
@@ -123,25 +125,28 @@ export const sendLifetimeAccessEmail = async (
 
   return { data };
 };
+
 export const sendSubscriptionStartEmail = async (
   email: string,
-  subscriptionPlan: string, // Matches productName in the SubscriptionStartEmail component
+  subscriptionPlan: string,
   dashboardLink: string,
   subscriptionStartDate: string,
   firstName: string | null,
   lastName: string | null,
+  invoiceLink: string,
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: `🎉 You've Got Access to ${subscriptionPlan}! 🎉`, // Updated subject line dynamically based on productName
+    subject: `🎉 You've Got Access to ${subscriptionPlan}! 🎉`,
     react: SubscriptionStartEmail({
       firstName,
       lastName,
       email,
       subscriptionStartDate,
-      subscriptionPlan, // Passed as productName to match the prop in the component
+      subscriptionPlan,
       dashboardLink,
+      invoiceLink,
     }),
   });
 
@@ -167,11 +172,12 @@ export const sendExamPurchaseEmail = async (
   purchaseDate: string,
   examLink: string,
   examPrice: string,
+  invoiceLink: string,
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: `🎉 Successfully Purchased Exam ${examName}! 🎉`, // Updated subject line dynamically based on productName
+    subject: `🎉 Successfully Purchased Exam ${examName}! 🎉`,
     react: ExamPurchaseEmail({
       firstName,
       lastName,
@@ -180,6 +186,7 @@ export const sendExamPurchaseEmail = async (
       purchaseDate,
       examLink,
       examPrice,
+      invoiceLink,
     }),
   });
 

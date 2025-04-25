@@ -108,6 +108,12 @@ export async function POST(req: Request) {
           session.payment_intent as string,
         );
 
+        // Get the invoice link for one-time payment
+        const invoice = await stripe.invoices.retrieve(
+          paymentIntent.invoice as string,
+        );
+        const invoiceLink = invoice.hosted_invoice_url;
+
         console.log("payment intent in one time payment was", paymentIntent);
 
         await db.user.update({
@@ -126,12 +132,19 @@ export async function POST(req: Request) {
           new Date().toLocaleDateString(), // Access start date
           user.firstName,
           user.lastName,
+          invoiceLink || "", // Add invoice link
         );
       } else if (session.subscription) {
         console.log("a subscription was made");
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string,
         );
+
+        // Get the invoice link for subscription
+        const invoice = await stripe.invoices.retrieve(
+          subscription.latest_invoice as string,
+        );
+        const invoiceLink = invoice.hosted_invoice_url;
 
         console.log("updating subscription", subscription);
         await updateUserWithSubscription(user, subscription);
@@ -144,6 +157,7 @@ export async function POST(req: Request) {
           new Date().toLocaleDateString(), // Subscription start date
           user.firstName,
           user.lastName,
+          invoiceLink || "", // Add invoice link
         );
       }
       // One-time payment case
@@ -154,9 +168,20 @@ export async function POST(req: Request) {
           session.payment_intent as string,
         );
 
+        // Get the invoice link for exam purchase
+        const invoice = await stripe.invoices.retrieve(
+          paymentIntent.invoice as string,
+        );
+        const invoiceLink = invoice.hosted_invoice_url;
+
         console.log("payment intent in one time payment was", paymentIntent);
 
-        await processExamPurchase(user, examId, paymentIntent);
+        await processExamPurchase(
+          user,
+          examId,
+          paymentIntent,
+          invoiceLink || "",
+        );
       }
     }
 
@@ -231,24 +256,30 @@ async function processExamPurchase(
   user: any,
   examId: string,
   paymentIntent: Stripe.PaymentIntent,
+  invoiceLink: string,
 ) {
   // Fetch the exam details from the database
   const exam = await db.exam.findUnique({
     where: { id: examId },
-    select: { name: true, slug: true, price: true, vendor:{
-        select:{
-            id:true,
-            isUserVendor:true,
-            userId:true,
-            commissionRate:true,
-            name:true,
-            user:{
-               select:{
-                email:true,
-               }
-            }
-        }
-    } },
+    select: {
+      name: true,
+      slug: true,
+      price: true,
+      vendor: {
+        select: {
+          id: true,
+          isUserVendor: true,
+          userId: true,
+          commissionRate: true,
+          name: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   if (!exam) {
@@ -287,6 +318,7 @@ async function processExamPurchase(
       new Date().toLocaleDateString(), // Purchase date
       `https://hydranode.ai/exam/${exam.slug}`,
       exam.price.toString(),
+      invoiceLink || "", // Add invoice link
     );
   } else {
     console.log(
@@ -301,34 +333,30 @@ async function processExamPurchase(
         vendorId: exam.vendor.id,
         amount: exam.price, // Calculate payout amount
         currency: paymentIntent.currency,
-        status:"PAID"
-      }
+        status: "PAID",
+      },
     });
 
     // send email to vendor for successful exam purchase
     await sendVendorExamPurchasedEmail(
       exam.vendor.name,
       exam.vendor.user?.email || "Contact@hydranode.ai",
-        exam.name,
-        new Date().toLocaleDateString(), // Purchase date
-        exam.price.toString(),
-        user.firstName,
-        user.lastName,
+      exam.name,
+      new Date().toLocaleDateString(), // Purchase date
+      exam.price.toString(),
+      user.firstName,
+      user.lastName,
     );
-
   }
 }
 
 // Helper function to calculate payout amount based on commission
 function calculatePayoutAmount(price: number, commissionRate: number): number {
-    // Calculate the payout amount after deducting the commission
-    const commissionAmount = price * (commissionRate / 100);
-    const payoutAmount = price - commissionAmount;
-    return payoutAmount;
-  }
-
-
-
+  // Calculate the payout amount after deducting the commission
+  const commissionAmount = price * (commissionRate / 100);
+  const payoutAmount = price - commissionAmount;
+  return payoutAmount;
+}
 
 // Helper function to create a payment record
 async function createPaymentRecord(

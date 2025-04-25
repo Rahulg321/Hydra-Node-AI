@@ -21,6 +21,7 @@ interface ExamPurchaseEmailProps {
   purchaseDate: string; // Date when the purchase was made
   examLink: string; // Link to access the exam
   examPrice: string; // price of  exam
+  invoiceLink: string;
 }
 
 export default function ExamPurchaseEmail({
@@ -31,6 +32,7 @@ export default function ExamPurchaseEmail({
   purchaseDate,
   examLink,
   examPrice,
+  invoiceLink,
 }: ExamPurchaseEmailProps) {
   return (
     <Html>
@@ -69,6 +71,10 @@ export default function ExamPurchaseEmail({
               </Text>
               <Text style={detailsText}>
                 <strong>Purchase Date:</strong> {purchaseDate}
+              </Text>
+              <Text style={detailsText}>
+                <strong>Invoice:</strong>{" "}
+                <Link href={invoiceLink}>View your invoice</Link>
               </Text>
             </Section>
 

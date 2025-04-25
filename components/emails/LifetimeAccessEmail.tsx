@@ -20,6 +20,7 @@ interface LifetimeAccessEmailProps {
   productName: string; // Product or service name for which the user got lifetime access
   accessStartDate: string; // Date when the lifetime access begins
   dashboardLink: string; // Link to the user dashboard or access area
+  invoiceLink: string;
 }
 
 export default function LifetimeAccessEmail({
@@ -29,6 +30,7 @@ export default function LifetimeAccessEmail({
   productName,
   accessStartDate,
   dashboardLink,
+  invoiceLink,
 }: LifetimeAccessEmailProps) {
   return (
     <Html>
@@ -61,23 +63,21 @@ export default function LifetimeAccessEmail({
             </Text>
 
             <Section style={detailsContainer}>
-              <Text style={detailsHeading}>What’s Next?</Text>
+              <Text style={detailsHeading}>What's Next?</Text>
               <Text style={detailsText}>
                 <strong>Product Name:</strong> {productName}
               </Text>
               <Text style={detailsText}>
                 <strong>Access Start Date:</strong> {accessStartDate}
               </Text>
+              <Text style={detailsText}>
+                <strong>Invoice:</strong>{" "}
+                <Link href={invoiceLink}>View your invoice</Link>
+              </Text>
             </Section>
 
-            <Text style={paragraph}>
-              Click below to explore all the amazing features that are now at
-              your fingertips. Dive in and start enjoying the limitless
-              possibilities!
-            </Text>
-
             <Button style={button} href={dashboardLink}>
-              Go to Your Dashboard
+              Access Your Dashboard
             </Button>
 
             <Hr style={hr} />
