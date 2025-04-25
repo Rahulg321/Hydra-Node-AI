@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function CTABanner() {
   return (
@@ -20,10 +21,13 @@ export default function CTABanner() {
             insights.
           </p>
 
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 px-8 py-3 font-medium text-white transition-all duration-300 hover:shadow-lg hover:shadow-orange-900/20">
-            Start your free trial
+          <Link
+            href={"/vendors"}
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] px-8 py-3 font-medium text-white transition-all duration-300 hover:shadow-lg hover:shadow-orange-900/20"
+          >
+            Start your journey
             <ArrowRight size={18} />
-          </button>
+          </Link>
         </div>
       </div>
     </div>

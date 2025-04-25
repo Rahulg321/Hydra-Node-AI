@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GradientButton } from "../buttons/gradient-button";
+import Link from "next/link";
 
 export default function ExamPrepHero() {
   return (
@@ -15,7 +16,9 @@ export default function ExamPrepHero() {
         </h1>
 
         <div className="">
-          <GradientButton size={"lg"}>Start your free trial</GradientButton>
+          <GradientButton size={"lg"} asChild>
+            <Link href="/vendors">Start your exam</Link>
+          </GradientButton>
         </div>
 
         <p className="mt-4 text-sm text-gray-500">No credit card required</p>

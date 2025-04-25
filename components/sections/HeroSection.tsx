@@ -63,10 +63,10 @@ export default function CertificationHero() {
 
       {/* CTA Button */}
       <Link
-        href="/pricing"
+        href="/vendors"
         className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-[#ff7a50] to-[#ff9d7a] px-6 py-3 font-medium text-white transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20"
       >
-        Start your free trial
+        Start your journey
         <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
       </Link>
 
