@@ -49,11 +49,32 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
   // Fetch quiz session first
   const quizSession = await db.quizSession.findUnique({
     where: { id: quizId },
-    include: {
+    select: {
+      id: true,
+      examTime: true,
+      questionCount: true,
+      startTime: true,
+      endTime: true,
+      correctAnswers: true,
+      incorrectAnswers: true,
+      skippedAnswers: true,
+      percentageScored: true,
+      passFailStatus: true,
+      isCompleted: true,
       exam: {
-        include: { questions: true },
+        select: {
+          slug: true,
+          name: true,
+        },
       },
-      userAttempts: true,
+      userAttempts: {
+        select: {
+          skipped: true,
+          isCorrect: true,
+          userAnswer: true,
+          question: true,
+        },
+      },
     },
   });
 
@@ -68,7 +89,7 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
 
   let userAttempts = quizSession.userAttempts;
   const exam = quizSession.exam;
-  const questions = exam.questions;
+  const questions = quizSession.userAttempts.map((attempt) => attempt.question);
   let questionsLimit = quizSession.questionCount;
 
   const sliceQuestions = questions.slice(0, questionsLimit);
@@ -78,11 +99,14 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
   return (
     <section className="min-h-screen">
       <ReviewMcq
-        quizSession={quizSession}
-        userAttempts={userAttempts}
-        examName={quizSession.exam.name}
+        quizSessionId={quizSession.id}
+        userAttempts={userAttempts.map((attempt) => ({
+          skipped: attempt.skipped ?? false,
+          isCorrect: attempt.isCorrect ?? false,
+          userAnswer: attempt.userAnswer ?? "",
+        }))}
         examId={examId}
-        questions={sliceQuestions}
+        questions={userAttempts.map((attempt) => attempt.question)}
       />
     </section>
   );

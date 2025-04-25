@@ -5,35 +5,26 @@ import { CircleCheckBig } from "lucide-react";
 interface CorrectQuestionGridProps {
   totalQuestions: number;
   questionStatus: (string | null)[];
-  onSelectQuestion?: (index: number) => void;
-  currentQuestionIndex?: number;
 }
 
 const CorrectQuestionGrid = ({
   totalQuestions,
   questionStatus,
-  onSelectQuestion,
-  currentQuestionIndex,
 }: CorrectQuestionGridProps) => {
-  console.log("question status in correct question grid", questionStatus);
   return (
     <div className="rounded-lg bg-muted">
       <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent max-h-[250px] overflow-y-auto">
         <div className="grid grid-cols-3 gap-1 px-2 py-4 lg:grid-cols-4">
           {Array.from({ length: totalQuestions }).map((_, index) => {
-            let statusClass = "bg-gray-400 dark:bg-muted";
-
-            if (questionStatus[index] === "correct") {
+            let statusClass = "border-primary";
+            if (questionStatus[index] === "attempted") {
+              statusClass = "bg-orange-700";
+            } else if (questionStatus[index] === "skipped") {
+              statusClass = "bg-yellow-500 border-yellow-500";
+            } else if (questionStatus[index] === "correct") {
               statusClass = "bg-[#065A1D]";
             } else if (questionStatus[index] === "incorrect") {
               statusClass = "bg-[#600000]";
-            } else if (
-              questionStatus[index] === "skipped" ||
-              questionStatus[index] === null
-            ) {
-              statusClass = "bg-[#E8A600]";
-            } else {
-              statusClass = "bg-[#E8A600]";
             }
 
             return (

@@ -29,16 +29,18 @@ import CorrectQuestionGrid from "@/components/correct-question-grid";
 // import HtmlContent from "@/components/html-content";
 
 const ReviewMcq = ({
-  userAttempts = [],
+  userAttempts,
   questions,
-  quizSession,
-  examName, // examName is passed but not used, consider using it e.g., in a header
+  quizSessionId,
   examId,
 }: {
-  userAttempts?: UserAttempt[];
+  userAttempts: {
+    skipped: boolean;
+    isCorrect: boolean;
+    userAnswer: string;
+  }[];
   questions: Question[];
-  quizSession: QuizSession;
-  examName: string;
+  quizSessionId: string;
   examId: string;
 }) => {
   const [userAttemptIndex, setUserAttemptIndex] = useState(0);
@@ -56,10 +58,6 @@ const ReviewMcq = ({
     setShowOverallExplanation(false); // Hide explanation when changing question
     setUserAttemptIndex((prev) => Math.max(prev - 1, 0));
   };
-  const handleGridSelect = (index: number) => {
-    setShowOverallExplanation(false);
-    setUserAttemptIndex(index);
-  };
 
   const totalQuestions = questions.length;
   const correctQuestions = userAttempts.filter(
@@ -71,15 +69,6 @@ const ReviewMcq = ({
   const skippedQuestions = userAttempts.filter(
     (attempt) => attempt.skipped,
   ).length;
-
-  const questionStatus = userAttempts.map((attempt, index) => ({
-    index: index,
-    status: attempt.skipped
-      ? "skipped"
-      : attempt.isCorrect
-        ? "correct"
-        : "incorrect",
-  }));
 
   return (
     <section className="bg-background text-foreground">
@@ -111,13 +100,17 @@ const ReviewMcq = ({
             <h2 className="mb-4 text-lg font-semibold">Quiz Overview</h2>
             <CorrectQuestionGrid
               totalQuestions={totalQuestions}
-              questionStatus={questionStatus.map((item) => item.status)}
-              onSelectQuestion={handleGridSelect} // Pass handler
-              currentQuestionIndex={userAttemptIndex} // Highlight current
+              questionStatus={userAttempts.map((attempt) =>
+                attempt.skipped
+                  ? "skipped"
+                  : attempt.isCorrect
+                    ? "correct"
+                    : "incorrect",
+              )}
             />
             <GradientButton className="mt-auto w-full" asChild>
               <Link
-                href={`/exam/${examId}/quiz/${quizSession.id}/results`}
+                href={`/exam/${examId}/quiz/${quizSessionId}/results`}
                 className="flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />

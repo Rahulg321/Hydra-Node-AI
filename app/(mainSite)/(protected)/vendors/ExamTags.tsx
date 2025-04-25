@@ -10,7 +10,7 @@ const ExamTags = () => {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
 
-  const examLevel = searchParams.get("examLevel") || "ASSOCIATE";
+  const examLevel = searchParams.get("examLevel") || "FREE";
 
   // Array of exam levels
   const examLevels = [
