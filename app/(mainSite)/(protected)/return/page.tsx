@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { GradientButton } from "@/components/buttons/gradient-button";
 import { Button } from "@/components/ui/button";
 import { stripe } from "@/lib/stripe";
 import Link from "next/link";
@@ -26,12 +27,10 @@ async function getCustomer(customerId: string) {
   return customer;
 }
 
-const ProductConfirmationPage = async (
-  props: {
-    params: Promise<{ slug: string }>;
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-  }
-) => {
+const ProductConfirmationPage = async (props: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
   const searchParams = await props.searchParams;
   const currentAuthSession = await auth();
   const sessionId = searchParams.session_id || "";
@@ -40,8 +39,8 @@ const ProductConfirmationPage = async (
 
   if (!currentCheckoutSession) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-yellow-50 dark:bg-dark">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
+      <section className="flex min-h-screen items-center justify-center dark:bg-dark">
+        <div className="w-full max-w-md rounded-lg p-8 text-center shadow-lg dark:bg-dark-card">
           <FaExclamationTriangle className="mx-auto mb-4 text-6xl text-yellow-500" />
           <h2 className="mb-4 text-3xl font-bold text-yellow-700 dark:text-yellow-400">
             Session Not Found
@@ -62,8 +61,8 @@ const ProductConfirmationPage = async (
 
   if (currentCheckoutSession.status === "open") {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-yellow-50 dark:bg-dark">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
+      <section className="flex min-h-screen items-center justify-center dark:bg-dark">
+        <div className="w-full max-w-md rounded-lg p-8 text-center shadow-lg dark:bg-dark-card">
           <FaExclamationTriangle className="mx-auto mb-4 text-6xl text-yellow-500" />
           <h2 className="mb-4 text-3xl font-bold text-yellow-700 dark:text-yellow-400">
             Payment Failed
@@ -81,8 +80,8 @@ const ProductConfirmationPage = async (
 
   if (currentCheckoutSession.status === "complete") {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-green-50 dark:bg-dark">
-        <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
+      <section className="flex min-h-screen items-center justify-center dark:bg-dark">
+        <div className="w-full max-w-md rounded-lg p-8 text-center shadow-lg dark:bg-dark-card">
           <FaCheckCircle className="mx-auto mb-4 text-6xl text-green-500" />
           <h1 className="mb-2 text-3xl font-bold text-green-700 dark:text-green-400">
             Payment Successful 🎉
@@ -92,9 +91,9 @@ const ProductConfirmationPage = async (
             Your account has been activated. You now have access to all the
             features of your plan.
           </p>
-          <Button asChild className="w-full">
+          <GradientButton asChild className="w-full">
             <Link href="/vendors">Explore the Product</Link>
-          </Button>
+          </GradientButton>
         </div>
       </section>
     );
@@ -102,7 +101,7 @@ const ProductConfirmationPage = async (
 
   return (
     <section className="flex min-h-screen items-center justify-center dark:bg-dark">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg dark:bg-dark-card">
+      <div className="w-full max-w-md rounded-lg p-8 text-center shadow-lg dark:bg-dark-card">
         <FaExclamationTriangle className="mx-auto mb-4 text-6xl text-yellow-500" />
         <h2 className="mb-4 text-3xl font-bold text-yellow-700">
           Something Went Wrong

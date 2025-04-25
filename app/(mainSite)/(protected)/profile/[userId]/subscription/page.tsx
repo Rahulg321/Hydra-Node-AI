@@ -17,11 +17,11 @@ const PersonSubscriptionPage = async ({
   }
 
   return (
-    <div>
+    <section className="container py-10">
       <Suspense fallback={<Skeleton className="h-[200px] w-full rounded-xl" />}>
         <CurrentPlanSection existingUser={existingLoggedInUser} />
       </Suspense>
-    </div>
+    </section>
   );
 };
 

@@ -38,17 +38,6 @@ export default async function CreateMultiStepExam(
   questionsToShow: number,
   numberOfQuestions?: number,
 ) {
-  // start and create a new quiz session and send the value of the
-  // quiz session back to the frontend for redirecting
-
-  console.log("examLength", examLength);
-  console.log("questionsToShow", questionsToShow);
-  console.log("numberOfQuestions", numberOfQuestions);
-  console.log("examMode", examMode);
-  console.log("totalTime", totalTime);
-  console.log("examId", examId);
-  console.log("currentUserId", currentUserId);
-
   try {
     if (!examId || !currentUserId) {
       console.error(

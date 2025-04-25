@@ -5,6 +5,14 @@ import Link from "next/link";
 import { InfoIcon } from "lucide-react";
 import { PaymentDetailsDialog } from "@/components/Dialogs/payment-details-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog";
+import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
 
 export default function CurrentPlanSection({
   existingUser,
@@ -12,6 +20,8 @@ export default function CurrentPlanSection({
   existingUser: User;
 }) {
   const currentDate = new Date();
+
+  console.log("existingUser", existingUser);
 
   const getSubscriptionDetails = () => {
     if (existingUser.hasLifetimeAccess) {
@@ -147,72 +157,165 @@ export default function CurrentPlanSection({
   const subscriptionDetails = getSubscriptionDetails();
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-6">
       <h2 className="text-xl font-semibold text-white">Subscription</h2>
 
-      <div className="">
+      <div className="overflow-hidden rounded-xl border border-gray-800 bg-[#171616]">
         <div className="p-6">
-          <div className="w-full rounded-xl border bg-[#171616] p-2 md:p-4 lg:p-6">
-            <h5 className="transducer-font mb-4 font-semibold uppercase tracking-wider text-white">
-              View and manage subscription
-            </h5>
+          <h5 className="transducer-font mb-6 font-semibold uppercase tracking-wider text-white">
+            View and manage subscription
+          </h5>
 
-            {/* Desktop view - hidden on mobile */}
-            <div className="hidden gap-4 rounded-t-md bg-[#50443F] p-4 md:grid md:grid-cols-4">
-              <div className="text-sm font-medium text-white">Subscription</div>
-              <div className="text-sm font-medium text-white">Last payment</div>
-              <div className="text-sm font-medium text-white">
-                Upcoming payment
+          {/* Desktop view - hidden on mobile */}
+          <div className="hidden gap-4 rounded-t-md bg-[#50443F] p-4 md:grid md:grid-cols-5">
+            <div className="text-sm font-medium text-white">Subscription</div>
+            <div className="text-sm font-medium text-white">Last payment</div>
+            <div className="text-sm font-medium text-white">
+              Upcoming payment
+            </div>
+            <div className="text-sm font-medium text-white">Status</div>
+            <div className="text-sm font-medium text-white">Manage</div>
+          </div>
+
+          {/* Desktop Content - hidden on mobile */}
+          <div className="hidden min-h-[80px] items-center gap-4 p-4 md:grid md:grid-cols-5">
+            <div>
+              <div className="font-medium text-white">
+                {subscriptionDetails.planName}
               </div>
-              <div className="text-sm font-medium text-white">Status</div>
+              <div className="text-sm text-gray-400">
+                {subscriptionDetails.planType}
+              </div>
             </div>
 
-            {/* Desktop Content - hidden on mobile */}
-            <div className="hidden items-center gap-4 p-4 md:grid md:grid-cols-4">
-              <div>
-                <div className="font-medium text-white">
-                  {subscriptionDetails.planName}
-                </div>
-                <div className="text-sm text-gray-400">
-                  {subscriptionDetails.planType}
-                </div>
+            <div>
+              <div className="text-white">
+                {subscriptionDetails.lastPayment}
               </div>
+              {subscriptionDetails.lastPayment !== "N/A" && (
+                <Link
+                  href="#"
+                  className="text-sm text-orange-500 hover:text-orange-400"
+                >
+                  View invoice
+                </Link>
+              )}
+            </div>
 
-              <div>
-                <div className="text-white">
-                  {subscriptionDetails.lastPayment}
-                </div>
-                {subscriptionDetails.lastPayment !== "N/A" && (
-                  <Link
-                    href="#"
-                    className="text-sm text-orange-500 hover:text-orange-400"
-                  >
-                    View invoice
-                  </Link>
+            <div>
+              <div className="text-white">
+                {subscriptionDetails.upcomingPayment}
+              </div>
+              {subscriptionDetails.upcomingPayment !== "N/A" && (
+                <PaymentDetailsDialog
+                  plan={subscriptionDetails.planName}
+                  nextPaymentDate={subscriptionDetails.upcomingPayment}
+                  amount={subscriptionDetails.amount}
+                  billingCycle={subscriptionDetails.billingCycle}
+                  billingType={subscriptionDetails.billingType}
+                  trigger={
+                    <Button variant="link" className="h-8 p-0">
+                      View Payment Details
+                    </Button>
+                  }
+                />
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span
+                className={`${
+                  subscriptionDetails.status === "Active"
+                    ? "text-green-500"
+                    : subscriptionDetails.status === "Trial"
+                      ? "text-blue-500"
+                      : subscriptionDetails.status === "Expired"
+                        ? "text-red-500"
+                        : subscriptionDetails.status === "Cancelled"
+                          ? "text-yellow-500"
+                          : "text-gray-500"
+                }`}
+              >
+                {subscriptionDetails.status}
+              </span>
+              <InfoIcon className="h-4 w-4 text-gray-500" />
+            </div>
+
+            <div>
+              {subscriptionDetails.status === "Active" &&
+                existingUser.stripeSubscriptionId && (
+                  <CancelSubscriptionDialog userId={existingUser.id} />
                 )}
-              </div>
+              {subscriptionDetails.status === "Expired" ||
+                ((subscriptionDetails.status === "Cancelled" ||
+                  subscriptionDetails.status === "Trial" ||
+                  subscriptionDetails.status === "Inactive") && (
+                  <Button variant="link" size="lg" asChild>
+                    <Link href="/pricing">Upgrade</Link>
+                  </Button>
+                ))}
+            </div>
+          </div>
 
-              <div>
-                <div className="text-white">
-                  {subscriptionDetails.upcomingPayment}
-                </div>
-                {subscriptionDetails.upcomingPayment !== "N/A" && (
-                  <PaymentDetailsDialog
-                    plan={subscriptionDetails.planName}
-                    nextPaymentDate={subscriptionDetails.upcomingPayment}
-                    amount={subscriptionDetails.amount}
-                    billingCycle={subscriptionDetails.billingCycle}
-                    billingType={subscriptionDetails.billingType}
-                    trigger={
-                      <Button variant="link">View Payment Details</Button>
-                    }
-                  />
-                )}
+          {/* Mobile view */}
+          <div className="grid grid-cols-1 gap-4 md:hidden">
+            <div className="rounded-md bg-[#50443F] p-4">
+              <div className="mb-2 text-sm font-medium text-white">
+                Subscription
               </div>
+              <div className="font-medium text-white">
+                {subscriptionDetails.planName}
+              </div>
+              <div className="text-sm text-gray-400">
+                {subscriptionDetails.planType}
+              </div>
+            </div>
 
+            <div className="rounded-md bg-[#50443F] p-4">
+              <div className="mb-2 text-sm font-medium text-white">
+                Last payment
+              </div>
+              <div className="text-white">
+                {subscriptionDetails.lastPayment}
+              </div>
+              {subscriptionDetails.lastPayment !== "N/A" && (
+                <Link
+                  href="#"
+                  className="text-sm text-orange-500 hover:text-orange-400"
+                >
+                  View invoice
+                </Link>
+              )}
+            </div>
+
+            <div className="rounded-md bg-[#50443F] p-4">
+              <div className="mb-2 text-sm font-medium text-white">
+                Upcoming payment
+              </div>
+              <div className="text-white">
+                {subscriptionDetails.upcomingPayment}
+              </div>
+              {subscriptionDetails.upcomingPayment !== "N/A" && (
+                <PaymentDetailsDialog
+                  plan={subscriptionDetails.planName}
+                  nextPaymentDate={subscriptionDetails.upcomingPayment}
+                  amount={subscriptionDetails.amount}
+                  billingCycle={subscriptionDetails.billingCycle}
+                  billingType={subscriptionDetails.billingType}
+                  trigger={
+                    <Button variant="link" className="h-8 p-0">
+                      View Payment Details
+                    </Button>
+                  }
+                />
+              )}
+            </div>
+
+            <div className="rounded-md bg-[#50443F] p-4">
+              <div className="mb-2 text-sm font-medium text-white">Status</div>
               <div className="flex items-center gap-2">
                 <span
-                  className={`text-white ${
+                  className={`${
                     subscriptionDetails.status === "Active"
                       ? "text-green-500"
                       : subscriptionDetails.status === "Trial"
@@ -226,100 +329,27 @@ export default function CurrentPlanSection({
                 >
                   {subscriptionDetails.status}
                 </span>
-                <InfoIcon className="h-5 w-5 text-gray-500" />
+                <InfoIcon className="h-4 w-4 text-gray-500" />
               </div>
             </div>
 
-            {/* Mobile view */}
-            <div className="space-y-4 p-2 md:hidden">
-              <div className="rounded-md bg-[#50443F] p-3">
-                <div className="mb-2 text-sm font-medium text-white">
-                  Subscription
-                </div>
-                <div className="font-medium text-white">
-                  {subscriptionDetails.planName}
-                </div>
-                <div className="text-sm text-gray-400">
-                  {subscriptionDetails.planType}
-                </div>
-              </div>
-
-              <div className="rounded-md bg-[#50443F] p-3">
-                <div className="mb-2 text-sm font-medium text-white">
-                  Last payment
-                </div>
-                <div className="text-white">
-                  {subscriptionDetails.lastPayment}
-                </div>
-                {subscriptionDetails.lastPayment !== "N/A" && (
-                  <Link
-                    href="#"
-                    className="text-sm text-orange-500 hover:text-orange-400"
-                  >
-                    View invoice
-                  </Link>
-                )}
-              </div>
-
-              <div className="rounded-md bg-[#50443F] p-3">
-                <div className="mb-2 text-sm font-medium text-white">
-                  Upcoming payment
-                </div>
-                <div className="text-white">
-                  {subscriptionDetails.upcomingPayment}
-                </div>
-                {subscriptionDetails.upcomingPayment !== "N/A" && (
-                  <PaymentDetailsDialog
-                    plan={subscriptionDetails.planName}
-                    nextPaymentDate={subscriptionDetails.upcomingPayment}
-                    amount={subscriptionDetails.amount}
-                    billingCycle={subscriptionDetails.billingCycle}
-                    billingType={subscriptionDetails.billingType}
-                    trigger={
-                      <Button variant="link" className="h-auto p-0">
-                        View Payment Details
-                      </Button>
-                    }
-                  />
-                )}
-              </div>
-
-              <div className="rounded-md bg-[#50443F] p-3">
-                <div className="mb-2 text-sm font-medium text-white">
-                  Status
-                </div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-white ${
-                      subscriptionDetails.status === "Active"
-                        ? "text-green-500"
-                        : subscriptionDetails.status === "Trial"
-                          ? "text-blue-500"
-                          : subscriptionDetails.status === "Expired"
-                            ? "text-red-500"
-                            : subscriptionDetails.status === "Cancelled"
-                              ? "text-yellow-500"
-                              : "text-gray-500"
-                    }`}
-                  >
-                    {subscriptionDetails.status}
-                  </span>
-                  <InfoIcon className="h-5 w-5 text-gray-500" />
-                </div>
+            <div className="rounded-md bg-[#50443F] p-4">
+              <div className="mb-2 text-sm font-medium text-white">Manage</div>
+              <div>
+                {subscriptionDetails.status === "Active" &&
+                  existingUser.stripeSubscriptionId && (
+                    <CancelSubscriptionDialog userId={existingUser.id} />
+                  )}
+                {subscriptionDetails.status === "Expired" ||
+                  ((subscriptionDetails.status === "Cancelled" ||
+                    subscriptionDetails.status === "Trial" ||
+                    subscriptionDetails.status === "Inactive") && (
+                    <Button variant="link" size="lg" asChild>
+                      <Link href="/pricing">Upgrade</Link>
+                    </Button>
+                  ))}
               </div>
             </div>
-          </div>
-
-          <div className="mt-6">
-            <Link href={"/pricing"}>
-              <GradientButton
-                className="w-full rounded-none sm:w-auto"
-                size={"lg"}
-                asChild
-              >
-                {subscriptionDetails.actionText}
-              </GradientButton>
-            </Link>
           </div>
         </div>
       </div>

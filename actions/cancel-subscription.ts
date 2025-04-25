@@ -1,13 +1,17 @@
 "use server";
 
+import { withServerActionAuth } from "@/lib/auth";
 import db from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { revalidatePath } from "next/cache";
 
-// Function to cancel subscription for a user
-export async function cancelUserSubscription(userId: string) {
+/**
+ * This function is used to cancel a subscription for a user.
+ * @param userId - The ID of the user to cancel the subscription for.
+ * @returns A promise that resolves to an object containing the type and message of the result.
+ */
+const cancelSubscription = withServerActionAuth(async (user, userId) => {
   try {
-    // Step 1: Find the user in the database
     const user = await db.user.findUnique({
       where: { id: userId },
     });
@@ -16,7 +20,6 @@ export async function cancelUserSubscription(userId: string) {
       throw new Error("User does not have an active subscription.");
     }
 
-    // Step 2: Cancel the subscription in Stripe
     const subscription = await stripe.subscriptions.cancel(
       user.stripeSubscriptionId,
     );
@@ -34,6 +37,8 @@ export async function cancelUserSubscription(userId: string) {
     });
 
     revalidatePath(`/profile/${userId}`);
+    revalidatePath(`/profile/${userId}/subscription`);
+    revalidatePath(`/`);
 
     return {
       type: "success",
@@ -46,4 +51,6 @@ export async function cancelUserSubscription(userId: string) {
       message: error.message,
     };
   }
-}
+});
+
+export { cancelSubscription };
