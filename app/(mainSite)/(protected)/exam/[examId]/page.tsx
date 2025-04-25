@@ -80,10 +80,12 @@ export default async function ExamPage(props: {
       </section>
     );
 
-  const [{ hasAccess }, { status: hasTrialAccess }] = await Promise.all([
-    checkIfUserHasAccessToExam(session.user.id as string, exam.id),
-    checkIfUserHasTrialAccess(session.user.id as string),
-  ]);
+  const { hasAccess } = await checkIfUserHasAccessToExam(
+    session.user.id as string,
+    exam.id,
+  );
+
+  console.log("user has access", { hasAccess });
 
   return (
     <div>
@@ -124,7 +126,6 @@ export default async function ExamPage(props: {
                 session={session}
                 questionLength={exam.questions.length}
                 hasAccess={hasAccess}
-                hasTrialAccess={hasTrialAccess}
               />
               <Card className="border-none">
                 <CardHeader>

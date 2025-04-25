@@ -185,16 +185,15 @@ export async function checkIfUserHasAccessToExam(
       };
     }
 
-    // 3. (Optional) Check for Trial Access
-    const userHasTrialAccess = await checkIfUserHasTrialAccess(userId);
-    console.log("user has trial access", userHasTrialAccess);
-    if (userHasTrialAccess.status) {
+    const examIsFree = await checkIfUserExamIsFree(userId, examId);
+    console.log("exam is free", examIsFree);
+    if (examIsFree.status) {
       return {
         hasAccess: true,
-        message: "User has trial access. Access granted.",
+        message: "Exam is free. Access granted.",
       };
     }
-    // If none of the above conditions are met, the user does not have access
+
     return {
       hasAccess: false,
       message: "User does not have access to this exam.",
@@ -268,7 +267,7 @@ export async function checkIfUserHasSubscription(userId: string) {
         id: userId,
       },
       select: {
-        stripeCurrentPeriodEnd: true,
+        hasActiveSubscription: true,
       },
     });
 
@@ -282,13 +281,9 @@ export async function checkIfUserHasSubscription(userId: string) {
       };
     }
 
-    const hasActiveSubscription =
-      currentUser.stripeCurrentPeriodEnd &&
-      new Date(currentUser.stripeCurrentPeriodEnd) > new Date();
-
     return {
-      status: hasActiveSubscription,
-      message: hasActiveSubscription
+      status: currentUser.hasActiveSubscription,
+      message: currentUser.hasActiveSubscription
         ? "User has active subscription"
         : "user does not active subscription",
     };
@@ -383,6 +378,44 @@ export async function checkIfUserHasLifeTimeAcess(userId: string) {
     return {
       status: false,
       message: "An error occurred while checking for lifetime access",
+    };
+  }
+}
+
+/**
+ * Checks if the exam user is trying to access is free
+ *
+ * @param {string} userId - The ID of the user.
+ * @param {string} examId - The ID of the exam.
+ * @returns {Promise<{status: boolean, message: string}>} - An object indicating if the exam is free and a corresponding message.
+ */
+export async function checkIfUserExamIsFree(userId: string, examId: string) {
+  try {
+    const exam = await db.exam.findFirst({
+      where: {
+        id: examId,
+      },
+      select: {
+        examLevel: true,
+      },
+    });
+
+    if (exam?.examLevel === "FREE") {
+      return {
+        status: true,
+        message: "Exam is free. Access granted.",
+      };
+    } else {
+      return {
+        status: false,
+        message: "Exam is not free. Access denied.",
+      };
+    }
+  } catch (error) {
+    console.error("Error checking if the exam is free:", error);
+    return {
+      status: false,
+      message: "An error occurred while checking if the exam is free",
     };
   }
 }

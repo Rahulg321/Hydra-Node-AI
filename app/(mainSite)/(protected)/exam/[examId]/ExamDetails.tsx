@@ -6,6 +6,8 @@ import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";
 import { Session } from "next-auth";
+import { GradientButton } from "@/components/buttons/gradient-button";
+import Link from "next/link";
 
 interface ExamDetailsProps {
   name: string;
@@ -20,7 +22,6 @@ interface ExamDetailsProps {
   timeAllowed: number;
   stripePriceId: string;
   hasAccess: boolean;
-  hasTrialAccess: boolean;
   session: Session;
 }
 
@@ -35,7 +36,6 @@ export function ExamDetails({
   questionLength,
   timeAllowed,
   hasAccess,
-  hasTrialAccess,
   stripePriceId,
   session,
 }: ExamDetailsProps) {
@@ -75,31 +75,11 @@ export function ExamDetails({
           </div>
         ) : (
           <>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <ExamPricingCard
-                heading="For 1 year"
-                headingTag="Yearly Billing"
-                tagline="Perfect for committed learners and professionals aiming for continuous growth and development."
-                price="$100"
-                duration="year"
-                isFeatured
-              />
-              <ExamPricingCard
-                heading="For Life time"
-                headingTag="Lifetime Billing"
-                tagline="Gain unlimited access to HydraNode's platform and resources for life."
-                price="$200"
-                duration="week"
-              />
+            <div className="mt-4 md:mt-6 lg:mt-8">
+              <GradientButton size="xl">
+                <Link href={`/pricing`}>Get Subscription</Link>
+              </GradientButton>
             </div>
-            <ExamCheckoutDialog
-              id={examId}
-              name={examName}
-              price={examPrice}
-              slug={examSlug}
-              stripePriceId={stripePriceId}
-              session={session}
-            />
           </>
         )}
       </CardContent>
