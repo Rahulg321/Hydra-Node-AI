@@ -14,10 +14,10 @@ const ExamTags = () => {
 
   // Array of exam levels
   const examLevels = [
+    { label: "Free", value: "FREE" },
     { label: "Associate", value: "ASSOCIATE" },
     { label: "Professional", value: "PROFESSIONAL" },
     { label: "Expert", value: "EXPERT" },
-    { label: "Free", value: "FREE" },
   ];
 
   const handleTagClick = (term: string) => {
