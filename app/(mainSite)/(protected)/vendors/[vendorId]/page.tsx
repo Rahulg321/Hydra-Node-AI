@@ -74,9 +74,7 @@ const VendorPage = async (props: {
   const params = await props.params;
   const vendorId = params.vendorId;
   const examLevel: ExamLevel = searchParams.examLevel || "ASSOCIATE";
-  // we are using the current vendor id so as to improve performance
   const allExams = await getCurrentVendorExams(vendorId, examLevel);
-  console.log({ allExams, vendorId, examLevel });
 
   return (
     <section className="big-container block-space-mini relative">

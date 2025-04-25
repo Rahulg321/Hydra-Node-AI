@@ -17,9 +17,10 @@ const ExamTags = () => {
     { label: "Associate", value: "ASSOCIATE" },
     { label: "Professional", value: "PROFESSIONAL" },
     { label: "Expert", value: "EXPERT" },
+    { label: "Free", value: "FREE" },
   ];
 
-  const   handleTagClick = (term: string) => {
+  const handleTagClick = (term: string) => {
     const params = new URLSearchParams(searchParams);
 
     if (term) {

@@ -192,6 +192,7 @@ enum ExamLevel {
   ASSOCIATE
   PROFESSIONAL
   EXPERT
+  FREE
 }
 
 model Tag {
