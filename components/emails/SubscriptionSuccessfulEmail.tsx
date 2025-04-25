@@ -19,7 +19,6 @@ interface SubscriptionStartEmailProps {
   email: string;
   subscriptionStartDate: string; // Date when the subscription starts
   subscriptionPlan: string; // Subscription plan name (e.g., "Pro Plan")
-  dashboardLink: string; // Link to user's dashboard
   invoiceLink: string;
 }
 
@@ -29,7 +28,6 @@ export default function SubscriptionStartEmail({
   email,
   subscriptionStartDate,
   subscriptionPlan,
-  dashboardLink,
   invoiceLink,
 }: SubscriptionStartEmailProps) {
   return (
@@ -73,10 +71,6 @@ export default function SubscriptionStartEmail({
               To start using all the premium features, you can log in to your
               account using the link below.
             </Text>
-
-            <Button style={button} href={dashboardLink}>
-              Go to Your Dashboard
-            </Button>
 
             <Hr style={hr} />
             <Text style={footer}>

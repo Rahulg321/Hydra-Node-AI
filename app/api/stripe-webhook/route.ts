@@ -153,7 +153,6 @@ export async function POST(req: Request) {
           user.email,
           subscription.items.data[0]?.price?.nickname ||
             "Your Subscription Plan",
-          `https://hydranode.ai/profile/${user.id}`,
           new Date().toLocaleDateString(), // Subscription start date
           user.firstName,
           user.lastName,
@@ -173,8 +172,6 @@ export async function POST(req: Request) {
           paymentIntent.invoice as string,
         );
         const invoiceLink = invoice.hosted_invoice_url;
-
-        console.log("payment intent in one time payment was", paymentIntent);
 
         await processExamPurchase(
           user,
