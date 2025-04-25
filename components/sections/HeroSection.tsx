@@ -61,7 +61,6 @@ export default function CertificationHero() {
         personalized learning paths.
       </p>
 
-      {/* CTA Button */}
       <Link
         href="/vendors"
         className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-[#ff7a50] to-[#ff9d7a] px-6 py-3 font-medium text-white transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20"

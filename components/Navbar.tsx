@@ -73,15 +73,6 @@ const Navbar = ({ session }: { session: Session | null }) => {
 
   return (
     <>
-      {/* Free trial announcement bar */}
-      <div className="w-full bg-orange-700 py-2 text-center text-white">
-        <div className="container mx-auto flex items-center justify-center">
-          <span className="mr-2">🔔</span>
-          <span>Get your 7 days free trial</span>
-        </div>
-      </div>
-
-      {/* Main navigation */}
       <nav
         className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
           isScrolled
