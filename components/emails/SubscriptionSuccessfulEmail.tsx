@@ -20,6 +20,7 @@ interface SubscriptionStartEmailProps {
   subscriptionStartDate: string; // Date when the subscription starts
   subscriptionPlan: string; // Subscription plan name (e.g., "Pro Plan")
   dashboardLink: string; // Link to user's dashboard
+  invoiceLink: string;
 }
 
 export default function SubscriptionStartEmail({
@@ -29,6 +30,7 @@ export default function SubscriptionStartEmail({
   subscriptionStartDate,
   subscriptionPlan,
   dashboardLink,
+  invoiceLink,
 }: SubscriptionStartEmailProps) {
   return (
     <Html>
@@ -60,6 +62,10 @@ export default function SubscriptionStartEmail({
               </Text>
               <Text style={detailsText}>
                 <strong>Start Date:</strong> {subscriptionStartDate}
+              </Text>
+              <Text style={detailsText}>
+                <strong>Invoice:</strong>{" "}
+                <Link href={invoiceLink}>Get your invoice here</Link>
               </Text>
             </Section>
 

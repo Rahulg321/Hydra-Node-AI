@@ -133,7 +133,6 @@ export const sendSubscriptionStartEmail = async (
   subscriptionStartDate: string,
   firstName: string | null,
   lastName: string | null,
-  invoiceLink: string,
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
@@ -146,7 +145,6 @@ export const sendSubscriptionStartEmail = async (
       subscriptionStartDate,
       subscriptionPlan,
       dashboardLink,
-      invoiceLink,
     }),
   });
 

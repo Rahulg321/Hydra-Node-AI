@@ -157,7 +157,7 @@ export async function POST(req: Request) {
           new Date().toLocaleDateString(), // Subscription start date
           user.firstName,
           user.lastName,
-          invoiceLink || "", // Add invoice link
+          invoiceLink || "",
         );
       }
       // One-time payment case
@@ -204,8 +204,6 @@ async function updateUserWithSubscription(
     // Check if the subscription has a price object and unit_amount
     const subscriptionItem = subscription.items.data[0];
     const price = subscriptionItem?.price;
-
-    console.log("subscription item is", subscriptionItem);
 
     if (
       !price ||
