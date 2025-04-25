@@ -29,7 +29,17 @@ export default auth(async function middleware(req) {
     console.log(
       "Access denied for not logged-in users trying to access a protected base route",
     );
-    return NextResponse.redirect(new URL("/login", req.url));
+    let callbackUrl = req.nextUrl.pathname;
+
+    if (req.nextUrl.search) {
+      callbackUrl += req.nextUrl.search;
+    }
+
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return NextResponse.redirect(
+      new URL(`/login?callbackUrl=${encodedCallbackUrl}`, req.url),
+    );
   }
 
   if (AUTH_ROUTES.includes(currentPathname)) {
@@ -49,8 +59,17 @@ export default auth(async function middleware(req) {
     // redirect unauthorized users
 
     if (!isLoggedIn) {
-      console.log("access denied for not logged in users");
-      return NextResponse.redirect(new URL("/login", req.url));
+      let callbackUrl = req.nextUrl.pathname;
+
+      if (req.nextUrl.search) {
+        callbackUrl += req.nextUrl.search;
+      }
+
+      const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+      return NextResponse.redirect(
+        new URL(`/login?callbackUrl=${encodedCallbackUrl}`, req.url),
+      );
     }
   }
 

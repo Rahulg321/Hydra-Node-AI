@@ -5,14 +5,20 @@ import { Button } from "@/components/ui/button";
 import { BsGoogle } from "react-icons/bs";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { useSearchParams } from "next/navigation";
 
 const SigninGoogle = () => {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
   return (
     <div>
       <Button
         type="submit"
         onClick={() => {
-          signIn("google", { callbackUrl: DEFAULT_LOGIN_REDIRECT });
+          signIn("google", {
+            callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+          });
         }}
         variant="outline"
         className="relative flex w-full items-center justify-center gap-2 border-gray-700 py-6 hover:bg-gradient-to-b hover:from-zinc-900 hover:to-zinc-800"

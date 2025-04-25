@@ -37,6 +37,8 @@ const LoginForm = () => {
   const [success, setSuccess] = useState("");
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
   const { toast } = useToast();
   let urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
@@ -59,7 +61,7 @@ const LoginForm = () => {
       setError("");
       setSuccess("");
 
-      const response = await LoginUser(values);
+      const response = await LoginUser(values, callbackUrl);
 
       if (response?.error) {
         // reset the entire form

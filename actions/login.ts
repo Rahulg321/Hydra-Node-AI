@@ -29,8 +29,13 @@ const rateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "1m"),
 });
 
-export async function LoginUser(values: LoginFormSchema) {
-  const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
+export async function LoginUser(
+  values: LoginFormSchema,
+  callbackUrl?: string | null,
+) {
+  const ip =
+    (await headers()).get("x-real-ip") ||
+    (await headers()).get("x-forwarded-for");
 
   const {
     remaining,
@@ -174,10 +179,8 @@ export async function LoginUser(values: LoginFormSchema) {
     const response = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
-
-    console.log("Resonse after signing in", response);
 
     return {
       successful_login: true,
