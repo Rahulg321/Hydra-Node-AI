@@ -1,3 +1,16 @@
+import {
+  Html,
+  Head,
+  Preview,
+  Body,
+  Container,
+  Section,
+  Text,
+  Button,
+  Hr,
+  Link,
+} from "@react-email/components";
+
 interface SubscriptionStartEmailProps {
   firstName: string | null;
   lastName: string | null;
@@ -17,6 +30,84 @@ export default function SubscriptionStartEmail({
   dashboardLink,
   invoiceLink,
 }: SubscriptionStartEmailProps) {
+  const main = {
+    backgroundColor: "#f6f9fc",
+    fontFamily: "Arial, sans-serif",
+  };
+
+  const container = {
+    margin: "0 auto",
+    padding: "20px 0",
+    width: "100%",
+    maxWidth: "600px",
+  };
+
+  const box = {
+    padding: "30px",
+    backgroundColor: "#ffffff",
+    borderRadius: "5px",
+  };
+
+  const heading = {
+    fontSize: "24px",
+    fontWeight: "bold",
+    textAlign: "center" as const,
+    margin: "30px 0",
+    color: "#333",
+  };
+
+  const paragraph = {
+    fontSize: "16px",
+    lineHeight: "26px",
+    color: "#333",
+    margin: "16px 0",
+  };
+
+  const detailsContainer = {
+    backgroundColor: "#f9f9f9",
+    padding: "15px",
+    borderRadius: "5px",
+    margin: "20px 0",
+  };
+
+  const detailsHeading = {
+    fontSize: "18px",
+    fontWeight: "bold",
+    margin: "10px 0",
+    color: "#333",
+  };
+
+  const detailsText = {
+    fontSize: "14px",
+    margin: "8px 0",
+    color: "#555",
+  };
+
+  const button = {
+    backgroundColor: "#0070f3",
+    borderRadius: "5px",
+    color: "#fff",
+    fontSize: "16px",
+    fontWeight: "bold",
+    textDecoration: "none",
+    textAlign: "center" as const,
+    display: "block",
+    padding: "12px",
+    margin: "25px 0",
+  };
+
+  const hr = {
+    borderColor: "#e6ebf1",
+    margin: "20px 0",
+  };
+
+  const footer = {
+    color: "#8898aa",
+    fontSize: "12px",
+    lineHeight: "22px",
+    textAlign: "center" as const,
+  };
+
   return (
     <Html>
       <Head>

@@ -63,7 +63,7 @@ export default function LifetimeAccessEmail({
             </Text>
 
             <Section style={detailsContainer}>
-              <Text style={detailsHeading}>What's Next?</Text>
+              <Text style={detailsHeading}>What&apos;s Next?</Text>
               <Text style={detailsText}>
                 <strong>Product Name:</strong> {productName}
               </Text>
