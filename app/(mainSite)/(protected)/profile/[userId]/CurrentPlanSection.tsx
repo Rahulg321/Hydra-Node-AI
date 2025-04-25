@@ -24,6 +24,7 @@ export default function CurrentPlanSection({
   console.log("existingUser", existingUser);
 
   const getSubscriptionDetails = () => {
+    // Lifetime access takes precedence over all other subscription types
     if (existingUser.hasLifetimeAccess) {
       return {
         planName: "Lifetime Plan",
@@ -39,6 +40,60 @@ export default function CurrentPlanSection({
       };
     }
 
+    // Check for active subscription
+    if (
+      existingUser.hasActiveSubscription &&
+      existingUser.stripeSubscriptionId
+    ) {
+      // User has an active subscription
+      if (
+        existingUser.stripeCurrentPeriodEnd &&
+        new Date(existingUser.stripeCurrentPeriodEnd) > currentDate
+      ) {
+        const lastPaymentDate = new Date(existingUser.stripeCurrentPeriodEnd);
+        lastPaymentDate.setFullYear(lastPaymentDate.getFullYear() - 1);
+
+        return {
+          planName: "Pro Plan",
+          planType: "Yearly",
+          lastPayment: formatDateWithSuffix(lastPaymentDate),
+          upcomingPayment: formatDateWithSuffix(
+            new Date(existingUser.stripeCurrentPeriodEnd),
+          ),
+          status: "Active",
+          actionLink: "#",
+          actionText: "Manage Subscription",
+          amount: "$100",
+          billingCycle: "Yearly",
+          billingType: "Subscription",
+        };
+      }
+    }
+
+    // Check for cancelled subscription that still has access until the end of the period
+    if (
+      !existingUser.hasActiveSubscription &&
+      existingUser.stripeSubscriptionId &&
+      existingUser.stripeCurrentPeriodEnd &&
+      new Date(existingUser.stripeCurrentPeriodEnd) > currentDate
+    ) {
+      return {
+        planName: "Cancelled Plan",
+        planType: "Yearly",
+        lastPayment: "N/A",
+        upcomingPayment: formatDateWithSuffix(
+          new Date(existingUser.stripeCurrentPeriodEnd),
+        ),
+        status: "Cancelled",
+        actionLink: "/pricing",
+        actionText: "Get Subscription",
+        amount: "$100",
+        billingCycle: "Yearly",
+        billingType: "Subscription",
+      };
+    }
+
+    // Check for expired subscription
     if (
       existingUser.stripeCurrentPeriodEnd &&
       new Date(existingUser.stripeCurrentPeriodEnd) <= currentDate
@@ -59,52 +114,28 @@ export default function CurrentPlanSection({
       };
     }
 
+    // Check for active trial
     if (
-      existingUser.stripeSubscriptionId &&
-      new Date(existingUser.stripeCurrentPeriodEnd as Date) > currentDate &&
-      !existingUser.hasActiveSubscription
+      existingUser.trialEndsAt &&
+      new Date(existingUser.trialEndsAt) > currentDate
     ) {
       return {
-        planName: "Cancelled Plan",
-        planType: "Yearly",
+        planName: "Trial Plan",
+        planType: "Trial",
         lastPayment: "N/A",
         upcomingPayment: formatDateWithSuffix(
-          new Date(existingUser.stripeCurrentPeriodEnd as Date),
+          new Date(existingUser.trialEndsAt),
         ),
-        status: "Cancelled",
+        status: "Trial",
         actionLink: "/pricing",
-        actionText: "Get Subscription",
-        amount: "$100",
-        billingCycle: "Yearly",
-        billingType: "Subscription",
+        actionText: "Subscribe Now",
+        amount: "$0",
+        billingCycle: "7 days",
+        billingType: "Trial",
       };
     }
 
-    if (
-      existingUser.stripeSubscriptionId &&
-      new Date(existingUser.stripeCurrentPeriodEnd as Date) > currentDate
-    ) {
-      const lastPaymentDate = new Date(
-        existingUser.stripeCurrentPeriodEnd as Date,
-      );
-      lastPaymentDate.setFullYear(lastPaymentDate.getFullYear() - 1);
-
-      return {
-        planName: "Pro Plan",
-        planType: "Yearly",
-        lastPayment: formatDateWithSuffix(lastPaymentDate),
-        upcomingPayment: formatDateWithSuffix(
-          new Date(existingUser.stripeCurrentPeriodEnd as Date),
-        ),
-        status: "Active",
-        actionLink: "#",
-        actionText: "Manage Subscription",
-        amount: "$100",
-        billingCycle: "Yearly",
-        billingType: "Subscription",
-      };
-    }
-
+    // Check for expired trial
     if (
       existingUser.trialEndsAt &&
       new Date(existingUser.trialEndsAt) <= currentDate
@@ -123,23 +154,7 @@ export default function CurrentPlanSection({
       };
     }
 
-    if (existingUser.trialEndsAt && !existingUser.stripeSubscriptionId) {
-      return {
-        planName: "Trial Plan",
-        planType: "Trial",
-        lastPayment: "N/A",
-        upcomingPayment: formatDateWithSuffix(
-          new Date(existingUser.trialEndsAt),
-        ),
-        status: "Trial",
-        actionLink: "/pricing",
-        actionText: "Subscribe Now",
-        amount: "$0",
-        billingCycle: "7 days",
-        billingType: "Trial",
-      };
-    }
-
+    // Default case - no plan
     return {
       planName: "No Plan",
       planType: "None",
@@ -246,14 +261,14 @@ export default function CurrentPlanSection({
                 existingUser.stripeSubscriptionId && (
                   <CancelSubscriptionDialog userId={existingUser.id} />
                 )}
-              {subscriptionDetails.status === "Expired" ||
-                ((subscriptionDetails.status === "Cancelled" ||
-                  subscriptionDetails.status === "Trial" ||
-                  subscriptionDetails.status === "Inactive") && (
-                  <Button variant="link" size="lg" asChild>
-                    <Link href="/pricing">Upgrade</Link>
-                  </Button>
-                ))}
+              {(subscriptionDetails.status === "Expired" ||
+                subscriptionDetails.status === "Cancelled" ||
+                subscriptionDetails.status === "Trial" ||
+                subscriptionDetails.status === "Inactive") && (
+                <Button variant="link" size="lg" asChild>
+                  <Link href="/pricing">Upgrade</Link>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -340,14 +355,14 @@ export default function CurrentPlanSection({
                   existingUser.stripeSubscriptionId && (
                     <CancelSubscriptionDialog userId={existingUser.id} />
                   )}
-                {subscriptionDetails.status === "Expired" ||
-                  ((subscriptionDetails.status === "Cancelled" ||
-                    subscriptionDetails.status === "Trial" ||
-                    subscriptionDetails.status === "Inactive") && (
-                    <Button variant="link" size="lg" asChild>
-                      <Link href="/pricing">Upgrade</Link>
-                    </Button>
-                  ))}
+                {(subscriptionDetails.status === "Expired" ||
+                  subscriptionDetails.status === "Cancelled" ||
+                  subscriptionDetails.status === "Trial" ||
+                  subscriptionDetails.status === "Inactive") && (
+                  <Button variant="link" size="lg" asChild>
+                    <Link href="/pricing">Upgrade</Link>
+                  </Button>
+                )}
               </div>
             </div>
           </div>
