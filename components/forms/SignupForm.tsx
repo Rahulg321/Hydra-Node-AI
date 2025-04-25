@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { Suspense, useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -139,7 +139,9 @@ const SignupForm = () => {
         <span className="mx-4 text-gray-500">or</span>
         <div className="flex-grow border-t border-gray-300" />
       </div>
-      <SigninGoogle />
+      <Suspense>
+        <SigninGoogle />
+      </Suspense>
     </div>
   );
 };

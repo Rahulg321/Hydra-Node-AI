@@ -1,7 +1,7 @@
 import SignupForm from "@/components/forms/SignupForm";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import LoginBackground from "@/public/auth/loginSignupImage.png";
 import LogoDark from "@/public/logos/h_logo.svg";
 import LogoLight from "@/public/logos/light_logo.png";
@@ -21,7 +21,9 @@ const SignUpPage = () => {
       />
       <div className="flex flex-1 flex-col items-center justify-center p-8 md:p-12">
         <h3 className="mb-4">Sign Up For Hydranode Platform</h3>
-        <SignupForm />
+        <Suspense>
+          <SignupForm />
+        </Suspense>
         <div className="mt-4 text-center">
           <p>
             Already have an account?{" "}

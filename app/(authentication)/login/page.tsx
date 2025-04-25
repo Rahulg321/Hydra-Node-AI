@@ -33,7 +33,9 @@ const LoginPage = () => {
               Enter your email & password to login to your account
             </p>
           </div>
-          <SigninGoogle />
+          <Suspense>
+            <SigninGoogle />
+          </Suspense>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-gray-700"></span>
