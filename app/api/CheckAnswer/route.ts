@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
     // Retrieve question from database
     const databaseQuestion = await db.question.findFirst({
       where: { id: questionId },
+      select: { correctAnswers: true, questionType: true },
     });
 
     if (!databaseQuestion) {
@@ -63,6 +64,15 @@ export async function POST(request: NextRequest) {
     // Track if the user skipped the question
     const isSkipped = userAnswer.length === 0;
 
+    // Get the current max order for this quiz session
+    const maxOrderAttempt = await db.userAttempt.findFirst({
+      where: { quizSessionId },
+      orderBy: { order: "desc" },
+      select: { order: true },
+    });
+
+    const nextOrder = (maxOrderAttempt?.order ?? 0) + 1;
+
     // Upsert UserAttempt with the result
     await db.userAttempt.upsert({
       where: {
@@ -77,11 +87,13 @@ export async function POST(request: NextRequest) {
         userAnswer: userAnswer.join(","),
         isCorrect: answerResult,
         skipped: isSkipped,
+        order: nextOrder,
       },
       update: {
         userAnswer: userAnswer.join(","),
         isCorrect: answerResult,
         skipped: isSkipped,
+        order: nextOrder,
       },
     });
 

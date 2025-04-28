@@ -73,7 +73,7 @@ const VendorPage = async (props: {
   const searchParams = await props.searchParams;
   const params = await props.params;
   const vendorId = params.vendorId;
-  const examLevel: ExamLevel = searchParams.examLevel || "ASSOCIATE";
+  const examLevel: ExamLevel = searchParams.examLevel || "FREE";
   const allExams = await getCurrentVendorExams(vendorId, examLevel);
 
   return (

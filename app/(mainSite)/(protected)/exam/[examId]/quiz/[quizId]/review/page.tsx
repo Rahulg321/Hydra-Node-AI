@@ -73,6 +73,7 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
           isCorrect: true,
           userAnswer: true,
           question: true,
+          order: true,
         },
       },
     },
@@ -87,14 +88,16 @@ const ReviewExamPage = async (props: ReviewExamPageProps) => {
     );
   }
 
-  let userAttempts = quizSession.userAttempts;
+  let userAttempts = quizSession.userAttempts.sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
   const exam = quizSession.exam;
-  const questions = quizSession.userAttempts.map((attempt) => attempt.question);
+  const questions = userAttempts.map((attempt) => attempt.question);
   let questionsLimit = quizSession.questionCount;
 
   const sliceQuestions = questions.slice(0, questionsLimit);
 
-  console.log("user attempts in reveiw page", userAttempts);
+  console.log("user attempts in review page", userAttempts);
 
   return (
     <section className="min-h-screen">

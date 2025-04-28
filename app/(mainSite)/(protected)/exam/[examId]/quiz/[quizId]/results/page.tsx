@@ -50,6 +50,7 @@ const QuizResultsPage = async (props: props) => {
         select: {
           skipped: true,
           isCorrect: true,
+          order: true,
         },
       },
     },
@@ -95,12 +96,14 @@ const QuizResultsPage = async (props: props) => {
   } = currentQuizSession;
 
   const userAttempts = currentQuizSession.userAttempts;
-
+  const sortedUserAttempts = userAttempts.sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
   return (
     <section className="px-2 sm:px-4">
       <div className="min-h-screen flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)]">
         <ExamGridResultSheet
-          userAttempts={userAttempts}
+          userAttempts={sortedUserAttempts}
           totalQuestions={totalQuestions}
           totalTimeTaken={totalTimeTaken}
         />

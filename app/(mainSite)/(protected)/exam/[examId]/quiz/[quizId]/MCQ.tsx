@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-// import { useExamModeContext } from "@/lib/exam-mode-context"; // Not used in the provided snippet
 import { cn, formatTime } from "@/lib/utils";
 import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
@@ -16,7 +15,7 @@ import {
   Menu,
   TableOfContents,
 } from "lucide-react";
-import Link from "next/link";
+
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Sheet,

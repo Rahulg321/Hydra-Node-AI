@@ -17,14 +17,14 @@ const CorrectQuestionGrid = ({
         <div className="grid grid-cols-3 gap-1 px-2 py-4 lg:grid-cols-4">
           {Array.from({ length: totalQuestions }).map((_, index) => {
             let statusClass = "border-primary";
-            if (questionStatus[index] === "attempted") {
-              statusClass = "bg-orange-700";
-            } else if (questionStatus[index] === "skipped") {
-              statusClass = "bg-yellow-500 border-yellow-500";
-            } else if (questionStatus[index] === "correct") {
+            if (questionStatus[index] === "correct") {
               statusClass = "bg-[#065A1D]";
             } else if (questionStatus[index] === "incorrect") {
               statusClass = "bg-[#600000]";
+            } else if (questionStatus[index] === "attempted") {
+              statusClass = "bg-orange-700";
+            } else if (questionStatus[index] === "skipped") {
+              statusClass = "bg-yellow-500 border-yellow-500";
             }
 
             return (
