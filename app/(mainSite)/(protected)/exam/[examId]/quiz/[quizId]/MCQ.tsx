@@ -346,7 +346,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     );
     if (newIndex !== questionIndex) {
       setQuestionIndex(newIndex);
-      setSelected([]); // Reset selection when question changes via URL
       setShowAnswer(false); // Hide answer when navigating
     }
   }, [searchParams, questions.length, questionIndex]); // Removed questionIndex dependency to prevent potential loops

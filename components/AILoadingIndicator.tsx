@@ -156,7 +156,7 @@ const AILoadingIndicator = ({
         <div className="text-center">
           <h2 className="mb-2 font-semibold">
             We Generated
-            <span className="bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text text-transparent">
+            <span className="ml-2 bg-gradient-to-r from-[rgba(255,195,177,0.9)] to-[rgba(255,98,24,0.9)] bg-clip-text text-transparent">
               {examLength} Questions
             </span>{" "}
             for you
