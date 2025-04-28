@@ -232,7 +232,7 @@ function ProfileMenu({ session }: { session: Session }) {
             className="flex items-center gap-2"
           >
             <User className="h-4 w-4" />
-            Profile
+            My Learnings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -243,7 +243,18 @@ function ProfileMenu({ session }: { session: Session }) {
             className="flex items-center gap-2"
           >
             <BookOpen className="h-4 w-4" />
-            My Learnings
+            Exam History
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/profile/${session.user.id}/info`}
+            className="flex items-center gap-2"
+          >
+            <BookOpen className="h-4 w-4" />
+            My Profile
           </Link>
         </DropdownMenuItem>
 
