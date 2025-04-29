@@ -3,17 +3,17 @@
 import {
   SignUpFormSchema,
   SignUpFormZodType,
-} from "@/lib/schemas/SignUpFormSchema";
+} from "@/hooks/lib/schemas/SignUpFormSchema";
 import * as z from "zod";
 import bcrypt from "bcryptjs";
 import db from "@/hooks/lib/db";
 import { getUserByEmail } from "@/data/user";
-import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationTokenEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/hooks/lib/tokens";
+import { sendVerificationTokenEmail } from "@/hooks/lib/mail";
 import { addDays } from "date-fns";
 
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "@/lib/redis";
+import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 
 const rateLimit = new Ratelimit({

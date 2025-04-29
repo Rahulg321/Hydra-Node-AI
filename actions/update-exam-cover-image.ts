@@ -3,7 +3,7 @@
 import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "@/lib/redis";
+import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 
 const rateLimit = new Ratelimit({

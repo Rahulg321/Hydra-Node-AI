@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "@/lib/redis";
+import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 import db from "@/hooks/lib/db";
 import { auth } from "@/auth";

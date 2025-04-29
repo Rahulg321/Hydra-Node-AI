@@ -6,10 +6,10 @@ import db from "@/hooks/lib/db";
 import {
   NewPasswordFormSchema,
   NewPasswordFormZodType,
-} from "@/lib/schemas/NewPasswordSchema";
+} from "@/hooks/lib/schemas/NewPasswordSchema";
 import bcrypt from "bcryptjs";
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "@/lib/redis";
+import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 
 const rateLimit = new Ratelimit({

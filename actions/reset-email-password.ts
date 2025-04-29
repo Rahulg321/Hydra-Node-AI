@@ -5,7 +5,7 @@ import db from "@/hooks/lib/db";
 import {
   ProfileFormSchema,
   ProfileFormZodType,
-} from "@/lib/schemas/ProfileFormSchema";
+} from "@/hooks/lib/schemas/ProfileFormSchema";
 
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";

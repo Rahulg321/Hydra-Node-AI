@@ -1,13 +1,12 @@
 "use server";
 
 import { getUserByEmail } from "@/data/user";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/hooks/lib/auth";
 import db from "@/hooks/lib/db";
-import { sendVerificationTokenEmail } from "@/lib/mail";
-import { EditProfileFormZodType } from "@/lib/schemas/EditProfileFormSchema";
-import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationTokenEmail } from "@/hooks/lib/mail";
+import { EditProfileFormZodType } from "@/hooks/lib/schemas/EditProfileFormSchema";
+import { generateVerificationToken } from "@/hooks/lib/tokens";
 import { revalidatePath } from "next/cache";
-import bcrypt from "bcryptjs";
 
 const EditUserProfile = async (
   values: EditProfileFormZodType,

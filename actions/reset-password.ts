@@ -1,12 +1,12 @@
 "use server";
 
 import { getUserByEmail } from "@/data/user";
-import { sendPasswordResetEmail } from "@/lib/mail";
+import { sendPasswordResetEmail } from "@/hooks/lib/mail";
 import {
   ResetPasswordFormSchema,
   ResetPasswordFormZodType,
-} from "@/lib/schemas/ResetPasswordFormSchema";
-import { generatePasswordResetToken } from "@/lib/tokens";
+} from "@/hooks/lib/schemas/ResetPasswordFormSchema";
+import { generatePasswordResetToken } from "@/hooks/lib/tokens";
 
 export async function resetPassword(values: ResetPasswordFormZodType) {
   try {

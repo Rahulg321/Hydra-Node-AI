@@ -1,13 +1,13 @@
 "use server";
 
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/hooks/lib/auth";
 import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import {
   ResetLoggedUserPasswordSchema,
   ResetLoggedUserPasswordType,
-} from "@/lib/schemas/ResetLoggedUserPassword";
+} from "@/hooks/lib/schemas/ResetLoggedUserPassword";
 
 /**
  * Resets the password for a logged-in user.
