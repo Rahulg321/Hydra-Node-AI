@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   LoginFormSchema,
   LoginFormZodType,
-} from "@/lib/schemas/LoginFormSchema";
+} from "@/hooks/lib/schemas/LoginFormSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import {
   ContactFormSchema,
   ContactFormSchemaZodType,
-} from "@/lib/schemas/ContactFormSchema";
+} from "@/hooks/lib/schemas/ContactFormSchema";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from "@/actions/contact-email";

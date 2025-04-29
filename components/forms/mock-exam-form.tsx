@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import {
   MockExamFormSchema,
   MockExamZodType,
-} from "@/lib/schemas/mock-exam-schema";
+} from "@/hooks/lib/schemas/mock-exam-schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,7 +26,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ExamModeValues, useExamModeContext } from "@/lib/exam-mode-context";
+import {
+  ExamModeValues,
+  useExamModeContext,
+} from "@/hooks/lib/exam-mode-context";
 import CreateCustomExam from "@/actions/custom-exam";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";

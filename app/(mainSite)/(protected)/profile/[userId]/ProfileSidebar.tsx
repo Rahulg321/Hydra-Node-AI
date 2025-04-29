@@ -1,7 +1,7 @@
 import { ProfilePicUploadDialog } from "@/components/Dialogs/ProfilePicUploadDialog";
 import { ResetUserPasswordDialog } from "@/components/Dialogs/ResetUserPasswordDialog";
 import EditProfileForm from "@/components/forms/edit-profile-form";
-import { getPlaceholderForRemoteImage } from "@/lib/get-placeholder";
+import { getPlaceholderForRemoteImage } from "@/hooks/lib/get-placeholder";
 import { User } from "@prisma/client";
 import { Session } from "next-auth";
 import Image from "next/image";

@@ -1,8 +1,8 @@
 "use server";
 
 import db from "@/hooks/lib/db";
-import { ExamModeValues } from "@/lib/exam-mode-context";
-import { MockExamZodType } from "@/lib/schemas/mock-exam-schema";
+import { ExamModeValues } from "@/hooks/lib/exam-mode-context";
+import { MockExamZodType } from "@/hooks/lib/schemas/mock-exam-schema";
 
 export default async function CreateCustomExam(
   values: MockExamZodType,

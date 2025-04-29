@@ -3,7 +3,7 @@ import { ProfilePicUploadDialog } from "@/components/Dialogs/ProfilePicUploadDia
 import { ResetUserPasswordDialog } from "@/components/Dialogs/ResetUserPasswordDialog";
 import AccountInfoForm from "@/components/forms/account-info-form";
 import SocialInfoForm from "@/components/forms/social-info-form";
-import { getPlaceholderForRemoteImage } from "@/lib/get-placeholder";
+import { getPlaceholderForRemoteImage } from "@/hooks/lib/get-placeholder";
 import { getUserById } from "@/prisma/queries";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";

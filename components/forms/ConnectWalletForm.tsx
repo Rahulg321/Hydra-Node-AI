@@ -18,7 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   ConnectWalletFormSchema,
   ConnectWalletFormZodType,
-} from "@/lib/schemas/ConnectWalletFormSchema";
+} from "@/hooks/lib/schemas/ConnectWalletFormSchema";
 
 const ConnectWalletForm = () => {
   const { toast } = useToast();

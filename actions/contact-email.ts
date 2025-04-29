@@ -1,9 +1,9 @@
 "use server";
 
-import { sendContactFormEmail } from "@/lib/mail";
-import { ContactFormSchemaZodType } from "@/lib/schemas/ContactFormSchema";
+import { sendContactFormEmail } from "@/hooks/lib/mail";
+import { ContactFormSchemaZodType } from "@/hooks/lib/schemas/ContactFormSchema";
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "@/lib/redis";
+import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 
 const rateLimit = new Ratelimit({

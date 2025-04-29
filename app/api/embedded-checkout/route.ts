@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { stripe } from "@/lib/stripe";
+import { stripe } from "@/hooks/lib/stripe";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 

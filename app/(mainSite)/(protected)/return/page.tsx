@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { GradientButton } from "@/components/buttons/gradient-button";
 import { Button } from "@/components/ui/button";
-import { stripe } from "@/lib/stripe";
+import { stripe } from "@/hooks/lib/stripe";
 import Link from "next/link";
 import React from "react";
 import {

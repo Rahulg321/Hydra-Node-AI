@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   LoginFormSchema,
   LoginFormZodType,
-} from "@/lib/schemas/LoginFormSchema";
+} from "@/hooks/lib/schemas/LoginFormSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,7 +24,7 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   ProfileFormSchema,
   ProfileFormZodType,
-} from "@/lib/schemas/ProfileFormSchema";
+} from "@/hooks/lib/schemas/ProfileFormSchema";
 import { resetEmailPassword } from "@/actions/reset-email-password";
 import { Session } from "next-auth";
 

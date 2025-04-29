@@ -8,7 +8,7 @@ import {
 import db from "@/hooks/lib/db";
 import slugify from "slugify";
 import { revalidatePath } from "next/cache";
-import { stripe } from "@/lib/stripe";
+import { stripe } from "@/hooks/lib/stripe";
 
 export default async function createVendorExam(data: string) {
   try {

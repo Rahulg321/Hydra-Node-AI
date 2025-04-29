@@ -1,6 +1,6 @@
 // "use server";
 
-// import { SignUpFormSchema } from "@/lib/schemas/SignUpFormSchema";
+// import { SignUpFormSchema } from "@/hooks/lib/schemas/SignUpFormSchema";
 // import * as z from "zod";
 
 // export async function RegisterUser(values: SignUpFormSchema) {

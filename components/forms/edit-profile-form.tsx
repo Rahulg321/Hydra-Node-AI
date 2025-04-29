@@ -20,7 +20,7 @@ import { Session } from "next-auth";
 import {
   EditProfileFormSchema,
   EditProfileFormZodType,
-} from "@/lib/schemas/EditProfileFormSchema";
+} from "@/hooks/lib/schemas/EditProfileFormSchema";
 import EditUserProfile from "@/actions/edit-profile";
 import { PasswordInput } from "../ui/password-input";
 import useCurrentUser from "@/hooks/use-current-user";

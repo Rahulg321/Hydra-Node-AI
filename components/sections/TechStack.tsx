@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { IconCloud } from "@/lib/magicui/icon-cloud";
+import { IconCloud } from "@/hooks/lib/magicui/icon-cloud";
 
 const slugs = [
   "typescript",
