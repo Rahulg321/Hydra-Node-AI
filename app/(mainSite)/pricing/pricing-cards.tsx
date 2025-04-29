@@ -48,7 +48,7 @@ const PricingCards = () => {
       description: "Ideal for serious learners",
       priceId:
         billingPeriod === "yearly"
-          ? "price_1RGe7PIbE21KKZM94OWnAMWS"
+          ? "price_1RJE5CIbE21KKZM9OPSQoVfS"
           : "price_1RGe2CIbE21KKZM9LvUkDVpj",
       mode: "subscription",
       price: billingPeriod === "yearly" ? 149 : 15,
