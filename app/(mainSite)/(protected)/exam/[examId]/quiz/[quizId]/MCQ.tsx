@@ -714,7 +714,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                         | "multiple_choice"
                     }
                     optionText={optionText}
-                    isShowAnswer={showAnswer} // Pass state to Option
+                    isShowAnswer={showAnswer}
                     optionExplanation={optionExp}
                     isCorrect={isCorrect}
                     selected={isSelected}

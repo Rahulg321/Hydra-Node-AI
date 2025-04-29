@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { Play, XIcon } from "lucide-react";
 
-import { cn } from "../../lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import Image from "next/image";
 
 type AnimationStyle =
