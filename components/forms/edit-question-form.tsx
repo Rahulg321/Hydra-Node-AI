@@ -29,7 +29,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Image } from "../minimal-tiptap/extensions";
 import { Editor } from "@tiptap/core";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 // import editSingleQuestion from "@/app/actions/EditSingleQuestion";
 import { useToast } from "../ui/use-toast";
 

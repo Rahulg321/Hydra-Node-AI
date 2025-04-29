@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/lib/redis";
@@ -13,7 +13,9 @@ const rateLimit = new Ratelimit({
 
 const UpdateExamCoverImage = async (formData: FormData, examId: string) => {
   try {
-    const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
+    const ip =
+      (await headers()).get("x-real-ip") ||
+      (await headers()).get("x-forwarded-for");
 
     const {
       remaining,

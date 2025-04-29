@@ -1,6 +1,6 @@
 import React from "react";
 import { manrope, poppins } from "../fonts";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { Metadata } from "next";
 import "../globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";

@@ -1,17 +1,15 @@
 import EditQuestionForm from "@/components/forms/edit-question-form";
 import HtmlContent from "@/components/html-content";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import React from "react";
 import DeleteQuestionButton from "./delete-question-button";
 
-const SpecificQuestionPage = async (
-  props: {
-    params: Promise<{
-      uid: string;
-      questionId: string;
-    }>;
-  }
-) => {
+const SpecificQuestionPage = async (props: {
+  params: Promise<{
+    uid: string;
+    questionId: string;
+  }>;
+}) => {
   const params = await props.params;
   const examId = params.uid;
   const questionId = params.questionId;

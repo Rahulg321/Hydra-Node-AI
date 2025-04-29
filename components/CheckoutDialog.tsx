@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { PricingTier } from "./sections/pricing/pricing-cards";
 import clsx from "clsx";
 import { Session } from "next-auth";

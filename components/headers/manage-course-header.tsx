@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Settings, Menu } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import Link from "next/link";
 
 interface HeaderProps {

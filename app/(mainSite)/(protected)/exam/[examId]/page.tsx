@@ -1,10 +1,10 @@
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import {
   checkIfUserHasAccessToExam,
   checkIfUserHasTrialAccess,
-} from "@/lib/utils";
+} from "@/hooks/lib/utils";
 import { MultiStepExamDialog } from "@/components/Dialogs/MultiStepExamDialog";
 import ExamCheckoutDialog from "@/components/ExamCheckoutDialog";
 import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";

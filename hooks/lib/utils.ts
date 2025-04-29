@@ -5,6 +5,75 @@ import { stripe } from "./stripe";
 import { format } from "date-fns"; // Assuming you're using date-fns or similar for date formatting
 
 /**
+ * Parses the userAnswer string based on question type (assuming Question data is available)
+ * @param answerString - The userAnswer string
+ * @param isMultiSelect - Whether the question is a multi-select question
+ * @returns The parsed userAnswer as an array of numbers
+ */
+export const parseUserAnswer = (
+  answerString: string | null,
+  isMultiSelect: boolean,
+): number[] => {
+  if (!answerString) return [];
+  if (isMultiSelect) {
+    return answerString
+      .split(",")
+      .map(Number)
+      .filter((n) => !isNaN(n));
+  } else {
+    const num = parseInt(answerString, 10);
+    return isNaN(num) ? [] : [num];
+  }
+};
+
+/**
+ * Formats the selected options array into a string for DB storage
+ * @param selectedOptions - The selected options as an array of numbers
+ * @param isMultiSelect - Whether the question is a multi-select question
+ * @returns The formatted string for DB storage
+ */
+export const formatUserAnswer = (
+  selectedOptions: number[],
+  isMultiSelect: boolean,
+): string => {
+  if (!selectedOptions || selectedOptions.length === 0) return "";
+  if (isMultiSelect) {
+    return selectedOptions.sort((a, b) => a - b).join(",");
+  } else {
+    return selectedOptions[0]?.toString() ?? ""; // Take the first element for single choice
+  }
+};
+
+/**
+ * Checks if the user's answer is correct for a multiple choice question
+ * @param correctAnswersStr - The correct answers as a comma-separated string
+ * @param userAnswer - The user's answer as an array of numbers
+ * @returns true if the user's answer is correct, false otherwise
+ */
+export function areAnswersCorrect(
+  correctAnswersStr: string,
+  userAnswer: number[],
+) {
+  // Step 1: Convert correctAnswersStr to an array of numbers and sort it
+  const correctAnswersArr = correctAnswersStr
+    .split(",")
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  // Step 2: Sort the userAnswer array as well
+  const sortedUserAnswer = [...userAnswer].sort((a, b) => a - b);
+
+  // Step 3: Compare both arrays for equality
+  if (correctAnswersArr.length !== sortedUserAnswer.length) {
+    return false;
+  }
+
+  return correctAnswersArr.every(
+    (val, index) => val === sortedUserAnswer[index],
+  );
+}
+
+/**
  * Utility function to format a duration in milliseconds into a readable format: '1h 30min'
  * @param {number} milliseconds - The duration in milliseconds
  * @returns {string} Formatted duration in the format '1h 30min'

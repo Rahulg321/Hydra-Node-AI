@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { cn, formatTime } from "@/lib/utils";
+import { cn, formatTime } from "@/hooks/lib/utils";
 import { Exam, Question, QuizSession } from "@prisma/client";
 import axios from "axios";
 import {
@@ -261,7 +261,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   const { toast } = useToast();
 
-  // Ensure examTime is used if timeAllowed isn't directly on quizSession
   const totalQuizTime = (quizSession.examTime || exam.timeAllowed) * 60;
 
   const [openSheet, setOpenSheet] = React.useState(false); // State for mobile sheet
@@ -270,29 +269,26 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<number[]>([]);
   const [questionIndex, setQuestionIndex] = useState(currentQuestionNumber - 1);
-  const [skippedAnswers, setSkippedAnswers] = useState(0); // Consider calculating this based on questionStatus if needed elsewhere
-  const [hasEnded, setHasEnded] = useState(quizSession.isCompleted); // Initialize based on session status
+  const [skippedAnswers, setSkippedAnswers] = useState(0);
+  const [hasEnded, setHasEnded] = useState(quizSession.isCompleted);
   const [questionStatus, setQuestionStatus] = useState<
     ("attempted" | "skipped" | null)[]
-  >(
-    Array(questions.length).fill(null), // Initialize status array
-  );
+  >(Array(questions.length).fill(null));
   const currentQuestion = questions[questionIndex];
-  const [isEnding, setIsEnding] = useState(false); // Used for showing analysis screen transition
+  const [isEnding, setIsEnding] = useState(false);
 
-  // Effect for analysis screen transition
+  const [allSelections, setAllSelections] = useState<Record<string, number[]>>(
+    {},
+  );
+
   useEffect(() => {
     if (hasEnded && !isEnding) {
       setIsEnding(true);
-      // Optional: Add a delay before showing the analysis screen if needed
-      // const timer = setTimeout(() => setIsEnding(true), 1000);
-      // return () => clearTimeout(timer);
     }
   }, [hasEnded, isEnding]);
 
-  // Effect for preventing unload and sending beacon
   useEffect(() => {
-    if (hasEnded) return; // Don't attach listener if already ended
+    if (hasEnded) return;
 
     function beforeUnload(e: BeforeUnloadEvent) {
       e.preventDefault();
@@ -344,6 +340,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
       0,
       Math.min(questions.length - 1, questionNumberFromURL - 1),
     );
+
     if (newIndex !== questionIndex) {
       setQuestionIndex(newIndex);
       setShowAnswer(false); // Hide answer when navigating
@@ -479,19 +476,16 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
 
   // Handle selecting/deselecting options
   const handleSelectOption = (index: number) => {
-    if (hasEnded) return; // Don't allow changes after end or when answer is shown
+    if (hasEnded) return;
 
     setSelected((prevSelected) => {
       if (currentQuestion.questionType === "multiple_choice") {
-        // Single choice: replace selection or deselect if clicking the same
         return prevSelected[0] === index ? [] : [index];
       } else {
-        // multi_select
-        // Multi choice: toggle selection
         const newSelection = prevSelected.includes(index)
           ? prevSelected.filter((i) => i !== index)
           : [...prevSelected, index];
-        return newSelection.sort((a, b) => a - b); // Keep selection sorted for consistency
+        return newSelection.sort((a, b) => a - b);
       }
     });
   };

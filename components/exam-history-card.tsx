@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import Link from "next/link";
 import { FaAws, FaGoogle, FaMicrosoft, FaQuestionCircle } from "react-icons/fa";
 import {

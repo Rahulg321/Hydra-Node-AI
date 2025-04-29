@@ -20,7 +20,7 @@ import {
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 
 export type PricingTier = {
   name: string;

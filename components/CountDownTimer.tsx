@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { formatTime } from "@/lib/utils";
+import { formatTime } from "@/hooks/lib/utils";
 
 function CountDownTimer({
   startTime, // ISO string of when the quiz started

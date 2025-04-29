@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 
 import ChangeExamPriceForm from "./exam-price-form";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 
 export default async function CoursePricingPage(props: {
   params: Promise<{

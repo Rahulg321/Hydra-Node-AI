@@ -1,5 +1,5 @@
 import { withAuth } from "@/lib/auth";
-import { checkIfUserHasPurchasedExam } from "@/lib/utils";
+import { checkIfUserHasPurchasedExam } from "@/hooks/lib/utils";
 import { User } from "@prisma/client";
 import { NextResponse } from "next/server";
 

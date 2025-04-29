@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 function areAnswersCorrect(correctAnswersStr: string, userAnswer: number[]) {

@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { Question, QuizSession, UserAttempt } from "@prisma/client";
 import {
   Circle,

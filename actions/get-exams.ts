@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { Exam } from "@prisma/client";
 
 type GetExamsResult = {

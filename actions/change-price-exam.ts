@@ -2,7 +2,7 @@
 
 import { ChangeExamPriceFormType } from "@/app/(manage-exam)/instructor/exam/[uid]/manage/pricing/exam-price-form";
 import { auth } from "@/auth";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { stripe } from "@/lib/stripe";
 import { revalidatePath } from "next/cache";
 

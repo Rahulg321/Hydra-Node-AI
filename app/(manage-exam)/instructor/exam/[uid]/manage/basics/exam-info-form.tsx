@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import { Image } from "@/components/minimal-tiptap/extensions";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { useRouter } from "next/navigation";
 import UpdateExamInformation from "@/actions/update-exam-information";
 import { useToast } from "@/hooks/use-toast";

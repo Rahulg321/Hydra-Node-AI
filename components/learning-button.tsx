@@ -3,7 +3,7 @@
 import React from "react";
 import { FaGraduationCap } from "react-icons/fa";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 
 interface LearningButtonProps {
   onClick?: () => void;

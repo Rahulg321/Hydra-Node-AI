@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { VerificationToken } from "@prisma/client";
 
 export const getVerificationTokenByToken = async (token: string) => {

@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import ExamEditor from "./exam-editor";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

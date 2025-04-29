@@ -2,7 +2,7 @@
 
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import {
   NewPasswordFormSchema,
   NewPasswordFormZodType,
@@ -22,7 +22,9 @@ export const newPasswordVerification = async (
   token?: string | null,
 ) => {
   // TODO: Implement rate limiting and error handling
-  const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
+  const ip =
+    (await headers()).get("x-real-ip") ||
+    (await headers()).get("x-forwarded-for");
 
   const {
     remaining,

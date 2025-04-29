@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { ExamModeValues } from "@/lib/exam-mode-context";
 import { MockExamZodType } from "@/lib/schemas/mock-exam-schema";
 

@@ -1,6 +1,6 @@
 import { Clock } from "lucide-react";
 import { CardBase } from "./card-base";
-import { formatDuration } from "@/lib/utils";
+import { formatDuration } from "@/hooks/lib/utils";
 import { getAverageTimeTaken } from "@/prisma/queries";
 interface AverageTimeCardProps {
   userId: string;

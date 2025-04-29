@@ -1,5 +1,5 @@
 import { GradientButton } from "@/components/buttons/gradient-button";
-import { formatDateWithSuffix } from "@/lib/utils";
+import { formatDateWithSuffix } from "@/hooks/lib/utils";
 import type { User } from "@prisma/client";
 import Link from "next/link";
 import { InfoIcon } from "lucide-react";

@@ -5,7 +5,7 @@ import {
   CreateExamFormType,
   createExamSchema,
 } from "@/components/schemas/create-exam-schema";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import slugify from "slugify";
 import { revalidatePath } from "next/cache";
 import { stripe } from "@/lib/stripe";

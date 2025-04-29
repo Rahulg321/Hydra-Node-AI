@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 
 export const getTwoFactorTokenByToken = async (token: string) => {
   try {

@@ -1,7 +1,7 @@
 import { Trophy } from "lucide-react";
 import { CardBase } from "./card-base";
-import { cn } from "@/lib/utils";
-import { formatDuration } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
+import { formatDuration } from "@/hooks/lib/utils";
 import { getBestOverallQuizSessionPerformance } from "@/prisma/queries";
 
 interface BestPerformanceCardProps {

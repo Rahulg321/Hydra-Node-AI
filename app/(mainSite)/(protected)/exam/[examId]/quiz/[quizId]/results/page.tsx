@@ -1,10 +1,10 @@
 import React from "react";
 import ResultsChart from "./ResultsChart";
 import { ArrowLeft, Check, CircleOff, Timer, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

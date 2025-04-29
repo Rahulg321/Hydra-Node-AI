@@ -1,6 +1,6 @@
 import React from "react";
 import ExamTags from "../ExamTags";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import Link from "next/link";
 import { ExamLevel } from "@prisma/client";
 import { Suspense } from "react";

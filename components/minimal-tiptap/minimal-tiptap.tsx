@@ -5,7 +5,7 @@ import type { Content, Editor } from "@tiptap/react";
 import type { UseMinimalTiptapEditorProps } from "./hooks/use-minimal-tiptap";
 import { EditorContent } from "@tiptap/react";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { SectionOne } from "./components/section/one";
 import { SectionTwo } from "./components/section/two";
 import { SectionThree } from "./components/section/three";
@@ -86,7 +86,7 @@ export const MinimalTiptapEditor = React.forwardRef<
       ref={ref}
       className={cn(
         "flex h-auto min-h-72 w-full flex-col rounded-md border border-input shadow-sm focus-within:border-primary",
-        className
+        className,
       )}
     >
       <Toolbar editor={editor} />

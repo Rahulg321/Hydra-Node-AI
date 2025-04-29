@@ -1,6 +1,6 @@
 import { QuestionsHeader } from "@/components/headers/questions-header";
 import ManageQuestionsSidebar from "@/components/sidebars/manage-questions-sidebar";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
 

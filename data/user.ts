@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 import { cache } from "react";

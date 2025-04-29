@@ -6,7 +6,7 @@ import {
 } from "@/lib/schemas/SignUpFormSchema";
 import * as z from "zod";
 import bcrypt from "bcryptjs";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationTokenEmail } from "@/lib/mail";
@@ -22,7 +22,9 @@ const rateLimit = new Ratelimit({
 });
 
 export async function SignUpUser(values: SignUpFormZodType) {
-  const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
+  const ip =
+    (await headers()).get("x-real-ip") ||
+    (await headers()).get("x-forwarded-for");
 
   const {
     remaining,

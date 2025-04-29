@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { Question } from "@prisma/client";
 import { NextResponse } from "next/server";
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@/lib/auth";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import {

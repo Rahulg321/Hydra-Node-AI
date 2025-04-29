@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaAws, FaMicrosoft, FaQuestionCircle } from "react-icons/fa";

@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { TransformedQuestion } from "@/components/Dialogs/bulk-import-dialog";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 
 export default async function BulkUploadQuestionsInstructor(

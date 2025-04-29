@@ -1,5 +1,5 @@
 import PrimaryButton from "@/components/ComponentButtons/PrimaryButton";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
 import VendorsOverviewSection from "./VendorsSection";

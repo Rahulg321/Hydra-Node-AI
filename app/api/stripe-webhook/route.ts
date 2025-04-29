@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { stripe } from "@/hooks/lib/stripe";
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { auth } from "@/auth";
 import {
   sendExamPurchaseEmail,
@@ -10,13 +10,14 @@ import {
   sendSubscriptionEndedEmail,
   sendSubscriptionStartEmail,
   sendVendorExamPurchasedEmail,
-} from "@/lib/mail";
+} from "@/hooks/lib/mail";
 
 export async function POST(req: Request) {
   const body = await req.text();
   const signature = (await headers()).get("Stripe-Signature");
 
   if (!signature || !process.env.STRIPE_WEBHOOK_SECRET) {
+    console.log("missing stripe signature or secret");
     return NextResponse.json(
       { error: "Missing Stripe signature or secret" },
       { status: 400 },
@@ -32,6 +33,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (error: any) {
+    console.log("signing error in stripe webhook", error);
     return new Response(`Webhook Error: ${error.message}`, { status: 400 });
   }
 
@@ -135,7 +137,7 @@ export async function POST(req: Request) {
           invoiceLink || "", // Add invoice link
         );
       } else if (session.subscription) {
-        console.log("a subscription was made");
+        console.log("a new subscription was made", session.subscription);
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string,
         );
@@ -213,31 +215,33 @@ async function updateUserWithSubscription(
     }
 
     // Update the user with subscription details
-    await db.user.update({
-      where: { id: user.id },
-      data: {
-        stripeSubscriptionId: subscription.id,
-        stripeCustomerId: subscription.customer as string,
-        stripePriceId: price.id,
-        stripeCurrentPeriodEnd: new Date(
-          subscription.current_period_end * 1000,
-        ),
-        hasActiveSubscription: true,
-      },
-    });
-
-    // Create a payment record for the subscription
-    await db.payment.create({
-      data: {
-        userId: user.id,
-        amount: price.unit_amount / 100,
-        currency: price.currency,
-        paymentType: "SUBSCRIPTION",
-        stripePaymentIntentId: subscription.latest_invoice as string,
-        stripeSubscriptionId: subscription.id,
-        status: "SUCCEEDED",
-      },
-    });
+    await Promise.all([
+      // Update the user with subscription details
+      db.user.update({
+        where: { id: user.id },
+        data: {
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: subscription.customer as string,
+          stripePriceId: price.id,
+          stripeCurrentPeriodEnd: new Date(
+            subscription.current_period_end * 1000,
+          ),
+          hasActiveSubscription: true,
+        },
+      }),
+      // Create a payment record for the subscription
+      db.payment.create({
+        data: {
+          userId: user.id,
+          amount: price.unit_amount / 100,
+          currency: price.currency,
+          paymentType: "SUBSCRIPTION",
+          stripePaymentIntentId: subscription.latest_invoice as string,
+          stripeSubscriptionId: subscription.id,
+          status: "SUCCEEDED",
+        },
+      }),
+    ]);
   } catch (error: any) {
     console.error(
       `An error occurred while updating user ${user.id} for subscription ${subscription.id}:`,

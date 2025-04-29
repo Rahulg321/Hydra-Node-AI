@@ -1,5 +1,5 @@
-import db from "@/lib/db";
-import { formatDateWithSuffix } from "@/lib/utils";
+import db from "@/hooks/lib/db";
+import { formatDateWithSuffix } from "@/hooks/lib/utils";
 import { Metadata } from "next";
 import React from "react";
 import ExamHistoryTable from "../ExamHistoryTable";

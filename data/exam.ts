@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { ExamLevel } from "@prisma/client";
 
 export async function getAllExams() {

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   LoginFormSchema,
   LoginFormZodType,
-} from "@/lib/schemas/LoginFormSchema";
+} from "@/hooks/lib/schemas/LoginFormSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,

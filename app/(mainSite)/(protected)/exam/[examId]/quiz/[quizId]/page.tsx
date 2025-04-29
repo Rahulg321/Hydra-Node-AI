@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { redirect } from "next/navigation";
 import MCQ from "./MCQ";
 

@@ -4,7 +4,7 @@ import ExamInformationForm from "./exam-info-form";
 import ExamImageUploadDialog from "@/components/Dialogs/exam-image-upload-dialog";
 import ExamVideoUploadDialog from "@/components/Dialogs/exam-video-upload-dialog";
 import Image from "next/image";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import CoverImagePlaceholder from "@/public/placeholder/cover-image-placeholder.webp";
 import CoverVideoPlaceholder from "@/public/placeholder/cover-video-placeholder.webp";
 import { ExamLevel } from "@prisma/client";

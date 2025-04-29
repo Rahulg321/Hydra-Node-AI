@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Input } from "./input";
 

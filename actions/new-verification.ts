@@ -2,7 +2,7 @@
 
 import { getUserByEmail } from "@/data/user";
 import { getVerificationTokenByToken } from "@/data/verification-token";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 
 // this method is used to verify when a new user signs up for the site
 

@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,

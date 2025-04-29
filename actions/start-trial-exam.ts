@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 
 /**
  * Starts a new quiz session for the user on trial exam mode and time.

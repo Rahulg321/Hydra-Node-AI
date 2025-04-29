@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { NewQuestionFormZodType } from "@/components/forms/new-question-form";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function addNewQuestion(

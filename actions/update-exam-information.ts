@@ -3,7 +3,7 @@
 import { examInfoFormSchemaType } from "@/app/(manage-exam)/instructor/exam/[uid]/manage/basics/exam-info-form";
 import { auth } from "@/auth";
 import { TransformedQuestion } from "@/components/Dialogs/bulk-import-dialog";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { ExamLevel } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import slugify from "slugify";

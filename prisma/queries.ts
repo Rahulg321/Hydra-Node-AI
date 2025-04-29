@@ -2,7 +2,7 @@ import {
   GetFilteredQuizSessionsHistory,
   QuizSessionHistory,
 } from "@/app/types";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { Prisma, QuizSession } from "@prisma/client";
 
 // interface QuizSessionWithDuration extends QuizSession {

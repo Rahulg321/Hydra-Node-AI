@@ -1,7 +1,7 @@
-import { formatDateWithSuffix } from "@/lib/utils";
+import { formatDateWithSuffix } from "@/hooks/lib/utils";
 import { Session } from "next-auth";
 import { CheckCircle2, XCircle } from "lucide-react";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { Payment } from "@prisma/client";
 
 async function PaymentHistorySection({

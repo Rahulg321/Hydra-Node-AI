@@ -5,23 +5,26 @@ import { getUserByEmail } from "@/data/user";
 import {
   LoginFormSchema,
   LoginFormZodType,
-} from "@/lib/schemas/LoginFormSchema";
+} from "@/hooks/lib/schemas/LoginFormSchema";
 import {
   generateTwoFactorToken,
   generateVerificationToken,
-} from "@/lib/tokens";
+} from "@/hooks/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import * as z from "zod";
 import { Resend } from "resend";
 import { TokenVerificationEmail } from "@/components/emails/TokenVerification";
-import { sendTwoFactorEmail, sendVerificationTokenEmail } from "@/lib/mail";
+import {
+  sendTwoFactorEmail,
+  sendVerificationTokenEmail,
+} from "@/hooks/lib/mail";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "@/lib/redis";
+import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 
 const rateLimit = new Ratelimit({

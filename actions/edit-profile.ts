@@ -2,7 +2,7 @@
 
 import { getUserByEmail } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { sendVerificationTokenEmail } from "@/lib/mail";
 import { EditProfileFormZodType } from "@/lib/schemas/EditProfileFormSchema";
 import { generateVerificationToken } from "@/lib/tokens";

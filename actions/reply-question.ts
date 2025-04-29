@@ -1,14 +1,14 @@
-'use server'
+"use server";
 
-import { revalidatePath } from 'next/cache'
-import db from '@/lib/db'
-import { auth } from '@/auth'
+import { revalidatePath } from "next/cache";
+import db from "@/hooks/lib/db";
+import { auth } from "@/auth";
 
 export default async function addReply(questionId: string, content: string) {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session || !session.user) {
-      throw new Error('You must be logged in to reply')
+      throw new Error("You must be logged in to reply");
     }
 
     const reply = await db.reply.create({
@@ -17,12 +17,12 @@ export default async function addReply(questionId: string, content: string) {
         authorId: session.user.id!,
         questionId,
       },
-    })
+    });
 
-    revalidatePath(`/community/forum/${questionId}`)
-    return reply
+    revalidatePath(`/community/forum/${questionId}`);
+    return reply;
   } catch (error) {
-    console.error('Error adding reply:', error)
-    throw new Error('Failed to add reply. Please try again.')
+    console.error("Error adding reply:", error);
+    throw new Error("Failed to add reply. Please try again.");
   }
 }

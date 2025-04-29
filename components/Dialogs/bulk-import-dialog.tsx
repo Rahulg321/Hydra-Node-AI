@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Upload, File, AlertCircle, Loader2, CheckCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";
 // import { TransformedDeal } from "@/app/types";
 import { useToast } from "@/hooks/use-toast";

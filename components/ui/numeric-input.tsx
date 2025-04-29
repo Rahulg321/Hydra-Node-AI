@@ -2,7 +2,7 @@
 
 import type * as React from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 
 interface NumericInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {

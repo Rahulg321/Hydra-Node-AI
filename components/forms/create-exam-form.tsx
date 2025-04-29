@@ -27,7 +27,7 @@ import {
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { MinimalTiptapEditor } from "../minimal-tiptap";
 import { Image } from "../minimal-tiptap/extensions";
 import createVendorExam from "@/actions/create-vendor-exam";

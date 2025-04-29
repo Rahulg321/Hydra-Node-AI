@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import React from "react";
 import { redirect } from "next/navigation";
 import ReviewMcq from "./ReviewMcq";

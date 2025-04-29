@@ -18,7 +18,7 @@ import {
 import React, { useCallback } from "react";
 import { Session } from "next-auth";
 import { Exam } from "@prisma/client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,

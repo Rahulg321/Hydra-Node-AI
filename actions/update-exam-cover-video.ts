@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/lib/redis";
 import { headers } from "next/headers";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import { auth } from "@/auth";
 
 const rateLimit = new Ratelimit({
@@ -23,7 +23,9 @@ export async function UpdateExamCoverVideo(formData: FormData, examId: string) {
       };
     }
 
-    const ip = (await headers()).get("x-real-ip") || (await headers()).get("x-forwarded-for");
+    const ip =
+      (await headers()).get("x-real-ip") ||
+      (await headers()).get("x-forwarded-for");
 
     const {
       remaining,

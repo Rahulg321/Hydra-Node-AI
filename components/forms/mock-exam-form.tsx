@@ -33,7 +33,7 @@ import { useRouter } from "next/navigation";
 import { ToastAction } from "../ui/toast";
 import Link from "next/link";
 import axios from "axios";
-import { checkIfUserHasAccessToExam } from "@/lib/utils";
+import { checkIfUserHasAccessToExam } from "@/hooks/lib/utils";
 
 const MockExamForm = ({
   examId,

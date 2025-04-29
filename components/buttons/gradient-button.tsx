@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { Button, type ButtonProps } from "@/components/ui/button";
 
 export interface GradientButtonProps extends ButtonProps {

@@ -6,16 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 
-type ExamPricingCardProps =  {
+type ExamPricingCardProps = {
   heading: string;
   headingTag: string;
   tagline: string;
   price: string;
   duration: string;
   isFeatured?: boolean;
-}
+};
 
 export function ExamPricingCard({
   heading,
@@ -26,7 +26,7 @@ export function ExamPricingCard({
   isFeatured = false,
 }: ExamPricingCardProps) {
   return (
-    <Card className={cn(isFeatured && "text-primary-foreground bg-primary")}>
+    <Card className={cn(isFeatured && "bg-primary text-primary-foreground")}>
       <CardHeader>
         <div className="text-sm font-medium uppercase">{headingTag}</div>
         <CardTitle className="text-2xl">{heading}</CardTitle>

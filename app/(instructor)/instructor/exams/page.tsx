@@ -34,7 +34,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import db from "@/lib/db";
+import db from "@/hooks/lib/db";
 import NotebookIllustration from "@/public/illustrations/notebook.svg";
 import QuestionsIllustration from "@/public/illustrations/questions.svg";
 import OnlineLearningIllustration from "@/public/illustrations/online-learning.svg";

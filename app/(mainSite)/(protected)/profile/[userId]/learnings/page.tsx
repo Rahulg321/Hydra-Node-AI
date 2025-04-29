@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { ExamHistoryCard } from "@/components/exam-history-card";
 import { LearningFilters } from "@/components/learning-filters";
 import QuizSessionPagination from "@/components/QuizSessionPagination";
-import { formatDateWithSuffix } from "@/lib/utils";
+import { formatDateWithSuffix } from "@/hooks/lib/utils";
 import {
   GetFilteredQuizSessions,
   getUserById,

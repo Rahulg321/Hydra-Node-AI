@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@/hooks/lib/utils";
 import { usePathname } from "next/navigation";
 import { Book, DollarSign, Layout, Settings } from "lucide-react";
 
