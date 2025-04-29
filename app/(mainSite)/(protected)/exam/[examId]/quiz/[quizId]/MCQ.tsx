@@ -491,7 +491,6 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
         ? prev.filter((i) => i !== idx)
         : [...prev, idx];
     }
-
     setAllSelections((s) => ({ ...s, [qid]: next }));
   };
   const calculatedSkippedAnswers = useMemo(() => {
@@ -714,7 +713,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                         | "multiple_choice"
                     }
                     optionText={optionText}
-                    isShowAnswer={showAnswer}
+                    isShowAnswer={showAnswer} // Pass state to Option
                     optionExplanation={optionExp}
                     isCorrect={isCorrect}
                     selected={isSelected}

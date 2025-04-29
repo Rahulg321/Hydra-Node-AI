@@ -62,7 +62,7 @@ export async function POST(req: Request) {
 
     if (event.type === "customer.subscription.deleted") {
       // Handle subscription cancellation
-      const subscription = event.data.object;
+      const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer;
 
       console.log(`Subscription ${subscription.id} has been deleted.`);
@@ -80,16 +80,55 @@ export async function POST(req: Request) {
 
       console.log(`Revoking access for user: ${user.email}`);
 
-      // Update the user's access status
+      // Update the user's subscription status and related fields
       await db.user.update({
         where: { id: user.id },
-        data: { hasActiveSubscription: false },
+        data: {
+          hasActiveSubscription: false,
+          // Keep stripeSubscriptionId as it might be needed for reference
+          // Keep stripePriceId as it might be needed for reference
+          // Keep stripeCurrentPeriodEnd as it's needed to know when access actually ends
+        },
       });
+
+      // Create a payment record for the cancellation
+      const lastPayment = await db.payment.findFirst({
+        where: {
+          userId: user.id,
+          stripeSubscriptionId: subscription.id,
+          status: "SUCCEEDED",
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (lastPayment) {
+        await db.payment.create({
+          data: {
+            userId: user.id,
+            amount: lastPayment.amount,
+            currency: lastPayment.currency,
+            paymentType: "SUBSCRIPTION",
+            stripePaymentIntentId: subscription.latest_invoice as string,
+            stripeSubscriptionId: subscription.id,
+            status: "SUCCEEDED",
+          },
+        });
+      }
 
       // **Send the subscription ended email**
       await sendSubscriptionEndedEmail(
         user.email,
-        new Date(subscription.current_period_end * 1000).toLocaleDateString(), // Format the end date
+        new Date(subscription.current_period_end * 1000).toLocaleString(
+          "en-US",
+          {
+            timeZone: "UTC",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          },
+        ), // Format the end date with time
         `www.hydranode.ai/pricing`, // Link to renew the subscription
         subscription.items.data[0]?.price?.nickname || "Your Subscription Plan", // Subscription plan name
         user.firstName,
@@ -131,7 +170,14 @@ export async function POST(req: Request) {
           user.email,
           "LIFETIME ACCESS",
           `https://hydranode.ai/profile/${user.id}`,
-          new Date().toLocaleDateString(), // Access start date
+          new Date().toLocaleString("en-US", {
+            timeZone: "UTC",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }), // Access start date with time
           user.firstName,
           user.lastName,
           invoiceLink || "", // Add invoice link
@@ -155,7 +201,14 @@ export async function POST(req: Request) {
           user.email,
           subscription.items.data[0]?.price?.nickname ||
             "Your Subscription Plan",
-          new Date().toLocaleDateString(), // Subscription start date
+          new Date().toLocaleString("en-US", {
+            timeZone: "UTC",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }), // Subscription start date with time
           user.firstName,
           user.lastName,
           invoiceLink || "",

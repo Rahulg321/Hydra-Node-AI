@@ -1,23 +1,17 @@
-import { GradientButton } from "@/components/buttons/gradient-button";
 import { formatDateWithSuffix } from "@/hooks/lib/utils";
-import type { User } from "@prisma/client";
+import type { User, Payment } from "@prisma/client";
 import Link from "next/link";
 import { InfoIcon } from "lucide-react";
 import { PaymentDetailsDialog } from "@/components/Dialogs/payment-details-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog";
-import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
 
 export default function CurrentPlanSection({
   existingUser,
 }: {
-  existingUser: User;
+  existingUser: User & {
+    Payment?: Payment[];
+  };
 }) {
   const currentDate = new Date();
 
@@ -36,7 +30,7 @@ export default function CurrentPlanSection({
         actionText: "Learn More",
         amount: "$200",
         billingCycle: "Lifetime",
-        billingType: "One time",
+        billingType: "One time" as const,
       };
     }
 
@@ -50,22 +44,31 @@ export default function CurrentPlanSection({
         existingUser.stripeCurrentPeriodEnd &&
         new Date(existingUser.stripeCurrentPeriodEnd) > currentDate
       ) {
-        const lastPaymentDate = new Date(existingUser.stripeCurrentPeriodEnd);
-        lastPaymentDate.setFullYear(lastPaymentDate.getFullYear() - 1);
+        const periodEnd = new Date(existingUser.stripeCurrentPeriodEnd);
+
+        // Get the last payment from the Payment table
+        const lastPayment = existingUser.Payment?.find(
+          (payment) =>
+            payment.paymentType === "SUBSCRIPTION" &&
+            payment.status === "SUCCEEDED" &&
+            payment.stripeSubscriptionId === existingUser.stripeSubscriptionId,
+        );
+
+        const lastPaymentDate = lastPayment?.createdAt
+          ? new Date(lastPayment.createdAt)
+          : new Date(periodEnd.getTime() - 365 * 24 * 60 * 60 * 1000); // Fallback to 1 year ago if no payment found
 
         return {
           planName: "Pro Plan",
-          planType: "Yearly",
+          planType: "Subscription",
           lastPayment: formatDateWithSuffix(lastPaymentDate),
-          upcomingPayment: formatDateWithSuffix(
-            new Date(existingUser.stripeCurrentPeriodEnd),
-          ),
+          upcomingPayment: formatDateWithSuffix(periodEnd),
           status: "Active",
           actionLink: "#",
           actionText: "Manage Subscription",
-          amount: "$100",
-          billingCycle: "Yearly",
-          billingType: "Subscription",
+          amount: lastPayment ? `$${lastPayment.amount}` : "$100",
+          billingCycle: "Subscription",
+          billingType: "Subscription" as const,
         };
       }
     }
@@ -77,19 +80,28 @@ export default function CurrentPlanSection({
       existingUser.stripeCurrentPeriodEnd &&
       new Date(existingUser.stripeCurrentPeriodEnd) > currentDate
     ) {
+      const lastPayment = existingUser.Payment?.find(
+        (payment) =>
+          payment.paymentType === "SUBSCRIPTION" &&
+          payment.status === "SUCCEEDED" &&
+          payment.stripeSubscriptionId === existingUser.stripeSubscriptionId,
+      );
+
       return {
         planName: "Cancelled Plan",
-        planType: "Yearly",
-        lastPayment: "N/A",
+        planType: "Subscription",
+        lastPayment: lastPayment
+          ? formatDateWithSuffix(new Date(lastPayment.createdAt))
+          : "N/A",
         upcomingPayment: formatDateWithSuffix(
           new Date(existingUser.stripeCurrentPeriodEnd),
         ),
         status: "Cancelled",
         actionLink: "/pricing",
         actionText: "Get Subscription",
-        amount: "$100",
-        billingCycle: "Yearly",
-        billingType: "Subscription",
+        amount: lastPayment ? `$${lastPayment.amount}` : "$100",
+        billingCycle: "Subscription",
+        billingType: "Subscription" as const,
       };
     }
 
@@ -98,62 +110,28 @@ export default function CurrentPlanSection({
       existingUser.stripeCurrentPeriodEnd &&
       new Date(existingUser.stripeCurrentPeriodEnd) <= currentDate
     ) {
+      const lastPayment = existingUser.Payment?.find(
+        (payment) =>
+          payment.paymentType === "SUBSCRIPTION" &&
+          payment.status === "SUCCEEDED" &&
+          payment.stripeSubscriptionId === existingUser.stripeSubscriptionId,
+      );
+
       return {
         planName: "Expired Plan",
-        planType: "Yearly",
-        lastPayment: formatDateWithSuffix(
-          new Date(existingUser.stripeCurrentPeriodEnd),
-        ),
+        planType: "Subscription",
+        lastPayment: lastPayment
+          ? formatDateWithSuffix(new Date(lastPayment.createdAt))
+          : "N/A",
         upcomingPayment: "N/A",
         status: "Expired",
         actionLink: "/pricing",
         actionText: "Renew Plan",
-        amount: "$100",
-        billingCycle: "Yearly",
-        billingType: "Subscription",
+        amount: lastPayment ? `$${lastPayment.amount}` : "$100",
+        billingCycle: "Subscription",
+        billingType: "Subscription" as const,
       };
     }
-
-    // Check for active trial
-    if (
-      existingUser.trialEndsAt &&
-      new Date(existingUser.trialEndsAt) > currentDate
-    ) {
-      return {
-        planName: "Trial Plan",
-        planType: "Trial",
-        lastPayment: "N/A",
-        upcomingPayment: formatDateWithSuffix(
-          new Date(existingUser.trialEndsAt),
-        ),
-        status: "Trial",
-        actionLink: "/pricing",
-        actionText: "Subscribe Now",
-        amount: "$0",
-        billingCycle: "7 days",
-        billingType: "Trial",
-      };
-    }
-
-    // Check for expired trial
-    if (
-      existingUser.trialEndsAt &&
-      new Date(existingUser.trialEndsAt) <= currentDate
-    ) {
-      return {
-        planName: "Trial Plan",
-        planType: "Trial",
-        lastPayment: "N/A",
-        upcomingPayment: "N/A",
-        status: "Expired",
-        actionLink: "/pricing",
-        actionText: "Subscribe Now",
-        amount: "$0",
-        billingCycle: "7 days",
-        billingType: "Trial",
-      };
-    }
-
     // Default case - no plan
     return {
       planName: "No Plan",
@@ -165,7 +143,7 @@ export default function CurrentPlanSection({
       actionText: "Subscribe Now",
       amount: "$0",
       billingCycle: "None",
-      billingType: "None",
+      billingType: "None" as const,
     };
   };
 

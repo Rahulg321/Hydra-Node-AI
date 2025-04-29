@@ -223,7 +223,15 @@ export async function checkIfUserHasAccessToExam(
   try {
     // 1. Check for Lifetime Access first
     const userHasLifeTimeAccess = await checkIfUserHasLifeTimeAcess(userId);
-    console.log("user has lifetime access", userHasLifeTimeAccess);
+
+    const examIsFree = await checkIfUserExamIsFree(userId, examId);
+    if (examIsFree.status) {
+      return {
+        hasAccess: true,
+        message: "Exam is free. Access granted.",
+      };
+    }
+
     if (userHasLifeTimeAccess.status) {
       return {
         hasAccess: true,
@@ -241,6 +249,20 @@ export async function checkIfUserHasAccessToExam(
       };
     }
 
+    // 3. Check for Cancelled Subscription
+    const userHasCancelledSubscription =
+      await checkIfUserCancelledSubscription(userId);
+    console.log(
+      "user has cancelled subscription",
+      userHasCancelledSubscription,
+    );
+    if (userHasCancelledSubscription.status) {
+      return {
+        hasAccess: false,
+        message: "User has a cancelled subscription. Access denied.",
+      };
+    }
+
     // 4. Check for Individual Exam Purchase
     const userHasPurchasedExam = await checkIfUserHasPurchasedExam(
       userId,
@@ -251,15 +273,6 @@ export async function checkIfUserHasAccessToExam(
       return {
         hasAccess: true,
         message: "User has purchased the exam. Access granted.",
-      };
-    }
-
-    const examIsFree = await checkIfUserExamIsFree(userId, examId);
-    console.log("exam is free", examIsFree);
-    if (examIsFree.status) {
-      return {
-        hasAccess: true,
-        message: "Exam is free. Access granted.",
       };
     }
 
@@ -274,6 +287,51 @@ export async function checkIfUserHasAccessToExam(
       message: "An error occurred while checking access to the exam.",
     };
   }
+}
+
+/**
+ * Checks if the user has a cancelled subscription that is still within its current period.
+ *
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<{status: boolean, message: string, periodEnd?: Date}>} - An object indicating if the user has a cancelled subscription that's still active and a corresponding message.
+ */
+export async function checkIfUserCancelledSubscription(userId: string) {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: {
+      stripeCurrentPeriodEnd: true,
+      hasActiveSubscription: true,
+      stripeSubscriptionId: true,
+    },
+  });
+
+  if (!user) {
+    return {
+      status: false,
+      message: "User not found",
+    };
+  }
+
+  // Check if user has a subscription ID but has cancelled it (hasActiveSubscription is false)
+  // and the current period hasn't ended yet
+  if (
+    user.stripeSubscriptionId && // User has a subscription
+    !user.hasActiveSubscription && // But it's cancelled
+    user.stripeCurrentPeriodEnd && // Has an end date
+    new Date(user.stripeCurrentPeriodEnd) > new Date() // Current period hasn't ended
+  ) {
+    return {
+      status: true,
+      message:
+        "User has a cancelled subscription that is still within its current period",
+      periodEnd: user.stripeCurrentPeriodEnd,
+    };
+  }
+
+  return {
+    status: false,
+    message: "User does not have a cancelled subscription that is still active",
+  };
 }
 
 /**
