@@ -59,7 +59,7 @@ const CheckoutDialog = ({
         userEmail: email,
         mode: mode,
         trialPeriodDays: trialPeriodDays,
-        isLifetime: name === "Lifetime Billing" ? true : false,
+        isLifetime: name === "Lifetime Access" ? true : false,
       }),
     })
       .then((res) => res.json())

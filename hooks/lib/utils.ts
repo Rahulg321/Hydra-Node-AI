@@ -222,9 +222,9 @@ export async function checkIfUserHasAccessToExam(
 ) {
   try {
     // 1. Check for Lifetime Access first
-    const userHasLifeTimeAccess = await checkIfUserHasLifeTimeAcess(userId);
 
     const examIsFree = await checkIfUserExamIsFree(userId, examId);
+    console.log("the exam is free", examIsFree);
     if (examIsFree.status) {
       return {
         hasAccess: true,
@@ -232,20 +232,12 @@ export async function checkIfUserHasAccessToExam(
       };
     }
 
+    const userHasLifeTimeAccess = await checkIfUserHasLifeTimeAcess(userId);
+    console.log("user has lifetime access", userHasLifeTimeAccess);
     if (userHasLifeTimeAccess.status) {
       return {
         hasAccess: true,
         message: "User has lifetime access. Access granted.",
-      };
-    }
-
-    // 2. Check for Active Subscription
-    const userHasSubscription = await checkIfUserHasSubscription(userId);
-    console.log("user has subscription", userHasSubscription);
-    if (userHasSubscription.status) {
-      return {
-        hasAccess: true,
-        message: "User has an active subscription. Access granted.",
       };
     }
 
@@ -258,8 +250,17 @@ export async function checkIfUserHasAccessToExam(
     );
     if (userHasCancelledSubscription.status) {
       return {
-        hasAccess: false,
+        hasAccess: true,
         message: "User has a cancelled subscription. Access denied.",
+      };
+    }
+    // 2. Check for Active Subscription
+    const userHasSubscription = await checkIfUserHasSubscription(userId);
+    console.log("user has subscription", userHasSubscription);
+    if (userHasSubscription.status) {
+      return {
+        hasAccess: true,
+        message: "User has an active subscription. Access granted.",
       };
     }
 
@@ -320,6 +321,10 @@ export async function checkIfUserCancelledSubscription(userId: string) {
     user.stripeCurrentPeriodEnd && // Has an end date
     new Date(user.stripeCurrentPeriodEnd) > new Date() // Current period hasn't ended
   ) {
+    console.log(
+      "user has a cancelled subscription that is still within its current period",
+      user.stripeCurrentPeriodEnd,
+    );
     return {
       status: true,
       message:
