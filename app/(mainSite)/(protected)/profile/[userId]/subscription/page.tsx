@@ -18,6 +18,10 @@ const PersonSubscriptionPage = async ({
     redirect("/login");
   }
 
+  if (userSession.user.id !== userId) {
+    redirect(`/profile/${userId}/subscription`);
+  }
+
   const existingLoggedInUser = await getUserById(userId);
 
   if (!existingLoggedInUser) {
