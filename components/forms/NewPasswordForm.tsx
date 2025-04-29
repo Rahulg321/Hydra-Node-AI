@@ -21,7 +21,7 @@ import Link from "next/link";
 import {
   NewPasswordFormSchema,
   NewPasswordFormZodType,
-} from "@/lib/schemas/NewPasswordSchema";
+} from "@/hooks/lib/schemas/NewPasswordSchema";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
 import { newPasswordVerification } from "@/actions/new-password-verification";
 import { PasswordInput } from "../ui/password-input";

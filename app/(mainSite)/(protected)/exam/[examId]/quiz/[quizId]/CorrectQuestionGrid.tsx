@@ -27,9 +27,9 @@ const CorrectQuestionGrid = ({
                 className={`aspect-square rounded-lg border ${statusClass} flex items-center justify-center p-2 text-xs font-medium`}
               >
                 {questionStatus[index] === "attempted" ? (
-                  <Check />
+                  <Check className="h-4 w-4" />
                 ) : (
-                  <div>{index + 1}</div>
+                  <div className="text-xs">{index + 1}</div>
                 )}
               </div>
             );

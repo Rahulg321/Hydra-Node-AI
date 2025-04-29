@@ -4,14 +4,8 @@ import React, { Suspense, useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
-  LoginFormSchema,
-  LoginFormZodType,
-} from "@/lib/schemas/LoginFormSchema";
-import { Button } from "@/components/ui/button";
-import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import {
   SignUpFormSchema,
   SignUpFormZodType,
-} from "@/lib/schemas/SignUpFormSchema";
+} from "@/hooks/lib/schemas/SignUpFormSchema";
 import { SignUpUser } from "@/actions/sign-up";
 import { useToast } from "@/components/ui/use-toast";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
@@ -32,7 +26,6 @@ import { GradientButton } from "../buttons/gradient-button";
 const SignupForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const form = useForm<SignUpFormZodType>({
     resolver: zodResolver(SignUpFormSchema),

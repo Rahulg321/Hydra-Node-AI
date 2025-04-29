@@ -27,11 +27,9 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check } from "lucide-react";
 import { GradientButton } from "../buttons/gradient-button";
-import {
-  ResetLoggedUserPasswordSchema,
-  ResetLoggedUserPasswordType,
-} from "@/lib/schemas/ResetLoggedUserPassword";
 import resetLoggedInUserPassword from "@/actions/reset-logged-user-password";
+import { ResetLoggedUserPasswordSchema } from "@/hooks/lib/schemas/ResetLoggedUserPassword";
+import { ResetLoggedUserPasswordType } from "@/hooks/lib/schemas/ResetLoggedUserPassword";
 
 interface ResetUserPasswordDialogProps {
   userId: string;

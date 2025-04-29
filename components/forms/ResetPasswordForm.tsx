@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   LoginFormSchema,
   LoginFormZodType,
-} from "@/lib/schemas/LoginFormSchema";
+} from "@/hooks/lib/schemas/LoginFormSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,7 +27,7 @@ import Link from "next/link";
 import {
   ResetPasswordFormSchema,
   ResetPasswordFormZodType,
-} from "@/lib/schemas/ResetPasswordFormSchema";
+} from "@/hooks/lib/schemas/ResetPasswordFormSchema";
 import { resetPassword } from "@/actions/reset-password";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
 import { GradientButton } from "../buttons/gradient-button";

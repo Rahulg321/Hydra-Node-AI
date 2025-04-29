@@ -282,6 +282,11 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
   );
 
   useEffect(() => {
+    setSelected(allSelections[currentQuestion.id] || []);
+    setShowAnswer(false);
+  }, [currentQuestion.id, allSelections]);
+
+  useEffect(() => {
     if (hasEnded && !isEnding) {
       setIsEnding(true);
     }
@@ -474,23 +479,21 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     startTransition, // Ensure startTransition is stable or included
   ]);
 
-  // Handle selecting/deselecting options
-  const handleSelectOption = (index: number) => {
-    if (hasEnded) return;
+  const handleSelectOption = (idx: number) => {
+    const qid = currentQuestion.id;
+    const prev = allSelections[qid] || [];
+    let next: number[];
 
-    setSelected((prevSelected) => {
-      if (currentQuestion.questionType === "multiple_choice") {
-        return prevSelected[0] === index ? [] : [index];
-      } else {
-        const newSelection = prevSelected.includes(index)
-          ? prevSelected.filter((i) => i !== index)
-          : [...prevSelected, index];
-        return newSelection.sort((a, b) => a - b);
-      }
-    });
+    if (currentQuestion.questionType === "multiple_choice") {
+      next = prev[0] === idx ? [] : [idx];
+    } else {
+      next = prev.includes(idx)
+        ? prev.filter((i) => i !== idx)
+        : [...prev, idx];
+    }
+
+    setAllSelections((s) => ({ ...s, [qid]: next }));
   };
-
-  // Calculate derived state
   const calculatedSkippedAnswers = useMemo(() => {
     return questionStatus.filter((s) => s === "skipped").length;
   }, [questionStatus]);
@@ -503,25 +506,19 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
     );
   }
 
-  // Main Quiz UI
   return (
     <div>
-      {/* Use a wrapper div if ExamAnalysingScreen needs sibling elements, otherwise fragment is fine */}
-      {/* The main layout uses grid for medium screens and up */}
       <section
         className={cn(
-          "flex flex-1 flex-col md:grid", // Flex layout for mobile (Sheet handles sidebar), Grid for md+
-          "min-h-screen", // Ensure it takes full height
-          // --- Dynamic Grid Columns based on sidebar state ---
+          "flex flex-1 flex-col md:grid",
+          "min-h-screen",
           sidebarOpen
             ? "md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)]" // Sidebar open widths (adjust px)
             : "md:grid-cols-[60px_minmax(0,1fr)] lg:grid-cols-[70px_minmax(0,1fr)]", // Sidebar closed widths (adjust px)
           "transition-all duration-300 ease-in-out",
         )}
       >
-        {/* --- Mobile Sidebar Trigger (Sheet) --- */}
         <div className="sticky top-0 z-30 bg-background p-2 md:hidden">
-          {/* Added a top bar for mobile trigger */}
           <Sheet open={openSheet} onOpenChange={setOpenSheet}>
             <SheetTrigger asChild>
               <Button variant="outline" size="sm">
@@ -700,7 +697,7 @@ const MCQ = ({ quizSession, exam, questions }: McqProps) => {
                   | string
                   | null;
 
-                if (!optionText) return null; // Don't render if option text is missing
+                if (!optionText) return null;
 
                 const correctAnswersArray = currentQuestion.correctAnswers
                   .split(",")

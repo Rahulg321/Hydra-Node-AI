@@ -16,13 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  ConnectWalletFormSchema,
-  ConnectWalletFormZodType,
-} from "@/lib/schemas/ConnectWalletFormSchema";
-import {
   AccountInfoFormSchema,
   AccountInfoFormSchemaZodType,
-} from "@/lib/schemas/AccountInforFormSchema";
+} from "@/hooks/lib/schemas/AccountInforFormSchema";
 import { GradientButton } from "../buttons/gradient-button";
 import { updateAccountInfo } from "@/actions/account-info";
 

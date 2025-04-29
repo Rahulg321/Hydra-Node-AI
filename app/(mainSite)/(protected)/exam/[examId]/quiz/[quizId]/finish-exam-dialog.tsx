@@ -53,8 +53,15 @@ const FinishExamDialog = ({
             You have skipped {skippedQuestions} questions.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="">
-          <Button variant="outline" size="lg" className="rounded-full">
+        <AlertDialogFooter className="justify-center gap-4">
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
             Review Questions
           </Button>
           <GradientButton
