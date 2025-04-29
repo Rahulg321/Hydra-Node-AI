@@ -1,8 +1,8 @@
 "use server";
 
-import { withServerActionAuth } from "@/lib/auth";
+import { withServerActionAuth } from "@/hooks/lib/auth";
 import db from "@/hooks/lib/db";
-import { stripe } from "@/lib/stripe";
+import { stripe } from "@/hooks/lib/stripe";
 import { revalidatePath } from "next/cache";
 
 /**

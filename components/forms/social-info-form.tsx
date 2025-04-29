@@ -19,7 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   SocialInfoFormSchema,
   SocialInfoFormSchemaZodType,
-} from "@/lib/schemas/SocialInfoFormSchema";
+} from "@/hooks/lib/schemas/SocialInfoFormSchema";
 import { GradientButton } from "../buttons/gradient-button";
 import { updateSocialInfo } from "@/actions/social-info";
 const SocialInfoForm = ({
