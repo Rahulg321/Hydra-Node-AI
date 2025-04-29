@@ -116,24 +116,41 @@ export async function POST(req: Request) {
       }
 
       // **Send the subscription ended email**
-      await sendSubscriptionEndedEmail(
-        user.email,
-        new Date(subscription.current_period_end * 1000).toLocaleString(
-          "en-US",
-          {
-            timeZone: "UTC",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          },
-        ), // Format the end date with time
-        `www.hydranode.ai/pricing`, // Link to renew the subscription
-        subscription.items.data[0]?.price?.nickname || "Your Subscription Plan", // Subscription plan name
-        user.firstName,
-        user.lastName,
-      );
+      try {
+        const emailResult = await sendSubscriptionEndedEmail(
+          user.email,
+          new Date(subscription.current_period_end * 1000).toLocaleString(
+            "en-US",
+            {
+              timeZone: "UTC",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            },
+          ),
+          `www.hydranode.ai/pricing`,
+          subscription.items.data[0]?.price?.nickname ||
+            "Your Subscription Plan",
+          user.firstName,
+          user.lastName,
+        );
+
+        if (emailResult?.error) {
+          console.error(
+            "Failed to send subscription ended email:",
+            emailResult.error,
+          );
+        } else {
+          console.log(
+            "Successfully sent subscription ended email to:",
+            user.email,
+          );
+        }
+      } catch (emailError) {
+        console.error("Error sending subscription ended email:", emailError);
+      }
 
       console.log(`Revoking access for user: ${user.email} and sending email.`);
     }
@@ -149,7 +166,6 @@ export async function POST(req: Request) {
           session.payment_intent as string,
         );
 
-        // Get the invoice link for one-time payment
         const invoice = await stripe.invoices.retrieve(
           paymentIntent.invoice as string,
         );
@@ -160,35 +176,50 @@ export async function POST(req: Request) {
         await db.user.update({
           where: { id: user.id },
           data: {
-            hasLifetimeAccess: true, // Grant lifetime access
+            hasLifetimeAccess: true,
           },
         });
 
         await createPaymentRecord(user.id, paymentIntent);
 
-        await sendLifetimeAccessEmail(
-          user.email,
-          "LIFETIME ACCESS",
-          `https://hydranode.ai/profile/${user.id}`,
-          new Date().toLocaleString("en-US", {
-            timeZone: "UTC",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }), // Access start date with time
-          user.firstName,
-          user.lastName,
-          invoiceLink || "", // Add invoice link
-        );
+        try {
+          const emailResult = await sendLifetimeAccessEmail(
+            user.email,
+            "LIFETIME ACCESS",
+            `https://hydranode.ai/profile/${user.id}`,
+            new Date().toLocaleString("en-US", {
+              timeZone: "UTC",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            user.firstName,
+            user.lastName,
+            invoiceLink || "",
+          );
+
+          if (emailResult?.error) {
+            console.error(
+              "Failed to send lifetime access email:",
+              emailResult.error,
+            );
+          } else {
+            console.log(
+              "Successfully sent lifetime access email to:",
+              user.email,
+            );
+          }
+        } catch (emailError) {
+          console.error("Error sending lifetime access email:", emailError);
+        }
       } else if (session.subscription) {
         console.log("a new subscription was made", session.subscription);
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string,
         );
 
-        // Get the invoice link for subscription
         const invoice = await stripe.invoices.retrieve(
           subscription.latest_invoice as string,
         );
@@ -197,22 +228,38 @@ export async function POST(req: Request) {
         console.log("updating subscription", subscription);
         await updateUserWithSubscription(user, subscription);
 
-        await sendSubscriptionStartEmail(
-          user.email,
-          subscription.items.data[0]?.price?.nickname ||
-            "Your Subscription Plan",
-          new Date().toLocaleString("en-US", {
-            timeZone: "UTC",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }), // Subscription start date with time
-          user.firstName,
-          user.lastName,
-          invoiceLink || "",
-        );
+        try {
+          const emailResult = await sendSubscriptionStartEmail(
+            user.email,
+            subscription.items.data[0]?.price?.nickname ||
+              "Your Subscription Plan",
+            new Date().toLocaleString("en-US", {
+              timeZone: "UTC",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            user.firstName,
+            user.lastName,
+            invoiceLink || "",
+          );
+
+          if (emailResult?.error) {
+            console.error(
+              "Failed to send subscription start email:",
+              emailResult.error,
+            );
+          } else {
+            console.log(
+              "Successfully sent subscription start email to:",
+              user.email,
+            );
+          }
+        } catch (emailError) {
+          console.error("Error sending subscription start email:", emailError);
+        }
       }
       // One-time payment case
       else if (session.payment_intent && examId) {
@@ -222,7 +269,6 @@ export async function POST(req: Request) {
           session.payment_intent as string,
         );
 
-        // Get the invoice link for exam purchase
         const invoice = await stripe.invoices.retrieve(
           paymentIntent.invoice as string,
         );

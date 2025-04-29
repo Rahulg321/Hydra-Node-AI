@@ -230,6 +230,8 @@ export const sendSubscriptionEndedEmail = async (
       error: `could not send email -> ${error.message}}`,
     };
   }
+
+  return { data };
 };
 
 export const sendPaymentSuccessfulEmail = async (
@@ -283,6 +285,8 @@ export const sendTwoFactorEmail = async (email: string, token: string) => {
       error: `could not send email -> ${error.message}}`,
     };
   }
+
+  return { data };
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
@@ -303,6 +307,8 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
       error: `could not send email -> ${error.message}}`,
     };
   }
+
+  return { data };
 };
 
 export const sendVerificationTokenEmail = async (
@@ -328,6 +334,8 @@ export const sendVerificationTokenEmail = async (
       error: `could not send email -> ${error.message}}`,
     };
   }
+
+  return { data };
 };
 
 export const sendContactFormEmail = async (
@@ -338,7 +346,7 @@ export const sendContactFormEmail = async (
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
-    to: ["contact@hydranode.ai"],
+    to: ["rg5353070@gmail.com"],
     replyTo: email,
     subject: `Contact Inquiry by ${firstName} ${lastName} from HydraNode`,
     react: ContactMessageEmail({
@@ -355,4 +363,6 @@ export const sendContactFormEmail = async (
       error: `could not send email -> ${error.message}}`,
     };
   }
+
+  return { data };
 };
