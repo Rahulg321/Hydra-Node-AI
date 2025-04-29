@@ -313,6 +313,24 @@ async function updateUserWithSubscription(
       );
     }
 
+    // Get the billing interval from the price
+    const billingInterval = price.recurring?.interval;
+    const billingIntervalCount = price.recurring?.interval_count || 1;
+
+    console.log(
+      `Subscription billing interval: ${billingInterval}, count: ${billingIntervalCount}`,
+    );
+
+    // Calculate the next billing date
+    const currentPeriodEnd = new Date(subscription.current_period_end * 1000);
+    const currentPeriodStart = new Date(
+      subscription.current_period_start * 1000,
+    );
+
+    console.log(
+      `Subscription period: ${currentPeriodStart.toISOString()} to ${currentPeriodEnd.toISOString()}`,
+    );
+
     // Update the user with subscription details
     await Promise.all([
       // Update the user with subscription details
@@ -322,9 +340,7 @@ async function updateUserWithSubscription(
           stripeSubscriptionId: subscription.id,
           stripeCustomerId: subscription.customer as string,
           stripePriceId: price.id,
-          stripeCurrentPeriodEnd: new Date(
-            subscription.current_period_end * 1000,
-          ),
+          stripeCurrentPeriodEnd: currentPeriodEnd,
           hasActiveSubscription: true,
         },
       }),
@@ -341,11 +357,24 @@ async function updateUserWithSubscription(
         },
       }),
     ]);
+
+    // Log the subscription details for debugging
+    console.log(`Updated subscription for user ${user.id}:`, {
+      subscriptionId: subscription.id,
+      priceId: price.id,
+      billingInterval,
+      billingIntervalCount,
+      currentPeriodStart: currentPeriodStart.toISOString(),
+      currentPeriodEnd: currentPeriodEnd.toISOString(),
+      amount: price.unit_amount / 100,
+      currency: price.currency,
+    });
   } catch (error: any) {
     console.error(
       `An error occurred while updating user ${user.id} for subscription ${subscription.id}:`,
       error,
     );
+    throw error; // Re-throw to handle in the webhook
   }
 }
 

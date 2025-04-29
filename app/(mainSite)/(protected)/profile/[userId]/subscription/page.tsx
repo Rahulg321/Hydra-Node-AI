@@ -3,6 +3,7 @@ import CurrentPlanSection from "../CurrentPlanSection";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserById } from "@/prisma/queries";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 
 const PersonSubscriptionPage = async ({
   params,
@@ -10,6 +11,13 @@ const PersonSubscriptionPage = async ({
   params: Promise<{ userId: string }>;
 }) => {
   const { userId } = await params;
+
+  const userSession = await auth();
+
+  if (!userSession) {
+    redirect("/login");
+  }
+
   const existingLoggedInUser = await getUserById(userId);
 
   if (!existingLoggedInUser) {
