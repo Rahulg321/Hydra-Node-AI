@@ -103,12 +103,15 @@ export default function CurrentPlanSection({
 
       // Determine plan details based on the stored price ID
       if (existingUser.stripePriceId === MONTHLY_PRICE_ID) {
+        console.log("monthly");
         determinedPlanName = "Pro Monthly";
         determinedBillingCycle = "Monthly";
       } else if (existingUser.stripePriceId === YEARLY_PRICE_ID) {
+        console.log("yearly");
         determinedPlanName = "Pro Yearly";
         determinedBillingCycle = "Yearly";
       } else if (existingUser.stripePriceId) {
+        console.log("unknown");
         // If there's a price ID but it doesn't match known ones, log a warning
         // or fetch nickname dynamically if possible. For now, use default.
         console.warn(
