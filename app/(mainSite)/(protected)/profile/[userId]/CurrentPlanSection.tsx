@@ -15,7 +15,7 @@ export default function CurrentPlanSection({
 }) {
   const currentDate = new Date();
 
-  // Helper function to find the latest relevant payment
+  // Helper function to find the latest relevant *subscription* payment
   const findLatestSubscriptionPayment = (): Payment | undefined => {
     if (!existingUser.Payment || !existingUser.stripeSubscriptionId) {
       return undefined;
@@ -33,31 +33,51 @@ export default function CurrentPlanSection({
         .sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        )[// Return the first element (latest)
-      0]
+        )[0] // Return the first element (latest)
+    );
+  };
+
+  // Helper function to find the lifetime payment
+  const findLifetimePayment = (): Payment | undefined => {
+    // Find the first successful lifetime payment
+    return existingUser.Payment?.find(
+      (payment) =>
+        payment.paymentType === "ONE_TIME" &&
+        payment.status === "SUCCEEDED" &&
+        payment.userId === existingUser.id,
     );
   };
 
   const getSubscriptionDetails = () => {
     // Lifetime access takes precedence
     if (existingUser.hasLifetimeAccess) {
+      const lifetimePayment = findLifetimePayment();
+      const lifetimePaymentDate = lifetimePayment?.createdAt
+        ? new Date(lifetimePayment.createdAt)
+        : null;
+
+      console.log("lifetimePayment", lifetimePayment);
+
       return {
         planName: "Lifetime Plan",
         planType: "Unlimited",
-        lastPayment: "N/A",
+        lastPayment: lifetimePaymentDate // Display the date of the lifetime payment
+          ? formatDateWithSuffix(lifetimePaymentDate)
+          : "N/A", // Fallback if payment record not found for some reason
         upcomingPayment: "N/A",
         status: "Active",
         actionLink: "#",
         actionText: "Learn More",
-        amount: "$200", // Assuming fixed price for lifetime
+        amount: lifetimePayment ? `$${lifetimePayment.amount}` : "$200", // Use actual amount if found, else default
         billingCycle: "Lifetime",
         billingType: "One time" as const,
       };
     }
 
-    const lastPayment = findLatestSubscriptionPayment();
-    const lastPaymentDate = lastPayment?.createdAt
-      ? new Date(lastPayment.createdAt)
+    // Find the latest successful *subscription* payment for recurring plans
+    const lastSubscriptionPayment = findLatestSubscriptionPayment();
+    const lastSubscriptionPaymentDate = lastSubscriptionPayment?.createdAt
+      ? new Date(lastSubscriptionPayment.createdAt)
       : null;
     const periodEndDate = existingUser.stripeCurrentPeriodEnd
       ? new Date(existingUser.stripeCurrentPeriodEnd)
@@ -70,18 +90,46 @@ export default function CurrentPlanSection({
       periodEndDate &&
       periodEndDate > currentDate
     ) {
+      // TODO: Replace these with actual Stripe Price IDs from your environment variables or config
+      const MONTHLY_PRICE_ID =
+        process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID ||
+        "YOUR_MONTHLY_PRICE_ID_PLACEHOLDER";
+      const YEARLY_PRICE_ID =
+        process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID ||
+        "YOUR_YEARLY_PRICE_ID_PLACEHOLDER";
+
+      let determinedPlanName = "Pro Plan"; // Default name
+      let determinedBillingCycle = "Subscription"; // Default cycle
+
+      // Determine plan details based on the stored price ID
+      if (existingUser.stripePriceId === MONTHLY_PRICE_ID) {
+        determinedPlanName = "Pro Monthly";
+        determinedBillingCycle = "Monthly";
+      } else if (existingUser.stripePriceId === YEARLY_PRICE_ID) {
+        determinedPlanName = "Pro Yearly";
+        determinedBillingCycle = "Yearly";
+      } else if (existingUser.stripePriceId) {
+        // If there's a price ID but it doesn't match known ones, log a warning
+        // or fetch nickname dynamically if possible. For now, use default.
+        console.warn(
+          `Unknown active subscription price ID: ${existingUser.stripePriceId}`,
+        );
+      }
+
       return {
-        planName: "Pro Plan", // Consider fetching nickname from priceId if available
+        planName: determinedPlanName, // Use determined name
         planType: "Subscription",
-        lastPayment: lastPaymentDate
-          ? formatDateWithSuffix(lastPaymentDate)
-          : "N/A",
+        lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment
+          ? formatDateWithSuffix(lastSubscriptionPaymentDate)
+          : "N/A", // Fallback if no successful payment found for this sub ID
         upcomingPayment: formatDateWithSuffix(periodEndDate), // periodEndDate is guaranteed non-null here
         status: "Active",
-        actionLink: "#", // Link to Stripe customer portal?
+        actionLink: process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL || "#", // Link to Stripe customer portal
         actionText: "Manage Subscription",
-        amount: lastPayment ? `$${lastPayment.amount}` : "$100", // Or fetch amount from priceId
-        billingCycle: "Subscription", // Or determine from price interval (e.g., Monthly/Yearly)
+        amount: lastSubscriptionPayment
+          ? `$${lastSubscriptionPayment.amount}`
+          : "N/A", // Use last payment amount, fallback N/A
+        billingCycle: determinedBillingCycle, // Use determined cycle (Monthly/Yearly)
         billingType: "Subscription" as const,
       };
     }
@@ -96,14 +144,16 @@ export default function CurrentPlanSection({
       return {
         planName: "Cancelled Plan", // Consider fetching nickname
         planType: "Subscription",
-        lastPayment: lastPaymentDate
-          ? formatDateWithSuffix(lastPaymentDate)
+        lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment before cancellation
+          ? formatDateWithSuffix(lastSubscriptionPaymentDate)
           : "N/A",
         upcomingPayment: `Access ends ${formatDateWithSuffix(periodEndDate)}`, // Clarify meaning
         status: "Cancelled",
         actionLink: "/pricing",
         actionText: "Resubscribe",
-        amount: lastPayment ? `$${lastPayment.amount}` : "$100", // Or fetch amount from priceId
+        amount: lastSubscriptionPayment
+          ? `$${lastSubscriptionPayment.amount}`
+          : "$100", // Or fetch amount from priceId
         billingCycle: "Subscription",
         billingType: "Subscription" as const,
       };
@@ -118,14 +168,16 @@ export default function CurrentPlanSection({
       return {
         planName: "Expired Plan", // Consider fetching nickname
         planType: "Subscription",
-        lastPayment: lastPaymentDate
-          ? formatDateWithSuffix(lastPaymentDate)
+        lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment before expiry
+          ? formatDateWithSuffix(lastSubscriptionPaymentDate)
           : "N/A",
         upcomingPayment: "N/A",
         status: "Expired",
         actionLink: "/pricing",
         actionText: "Renew Plan",
-        amount: lastPayment ? `$${lastPayment.amount}` : "$100", // Or fetch amount from priceId
+        amount: lastSubscriptionPayment
+          ? `$${lastSubscriptionPayment.amount}`
+          : "$100", // Or fetch amount from priceId
         billingCycle: "Subscription",
         billingType: "Subscription" as const,
       };
@@ -135,7 +187,7 @@ export default function CurrentPlanSection({
     return {
       planName: "No Plan",
       planType: "None",
-      lastPayment: "N/A",
+      lastPayment: "N/A", // No relevant payment for "No Plan"
       upcomingPayment: "N/A",
       status: "Inactive",
       actionLink: "/pricing",
@@ -147,6 +199,13 @@ export default function CurrentPlanSection({
   };
 
   const subscriptionDetails = getSubscriptionDetails();
+
+  // Find the specific payment record associated with the displayed lastPayment date
+  // This is needed to potentially link to an invoice URL later
+  const lastPaymentRecord =
+    subscriptionDetails.billingType === "One time"
+      ? findLifetimePayment()
+      : findLatestSubscriptionPayment();
 
   return (
     <div className="w-full space-y-6">
@@ -188,9 +247,12 @@ export default function CurrentPlanSection({
               <div className="text-white">
                 {subscriptionDetails.lastPayment}
               </div>
-              {subscriptionDetails.lastPayment !== "N/A" && (
+              {/* Show View Invoice link only if there was a last payment record found */}
+              {lastPaymentRecord && lastPaymentRecord.stripeInvoiceId && (
                 <Link
-                  href="#" // TODO: Link to actual invoice URL if available
+                  href={`https://dashboard.stripe.com/invoices/${lastPaymentRecord.stripeInvoiceId}`}
+                  target="_blank" // Open invoice in new tab
+                  rel="noopener noreferrer"
                   className="text-sm text-orange-500 hover:text-orange-400"
                 >
                   View invoice
@@ -203,11 +265,13 @@ export default function CurrentPlanSection({
               <div className="text-white">
                 {subscriptionDetails.upcomingPayment}
               </div>
+              {/* Show Payment Details only for active, non-lifetime subscriptions with an upcoming payment */}
               {subscriptionDetails.upcomingPayment !== "N/A" &&
-                subscriptionDetails.status !== "Cancelled" && (
+                subscriptionDetails.status === "Active" &&
+                subscriptionDetails.billingType === "Subscription" && (
                   <PaymentDetailsDialog
                     plan={subscriptionDetails.planName}
-                    nextPaymentDate={subscriptionDetails.upcomingPayment} // This might need adjustment if 'Access ends...' text is used
+                    nextPaymentDate={subscriptionDetails.upcomingPayment}
                     amount={subscriptionDetails.amount}
                     billingCycle={subscriptionDetails.billingCycle}
                     billingType={subscriptionDetails.billingType}
@@ -242,26 +306,30 @@ export default function CurrentPlanSection({
 
             {/* Manage Actions */}
             <div>
+              {/* Show Cancel only for Active Subscriptions (not Lifetime) */}
               {subscriptionDetails.status === "Active" &&
-                existingUser.stripeSubscriptionId &&
-                existingUser.hasLifetimeAccess !== true && ( // Don't show cancel for lifetime
+                subscriptionDetails.billingType === "Subscription" &&
+                existingUser.stripeSubscriptionId && (
                   <CancelSubscriptionDialog userId={existingUser.id} />
                 )}
+              {/* Show Resubscribe/Renew/Subscribe links */}
               {(subscriptionDetails.status === "Expired" ||
                 subscriptionDetails.status === "Cancelled" ||
-                subscriptionDetails.status === "Inactive") && ( // Removed Trial here, add if needed
+                subscriptionDetails.status === "Inactive") && (
                 <Button variant="link" size="lg" asChild>
                   <Link href={subscriptionDetails.actionLink}>
                     {subscriptionDetails.actionText}
                   </Link>
                 </Button>
               )}
-              {/* Add link to Stripe Customer Portal if status is Active */}
-              {/* {subscriptionDetails.status === "Active" && existingUser.stripeCustomerId && (
-                 <Button variant="link" size="lg" asChild>
-                   <Link href="/api/stripe-portal">Manage Billing</Link>
-                 </Button>
-               )} */}
+              {/* Add link to Stripe Customer Portal if status is Active and it's a subscription */}
+              {subscriptionDetails.status === "Active" &&
+                subscriptionDetails.billingType === "Subscription" &&
+                existingUser.stripeCustomerId && (
+                  <Button variant="link" size="lg" asChild>
+                    <Link href="/api/stripe-portal">Manage Billing</Link>
+                  </Button>
+                )}
             </div>
           </div>
 
@@ -288,9 +356,11 @@ export default function CurrentPlanSection({
               <div className="text-white">
                 {subscriptionDetails.lastPayment}
               </div>
-              {subscriptionDetails.lastPayment !== "N/A" && (
+              {lastPaymentRecord && lastPaymentRecord.stripeInvoiceId && (
                 <Link
-                  href="#" // TODO: Link to actual invoice URL if available
+                  href={`https://dashboard.stripe.com/invoices/${lastPaymentRecord.stripeInvoiceId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-orange-500 hover:text-orange-400"
                 >
                   View invoice
@@ -309,10 +379,11 @@ export default function CurrentPlanSection({
                 {subscriptionDetails.upcomingPayment}
               </div>
               {subscriptionDetails.upcomingPayment !== "N/A" &&
-                subscriptionDetails.status !== "Cancelled" && (
+                subscriptionDetails.status === "Active" &&
+                subscriptionDetails.billingType === "Subscription" && (
                   <PaymentDetailsDialog
                     plan={subscriptionDetails.planName}
-                    nextPaymentDate={subscriptionDetails.upcomingPayment} // This might need adjustment if 'Access ends...' text is used
+                    nextPaymentDate={subscriptionDetails.upcomingPayment}
                     amount={subscriptionDetails.amount}
                     billingCycle={subscriptionDetails.billingCycle}
                     billingType={subscriptionDetails.billingType}
@@ -353,8 +424,8 @@ export default function CurrentPlanSection({
               <div className="mb-2 text-sm font-medium text-white">Manage</div>
               <div>
                 {subscriptionDetails.status === "Active" &&
-                  existingUser.stripeSubscriptionId &&
-                  existingUser.hasLifetimeAccess !== true && (
+                  subscriptionDetails.billingType === "Subscription" &&
+                  existingUser.stripeSubscriptionId && (
                     <CancelSubscriptionDialog userId={existingUser.id} />
                   )}
                 {(subscriptionDetails.status === "Expired" ||
@@ -366,12 +437,13 @@ export default function CurrentPlanSection({
                     </Link>
                   </Button>
                 )}
-                {/* Add link to Stripe Customer Portal if status is Active */}
-                {/* {subscriptionDetails.status === "Active" && existingUser.stripeCustomerId && (
-                   <Button variant="link" size="lg" asChild>
-                     <Link href="/api/stripe-portal">Manage Billing</Link>
-                   </Button>
-                 )} */}
+                {subscriptionDetails.status === "Active" &&
+                  subscriptionDetails.billingType === "Subscription" &&
+                  existingUser.stripeCustomerId && (
+                    <Button variant="link" size="lg" asChild>
+                      <Link href="/api/stripe-portal">Manage Billing</Link>
+                    </Button>
+                  )}
               </div>
             </div>
           </div>

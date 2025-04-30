@@ -213,7 +213,7 @@ export const sendSubscriptionEndedEmail = async (
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: "2 FA Verification",
+    subject: "Subscription Cancelled!",
     react: SubscriptionEndEmail({
       firstName,
       lastName,

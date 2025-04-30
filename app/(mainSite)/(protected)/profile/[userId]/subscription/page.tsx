@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getUserById } from "@/prisma/queries";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import db from "@/hooks/lib/db";
 
 const PersonSubscriptionPage = async ({
   params,
@@ -22,7 +23,14 @@ const PersonSubscriptionPage = async ({
     redirect(`/profile/${userId}/subscription`);
   }
 
-  const existingLoggedInUser = await getUserById(userId);
+  const existingLoggedInUser = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+    include: {
+      Payment: true,
+    },
+  });
 
   if (!existingLoggedInUser) {
     return redirect("/login");
