@@ -1,7 +1,7 @@
 import { formatDateWithSuffix } from "@/hooks/lib/utils";
 import type { User, Payment } from "@prisma/client";
 import Link from "next/link";
-import { InfoIcon } from "lucide-react";
+// Removed InfoIcon import as it's no longer used
 import { PaymentDetailsDialog } from "@/components/Dialogs/payment-details-dialog";
 import { Button } from "@/components/ui/button";
 import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog";
@@ -91,24 +91,25 @@ export default function CurrentPlanSection({
       periodEndDate > currentDate
     ) {
       // TODO: Replace these with actual Stripe Price IDs from your environment variables or config
+      // Renamed PRO to PLUS
       const MONTHLY_PRICE_ID =
-        process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID ||
-        "YOUR_MONTHLY_PRICE_ID_PLACEHOLDER";
+        process.env.NEXT_PUBLIC_STRIPE_PLUS_MONTHLY_PRICE_ID ||
+        "YOUR_PLUS_MONTHLY_PRICE_ID_PLACEHOLDER";
       const YEARLY_PRICE_ID =
-        process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID ||
-        "YOUR_YEARLY_PRICE_ID_PLACEHOLDER";
+        process.env.NEXT_PUBLIC_STRIPE_PLUS_YEARLY_PRICE_ID ||
+        "YOUR_PLUS_YEARLY_PRICE_ID_PLACEHOLDER";
 
-      let determinedPlanName = "Pro Plan"; // Default name
+      let determinedPlanName = "Plus Plan"; // Default name - Renamed Pro to Plus
       let determinedBillingCycle = "Subscription"; // Default cycle
 
       // Determine plan details based on the stored price ID
       if (existingUser.stripePriceId === MONTHLY_PRICE_ID) {
         console.log("monthly");
-        determinedPlanName = "Pro Monthly";
+        determinedPlanName = "Plus Monthly"; // Renamed Pro to Plus
         determinedBillingCycle = "Monthly";
       } else if (existingUser.stripePriceId === YEARLY_PRICE_ID) {
         console.log("yearly");
-        determinedPlanName = "Pro Yearly";
+        determinedPlanName = "Plus Yearly"; // Renamed Pro to Plus
         determinedBillingCycle = "Yearly";
       } else if (existingUser.stripePriceId) {
         console.log("unknown");
@@ -144,8 +145,11 @@ export default function CurrentPlanSection({
       periodEndDate &&
       periodEndDate > currentDate
     ) {
+      // Assuming cancelled plans were also Plus plans if applicable,
+      // but keeping "Cancelled Plan" for now as it might not be tied to a specific tier anymore.
+      // If needed, logic similar to the active check could be added here.
       return {
-        planName: "Cancelled Plan", // Consider fetching nickname
+        planName: "Cancelled Plan", // Consider fetching nickname or determining if it was Plus
         planType: "Subscription",
         lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment before cancellation
           ? formatDateWithSuffix(lastSubscriptionPaymentDate)
@@ -168,8 +172,9 @@ export default function CurrentPlanSection({
       periodEndDate &&
       periodEndDate <= currentDate
     ) {
+      // Similar note as cancelled plan regarding plan name.
       return {
-        planName: "Expired Plan", // Consider fetching nickname
+        planName: "Expired Plan", // Consider fetching nickname or determining if it was Plus
         planType: "Subscription",
         lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment before expiry
           ? formatDateWithSuffix(lastSubscriptionPaymentDate)
@@ -273,7 +278,7 @@ export default function CurrentPlanSection({
                 subscriptionDetails.status === "Active" &&
                 subscriptionDetails.billingType === "Subscription" && (
                   <PaymentDetailsDialog
-                    plan={subscriptionDetails.planName}
+                    plan={subscriptionDetails.planName} // Will show "Plus Monthly/Yearly" if applicable
                     nextPaymentDate={subscriptionDetails.upcomingPayment}
                     amount={subscriptionDetails.amount}
                     billingCycle={subscriptionDetails.billingCycle}
@@ -304,11 +309,13 @@ export default function CurrentPlanSection({
               >
                 {subscriptionDetails.status}
               </span>
-              <InfoIcon className="h-4 w-4 text-gray-500" />
+              {/* Removed InfoIcon */}
             </div>
 
             {/* Manage Actions */}
-            <div>
+            <div className="flex flex-col items-start">
+              {" "}
+              {/* Use flex-col for vertical stacking */}
               {/* Show Cancel only for Active Subscriptions (not Lifetime) */}
               {subscriptionDetails.status === "Active" &&
                 subscriptionDetails.billingType === "Subscription" &&
@@ -319,7 +326,7 @@ export default function CurrentPlanSection({
               {(subscriptionDetails.status === "Expired" ||
                 subscriptionDetails.status === "Cancelled" ||
                 subscriptionDetails.status === "Inactive") && (
-                <Button variant="link" size="lg" asChild>
+                <Button variant="link" size="lg" asChild className="h-auto p-0">
                   <Link href={subscriptionDetails.actionLink}>
                     {subscriptionDetails.actionText}
                   </Link>
@@ -329,7 +336,12 @@ export default function CurrentPlanSection({
               {subscriptionDetails.status === "Active" &&
                 subscriptionDetails.billingType === "Subscription" &&
                 existingUser.stripeCustomerId && (
-                  <Button variant="link" size="lg" asChild>
+                  <Button
+                    variant="link"
+                    size="lg"
+                    asChild
+                    className="h-auto p-0"
+                  >
                     <Link href="/api/stripe-portal">Manage Billing</Link>
                   </Button>
                 )}
@@ -385,7 +397,7 @@ export default function CurrentPlanSection({
                 subscriptionDetails.status === "Active" &&
                 subscriptionDetails.billingType === "Subscription" && (
                   <PaymentDetailsDialog
-                    plan={subscriptionDetails.planName}
+                    plan={subscriptionDetails.planName} // Will show "Plus Monthly/Yearly" if applicable
                     nextPaymentDate={subscriptionDetails.upcomingPayment}
                     amount={subscriptionDetails.amount}
                     billingCycle={subscriptionDetails.billingCycle}
@@ -418,14 +430,16 @@ export default function CurrentPlanSection({
                 >
                   {subscriptionDetails.status}
                 </span>
-                <InfoIcon className="h-4 w-4 text-gray-500" />
+                {/* Removed InfoIcon */}
               </div>
             </div>
 
             {/* Manage */}
             <div className="rounded-md bg-[#50443F] p-4">
               <div className="mb-2 text-sm font-medium text-white">Manage</div>
-              <div>
+              <div className="flex flex-col items-start">
+                {" "}
+                {/* Use flex-col for vertical stacking */}
                 {subscriptionDetails.status === "Active" &&
                   subscriptionDetails.billingType === "Subscription" &&
                   existingUser.stripeSubscriptionId && (
@@ -434,7 +448,12 @@ export default function CurrentPlanSection({
                 {(subscriptionDetails.status === "Expired" ||
                   subscriptionDetails.status === "Cancelled" ||
                   subscriptionDetails.status === "Inactive") && (
-                  <Button variant="link" size="lg" asChild>
+                  <Button
+                    variant="link"
+                    size="lg"
+                    asChild
+                    className="h-auto p-0"
+                  >
                     <Link href={subscriptionDetails.actionLink}>
                       {subscriptionDetails.actionText}
                     </Link>
@@ -443,7 +462,12 @@ export default function CurrentPlanSection({
                 {subscriptionDetails.status === "Active" &&
                   subscriptionDetails.billingType === "Subscription" &&
                   existingUser.stripeCustomerId && (
-                    <Button variant="link" size="lg" asChild>
+                    <Button
+                      variant="link"
+                      size="lg"
+                      asChild
+                      className="h-auto p-0"
+                    >
                       <Link href="/api/stripe-portal">Manage Billing</Link>
                     </Button>
                   )}

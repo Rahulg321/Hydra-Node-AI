@@ -143,13 +143,7 @@ const PricingCards = () => {
                           : plan.price}
                       </span>
                       {plan.price > 0 && (
-                        <span className="ml-1 text-gray-400">
-                          {index === 1
-                            ? billingPeriod === "yearly"
-                              ? "/year"
-                              : "/month"
-                            : ""}
-                        </span>
+                        <span className="ml-1 text-gray-400"></span>
                       )}
                     </div>
                     <p className="mb-4 text-sm text-gray-400">
