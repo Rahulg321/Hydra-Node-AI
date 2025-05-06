@@ -1,10 +1,22 @@
 import { formatDateWithSuffix } from "@/hooks/lib/utils";
 import type { User, Payment } from "@prisma/client";
 import Link from "next/link";
-// Removed InfoIcon import as it's no longer used
-import { PaymentDetailsDialog } from "@/components/Dialogs/payment-details-dialog";
+import { PaymentDetailsDialog } from "@/components/Dialogs/payment-details-dialog"; // Ensure this component handles its 'trigger' prop correctly with asChild
 import { Button } from "@/components/ui/button";
-import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog";
+import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog"; // Ensure this component's internal trigger is correctly set up
+
+type SubscriptionDisplayDetails = {
+  planName: string;
+  planType: string;
+  lastPayment: string;
+  upcomingPayment: string;
+  status: "Active" | "Cancelled" | "Expired" | "Inactive" | "Trial";
+  actionLink: string;
+  actionText: string;
+  amount: string;
+  billingCycle: string;
+  billingType: "One time" | "Subscription" | "None";
+};
 
 export default function CurrentPlanSection({
   existingUser,
@@ -15,31 +27,22 @@ export default function CurrentPlanSection({
 }) {
   const currentDate = new Date();
 
-  // Helper function to find the latest relevant *subscription* payment
   const findLatestSubscriptionPayment = (): Payment | undefined => {
     if (!existingUser.Payment || !existingUser.stripeSubscriptionId) {
       return undefined;
     }
-    return (
-      existingUser.Payment
-        // Filter for relevant subscription payments first
-        .filter(
-          (payment) =>
-            payment.paymentType === "SUBSCRIPTION" &&
-            payment.status === "SUCCEEDED" &&
-            payment.stripeSubscriptionId === existingUser.stripeSubscriptionId,
-        )
-        // Sort by creation date descending to get the latest
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        )[0] // Return the first element (latest)
-    );
+    return existingUser.Payment.filter(
+      (payment) =>
+        payment.paymentType === "SUBSCRIPTION" &&
+        payment.status === "SUCCEEDED" &&
+        payment.stripeSubscriptionId === existingUser.stripeSubscriptionId,
+    ).sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )[0];
   };
 
-  // Helper function to find the lifetime payment
   const findLifetimePayment = (): Payment | undefined => {
-    // Find the first successful lifetime payment
     return existingUser.Payment?.find(
       (payment) =>
         payment.paymentType === "ONE_TIME" &&
@@ -48,33 +51,26 @@ export default function CurrentPlanSection({
     );
   };
 
-  const getSubscriptionDetails = () => {
-    // Lifetime access takes precedence
+  const getSubscriptionDetails = (): SubscriptionDisplayDetails => {
     if (existingUser.hasLifetimeAccess) {
       const lifetimePayment = findLifetimePayment();
-      const lifetimePaymentDate = lifetimePayment?.createdAt
+      const paymentDate = lifetimePayment?.createdAt
         ? new Date(lifetimePayment.createdAt)
         : null;
-
-      console.log("lifetimePayment", lifetimePayment);
-
       return {
         planName: "Lifetime Plan",
         planType: "Unlimited",
-        lastPayment: lifetimePaymentDate // Display the date of the lifetime payment
-          ? formatDateWithSuffix(lifetimePaymentDate)
-          : "N/A", // Fallback if payment record not found for some reason
+        lastPayment: paymentDate ? formatDateWithSuffix(paymentDate) : "N/A",
         upcomingPayment: "N/A",
         status: "Active",
         actionLink: "#",
         actionText: "Learn More",
-        amount: lifetimePayment ? `$${lifetimePayment.amount}` : "$200", // Use actual amount if found, else default
+        amount: lifetimePayment ? `$${lifetimePayment.amount}` : "$200",
         billingCycle: "Lifetime",
-        billingType: "One time" as const,
+        billingType: "One time",
       };
     }
 
-    // Find the latest successful *subscription* payment for recurring plans
     const lastSubscriptionPayment = findLatestSubscriptionPayment();
     const lastSubscriptionPaymentDate = lastSubscriptionPayment?.createdAt
       ? new Date(lastSubscriptionPayment.createdAt)
@@ -83,100 +79,89 @@ export default function CurrentPlanSection({
       ? new Date(existingUser.stripeCurrentPeriodEnd)
       : null;
 
-    // Check for active subscription
+    const getPlanInfoFromPriceId = (priceId: string | null) => {
+      const MONTHLY_PRICE_ID =
+        process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID ||
+        "YOUR_PLUS_MONTHLY_PRICE_ID_PLACEHOLDER";
+      const YEARLY_PRICE_ID =
+        process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID ||
+        "YOUR_PLUS_YEARLY_PRICE_ID_PLACEHOLDER";
+
+      if (priceId === MONTHLY_PRICE_ID)
+        return { name: "Plus Plan (Monthly)", cycle: "Monthly" };
+      if (priceId === YEARLY_PRICE_ID)
+        return { name: "Plus Plan (Yearly)", cycle: "Yearly" };
+      if (priceId) {
+        console.warn(`Unknown active subscription price ID: ${priceId}`); // Kept for debugging if needed
+        return { name: "Plus Plan", cycle: "Subscription" };
+      }
+      return { name: "Subscription Plan", cycle: "Subscription" };
+    };
+
     if (
       existingUser.hasActiveSubscription &&
       existingUser.stripeSubscriptionId &&
       periodEndDate &&
       periodEndDate > currentDate
     ) {
-      // TODO: Replace these with actual Stripe Price IDs from your environment variables or config
-      // Renamed PRO to PLUS
-      const MONTHLY_PRICE_ID =
-        process.env.NEXT_PUBLIC_STRIPE_PLUS_MONTHLY_PRICE_ID ||
-        "YOUR_PLUS_MONTHLY_PRICE_ID_PLACEHOLDER";
-      const YEARLY_PRICE_ID =
-        process.env.NEXT_PUBLIC_STRIPE_PLUS_YEARLY_PRICE_ID ||
-        "YOUR_PLUS_YEARLY_PRICE_ID_PLACEHOLDER";
-
-      let determinedPlanName = "Plus Plan"; // Default name - Renamed Pro to Plus
-      let determinedBillingCycle = "Subscription"; // Default cycle
-
-      // Determine plan details based on the stored price ID
-      if (existingUser.stripePriceId === MONTHLY_PRICE_ID) {
-        console.log("monthly");
-        determinedPlanName = "Plus Monthly"; // Renamed Pro to Plus
-        determinedBillingCycle = "Monthly";
-      } else if (existingUser.stripePriceId === YEARLY_PRICE_ID) {
-        console.log("yearly");
-        determinedPlanName = "Plus Yearly"; // Renamed Pro to Plus
-        determinedBillingCycle = "Yearly";
-      } else if (existingUser.stripePriceId) {
-        console.log("unknown");
-        // If there's a price ID but it doesn't match known ones, log a warning
-        // or fetch nickname dynamically if possible. For now, use default.
-        console.warn(
-          `Unknown active subscription price ID: ${existingUser.stripePriceId}`,
-        );
-      }
-
+      const { name, cycle } = getPlanInfoFromPriceId(
+        existingUser.stripePriceId,
+      );
       return {
-        planName: determinedPlanName, // Use determined name
+        planName: name,
         planType: "Subscription",
-        lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment
+        lastPayment: lastSubscriptionPaymentDate
           ? formatDateWithSuffix(lastSubscriptionPaymentDate)
-          : "N/A", // Fallback if no successful payment found for this sub ID
-        upcomingPayment: formatDateWithSuffix(periodEndDate), // periodEndDate is guaranteed non-null here
+          : "N/A",
+        upcomingPayment: formatDateWithSuffix(periodEndDate), // periodEndDate is non-null here
         status: "Active",
-        actionLink: process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL || "#", // Link to Stripe customer portal
+        actionLink:
+          process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ||
+          "/api/stripe-portal",
         actionText: "Manage Subscription",
         amount: lastSubscriptionPayment
           ? `$${lastSubscriptionPayment.amount}`
-          : "N/A", // Use last payment amount, fallback N/A
-        billingCycle: determinedBillingCycle, // Use determined cycle (Monthly/Yearly)
-        billingType: "Subscription" as const,
+          : "N/A",
+        billingCycle: cycle,
+        billingType: "Subscription",
       };
     }
 
-    // Check for cancelled subscription that still has access
     if (
       !existingUser.hasActiveSubscription &&
       existingUser.stripeSubscriptionId &&
       periodEndDate &&
       periodEndDate > currentDate
     ) {
-      // Assuming cancelled plans were also Plus plans if applicable,
-      // but keeping "Cancelled Plan" for now as it might not be tied to a specific tier anymore.
-      // If needed, logic similar to the active check could be added here.
+      const { name } = getPlanInfoFromPriceId(existingUser.stripePriceId);
       return {
-        planName: "Cancelled Plan", // Consider fetching nickname or determining if it was Plus
+        planName: `Cancelled ${name}`,
         planType: "Subscription",
-        lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment before cancellation
+        lastPayment: lastSubscriptionPaymentDate
           ? formatDateWithSuffix(lastSubscriptionPaymentDate)
           : "N/A",
-        upcomingPayment: `Access ends ${formatDateWithSuffix(periodEndDate)}`, // Clarify meaning
+        upcomingPayment: `Access ends ${formatDateWithSuffix(periodEndDate)}`, // periodEndDate is non-null here
         status: "Cancelled",
         actionLink: "/pricing",
         actionText: "Resubscribe",
         amount: lastSubscriptionPayment
           ? `$${lastSubscriptionPayment.amount}`
-          : "$100", // Or fetch amount from priceId
-        billingCycle: "Subscription",
-        billingType: "Subscription" as const,
+          : "N/A",
+        billingCycle: getPlanInfoFromPriceId(existingUser.stripePriceId).cycle, // retain original cycle if known
+        billingType: "Subscription",
       };
     }
 
-    // Check for expired subscription (had one previously but period ended)
     if (
-      existingUser.stripeSubscriptionId && // Check if they ever had a subscription ID
+      existingUser.stripeSubscriptionId &&
       periodEndDate &&
       periodEndDate <= currentDate
     ) {
-      // Similar note as cancelled plan regarding plan name.
+      const { name } = getPlanInfoFromPriceId(existingUser.stripePriceId);
       return {
-        planName: "Expired Plan", // Consider fetching nickname or determining if it was Plus
+        planName: `Expired ${name}`,
         planType: "Subscription",
-        lastPayment: lastSubscriptionPaymentDate // Use the date of the last successful subscription payment before expiry
+        lastPayment: lastSubscriptionPaymentDate
           ? formatDateWithSuffix(lastSubscriptionPaymentDate)
           : "N/A",
         upcomingPayment: "N/A",
@@ -185,31 +170,28 @@ export default function CurrentPlanSection({
         actionText: "Renew Plan",
         amount: lastSubscriptionPayment
           ? `$${lastSubscriptionPayment.amount}`
-          : "$100", // Or fetch amount from priceId
-        billingCycle: "Subscription",
-        billingType: "Subscription" as const,
+          : "N/A",
+        billingCycle: getPlanInfoFromPriceId(existingUser.stripePriceId).cycle, // retain original cycle if known
+        billingType: "Subscription",
       };
     }
 
-    // Default case - no active, cancelled, expired, or lifetime plan found
     return {
       planName: "No Plan",
       planType: "None",
-      lastPayment: "N/A", // No relevant payment for "No Plan"
+      lastPayment: "N/A",
       upcomingPayment: "N/A",
       status: "Inactive",
       actionLink: "/pricing",
       actionText: "Subscribe Now",
       amount: "$0",
       billingCycle: "None",
-      billingType: "None" as const,
+      billingType: "None",
     };
   };
 
   const subscriptionDetails = getSubscriptionDetails();
 
-  // Find the specific payment record associated with the displayed lastPayment date
-  // This is needed to potentially link to an invoice URL later
   const lastPaymentRecord =
     subscriptionDetails.billingType === "One time"
       ? findLifetimePayment()
@@ -218,30 +200,36 @@ export default function CurrentPlanSection({
   return (
     <div className="w-full space-y-6">
       <h2 className="text-xl font-semibold text-white">Subscription</h2>
-
       <div className="overflow-hidden rounded-xl border border-gray-800 bg-[#171616]">
         <div className="p-6">
           <h5 className="transducer-font mb-6 font-semibold uppercase tracking-wider text-white">
             View and manage subscription
           </h5>
 
-          {/* Desktop view - hidden on mobile */}
+          {/* Desktop view */}
           <div className="hidden gap-4 rounded-t-md bg-[#50443F] p-4 md:grid md:grid-cols-5">
-            <div className="text-sm font-medium text-white">Subscription</div>
-            <div className="text-sm font-medium text-white">Last payment</div>
-            <div className="text-sm font-medium text-white">
+            {/* Headers */}
+            <div className="text-center text-sm font-medium text-white">
+              Subscription
+            </div>
+            <div className="text-center text-sm font-medium text-white">
+              Last payment
+            </div>
+            <div className="text-center text-sm font-medium text-white">
               {subscriptionDetails.status === "Cancelled"
                 ? "Access Ends"
                 : "Upcoming payment"}
             </div>
-            <div className="text-sm font-medium text-white">Status</div>
-            <div className="text-sm font-medium text-white">Manage</div>
+            <div className="text-center text-sm font-medium text-white">
+              Status
+            </div>
+            <div className="text-center text-sm font-medium text-white">
+              Manage
+            </div>
           </div>
-
-          {/* Desktop Content - hidden on mobile */}
           <div className="hidden min-h-[80px] items-center gap-4 p-4 md:grid md:grid-cols-5">
-            {/* Plan Name & Type */}
-            <div>
+            {/* Content Rows */}
+            <div className="text-center">
               <div className="font-medium text-white">
                 {subscriptionDetails.planName}
               </div>
@@ -249,17 +237,14 @@ export default function CurrentPlanSection({
                 {subscriptionDetails.planType}
               </div>
             </div>
-
-            {/* Last Payment */}
-            <div>
+            <div className="text-center">
               <div className="text-white">
                 {subscriptionDetails.lastPayment}
               </div>
-              {/* Show View Invoice link only if there was a last payment record found */}
-              {lastPaymentRecord && lastPaymentRecord.stripeInvoiceId && (
+              {lastPaymentRecord?.stripeInvoiceId && (
                 <Link
                   href={`https://dashboard.stripe.com/invoices/${lastPaymentRecord.stripeInvoiceId}`}
-                  target="_blank" // Open invoice in new tab
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-orange-500 hover:text-orange-400"
                 >
@@ -267,78 +252,49 @@ export default function CurrentPlanSection({
                 </Link>
               )}
             </div>
-
-            {/* Upcoming Payment / Access End */}
-            <div>
+            <div className="text-center">
               <div className="text-white">
                 {subscriptionDetails.upcomingPayment}
               </div>
-              {/* Show Payment Details only for active, non-lifetime subscriptions with an upcoming payment */}
-              {subscriptionDetails.upcomingPayment !== "N/A" &&
-                subscriptionDetails.status === "Active" &&
-                subscriptionDetails.billingType === "Subscription" && (
-                  <PaymentDetailsDialog
-                    plan={subscriptionDetails.planName} // Will show "Plus Monthly/Yearly" if applicable
-                    nextPaymentDate={subscriptionDetails.upcomingPayment}
-                    amount={subscriptionDetails.amount}
-                    billingCycle={subscriptionDetails.billingCycle}
-                    billingType={subscriptionDetails.billingType}
-                    trigger={
-                      <Button variant="link" className="h-8 p-0">
-                        View Payment Details
-                      </Button>
-                    }
-                  />
-                )}
             </div>
-
-            {/* Status */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <span
                 className={`${
                   subscriptionDetails.status === "Active"
                     ? "text-green-500"
-                    : subscriptionDetails.status === "Trial" // Assuming Trial might be a status
+                    : subscriptionDetails.status === "Trial"
                       ? "text-blue-500"
                       : subscriptionDetails.status === "Expired"
                         ? "text-red-500"
                         : subscriptionDetails.status === "Cancelled"
                           ? "text-yellow-500"
-                          : "text-gray-500" // Inactive or other
+                          : "text-gray-500"
                 }`}
               >
                 {subscriptionDetails.status}
               </span>
-              {/* Removed InfoIcon */}
             </div>
-
-            {/* Manage Actions */}
-            <div className="flex flex-col items-start">
-              {" "}
-              {/* Use flex-col for vertical stacking */}
-              {/* Show Cancel only for Active Subscriptions (not Lifetime) */}
+            <div className="flex flex-col items-center gap-1">
               {subscriptionDetails.status === "Active" &&
                 subscriptionDetails.billingType === "Subscription" &&
                 existingUser.stripeSubscriptionId && (
                   <CancelSubscriptionDialog userId={existingUser.id} />
                 )}
-              {/* Show Resubscribe/Renew/Subscribe links */}
               {(subscriptionDetails.status === "Expired" ||
                 subscriptionDetails.status === "Cancelled" ||
                 subscriptionDetails.status === "Inactive") && (
-                <Button variant="link" size="lg" asChild className="h-auto p-0">
+                <Button variant="link" size="sm" asChild className="h-auto p-0">
                   <Link href={subscriptionDetails.actionLink}>
                     {subscriptionDetails.actionText}
                   </Link>
                 </Button>
               )}
-              {/* Add link to Stripe Customer Portal if status is Active and it's a subscription */}
               {subscriptionDetails.status === "Active" &&
                 subscriptionDetails.billingType === "Subscription" &&
                 existingUser.stripeCustomerId && (
                   <Button
                     variant="link"
-                    size="lg"
+                    size="sm"
                     asChild
                     className="h-auto p-0"
                   >
@@ -350,129 +306,121 @@ export default function CurrentPlanSection({
 
           {/* Mobile view */}
           <div className="grid grid-cols-1 gap-4 md:hidden">
-            {/* Subscription */}
-            <div className="rounded-md bg-[#50443F] p-4">
-              <div className="mb-2 text-sm font-medium text-white">
-                Subscription
-              </div>
-              <div className="font-medium text-white">
-                {subscriptionDetails.planName}
-              </div>
-              <div className="text-sm text-gray-400">
-                {subscriptionDetails.planType}
-              </div>
-            </div>
-
-            {/* Last Payment */}
-            <div className="rounded-md bg-[#50443F] p-4">
-              <div className="mb-2 text-sm font-medium text-white">
-                Last payment
-              </div>
-              <div className="text-white">
-                {subscriptionDetails.lastPayment}
-              </div>
-              {lastPaymentRecord && lastPaymentRecord.stripeInvoiceId && (
-                <Link
-                  href={`https://dashboard.stripe.com/invoices/${lastPaymentRecord.stripeInvoiceId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-orange-500 hover:text-orange-400"
-                >
-                  View invoice
-                </Link>
-              )}
-            </div>
-
-            {/* Upcoming Payment / Access End */}
-            <div className="rounded-md bg-[#50443F] p-4">
-              <div className="mb-2 text-sm font-medium text-white">
-                {subscriptionDetails.status === "Cancelled"
-                  ? "Access Ends"
-                  : "Upcoming payment"}
-              </div>
-              <div className="text-white">
-                {subscriptionDetails.upcomingPayment}
-              </div>
-              {subscriptionDetails.upcomingPayment !== "N/A" &&
-                subscriptionDetails.status === "Active" &&
-                subscriptionDetails.billingType === "Subscription" && (
-                  <PaymentDetailsDialog
-                    plan={subscriptionDetails.planName} // Will show "Plus Monthly/Yearly" if applicable
-                    nextPaymentDate={subscriptionDetails.upcomingPayment}
-                    amount={subscriptionDetails.amount}
-                    billingCycle={subscriptionDetails.billingCycle}
-                    billingType={subscriptionDetails.billingType}
-                    trigger={
-                      <Button variant="link" className="h-8 p-0">
-                        View Payment Details
-                      </Button>
-                    }
-                  />
-                )}
-            </div>
-
-            {/* Status */}
-            <div className="rounded-md bg-[#50443F] p-4">
-              <div className="mb-2 text-sm font-medium text-white">Status</div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`${
-                    subscriptionDetails.status === "Active"
-                      ? "text-green-500"
-                      : subscriptionDetails.status === "Trial"
-                        ? "text-blue-500"
-                        : subscriptionDetails.status === "Expired"
-                          ? "text-red-500"
-                          : subscriptionDetails.status === "Cancelled"
-                            ? "text-yellow-500"
-                            : "text-gray-500"
-                  }`}
-                >
-                  {subscriptionDetails.status}
-                </span>
-                {/* Removed InfoIcon */}
-              </div>
-            </div>
-
-            {/* Manage */}
-            <div className="rounded-md bg-[#50443F] p-4">
-              <div className="mb-2 text-sm font-medium text-white">Manage</div>
-              <div className="flex flex-col items-start">
-                {" "}
-                {/* Use flex-col for vertical stacking */}
-                {subscriptionDetails.status === "Active" &&
-                  subscriptionDetails.billingType === "Subscription" &&
-                  existingUser.stripeSubscriptionId && (
-                    <CancelSubscriptionDialog userId={existingUser.id} />
-                  )}
-                {(subscriptionDetails.status === "Expired" ||
-                  subscriptionDetails.status === "Cancelled" ||
-                  subscriptionDetails.status === "Inactive") && (
-                  <Button
-                    variant="link"
-                    size="lg"
-                    asChild
-                    className="h-auto p-0"
-                  >
-                    <Link href={subscriptionDetails.actionLink}>
-                      {subscriptionDetails.actionText}
-                    </Link>
-                  </Button>
-                )}
-                {subscriptionDetails.status === "Active" &&
-                  subscriptionDetails.billingType === "Subscription" &&
-                  existingUser.stripeCustomerId && (
-                    <Button
-                      variant="link"
-                      size="lg"
-                      asChild
-                      className="h-auto p-0"
+            {[
+              {
+                label: "Subscription",
+                content: (
+                  <div className="text-center">
+                    <div className="font-medium text-white">
+                      {subscriptionDetails.planName}
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {subscriptionDetails.planType}
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                label: "Last payment",
+                content: (
+                  <div className="text-center">
+                    <div className="text-white">
+                      {subscriptionDetails.lastPayment}
+                    </div>
+                    {lastPaymentRecord?.stripeInvoiceId && (
+                      <Link
+                        href={`https://dashboard.stripe.com/invoices/${lastPaymentRecord.stripeInvoiceId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-orange-500 hover:text-orange-400"
+                      >
+                        View invoice
+                      </Link>
+                    )}
+                  </div>
+                ),
+              },
+              {
+                label:
+                  subscriptionDetails.status === "Cancelled"
+                    ? "Access Ends"
+                    : "Upcoming payment",
+                content: (
+                  <div className="text-center">
+                    <div className="text-white">
+                      {subscriptionDetails.upcomingPayment}
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                label: "Status",
+                content: (
+                  <div className="flex justify-center">
+                    <span
+                      className={`${
+                        subscriptionDetails.status === "Active"
+                          ? "text-green-500"
+                          : subscriptionDetails.status === "Trial"
+                            ? "text-blue-500"
+                            : subscriptionDetails.status === "Expired"
+                              ? "text-red-500"
+                              : subscriptionDetails.status === "Cancelled"
+                                ? "text-yellow-500"
+                                : "text-gray-500"
+                      }`}
                     >
-                      <Link href="/api/stripe-portal">Manage Billing</Link>
-                    </Button>
-                  )}
+                      {subscriptionDetails.status}
+                    </span>
+                  </div>
+                ),
+              },
+              {
+                label: "Manage",
+                content: (
+                  <div className="flex flex-col items-center gap-1">
+                    {subscriptionDetails.status === "Active" &&
+                      subscriptionDetails.billingType === "Subscription" &&
+                      existingUser.stripeSubscriptionId && (
+                        <CancelSubscriptionDialog userId={existingUser.id} />
+                      )}
+                    {(subscriptionDetails.status === "Expired" ||
+                      subscriptionDetails.status === "Cancelled" ||
+                      subscriptionDetails.status === "Inactive") && (
+                      <Button
+                        variant="link"
+                        size="sm"
+                        asChild
+                        className="h-auto p-0"
+                      >
+                        <Link href={subscriptionDetails.actionLink}>
+                          {subscriptionDetails.actionText}
+                        </Link>
+                      </Button>
+                    )}
+                    {subscriptionDetails.status === "Active" &&
+                      subscriptionDetails.billingType === "Subscription" &&
+                      existingUser.stripeCustomerId && (
+                        <Button
+                          variant="link"
+                          size="sm"
+                          asChild
+                          className="h-auto p-0"
+                        >
+                          <Link href="/api/stripe-portal">Manage Billing</Link>
+                        </Button>
+                      )}
+                  </div>
+                ),
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-md bg-[#50443F] p-4">
+                <div className="mb-2 text-center text-sm font-medium text-white">
+                  {item.label}
+                </div>
+                {item.content}
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
