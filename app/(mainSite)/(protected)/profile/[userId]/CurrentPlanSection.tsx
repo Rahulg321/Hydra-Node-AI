@@ -289,18 +289,6 @@ export default function CurrentPlanSection({
                   </Link>
                 </Button>
               )}
-              {subscriptionDetails.status === "Active" &&
-                subscriptionDetails.billingType === "Subscription" &&
-                existingUser.stripeCustomerId && (
-                  <Button
-                    variant="link"
-                    size="sm"
-                    asChild
-                    className="h-auto p-0"
-                  >
-                    <Link href="/api/stripe-portal">Manage Billing</Link>
-                  </Button>
-                )}
             </div>
           </div>
 
@@ -398,18 +386,6 @@ export default function CurrentPlanSection({
                         </Link>
                       </Button>
                     )}
-                    {subscriptionDetails.status === "Active" &&
-                      subscriptionDetails.billingType === "Subscription" &&
-                      existingUser.stripeCustomerId && (
-                        <Button
-                          variant="link"
-                          size="sm"
-                          asChild
-                          className="h-auto p-0"
-                        >
-                          <Link href="/api/stripe-portal">Manage Billing</Link>
-                        </Button>
-                      )}
                   </div>
                 ),
               },
