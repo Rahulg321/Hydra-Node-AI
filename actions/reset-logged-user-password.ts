@@ -33,6 +33,13 @@ export default async function resetLoggedInUserPassword(
       };
     }
 
+    if (loggedInUser.isOAuth) {
+      return {
+        type: "error",
+        message: "You cannot reset your password using OAuth",
+      };
+    }
+
     // Find the user by ID
     const dbUser = await db.user.findUnique({
       where: {
@@ -59,6 +66,13 @@ export default async function resetLoggedInUserPassword(
     }
 
     const { oldPassword, newPassword } = validatedFields.data;
+
+    if (oldPassword === newPassword) {
+      return {
+        type: "error",
+        message: "New password cannot be the same as the old password",
+      };
+    }
 
     // Check if the user entered the correct password
 

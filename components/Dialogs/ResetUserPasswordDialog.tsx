@@ -30,6 +30,7 @@ import { GradientButton } from "../buttons/gradient-button";
 import resetLoggedInUserPassword from "@/actions/reset-logged-user-password";
 import { ResetLoggedUserPasswordSchema } from "@/hooks/lib/schemas/ResetLoggedUserPassword";
 import { ResetLoggedUserPasswordType } from "@/hooks/lib/schemas/ResetLoggedUserPassword";
+import { PasswordInput } from "../ui/password-input";
 
 interface ResetUserPasswordDialogProps {
   userId: string;
@@ -40,46 +41,57 @@ export function ResetUserPasswordDialog({
 }: ResetUserPasswordDialogProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const ResetUserPasswordForm = () => {
-    const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-    const { toast } = useToast();
-    const [isPending, startTransition] = React.useTransition();
+  const { toast } = useToast();
+  const [isPending, startTransition] = React.useTransition();
 
-    const form = useForm<ResetLoggedUserPasswordType>({
-      resolver: zodResolver(ResetLoggedUserPasswordSchema),
-      defaultValues: {
-        oldPassword: "",
-        newPassword: "",
-      },
+  const form = useForm<ResetLoggedUserPasswordType>({
+    resolver: zodResolver(ResetLoggedUserPasswordSchema),
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  function onSubmit(values: ResetLoggedUserPasswordType) {
+    startTransition(async () => {
+      console.log(values);
+      const response = await resetLoggedInUserPassword(userId, values);
+      if (response.type === "error") {
+        toast({
+          title: "An error occured",
+          description: response.message,
+          variant: "destructive",
+        });
+      }
+
+      if (response.type === "success") {
+        toast({
+          title: "Success",
+          description: response.message,
+          variant: "success",
+        });
+        setIsSuccess(true);
+      }
     });
+  }
 
-    // 2. Define a submit handler.
-    function onSubmit(values: ResetLoggedUserPasswordType) {
-      startTransition(async () => {
-        console.log(values);
-        const response = await resetLoggedInUserPassword(userId, values);
-        if (response.type === "error") {
-          toast({
-            title: "An error occured",
-            description: response.message,
-            variant: "destructive",
-          });
-        }
-
-        if (response.type === "success") {
-          toast({
-            title: "Success",
-            description: response.message,
-            variant: "success",
-          });
-          setIsSuccess(true);
-        }
-      });
-    }
-
-    return (
-      <>
+  return (
+    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex cursor-pointer items-center whitespace-nowrap bg-[#362F2C] px-2 py-2 text-xs text-white/70">
+          Change Password
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Reset User Password</AlertDialogTitle>
+          <AlertDialogDescription>
+            Enter a new password for the user.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
         {isSuccess ? (
           <SuccessScreen
             title="YOUR PASSWORD IS SUCCESSFULLY UPDATED"
@@ -96,11 +108,7 @@ export function ResetUserPasswordDialog({
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="Password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -113,46 +121,28 @@ export function ResetUserPasswordDialog({
                   <FormItem>
                     <FormLabel>New Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="New Password"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="New Password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <GradientButton type="submit" disabled={isPending}>
-                {isPending ? "Submitting..." : "Submit"}
-              </GradientButton>
+              <div className="flex justify-between gap-2">
+                <GradientButton type="submit" disabled={isPending}>
+                  {isPending ? "Submitting..." : "Submit"}
+                </GradientButton>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
             </form>
           </Form>
         )}
-      </>
-    );
-  };
-
-  return (
-    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <AlertDialogTrigger asChild>
-        <div className="flex cursor-pointer items-center whitespace-nowrap bg-[#362F2C] px-2 py-2 text-xs text-white/70">
-          Change Password
-        </div>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Reset User Password</AlertDialogTitle>
-          <AlertDialogDescription>
-            Enter a new password for the user.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <ResetUserPasswordForm />
-        <AlertDialogFooter>
-          <Button variant="secondary" onClick={() => setDialogOpen(false)}>
-            Cancel
-          </Button>
-        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
