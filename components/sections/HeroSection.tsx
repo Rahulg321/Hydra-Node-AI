@@ -3,12 +3,10 @@
 import React from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
-import Lamp from "../ui/lamp";
 
 export default function CertificationHero() {
   return (
     <div className="relative flex min-h-[550px] w-full flex-col items-center justify-center overflow-hidden text-white">
-      <Lamp />
       <div className="absolute bottom-[-12rem] left-1/2 h-[20rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
 
       <div className="absolute inset-0 z-[-10]">

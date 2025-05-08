@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { Button } from "../ui/button";
+import { GradientButton } from "../buttons/gradient-button";
 
 const NewVerificationForm = () => {
   const searchParams = useSearchParams();
@@ -43,9 +44,9 @@ const NewVerificationForm = () => {
   }, [onSubmit]);
 
   return (
-    <div className="flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-lg">
-        <p className="text-gray-600">
+    <div className="">
+      <div className="">
+        <p className="text-center text-white">
           We are confirming your email address. Please wait while we process
           your request.
         </p>
@@ -60,24 +61,28 @@ const NewVerificationForm = () => {
         {!loading && success && (
           <div className="text-center">
             <h3 className="text-lg font-medium text-green-600">{success}</h3>
-            <p className="mt-2 text-gray-600">
+            <Button className="" variant={"success"} size={"sm"}>
               Your email has been successfully verified. You can now access your
               account.
-            </p>
-            <Link href={"/login"}>Login</Link>
+            </Button>
+            <GradientButton asChild className="mt-4" size={"lg"}>
+              <Link href={"/login"}>Login</Link>
+            </GradientButton>
           </div>
         )}
 
         {!loading && error && (
-          <div className="text-center">
-            <h3 className="text-lg font-medium text-red-600">{error}</h3>
-            <p className="mt-2 text-gray-600">
+          <div className="mt-4 text-center">
+            <Button className="" variant={"destructive"} size={"sm"}>
+              {error}
+            </Button>
+            <p className="mt-4 text-white">
               Please ensure your verification link is correct, or try requesting
               a new one.
             </p>
-            <Button asChild className="mt-4">
+            <GradientButton asChild className="mt-4" size={"lg"}>
               <Link href={"/signup"}>Signup</Link>
-            </Button>
+            </GradientButton>
           </div>
         )}
 
