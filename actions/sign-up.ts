@@ -50,7 +50,13 @@ export async function SignUpUser(values: SignUpFormZodType) {
       };
     }
 
-    const { name, email, password } = validatedFields.data;
+    const { name, email, password, confirmPassword } = validatedFields.data;
+
+    if (password !== confirmPassword) {
+      return {
+        error: "Passwords do not match",
+      };
+    }
 
     const existingUser = await getUserByEmail(email);
 

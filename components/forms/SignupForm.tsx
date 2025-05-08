@@ -33,6 +33,7 @@ const SignupForm = () => {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
   // 2. Define a submit handler.
@@ -41,6 +42,11 @@ const SignupForm = () => {
     // ✅ This will be type-safe and validated.
     setError("");
     setSuccess("");
+
+    if (values.password !== values.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
     startTransition(async () => {
       console.log(values);
@@ -99,6 +105,23 @@ const SignupForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    placeholder="**********"
+                    className="text-gray-400"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder="**********"
