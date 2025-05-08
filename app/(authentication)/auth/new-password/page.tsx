@@ -3,6 +3,8 @@ import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
+import AuthHeroSection from "../../auth-hero-section";
+import { GradientButton } from "@/components/buttons/gradient-button";
 
 const ResetPasswordPage = async (props: {
   params: Promise<{}>;
@@ -18,39 +20,37 @@ const ResetPasswordPage = async (props: {
 
   if (!dbToken) {
     return (
-      <section className="block-space container relative">
-        <div className="absolute right-4 top-4">
-          <Link href="/">
-            <Image
-              src="/hydranode_logo.png"
-              alt="Hydranode official logo"
-              className="object-cover"
-              width={200}
-              height={200}
-            />
-          </Link>
-        </div>
-        <div className="mt-8 text-center">
-          <h1 className="mb-2 text-2xl font-semibold">Reset Your Password</h1>
-          <p className="mb-4 text-gray-600">Enter your updated password</p>
-          <p className="mb-6 text-red-600">
-            The token is invalid or has expired. Please request a new password
-            reset link.
-          </p>
-          <Link
-            href="/auth/reset"
-            className="inline-block rounded bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700"
-          >
-            Request New Password Reset
-          </Link>
+      <section className="flex flex-col md:flex-row">
+        <AuthHeroSection
+          headline="Join HydraNode - Simplify Your Certifications"
+          tagline="Experience the future of exam preparation with Hydranode's advanced AI technology. Get realistic practice, instant feedback, and personalized learning paths."
+        />
+        <div className="flex flex-1 flex-col items-center justify-center p-8">
+          <div className="mt-8 text-center">
+            <h1 className="mb-2 font-semibold">Reset Your Password</h1>
+            <p className="mb-4 text-gray-600">Enter your updated password</p>
+            <p className="mb-6 text-red-600">
+              The token is invalid or has expired. Please request a new password
+              reset link.
+            </p>
+            <GradientButton asChild>
+              <Link href="/auth/reset" className="">
+                Request New Password Reset
+              </Link>
+            </GradientButton>
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="block-space container">
-      <div className="space-y-2">
+    <section className="flex flex-col md:flex-row">
+      <AuthHeroSection
+        headline="Join HydraNode - Simplify Your Certifications"
+        tagline="Experience the future of exam preparation with Hydranode's advanced AI technology. Get realistic practice, instant feedback, and personalized learning paths."
+      />
+      <div className="flex flex-1 flex-col items-center justify-center p-8 md:p-12">
         <h2>Set up a new Password</h2>
         <h3 className="">
           Email:- <span className="text-baseC">{dbToken.email}</span>

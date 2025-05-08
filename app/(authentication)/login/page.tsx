@@ -48,6 +48,7 @@ const LoginPage = () => {
             <LoginForm />
           </Suspense>
         </div>
+        ``
       </div>
     </div>
   );

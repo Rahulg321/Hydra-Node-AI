@@ -69,7 +69,9 @@ const ResetPasswordForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel className="justify-start text-start">
+                  Email Address
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="johndoe@gmail.com" {...field} />
                 </FormControl>
