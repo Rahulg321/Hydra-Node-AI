@@ -1,5 +1,10 @@
 import db from "@/hooks/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/hooks/lib/redis";
+import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
 
 function areAnswersCorrect(correctAnswersStr: string, userAnswer: number[]) {
   // Step 1: Convert correctAnswersStr to an array of numbers and sort it
@@ -21,8 +26,40 @@ function areAnswersCorrect(correctAnswersStr: string, userAnswer: number[]) {
   );
 }
 
+// const userLimiter = new Ratelimit({
+//   redis,
+//   limiter: Ratelimit.slidingWindow(60, "1m"),    // 60 requests/min per user
+// });
+const ipLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(120, "1m"), // 120 requests/min per IP
+});
+// const globalLimiter = new Ratelimit({
+//   redis,
+//   limiter: Ratelimit.slidingWindow(1000, "1m"),  // 1000 requests/min total
+// });
+
 export async function POST(request: NextRequest) {
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
+
+  const { success: ipAllowed, pending: ipPending } = await ipLimiter.limit(ip);
+
+  if (!ipAllowed) {
+    await ipPending;
+    return NextResponse.json(
+      { message: "Too many check answer attempts. Please wait a minute." },
+      { status: 429 },
+    );
+  }
+
   try {
+    const userSession = await auth();
+
+    if (!userSession) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { questionId, quizSessionId, questionType, userAnswer } = body;
 

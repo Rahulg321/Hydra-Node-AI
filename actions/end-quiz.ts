@@ -1,7 +1,11 @@
 "use server";
 
 import db from "@/hooks/lib/db";
-
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/hooks/lib/redis";
+import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
+import { auth } from "@/auth";
 // this server action will be used to the quiz
 
 /**
@@ -28,10 +32,38 @@ import db from "@/hooks/lib/db";
  *   console.error("Error ending quiz:", response.message);
  * }
  */
+const endQuizIpLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
+
 export default async function EndQuizAction(
   quizSessionId: string,
   questionLength: number,
 ) {
+  const userSession = await auth();
+
+  if (!userSession) {
+    return {
+      type: "error",
+      message: "Unauthorized",
+    };
+  }
+
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
+
+  const { success: ipAllowed, pending: ipPending } =
+    await endQuizIpLimiter.limit(ip);
+
+  if (!ipAllowed) {
+    await ipPending;
+    return {
+      type: "error",
+      message: "Too many end quiz attempts. Please wait a minute.",
+    };
+  }
+
   try {
     let userAttempts = await db.userAttempt.findMany({
       where: {
