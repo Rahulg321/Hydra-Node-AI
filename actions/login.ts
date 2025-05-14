@@ -26,32 +26,32 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
 
-const rateLimit = new Ratelimit({
+const loginIpLimiter = new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(5, "1m"),
+});
+
+const userLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "10m"),
 });
 
 export async function LoginUser(
   values: LoginFormSchema,
   callbackUrl?: string | null,
 ) {
-  const ip =
-    (await headers()).get("x-real-ip") ||
-    (await headers()).get("x-forwarded-for");
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
 
-  const {
-    remaining,
-    limit,
-    success: limitReached,
-  } = await rateLimit.limit(ip!);
+  const { success: ipAllowed, pending: ipPending } =
+    await loginIpLimiter.limit(ip);
 
-  console.log({ remaining, limit, limitReached });
-
-  if (!limitReached) {
+  if (!ipAllowed) {
+    await ipPending;
     return {
-      error:
-        "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
+      error: "Too many login attempts. Please wait a minute.",
     };
   }
 
@@ -67,6 +67,16 @@ export async function LoginUser(
   }
 
   const { email, password, code } = validatedFields.data;
+
+  const { success: userAllowed, pending: userPending } =
+    await userLimiter.limit(`login:${email.toLowerCase()}`);
+
+  if (!userAllowed) {
+    await userPending;
+    return {
+      error: "Too many attempts for this account. Try again later.",
+    };
+  }
 
   const existingUser = await getUserByEmail(email);
   // they need to create an account first or they need to login with OAuth

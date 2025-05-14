@@ -8,6 +8,15 @@ import {
   ResetLoggedUserPasswordSchema,
   ResetLoggedUserPasswordType,
 } from "@/hooks/lib/schemas/ResetLoggedUserPassword";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/hooks/lib/redis";
+import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
+
+const resetPasswordIpLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
 
 /**
  * Resets the password for a logged-in user.
@@ -20,6 +29,19 @@ export default async function resetLoggedInUserPassword(
   userId: string,
   values: ResetLoggedUserPasswordType,
 ) {
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
+
+  const { success: ipAllowed, pending: ipPending } =
+    await resetPasswordIpLimiter.limit(ip);
+
+  if (!ipAllowed) {
+    await ipPending;
+    return {
+      error: "Too many password reset attempts. Please wait a minute.",
+    };
+  }
+
   let newHashedPassword = "";
 
   try {

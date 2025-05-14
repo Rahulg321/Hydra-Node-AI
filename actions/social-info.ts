@@ -3,6 +3,15 @@
 import { auth } from "@/auth";
 import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/hooks/lib/redis";
+import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
+
+const socialInfoIpLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
 
 /**
  * Updates the social info of the user, changing the linkedin and twitter links
@@ -20,6 +29,19 @@ export async function updateSocialInfo({
   linkedinLink: string;
   twitterLink: string;
 }) {
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
+
+  const { success: ipAllowed, pending: ipPending } =
+    await socialInfoIpLimiter.limit(ip);
+
+  if (!ipAllowed) {
+    await ipPending;
+    return {
+      error: "Too many social info update attempts. Please wait a minute.",
+    };
+  }
+
   try {
     const session = await auth();
 

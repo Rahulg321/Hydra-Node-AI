@@ -15,32 +15,31 @@ import { addDays } from "date-fns";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
 
-const rateLimit = new Ratelimit({
+const signUpIpLimiter = new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(5, "1m"),
 });
 
+const userLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "10m"),
+});
+
 export async function SignUpUser(values: SignUpFormZodType) {
-  const ip =
-    (await headers()).get("x-real-ip") ||
-    (await headers()).get("x-forwarded-for");
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
 
-  const {
-    remaining,
-    limit,
-    success: limitReached,
-  } = await rateLimit.limit(ip!);
+  const { success: ipAllowed, pending: ipPending } =
+    await signUpIpLimiter.limit(ip);
 
-  console.log({ remaining, limit, limitReached });
-
-  if (!limitReached) {
+  if (!ipAllowed) {
+    await ipPending;
     return {
-      error:
-        "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
+      error: "Too many login attempts. Please wait a minute.",
     };
   }
-
   try {
     const validatedFields = SignUpFormSchema.safeParse(values);
 
@@ -55,6 +54,16 @@ export async function SignUpUser(values: SignUpFormZodType) {
     if (password !== confirmPassword) {
       return {
         error: "Passwords do not match",
+      };
+    }
+
+    const { success: userAllowed, pending: userPending } =
+      await userLimiter.limit(`signup:${email.toLowerCase()}`);
+
+    if (!userAllowed) {
+      await userPending;
+      return {
+        error: "Too many attempts for this account. Try again later.",
       };
     }
 

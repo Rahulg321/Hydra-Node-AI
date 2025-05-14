@@ -4,6 +4,16 @@ import { auth } from "@/auth";
 import db from "@/hooks/lib/db";
 import { revalidatePath } from "next/cache";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/hooks/lib/redis";
+import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
+
+const accountInfoIpLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
+
 /**
  * Updates the account info of the user, changing the first name and last name
  * @param param0
@@ -18,6 +28,19 @@ export async function updateAccountInfo({
   firstName: string;
   lastName: string;
 }) {
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
+
+  const { success: ipAllowed, pending: ipPending } =
+    await accountInfoIpLimiter.limit(ip);
+
+  if (!ipAllowed) {
+    await ipPending;
+    return {
+      error: "Too many account info update attempts. Please wait a minute.",
+    };
+  }
+
   try {
     const session = await auth();
 

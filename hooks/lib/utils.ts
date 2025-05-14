@@ -5,6 +5,22 @@ import { stripe } from "./stripe";
 import { format } from "date-fns"; // Assuming you're using date-fns or similar for date formatting
 
 /**
+ * Extracts the client IP address from the request headers
+ * @param h - The request headers
+ * @returns The client IP address or "unknown" if not found
+ */
+export function extractClientIp(h: Headers): string {
+  const xReal = h.get("x-real-ip");
+  if (xReal) return xReal;
+
+  const xForwarded = h.get("x-forwarded-for");
+  if (xForwarded) return xForwarded.split(",")[0].trim();
+
+  // Fallback when deployed behind Vercel/Node httpServer
+  return h.get("client-ip") ?? "unknown";
+}
+
+/**
  * Parses the userAnswer string based on question type (assuming Question data is available)
  * @param answerString - The userAnswer string
  * @param isMultiSelect - Whether the question is a multi-select question
