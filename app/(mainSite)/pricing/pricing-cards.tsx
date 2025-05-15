@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CheckoutDialog from "@/components/CheckoutDialog";
-import { GradientButton } from "@/components/buttons/gradient-button";
 import { Switch } from "@/components/ui/switch";
 
 const PricingCards = () => {
@@ -24,14 +23,20 @@ const PricingCards = () => {
     threshold: 0.1,
   });
 
+  const environment = process.env.NODE_ENV;
+
   const plans = [
     {
       name: "Plus",
       description: "Ideal for serious learners",
       priceId:
         billingPeriod === "yearly"
-          ? "price_1RJE5CIbE21KKZM9OPSQoVfS"
-          : "price_1RGe2CIbE21KKZM9LvUkDVpj",
+          ? environment === "development"
+            ? "price_1RJE5CIbE21KKZM9OPSQoVfS"
+            : "price_1PrzZcIbE21KKZM9qlCdF86M"
+          : environment === "development"
+            ? "price_1RGe2CIbE21KKZM9LvUkDVpj"
+            : "price_1Prza0IbE21KKZM9u3XAEc3U",
       mode: "subscription",
       price: billingPeriod === "yearly" ? 149 : 15,
       billing: `Billed ${billingPeriod}`,
@@ -50,7 +55,10 @@ const PricingCards = () => {
     {
       name: "Lifetime Access",
       description: "Ideal for working professionals",
-      priceId: "price_1RGe9KIbE21KKZM9HQ3YUphb",
+      priceId:
+        environment === "development"
+          ? "price_1RGe9KIbE21KKZM9HQ3YUphb"
+          : "price_1PrzZCIbE21KKZM9CMJAMZZZ",
       mode: "payment",
       price: 199,
       billing: "One-time billing",

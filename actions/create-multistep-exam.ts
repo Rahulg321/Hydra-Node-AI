@@ -1,6 +1,12 @@
 "use server";
 
 import db from "@/hooks/lib/db";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/hooks/lib/redis";
+import { headers } from "next/headers";
+import { extractClientIp } from "@/hooks/lib/utils";
+import { auth } from "@/auth";
+
 /**
  * Creates a new quiz session for a user with the specified exam mode and time.
  *
@@ -29,6 +35,11 @@ import db from "@/hooks/lib/db";
  * }
  */
 
+const createExamIpLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1m"),
+});
+
 export default async function CreateMultiStepExam(
   examMode: string,
   totalTime: number,
@@ -38,6 +49,28 @@ export default async function CreateMultiStepExam(
   questionsToShow: number,
   numberOfQuestions?: number,
 ) {
+  const userSession = await auth();
+  if (!userSession) {
+    return {
+      type: "error",
+      message: "You must be logged in to create an exam",
+    };
+  }
+
+  const hdrs = await headers();
+  const ip = extractClientIp(hdrs);
+
+  const { success: ipAllowed, pending: ipPending } =
+    await createExamIpLimiter.limit(ip);
+
+  if (!ipAllowed) {
+    await ipPending;
+    return {
+      type: "error",
+      message: "Too many exam attempts. Please wait a minute.",
+    };
+  }
+
   try {
     if (!examId || !currentUserId) {
       console.error(

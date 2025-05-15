@@ -37,7 +37,7 @@ export async function SignUpUser(values: SignUpFormZodType) {
   if (!ipAllowed) {
     await ipPending;
     return {
-      error: "Too many login attempts. Please wait a minute.",
+      error: "Too many signup attempts. Please wait a minute.",
     };
   }
   try {
