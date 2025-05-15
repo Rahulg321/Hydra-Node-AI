@@ -49,8 +49,8 @@ const SignupForm = () => {
     }
 
     startTransition(async () => {
-      console.log(values);
       const response = await SignUpUser(values);
+      console.log(response);
       if (response.success) {
         setSuccess(response.success);
       } else if (response.error) {
