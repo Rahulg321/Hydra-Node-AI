@@ -22,11 +22,6 @@ const signUpIpLimiter = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "1m"),
 });
 
-const userLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, "10m"),
-});
-
 export async function SignUpUser(values: SignUpFormZodType) {
   const hdrs = await headers();
   const ip = extractClientIp(hdrs);
@@ -54,16 +49,6 @@ export async function SignUpUser(values: SignUpFormZodType) {
     if (password !== confirmPassword) {
       return {
         error: "Passwords do not match",
-      };
-    }
-
-    const { success: userAllowed, pending: userPending } =
-      await userLimiter.limit(`signup:${email.toLowerCase()}`);
-
-    if (!userAllowed) {
-      await userPending;
-      return {
-        error: "Too many attempts for this account. Try again later.",
       };
     }
 

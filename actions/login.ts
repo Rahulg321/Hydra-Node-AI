@@ -33,11 +33,6 @@ const loginIpLimiter = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "1m"),
 });
 
-const userLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, "10m"),
-});
-
 export async function LoginUser(
   values: LoginFormSchema,
   callbackUrl?: string | null,
@@ -67,16 +62,6 @@ export async function LoginUser(
   }
 
   const { email, password, code } = validatedFields.data;
-
-  const { success: userAllowed, pending: userPending } =
-    await userLimiter.limit(`login:${email.toLowerCase()}`);
-
-  if (!userAllowed) {
-    await userPending;
-    return {
-      error: "Too many attempts for this account. Try again later.",
-    };
-  }
 
   const existingUser = await getUserByEmail(email);
   // they need to create an account first or they need to login with OAuth
