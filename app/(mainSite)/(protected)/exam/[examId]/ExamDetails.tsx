@@ -8,6 +8,7 @@ import StartTrialExamDialog from "@/components/Dialogs/start-trial-exam-dialog";
 import { Session } from "next-auth";
 import { GradientButton } from "@/components/buttons/gradient-button";
 import Link from "next/link";
+import { getQuestionRange } from "@/hooks/lib/utils";
 
 interface ExamDetailsProps {
   name: string;
@@ -39,6 +40,9 @@ export function ExamDetails({
   stripePriceId,
   session,
 }: ExamDetailsProps) {
+  const questionRange = getQuestionRange(questionLength);
+  console.log(questionRange);
+
   return (
     <Card className="border-none">
       <CardHeader>
@@ -50,7 +54,7 @@ export function ExamDetails({
       </CardHeader>
       <CardContent className="p-4">
         <dl className="grid grid-cols-2 gap-4">
-          <DetailItem label="Range of Questions" value={`300-400`} />
+          <DetailItem label="Range of Questions" value={questionRange} />
           <DetailItem
             label="Mock Exam Questions"
             value={questionsToShow.toString()}

@@ -5,6 +5,23 @@ import { stripe } from "./stripe";
 import { format } from "date-fns"; // Assuming you're using date-fns or similar for date formatting
 
 /**
+ * Given a total number of questions, returns the inclusive range
+ * in hundreds that contains it, e.g. 123 → "100-200", 323 → "300-400".
+ */
+export function getQuestionRange(totalQuestions: number): string {
+  if (totalQuestions < 0) {
+    throw new Error("Question count must be non-negative");
+  }
+
+  // Determine the lower bound by flooring to the nearest hundred
+  const lower = Math.floor(totalQuestions / 100) * 100;
+  // Upper bound is exactly one hundred more
+  const upper = lower + 100;
+
+  return `${lower}-${upper}`;
+}
+
+/**
  * Extracts the client IP address from the request headers
  * @param h - The request headers
  * @returns The client IP address or "unknown" if not found
