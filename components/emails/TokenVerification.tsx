@@ -16,6 +16,7 @@ import * as React from "react";
 
 interface TokenVerificationEmailProps {
   tokenConfirmLink: string;
+  firstName?: string | null;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -24,47 +25,82 @@ const baseUrl = process.env.VERCEL_URL
 
 export const TokenVerificationEmail: React.FC<
   Readonly<TokenVerificationEmailProps>
-> = ({ tokenConfirmLink }) => (
+> = ({ tokenConfirmLink, firstName }) => (
   <Html>
     <Head />
-    <Preview>Verify your email address</Preview>
+    <Preview>Almost there! Please verify your email for HydraNode ✨</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Section style={logoContainer}></Section>
-        <Heading style={h1}>Welcome to Hydranode!!!!</Heading>
-        <Text style={heroText}>
-          You need to verify your email address first to create your account.
-          Simply click the link below, and you&apos;re all set.
+        <Section style={logoContainer}>
+          <Img
+            src={`${baseUrl}/public/hydranode_logo.png`}
+            width="120"
+            height="36"
+            alt="HydraNode"
+          />
+        </Section>
+
+        <Heading style={h1}>Welcome to HydraNode!</Heading>
+
+        <Text style={heroText}>Hi {firstName || "there"},</Text>
+
+        <Text style={paragraph}>
+          Welcome to the HydraNode community! We&apos;re really excited to have
+          you join us and can&apos;t wait for you to start preparing for your
+          certification exams.
+        </Text>
+
+        <Text style={paragraph}>
+          Just one quick step before you can dive in: please confirm your email
+          address by clicking the button below. This helps us ensure your
+          account is secure and you receive all important updates from us.
         </Text>
 
         <Section style={codeBox}>
           <Link href={tokenConfirmLink} style={buttonLink}>
-            Click here to confirm your email
+            Verify Your Email Address
           </Link>
         </Section>
 
-        <Text style={text}>
-          If you didn&apos;t request this email, there&apos;s nothing to worry
-          about, you can safely ignore it.
-        </Text>
-
-        <Section>
-          <Row style={footerLogos}>
-            <Column style={{ width: "66%" }}>
-              <Img
-                src={`${baseUrl}/public/hydranode_logo.png`} // Add your Hydranode logo again here
-                width="120"
-                height="36"
-                alt="Hydranode"
-              />
-            </Column>
-          </Row>
+        <Section style={benefitsContainer}>
+          <Text style={benefitsHeading}>Why verify?</Text>
+          <Text style={benefitsText}>
+            • Unlock full access to your new HydraNode account
+          </Text>
+          <Text style={benefitsText}>
+            • Get started with our free certification exams
+          </Text>
+          <Text style={benefitsText}>
+            • Ensure you receive important communications and product updates
+          </Text>
         </Section>
 
-        <Section>
+        <Text style={paragraph}>
+          Having trouble with the button? You can also paste this link into your
+          browser:
+          <br />
+          <Link href={tokenConfirmLink} style={linkText}>
+            {tokenConfirmLink}
+          </Link>
+        </Text>
+
+        <Text style={paragraph}>
+          If you have any questions, feel free to contact our support team at{" "}
+          <Link href="mailto:contact@hydranode.ai" style={linkText}>
+            contact@hydranode.ai
+          </Link>
+        </Text>
+
+        <Text style={signature}>
+          Warmly,
+          <br />
+          The HydraNode Team
+        </Text>
+
+        <Section style={footerSection}>
           <Link
             style={footerLink}
-            href="https://hydranode.ai/pricing" // Replace with your blog or other relevant links
+            href="https://hydranode.ai/pricing"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -73,7 +109,7 @@ export const TokenVerificationEmail: React.FC<
           &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
           <Link
             style={footerLink}
-            href="https://hydranode.ai/about-us" // Replace with your policies link
+            href="https://hydranode.ai/about-us"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -82,7 +118,7 @@ export const TokenVerificationEmail: React.FC<
           &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
           <Link
             style={footerLink}
-            href="https://hydranode.ai/help" // Replace with your help center link
+            href="https://hydranode.ai/help"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -91,19 +127,15 @@ export const TokenVerificationEmail: React.FC<
           &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
           <Link
             style={footerLink}
-            href="https://hydranode.ai/community" // Replace with your community link
+            href="https://hydranode.ai/community"
             target="_blank"
             rel="noopener noreferrer"
-            data-auth="NotApplicable"
-            data-linkindex="6"
           >
-            Hydranode Community
+            HydraNode Community
           </Link>
           <Text style={footerText}>
-            ©2023 Hydranode Technologies, All rights reserved. <br />
-            Hydranode Street, UK <br />
-            <br />
-            All rights reserved.
+            ©2024 HydraNode Technologies, All rights reserved. <br />
+            123 Tech Street, San Francisco, CA 94122
           </Text>
         </Section>
       </Container>
@@ -112,31 +144,6 @@ export const TokenVerificationEmail: React.FC<
 );
 
 export default TokenVerificationEmail;
-
-const footerText = {
-  fontSize: "12px",
-  color: "#b7b7b7",
-  lineHeight: "15px",
-  textAlign: "left" as const,
-  marginBottom: "50px",
-};
-
-const footerLink = {
-  color: "#b7b7b7",
-  textDecoration: "underline",
-};
-
-const footerLogos = {
-  marginBottom: "32px",
-  paddingLeft: "8px",
-  paddingRight: "8px",
-  width: "100%",
-};
-
-const socialMediaIcon = {
-  display: "inline",
-  marginLeft: "32px",
-};
 
 const main = {
   backgroundColor: "#ffffff",
@@ -148,10 +155,12 @@ const main = {
 const container = {
   margin: "0 auto",
   padding: "0px 20px",
+  maxWidth: "600px",
 };
 
 const logoContainer = {
   marginTop: "32px",
+  textAlign: "center" as const,
 };
 
 const h1 = {
@@ -161,17 +170,26 @@ const h1 = {
   margin: "30px 0",
   padding: "0",
   lineHeight: "42px",
+  textAlign: "center" as const,
 };
 
 const heroText = {
-  fontSize: "20px",
-  lineHeight: "28px",
-  marginBottom: "30px",
+  fontSize: "24px",
+  lineHeight: "32px",
+  marginBottom: "20px",
+  color: "#1d1c1d",
+};
+
+const paragraph = {
+  fontSize: "16px",
+  lineHeight: "24px",
+  marginBottom: "20px",
+  color: "#1d1c1d",
 };
 
 const codeBox = {
-  background: "rgb(245, 244, 245)",
-  borderRadius: "4px",
+  background: "#f6f9fc",
+  borderRadius: "8px",
   marginBottom: "30px",
   padding: "40px 10px",
 };
@@ -185,10 +203,55 @@ const buttonLink = {
   borderRadius: "5px",
   display: "block",
   textAlign: "center" as const,
+  fontWeight: "600",
 };
 
-const text = {
-  color: "#000",
-  fontSize: "14px",
+const benefitsContainer = {
+  marginBottom: "30px",
+};
+
+const benefitsHeading = {
+  fontSize: "18px",
+  fontWeight: "600",
+  marginBottom: "12px",
+  color: "#1d1c1d",
+};
+
+const benefitsText = {
+  fontSize: "16px",
   lineHeight: "24px",
+  marginBottom: "8px",
+  color: "#1d1c1d",
+};
+
+const linkText = {
+  color: "#0070f3",
+  textDecoration: "underline",
+};
+
+const signature = {
+  fontSize: "16px",
+  lineHeight: "24px",
+  marginBottom: "30px",
+  color: "#1d1c1d",
+};
+
+const footerSection = {
+  marginTop: "40px",
+  paddingTop: "20px",
+  borderTop: "1px solid #e6ebf1",
+};
+
+const footerLink = {
+  color: "#8898aa",
+  textDecoration: "underline",
+  fontSize: "14px",
+};
+
+const footerText = {
+  fontSize: "12px",
+  color: "#8898aa",
+  lineHeight: "15px",
+  textAlign: "center" as const,
+  marginTop: "20px",
 };

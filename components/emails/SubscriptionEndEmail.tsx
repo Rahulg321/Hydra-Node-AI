@@ -17,9 +17,9 @@ interface SubscriptionEndEmailProps {
   firstName: string | null;
   lastName: string | null;
   email: string;
-  subscriptionEndDate: string; // Date when the subscription ends
-  subscriptionPlan: string; // Subscription plan name (e.g., "Pro Plan")
-  renewalLink: string; // Link to renew the subscription
+  subscriptionEndDate: string;
+  subscriptionPlan: string;
+  renewalLink: string;
 }
 
 export default function SubscriptionEndEmail({
@@ -30,47 +30,78 @@ export default function SubscriptionEndEmail({
   subscriptionPlan,
   renewalLink,
 }: SubscriptionEndEmailProps) {
+  const fullName = firstName && lastName ? `${firstName} ${lastName}` : "there";
+
   return (
     <Html>
       <Head>
-        <title>Your Subscription Has Ended</title>
+        <title>Sad to see you go, {firstName}...</title>
       </Head>
-      <Preview>
-        {firstName && lastName
-          ? "Subscription for {subscriptionPlan} has ended for {firstName} {lastName}"
-          : "Subscription for {subscriptionPlan} has ended "}
-      </Preview>
+      <Preview>Sad to see you go, but is this goodbye for good?</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Text style={heading}>Subscription Ended</Text>
+            <Text style={heading}>Sad to see you go, {firstName}...</Text>
+
+            <Text style={paragraph}>Hi {fullName},</Text>
+
             <Text style={paragraph}>
-              Hello {firstName} {lastName},
+              We noticed you recently cancelled your HydraNode subscription, and
+              honestly, we&apos;re a bit bummed to see you go! We genuinely
+              valued having you as part of the HydraNode community.
             </Text>
+
             <Text style={paragraph}>
-              We wanted to inform you that your subscription to the{" "}
-              <strong>{subscriptionPlan}</strong> has ended on{" "}
-              <strong>{subscriptionEndDate}</strong>.
+              While goodbyes are tough, we&apos;re always striving to improve
+              HydraNode. To help us do that, we&apos;d be incredibly grateful if
+              you could share a little bit about why you decided to cancel. Your
+              honest feedback is like gold to us – it helps us understand what
+              we can improve for you and others.
             </Text>
 
             <Section style={detailsContainer}>
-              <Text style={detailsHeading}>Next Steps:</Text>
-              <Text style={detailsText}>
-                <strong>Subscription Plan:</strong> {subscriptionPlan}
+              <Text style={detailsHeading}>
+                Would you be open to telling us what happened?
               </Text>
               <Text style={detailsText}>
-                <strong>End Date:</strong> {subscriptionEndDate}
+                • Just hit &quot;reply&quot; to this email: Let us know your
+                thoughts. No long essays needed (unless you want to!)
+              </Text>
+              <Text style={detailsText}>
+                • Send a note to us – we&apos;re here to listen
               </Text>
             </Section>
 
+            <Text style={paragraph}>Before you go, did you know about:</Text>
             <Text style={paragraph}>
-              You can renew your subscription at any time to regain access to
-              all the premium features.
+              • &quot;...the recent GraphRAG based Q&A generation that we rolled
+              out for even enhanced preparation?&quot;
+            </Text>
+            <Text style={paragraph}>
+              • &quot;...we&apos;re about to launch user behavior analytics that
+              many users have been asking for?&quot;
+            </Text>
+
+            <Text style={paragraph}>
+              We can offer you a 50% discount on our lifetime plan as a valued
+              customer. Send us an email to claim your discount. You can easily
+              reactivate your account and pick up right where you left off.
             </Text>
 
             <Button style={button} href={renewalLink}>
-              Renew Your Subscription
+              Reactivate Your Account
             </Button>
+
+            <Text style={paragraph}>
+              Thanks again for giving HydraNode a try, {firstName}. We wish you
+              all the best and hope our paths cross again!
+            </Text>
+
+            <Text style={paragraph}>
+              Warmly,
+              <br />
+              The HydraNode Team
+            </Text>
 
             <Hr style={hr} />
             <Text style={footer}>
@@ -110,11 +141,6 @@ const box = {
 const hr = {
   borderColor: "#e6ebf1",
   margin: "20px 0",
-};
-
-const logo = {
-  margin: "0 auto",
-  marginBottom: "20px",
 };
 
 const heading = {

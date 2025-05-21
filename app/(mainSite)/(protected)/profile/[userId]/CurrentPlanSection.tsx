@@ -75,6 +75,7 @@ export default function CurrentPlanSection({
     const lastSubscriptionPaymentDate = lastSubscriptionPayment?.createdAt
       ? new Date(lastSubscriptionPayment.createdAt)
       : null;
+
     const periodEndDate = existingUser.stripeCurrentPeriodEnd
       ? new Date(existingUser.stripeCurrentPeriodEnd)
       : null;

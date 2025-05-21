@@ -41,7 +41,6 @@ export function ExamDetails({
   session,
 }: ExamDetailsProps) {
   const questionRange = getQuestionRange(questionLength);
-  console.log(questionRange);
 
   return (
     <Card className="border-none">

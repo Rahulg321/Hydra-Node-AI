@@ -108,32 +108,39 @@ export default function SubscriptionStartEmail({
     textAlign: "center" as const,
   };
 
+  const fullName =
+    firstName && lastName ? `${firstName} ${lastName}` : "Valued User";
+
   return (
     <Html>
       <Head>
-        <title>Welcome to Your Subscription!</title>
+        <title>
+          Confirmed! You&apos;re ready to supercharge your certification
+          preparation with HydraNode
+        </title>
       </Head>
       <Preview>
-        {firstName && lastName
-          ? `Congrats, ${firstName} ${lastName}, your subscription to ${subscriptionPlan} is active!`
-          : `Congrats, your subscription to ${subscriptionPlan} is active!`}
+        Confirmed! You&apos;re ready to supercharge your certification
+        preparation with HydraNode, {fullName}!
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Text style={heading}>🎉 Welcome to Your Subscription! 🎉</Text>
-            <Text style={paragraph}>
-              {firstName && lastName
-                ? `Dear ${firstName} ${lastName},`
-                : `Dear Valued User,`}
+            <Text style={heading}>
+              Confirmed! You&apos;re ready to supercharge your certification
+              preparation with HydraNode, {fullName}!
             </Text>
+
+            <Text style={paragraph}>Hi {fullName},</Text>
+
             <Text style={paragraph}>
-              We are excited to let you know that your subscription to{" "}
-              <strong>{subscriptionPlan}</strong> is now active!
+              Fantastic news – your HydraNode subscription is active, and
+              you&apos;re all set to crack your certification preparation using
+              our GraphRAG based Q&A generation and analysis engine!
             </Text>
+
             <Text style={paragraph}>
-              Your subscription started on{" "}
-              <strong>{subscriptionStartDate}</strong>.
+              We&apos;re stoked to be part of your journey.
             </Text>
 
             <Section style={detailsContainer}>
@@ -142,13 +149,29 @@ export default function SubscriptionStartEmail({
                 <strong>Plan:</strong> {subscriptionPlan}
               </Text>
               <Text style={detailsText}>
-                <strong>Start Date:</strong> {subscriptionStartDate}
+                <strong>Active Since:</strong> {subscriptionStartDate}
               </Text>
               <Text style={detailsText}>
-                <strong>Invoice:</strong>{" "}
+                <strong>Invoice & Receipt:</strong>{" "}
                 <Link href={invoiceLink}>View your invoice</Link>
               </Text>
             </Section>
+
+            <Text style={paragraph}>
+              Our goal is to help you succeed. If you have any questions or need
+              assistance, our support team is ready and waiting. Just reply to
+              this message.
+            </Text>
+
+            <Text style={paragraph}>
+              Let&apos;s crack those certifications together!
+            </Text>
+
+            <Text style={paragraph}>
+              To your success,
+              <br />
+              The HydraNode Team
+            </Text>
 
             <Button style={button} href={dashboardLink}>
               Access Your Dashboard
