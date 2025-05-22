@@ -141,7 +141,6 @@ export const sendSubscriptionStartEmail = async (
     react: SubscriptionStartEmail({
       firstName,
       lastName,
-      email,
       subscriptionStartDate,
       subscriptionPlan,
       invoiceLink,

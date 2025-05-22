@@ -102,18 +102,6 @@ export default function SubscriptionEndEmail({
               <br />
               The HydraNode Team
             </Text>
-
-            <Hr style={hr} />
-            <Text style={footer}>
-              If you have any questions or need assistance, feel free to reply
-              to this email or contact our support team at{" "}
-              <Link href={`mailto:${email}`}>{email}</Link>.
-            </Text>
-
-            <Hr style={hr} />
-            <Text style={footer}>
-              HydraNode Inc., 123 Tech Street, San Francisco, CA 94122
-            </Text>
           </Section>
         </Container>
       </Body>

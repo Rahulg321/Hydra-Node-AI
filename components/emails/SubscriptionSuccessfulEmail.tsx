@@ -16,72 +16,75 @@ import { Container } from "@react-email/components";
 interface SubscriptionStartEmailProps {
   firstName: string | null;
   lastName: string | null;
-  email: string;
-  subscriptionStartDate: string; // Date when the subscription starts
-  subscriptionPlan: string; // Subscription plan name (e.g., "Pro Plan")
+  subscriptionStartDate: string;
+  subscriptionPlan: string;
   invoiceLink: string;
 }
 
 export default function SubscriptionStartEmail({
   firstName,
   lastName,
-  email,
   subscriptionStartDate,
   subscriptionPlan,
   invoiceLink,
 }: SubscriptionStartEmailProps) {
+  const customerName =
+    firstName && lastName
+      ? `${firstName} ${lastName}`
+      : firstName || lastName || "there";
   return (
     <Html>
       <Head>
-        <title>Your Subscription Has Started</title>
+        <title>{`Confirmed! You&#39;re ready to supercharge your certification preparation with HydraNode, ${customerName}!`}</title>
       </Head>
       <Preview>
-        {firstName && lastName
-          ? `Your ${subscriptionPlan} subscription has started, ${firstName} ${lastName}!`
-          : `Your ${subscriptionPlan} subscription has started!`}
+        {`Confirmed! You&#39;re ready to supercharge your certification preparation with HydraNode, ${customerName}!`}
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Text style={heading}>Welcome to {subscriptionPlan}!</Text>
+            <Text style={heading}>
+              {`Confirmed! You&#39;re ready to supercharge your certification preparation with HydraNode, ${customerName}!`}
+            </Text>
+            <Text style={paragraph}>Hi {customerName},</Text>
             <Text style={paragraph}>
-              Hello {firstName} {lastName},
+              Fantastic news – your HydraNode subscription is active, and
+              you&#39;re all set to crack your certification preparation using
+              our{" "}
+              <strong>
+                GraphRAG based Q&amp;A generation and analysis engine
+              </strong>
+              !
             </Text>
             <Text style={paragraph}>
-              We are excited to welcome you to our{" "}
-              <strong>{subscriptionPlan}</strong>! Your subscription has
-              officially started on <strong>{subscriptionStartDate}</strong>.
+              We&#39;re stoked to be part of your journey.
             </Text>
-
             <Section style={detailsContainer}>
-              <Text style={detailsHeading}>Your Subscription Details:</Text>
+              <Text style={detailsHeading}>Subscription Details:</Text>
               <Text style={detailsText}>
-                <strong>Subscription Plan:</strong> {subscriptionPlan}
+                <strong>Plan:</strong> {subscriptionPlan}
               </Text>
               <Text style={detailsText}>
-                <strong>Start Date:</strong> {subscriptionStartDate}
+                <strong>Active Since:</strong> {subscriptionStartDate}
               </Text>
               <Text style={detailsText}>
-                <strong>Invoice:</strong>{" "}
-                <Link href={invoiceLink}>Get your invoice here</Link>
+                <strong>Invoice &amp; Receipt:</strong>{" "}
+                <Link href={invoiceLink}>View your invoice</Link>
               </Text>
             </Section>
-
             <Text style={paragraph}>
-              To start using all the premium features, you can log in to your
-              account using the link below.
+              Our goal is to help you succeed. If you have any questions or need
+              assistance, our support team is ready and waiting. Just reply to
+              this message.
             </Text>
-
-            <Hr style={hr} />
-            <Text style={footer}>
-              If you have any questions or need assistance, feel free to reply
-              to this email or contact our support team at{" "}
-              <Link href={`mailto:${email}`}>{email}</Link>.
+            <Text style={paragraph}>
+              Let&#39;s crack those certifications together!
             </Text>
-
-            <Hr style={hr} />
             <Text style={footer}>
-              HydraNode Inc., 123 Tech Street, San Francisco, CA 94122
+              To your success,
+              <br />
+              The HydraNode Team
+              <Link href="https://hydranode.ai">hydranode.ai</Link>
             </Text>
           </Section>
         </Container>
