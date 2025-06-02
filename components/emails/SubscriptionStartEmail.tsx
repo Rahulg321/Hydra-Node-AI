@@ -109,28 +109,17 @@ export default function SubscriptionStartEmail({
   };
 
   const fullName =
-    firstName && lastName ? `${firstName} ${lastName}` : "Valued User";
+    firstName && lastName
+      ? `${firstName} ${lastName}`
+      : firstName
+        ? firstName
+        : "Valued User";
 
   return (
     <Html>
-      <Head>
-        <title>
-          Confirmed! You&apos;re ready to supercharge your certification
-          preparation with HydraNode
-        </title>
-      </Head>
-      <Preview>
-        Confirmed! You&apos;re ready to supercharge your certification
-        preparation with HydraNode, {fullName}!
-      </Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Text style={heading}>
-              Confirmed! You&apos;re ready to supercharge your certification
-              preparation with HydraNode, {fullName}!
-            </Text>
-
             <Text style={paragraph}>Hi {fullName},</Text>
 
             <Text style={paragraph}>
@@ -170,23 +159,8 @@ export default function SubscriptionStartEmail({
             <Text style={paragraph}>
               To your success,
               <br />
-              The HydraNode Team
-            </Text>
-
-            <Button style={button} href={dashboardLink}>
-              Access Your Dashboard
-            </Button>
-
-            <Hr style={hr} />
-            <Text style={footer}>
-              If you have any questions or need assistance, feel free to reply
-              to this email or contact our support team at{" "}
-              <Link href={`mailto:${email}`}>{email}</Link>.
-            </Text>
-
-            <Hr style={hr} />
-            <Text style={footer}>
-              HydraNode Inc., 123 Tech Street, San Francisco, CA 94122
+              The HydraNode Team <br />
+              <Link href="https://hydranode.ai">hydranode.ai</Link>
             </Text>
           </Section>
         </Container>

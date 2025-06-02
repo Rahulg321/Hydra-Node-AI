@@ -96,48 +96,6 @@ export const TokenVerificationEmail: React.FC<
           <br />
           The HydraNode Team
         </Text>
-
-        <Section style={footerSection}>
-          <Link
-            style={footerLink}
-            href="https://hydranode.ai/pricing"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Pricing
-          </Link>
-          &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-          <Link
-            style={footerLink}
-            href="https://hydranode.ai/about-us"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            About us
-          </Link>
-          &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-          <Link
-            style={footerLink}
-            href="https://hydranode.ai/help"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Help center
-          </Link>
-          &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-          <Link
-            style={footerLink}
-            href="https://hydranode.ai/community"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            HydraNode Community
-          </Link>
-          <Text style={footerText}>
-            ©2024 HydraNode Technologies, All rights reserved. <br />
-            123 Tech Street, San Francisco, CA 94122
-          </Text>
-        </Section>
       </Container>
     </Body>
   </Html>

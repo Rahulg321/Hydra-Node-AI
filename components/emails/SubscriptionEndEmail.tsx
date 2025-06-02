@@ -84,8 +84,10 @@ export default function SubscriptionEndEmail({
 
             <Text style={paragraph}>
               We can offer you a 50% discount on our lifetime plan as a valued
-              customer. Send us an email to claim your discount. You can easily
-              reactivate your account and pick up right where you left off.
+              customer.{" "}
+              <Link href="mailto:contact@hydranode.ai">Send us an email</Link>{" "}
+              to claim your discount. You can easily reactivate your account and
+              pick up right where you left off.
             </Text>
 
             <Button style={button} href={renewalLink}>
@@ -93,14 +95,22 @@ export default function SubscriptionEndEmail({
             </Button>
 
             <Text style={paragraph}>
-              Thanks again for giving HydraNode a try, {firstName}. We wish you
-              all the best and hope our paths cross again!
+              Thanks again for giving HydraNode a try,{" "}
+              {firstName ? firstName : ""}. We wish you all the best and hope
+              our paths cross again!
             </Text>
 
             <Text style={paragraph}>
               Warmly,
               <br />
               The HydraNode Team
+            </Text>
+
+            <Hr style={hr} />
+            <Text style={footer}>
+              Visit our <Link href="https://hydranode.ai">website</Link> to
+              learn more about our services and stay updated with our latest
+              features.
             </Text>
           </Section>
         </Container>

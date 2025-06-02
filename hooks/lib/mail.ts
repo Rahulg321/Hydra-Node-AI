@@ -137,7 +137,8 @@ export const sendSubscriptionStartEmail = async (
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: `🎉 You've Got Access to ${subscriptionPlan}! 🎉`,
+    subject: `Confirmed! You're ready to supercharge your certification
+          preparation with HydraNode`,
     react: SubscriptionStartEmail({
       firstName,
       lastName,
@@ -212,7 +213,7 @@ export const sendSubscriptionEndedEmail = async (
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: "Subscription Cancelled!",
+    subject: `Sad to see you go, ${firstName ? firstName : ""}... but is this goodbye for good?`,
     react: SubscriptionEndEmail({
       firstName,
       lastName,

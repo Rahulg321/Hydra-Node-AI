@@ -34,18 +34,9 @@ export default function SubscriptionStartEmail({
       : firstName || lastName || "there";
   return (
     <Html>
-      <Head>
-        <title>{`Confirmed! You&#39;re ready to supercharge your certification preparation with HydraNode, ${customerName}!`}</title>
-      </Head>
-      <Preview>
-        {`Confirmed! You&#39;re ready to supercharge your certification preparation with HydraNode, ${customerName}!`}
-      </Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Text style={heading}>
-              {`Confirmed! You&#39;re ready to supercharge your certification preparation with HydraNode, ${customerName}!`}
-            </Text>
             <Text style={paragraph}>Hi {customerName},</Text>
             <Text style={paragraph}>
               Fantastic news – your HydraNode subscription is active, and

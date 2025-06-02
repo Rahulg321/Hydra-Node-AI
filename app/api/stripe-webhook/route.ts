@@ -158,10 +158,32 @@ export async function POST(req: Request) {
               }
             }
 
+            let planName = subscription.items.data[0]?.price?.nickname;
+            if (!planName) {
+              // Fetch the product name as a fallback
+              const price = subscription.items.data[0]?.price;
+              if (price?.product) {
+                try {
+                  const product = await stripe.products.retrieve(
+                    price.product as string,
+                  );
+                  planName = product.name;
+                } catch (err) {
+                  console.error(
+                    "Failed to retrieve product for subscription:",
+                    price?.product,
+                    err,
+                  );
+                  planName = "Your Subscription Plan";
+                }
+              } else {
+                planName = "Your Subscription Plan";
+              }
+            }
+
             const emailResult = await sendSubscriptionStartEmail(
               user.email,
-              subscription.items.data[0]?.price?.nickname ||
-                "Your Subscription Plan",
+              planName,
               new Date().toLocaleString("en-US", {
                 // Use event timestamp or subscription start date
                 timeZone: "UTC",
@@ -200,7 +222,6 @@ export async function POST(req: Request) {
             `Handling one-time exam purchase checkout completion for examId: ${examId}`,
           );
 
-          // Retrieve the payment intent to get amount, currency etc.
           const paymentIntent = await stripe.paymentIntents.retrieve(
             session.payment_intent as string,
           );
@@ -209,7 +230,6 @@ export async function POST(req: Request) {
             console.warn(
               `Payment intent ${paymentIntent.id} for exam ${examId} is not succeeded. Status: ${paymentIntent.status}. Skipping purchase and payment creation.`,
             );
-            // Return 200 because the event was processed, even if the payment wasn't succeeded
             return NextResponse.json({ received: true }, { status: 200 });
           }
 
@@ -229,10 +249,7 @@ export async function POST(req: Request) {
             }
           }
 
-          // Process the exam purchase (create Purchase record, create Payment record)
           await processExamPurchase(user, examId, paymentIntent, invoiceLink);
-
-          // Email sending is handled inside processExamPurchase
         } else {
           console.warn(
             "Checkout session completed, but no lifetime, subscription, or exam metadata found.",
