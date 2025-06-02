@@ -320,7 +320,7 @@ export const sendVerificationTokenEmail = async (
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: "Verify your email address",
+    subject: "Almost there! Please verify your email for HydraNode",
     react: TokenVerificationEmail({
       tokenConfirmLink: confirmLink,
     }),
