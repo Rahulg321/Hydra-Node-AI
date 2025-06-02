@@ -105,13 +105,6 @@ export default function SubscriptionEndEmail({
               <br />
               The HydraNode Team
             </Text>
-
-            <Hr style={hr} />
-            <Text style={footer}>
-              Visit our <Link href="https://hydranode.ai">website</Link> to
-              learn more about our services and stay updated with our latest
-              features.
-            </Text>
           </Section>
         </Container>
       </Body>
