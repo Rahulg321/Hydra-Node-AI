@@ -58,7 +58,7 @@ const PricingCards = () => {
       priceId:
         environment === "development"
           ? "price_1RGe9KIbE21KKZM9HQ3YUphb"
-          : "price_1PrzZCIbE21KKZM9CMJAMZZZ",
+          : "price_1RWDLKIbE21KKZM9OA0nGsbQ",
       mode: "payment",
       price: 199,
       billing: "One-time billing",

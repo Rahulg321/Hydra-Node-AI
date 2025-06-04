@@ -181,6 +181,7 @@ export async function POST(req: Request) {
               }
             }
 
+            console.log("Sending subscription start email to:", user.email);
             const emailResult = await sendSubscriptionStartEmail(
               user.email,
               planName,

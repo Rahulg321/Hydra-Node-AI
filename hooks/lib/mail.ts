@@ -118,6 +118,7 @@ export const sendLifetimeAccessEmail = async (
       error.name,
       error.message,
     );
+
     return {
       error: `Could not send email -> ${error.message}}`,
     };
