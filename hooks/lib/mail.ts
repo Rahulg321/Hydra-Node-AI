@@ -138,8 +138,7 @@ export const sendSubscriptionStartEmail = async (
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: `Confirmed! You're ready to supercharge your certification
-          preparation with HydraNode`,
+    subject: `Confirmed! You're ready to supercharge your certification preparation with HydraNode`,
     react: SubscriptionStartEmail({
       firstName,
       lastName,

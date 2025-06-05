@@ -26,15 +26,15 @@ const transducerFont = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Hydronode AI",
-    template: "%s | Hydronode AI",
+    default: "Hydranode AI",
+    template: "%s | Hydranode AI",
   },
   description: "AI Powered Remote Learning Platform",
   openGraph: {
-    title: "Hydronode AI",
+    title: "Hydranode AI",
     description: "AI Powered Remote Learning Platform",
     url: baseUrl,
-    siteName: "Hydronode AI",
+    siteName: "Hydranode AI",
     locale: "en_US",
     type: "website",
   },
