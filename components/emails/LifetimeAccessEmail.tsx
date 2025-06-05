@@ -32,59 +32,73 @@ export default function LifetimeAccessEmail({
   dashboardLink,
   invoiceLink,
 }: LifetimeAccessEmailProps) {
+  const customerName =
+    firstName && lastName ? `${firstName} ${lastName}` : "Customer";
   return (
     <Html>
       <Head>
-        <title>Welcome to Lifetime Access!</title>
+        <title>HydraNode Lifetime Subscription Activated!</title>
       </Head>
       <Preview>
-        {firstName && lastName
-          ? `Congrats, ${firstName} ${lastName}, you now have Lifetime Access to ${productName}!`
-          : `Congrats, you now have Lifetime Access to ${productName}!`}
+        Amazing news – your HydraNode Lifetime Subscription is now active!
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={box}>
-            <Text style={heading}>🎉 Welcome to Lifetime Access! 🎉</Text>
+            <Text style={paragraph}>Hi {customerName},</Text>
             <Text style={paragraph}>
-              {firstName && lastName
-                ? `Dear ${firstName} ${lastName},`
-                : `Dear Valued User,`}
+              Amazing news – your{" "}
+              <strong>HydraNode Lifetime Subscription</strong> is now active!
+              You&apos;re officially ready to conquer your certification goals
+              with our powerful GraphRAG-based Q&amp;A generation and analysis
+              engine.
             </Text>
             <Text style={paragraph}>
-              We are beyond thrilled to announce that you now have{" "}
-              <strong>LIFETIME ACCESS</strong> to <strong>{productName}</strong>
-              !
+              We&apos;re thrilled to be your partner on this journey to lifelong
+              learning and achievement.
+            </Text>
+            <Text
+              style={{
+                ...paragraph,
+                fontWeight: "bold",
+                marginTop: 24,
+                marginBottom: 8,
+              }}
+            >
+              Subscription Details:
+            </Text>
+            <ul style={ulStyle}>
+              <li style={liStyle}>
+                <strong>Plan:</strong> Lifetime Access
+              </li>
+              <li style={liStyle}>
+                <strong>Active Since:</strong> {accessStartDate}
+              </li>
+              <li style={liStyle}>
+                <strong>Invoice &amp; Receipt:</strong>{" "}
+                <Link href={invoiceLink}>Link to Invoice/Receipt</Link>
+              </li>
+            </ul>
+            <Text style={paragraph}>
+              With your lifetime access, you&apos;ll always have HydraNode by
+              your side, ready to help you supercharge your preparation for any
+              future certification.
             </Text>
             <Text style={paragraph}>
-              This means no more renewals, no more subscriptions—just pure,
-              uninterrupted access to all the premium features, starting from{" "}
-              <strong>{accessStartDate}</strong>.
+              Do you have questions or need help getting started? Our dedicated
+              support team is here for you. Simply reply to this email, and
+              we&apos;ll be happy to help.
             </Text>
-
-            <Section style={detailsContainer}>
-              <Text style={detailsHeading}>What&apos;s Next?</Text>
-              <Text style={detailsText}>
-                <strong>Product Name:</strong> {productName}
-              </Text>
-              <Text style={detailsText}>
-                <strong>Access Start Date:</strong> {accessStartDate}
-              </Text>
-              <Text style={detailsText}>
-                <strong>Invoice:</strong>{" "}
-                <Link href={invoiceLink}>View your invoice</Link>
-              </Text>
-            </Section>
-
-            <Button style={button} href={dashboardLink}>
-              Access Your Dashboard
-            </Button>
-
+            <Text style={paragraph}>
+              Let&apos;s achieve lifelong certification success, together!
+            </Text>
             <Hr style={hr} />
             <Text style={footer}>
-              If you have any questions or need assistance, feel free to reply
-              to this email or contact our support team at{" "}
-              <Link href={`mailto:${email}`}>{email}</Link>.
+              To your success,
+              <br />
+              <br />
+              The HydraNode Team
+              <Link href="https://www.hydranode.ai">www.hydranode.ai</Link>
             </Text>
           </Section>
         </Container>
@@ -120,55 +134,29 @@ const logo = {
   marginBottom: "20px",
 };
 
-const heading = {
-  color: "#333",
-  fontSize: "24px",
-  fontWeight: "bold",
-  textAlign: "center" as const,
-  margin: "30px 0",
-};
-
 const paragraph = {
   color: "#525f7f",
   fontSize: "16px",
   lineHeight: "24px",
   textAlign: "left" as const,
+  margin: "12px 0",
 };
 
-const detailsContainer = {
-  backgroundColor: "#f4f7fa",
-  borderRadius: "4px",
-  padding: "24px",
-  marginBottom: "24px",
+const ulStyle = {
+  margin: "0 0 16px 24px",
+  padding: 0,
 };
 
-const detailsHeading = {
-  fontSize: "18px",
-  fontWeight: "bold",
-  marginBottom: "12px",
-};
-
-const detailsText = {
-  margin: "3px 0",
-};
-
-const button = {
-  backgroundColor: "#656ee8",
-  borderRadius: "5px",
-  color: "#fff",
+const liStyle = {
+  marginBottom: "6px",
   fontSize: "16px",
-  fontWeight: "bold",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  width: "100%",
-  padding: "10px",
+  color: "#525f7f",
 };
 
 const footer = {
   color: "#8898aa",
   fontSize: "12px",
   lineHeight: "16px",
-  textAlign: "center" as const,
+  textAlign: "left" as const,
   marginTop: "16px",
 };

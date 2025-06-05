@@ -100,7 +100,7 @@ export const sendLifetimeAccessEmail = async (
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
-    subject: "🎉 You've Got Lifetime Access! 🎉",
+    subject: "You're All Set for LifeTime Certification Success with HydraNode",
     react: LifetimeAccessEmail({
       firstName,
       lastName,
