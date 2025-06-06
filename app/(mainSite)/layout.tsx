@@ -70,6 +70,7 @@ export default async function RootLayout({
       <Head>
         <meta name="HydraNode" content="HydraNode" />
       </Head>
+
       <body
         className={clsx(
           "",
@@ -84,9 +85,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          
           <SessionProvider>
             <div className="">
-              {/* <Header session={session} /> */}
               <Navbar session={session} />
               {children}
               <Footer />
@@ -95,6 +96,7 @@ export default async function RootLayout({
           </SessionProvider>
         </ThemeProvider>
       </body>
+
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>
   );

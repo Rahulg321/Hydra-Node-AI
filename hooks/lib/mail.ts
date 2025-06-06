@@ -21,15 +21,26 @@ const domain =
     ? process.env.NEXT_PUBLIC_PROD_URL
     : process.env.NEXT_PUBLIC_APP_URL;
 
-// this email will be sent to the user when one of their exams was purchased in the marketplace
+/**
+ * This email will be sent to the vendor when one of their exams was purchased in the marketplace.
+ *
+ * @param vendorName - The name of the vendor.
+ * @param vendorEmail - The email address of the vendor.
+ * @param examName - The name of the purchased exam.
+ * @param purchaseDate - The date when the purchase was made.
+ * @param examPrice - The price of the exam.
+ * @param buyerFirstName - The first name of the buyer.
+ * @param buyerLastName - The last name of the buyer.
+ * @returns - The data and error of the email.
+ */
 export const sendVendorExamPurchasedEmail = async (
   vendorName: string | null,
-  vendorEmail: string, // Vendor's email address
-  examName: string, // Name of the purchased exam
-  purchaseDate: string, // Date when the purchase was made
+  vendorEmail: string,
+  examName: string,
+  purchaseDate: string,
   examPrice: string, // Price of the exam
-  buyerFirstName: string | null, // Buyer's first name (optional)
-  buyerLastName: string | null, // Buyer's last name (optional)
+  buyerFirstName: string | null,
+  buyerLastName: string | null,
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Hydranode <Contact@hydranode.ai>",
@@ -56,6 +67,17 @@ export const sendVendorExamPurchasedEmail = async (
   return { data };
 };
 
+/**
+ * This email will be sent to the user when they purchase an exam.
+ *
+ * @param customerName - The name of the customer.
+ * @param amount - The amount of the payment.
+ * @param currency - The currency of the payment.
+ * @param paymentDate - The date of the payment.
+ * @param productName - The name of the product.
+ * @param email - The email address of the user.
+ * @returns - The data and error of the email.
+ */
 export const sendPaymentErrorEmail = async (
   customerName: string,
   amount: string,
@@ -88,6 +110,18 @@ export const sendPaymentErrorEmail = async (
   return { data };
 };
 
+/**
+ * This email will be sent to the user when they purchase a lifetime access.
+ *
+ * @param email - The email address of the user.
+ * @param productName - The name of the product.
+ * @param dashboardLink - The link to the dashboard.
+ * @param accessStartDate - The date of the access start.
+ * @param firstName - The first name of the user.
+ * @param lastName - The last name of the user.
+ * @param invoiceLink - The link to the invoice.
+ * @returns - The data and error of the email.
+ */
 export const sendLifetimeAccessEmail = async (
   email: string,
   productName: string,
@@ -127,6 +161,17 @@ export const sendLifetimeAccessEmail = async (
   return { data };
 };
 
+/**
+ * This email will be sent to the user when they purchase a lifetime access.
+ *
+ * @param email - The email address of the user.
+ * @param subscriptionPlan - The name of the subscription plan.
+ * @param subscriptionStartDate - The date of the subscription start.
+ * @param firstName - The first name of the user.
+ * @param lastName - The last name of the user.
+ * @param invoiceLink - The link to the invoice.
+ * @returns - The data and error of the email.
+ */
 export const sendSubscriptionStartEmail = async (
   email: string,
   subscriptionPlan: string,
@@ -162,6 +207,19 @@ export const sendSubscriptionStartEmail = async (
   return { data };
 };
 
+/**
+ * This email will be sent to the user when they purchase an exam.
+ *
+ * @param firstName - The first name of the user.
+ * @param lastName - The last name of the user.
+ * @param email - The email address of the user.
+ * @param examName - The name of the exam.
+ * @param purchaseDate - The date of the purchase.
+ * @param examLink - The link to the exam.
+ * @param examPrice - The price of the exam.
+ * @param invoiceLink - The link to the invoice.
+ * @returns - The data and error of the email.
+ */
 export const sendExamPurchaseEmail = async (
   firstName: string | null,
   lastName: string | null,
@@ -202,6 +260,17 @@ export const sendExamPurchaseEmail = async (
   return { data };
 };
 
+/**
+ * This email will be sent to the user when their subscription is ended.
+ *
+ * @param email - The email address of the user.
+ * @param subscriptionPlan - The name of the subscription plan.
+ * @param renewalLink - The link to the renewal page.
+ * @param subscriptionEndDate - The date of the subscription end.
+ * @param firstName - The first name of the user.
+ * @param lastName - The last name of the user.
+ * @returns - The data and error of the email.
+ */
 export const sendSubscriptionEndedEmail = async (
   email: string,
   subscriptionPlan: string,

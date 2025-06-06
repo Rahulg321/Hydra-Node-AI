@@ -17,9 +17,9 @@ interface LifetimeAccessEmailProps {
   firstName: string | null;
   lastName: string | null;
   email: string;
-  productName: string; // Product or service name for which the user got lifetime access
-  accessStartDate: string; // Date when the lifetime access begins
-  dashboardLink: string; // Link to the user dashboard or access area
+  productName: string;
+  accessStartDate: string;
+  dashboardLink: string;
   invoiceLink: string;
 }
 
@@ -36,25 +36,8 @@ export default function LifetimeAccessEmail({
     firstName && lastName ? `${firstName} ${lastName}` : "Customer";
   return (
     <Html>
-      <Head>
-        <title>HydraNode Lifetime Subscription Activated!</title>
-      </Head>
-      <Preview>
-        Amazing news – your HydraNode Lifetime Subscription is now active!
-      </Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header with logo and background */}
-          <Section style={headerSection}>
-            <Img
-              src="https://www.hydranode.ai/logo.png"
-              alt="HydraNode Logo"
-              width={120}
-              height={40}
-              style={logo}
-            />
-          </Section>
-          {/* Card-like box */}
           <Section style={cardBox}>
             <Text style={greeting}>Hi {customerName},</Text>
             <Text style={headline}>
@@ -87,7 +70,7 @@ export default function LifetimeAccessEmail({
                 </li>
               </ul>
             </Section>
-            <Section style={{ textAlign: "center", margin: "32px 0 16px" }}>
+            <Section style={{ textAlign: "center", margin: "40px 0 24px" }}>
               <Button href={dashboardLink} style={dashboardButton}>
                 Go to Your Dashboard
               </Button>
@@ -107,7 +90,6 @@ export default function LifetimeAccessEmail({
               Let&apos;s achieve lifelong certification success, together!
             </Text>
           </Section>
-          {/* Footer */}
           <Section style={footerSection}>
             <Text style={footerText}>
               To your success,
@@ -146,24 +128,11 @@ const container = {
   minWidth: "100%",
 };
 
-const headerSection = {
-  backgroundColor: "#1a2233",
-  padding: "32px 0 16px 0",
-  textAlign: "center" as const,
-  borderTopLeftRadius: "12px",
-  borderTopRightRadius: "12px",
-};
-
-const logo = {
-  margin: "0 auto",
-  display: "block",
-};
-
 const cardBox = {
   backgroundColor: "#fff",
   borderRadius: "12px",
   boxShadow: "0 4px 24px rgba(30, 42, 80, 0.10)",
-  padding: "40px 32px 32px 32px",
+  padding: "48px 40px 40px 40px",
   margin: "0 auto",
   maxWidth: "520px",
 };
@@ -172,46 +141,46 @@ const greeting = {
   color: "#1a2233",
   fontSize: "18px",
   fontWeight: 500,
-  margin: "0 0 12px 0",
+  margin: "0 0 16px 0",
   textAlign: "left" as const,
 };
 
 const headline = {
   color: "#2d3a4e",
-  fontSize: "22px",
+  fontSize: "24px",
   fontWeight: 700,
-  margin: "0 0 18px 0",
+  margin: "0 0 24px 0",
   textAlign: "left" as const,
 };
 
 const paragraph = {
   color: "#525f7f",
   fontSize: "16px",
-  lineHeight: "24px",
+  lineHeight: "28px",
   textAlign: "left" as const,
-  margin: "12px 0",
+  margin: "16px 0",
 };
 
 const sectionTitle = {
   color: "#1a2233",
   fontSize: "16px",
   fontWeight: 600,
-  margin: "24px 0 8px 0",
+  margin: "32px 0 16px 0",
   textAlign: "left" as const,
   letterSpacing: "0.5px",
 };
 
 const detailsSection = {
-  margin: "0 0 16px 0",
+  margin: "0 0 24px 0",
 };
 
 const ulStyle = {
-  margin: "0 0 16px 24px",
+  margin: "0 0 24px 24px",
   padding: 0,
 };
 
 const liStyle = {
-  marginBottom: "6px",
+  marginBottom: "8px",
   fontSize: "16px",
   color: "#525f7f",
 };
@@ -227,7 +196,7 @@ const dashboardButton = {
   fontWeight: 600,
   fontSize: "16px",
   borderRadius: "8px",
-  padding: "14px 32px",
+  padding: "16px 36px",
   border: "none",
   textDecoration: "none",
   cursor: "pointer",
@@ -238,20 +207,20 @@ const dashboardButton = {
 
 const hr = {
   borderColor: "#e6ebf1",
-  margin: "28px 0 20px 0",
+  margin: "32px 0 24px 0",
 };
 
 const footerSection = {
   textAlign: "center" as const,
-  marginTop: "32px",
-  padding: "16px 0 0 0",
+  marginTop: "40px",
+  padding: "24px 0 0 0",
 };
 
 const footerText = {
   color: "#8898aa",
   fontSize: "13px",
-  lineHeight: "18px",
-  margin: "0 0 8px 0",
+  lineHeight: "20px",
+  margin: "0 0 12px 0",
 };
 
 const supportText = {

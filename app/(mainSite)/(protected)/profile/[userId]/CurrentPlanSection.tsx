@@ -3,7 +3,7 @@ import type { User, Payment } from "@prisma/client";
 import Link from "next/link";
 import { PaymentDetailsDialog } from "@/components/Dialogs/payment-details-dialog"; // Ensure this component handles its 'trigger' prop correctly with asChild
 import { Button } from "@/components/ui/button";
-import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog"; // Ensure this component's internal trigger is correctly set up
+import CancelSubscriptionDialog from "@/components/Dialogs/cancel-subscription-dialog";
 
 type SubscriptionDisplayDetails = {
   planName: string;
