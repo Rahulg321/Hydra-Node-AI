@@ -33,10 +33,10 @@ const PricingCards = () => {
         billingPeriod === "yearly"
           ? environment === "development"
             ? "price_1RJE5CIbE21KKZM9OPSQoVfS"
-            : "price_1PrzZcIbE21KKZM9qlCdF86M"
+            : "price_1RXJOpIbE21KKZM9mMcS4Fmj"
           : environment === "development"
             ? "price_1RGe2CIbE21KKZM9LvUkDVpj"
-            : "price_1Prza0IbE21KKZM9u3XAEc3U",
+            : "price_1RXJPaIbE21KKZM9CCohDW5V",
       mode: "subscription",
       price: billingPeriod === "yearly" ? 149 : 15,
       billing: `Billed ${billingPeriod}`,
@@ -58,7 +58,7 @@ const PricingCards = () => {
       priceId:
         environment === "development"
           ? "price_1RGe9KIbE21KKZM9HQ3YUphb"
-          : "price_1RWDLKIbE21KKZM9OA0nGsbQ",
+          : "price_1RXJNBIbE21KKZM9qe4AWIVX",
       mode: "payment",
       price: 199,
       billing: "One-time billing",

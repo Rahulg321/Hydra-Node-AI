@@ -12,11 +12,6 @@ const checkoutIpLimiter = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "1m"),
 });
 
-const userLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, "10m"),
-});
-
 export async function POST(req: Request) {
   const userSession = await auth();
 
