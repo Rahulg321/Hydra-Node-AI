@@ -138,6 +138,7 @@ export async function POST(req: Request) {
         invoice_creation: {
           enabled: true,
         },
+        allow_promotion_codes: true,
         customer_creation: "always",
         line_items: [
           {
