@@ -34,48 +34,48 @@ export default function Features() {
                 HydraNode
               </h3>
             </div>
-            <div className="relative overflow-hidden border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6">
+            <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-8">
               <ul className="space-y-6">
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-orange-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Questions are dynamically created and updated by AI to
                     perfectly match the latest exam syllabus
                   </span>
                 </li>
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-orange-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     A single, low cost subscription gives you access to our
                     entire library of certification exams.
                   </span>
                 </li>
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-orange-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Our platform analyses your performance and creates a study
                     plan focusing on your specific knowledge gaps to ensure you
                     learn efficiently
                   </span>
                 </li>
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-orange-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     The AI continously monitors for syllabus changes from
                     vendors like Google, Microsoft and AWS
                   </span>
                 </li>
-                <li className="flex items-start gap-3 pb-6">
-                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-orange-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Experience a different, realistic practice exam everytime.
                     Our AI mimics the actual testing environment to build true
                     confidence.
                   </span>
                 </li>
-                <li className="flex items-start gap-3 pb-6">
-                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-orange-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Get instant, detailed feedback on your performance, tracking
                     your progress where you need to improve
                   </span>
@@ -84,48 +84,50 @@ export default function Features() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-xl">
+          <div className="relative overflow-hidden rounded-3xl">
             <div className="absolute left-1/2 top-3/4 h-[20rem] w-64 -translate-x-1/2 rounded-full bg-orange-500 opacity-40 blur-3xl" />
 
             <h3 className="mb-8 text-center text-2xl font-semibold lg:text-3xl">
               Other tools
             </h3>
-            <div className="-from-[6.68%] -shadow-[0px_-17px_17.8px_0px_rgba(255,255,255,0.04)] relative border bg-opacity-20 bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-6 shadow-inner backdrop-blur-[12.309917449951172px]">
+            <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-8">
               <ul className="space-y-6">
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Relies on a fixed pool of manually uploaded questions that
                     are often outdated, irrelevant or inaccurate.
                   </span>
                 </li>
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Charges high fees (often $50+) for each individual exam dump
                     you need
                   </span>
                 </li>
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Encourages simply memorizing answers without understanding
                   </span>
                 </li>
-                <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
-                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>Content can be months or even years out of date</span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
+                    Content can be months or even years out of date
+                  </span>
                 </li>
-                <li className="flex items-start gap-3 pb-6">
-                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     You can see the same limited set of questions over and over,
                     leading to false confidence from memorization, not mastery
                   </span>
                 </li>
-                <li className="flex items-start gap-3 pb-6">
-                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>
+                <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
+                  <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
+                  <span className="text-sm leading-relaxed text-white opacity-80">
                     Provides a simple pass/fail score with no deep insights into
                     your actual strengths and weaknesses
                   </span>

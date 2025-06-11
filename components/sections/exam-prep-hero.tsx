@@ -17,7 +17,7 @@ export default function ExamPrepHero() {
 
         <div className="">
           <GradientButton size={"lg"} asChild>
-            <Link href="/vendors">Start your exam</Link>
+            <Link href="/vendors">Start your Free Exam</Link>
           </GradientButton>
         </div>
 
