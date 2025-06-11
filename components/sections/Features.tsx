@@ -38,23 +38,47 @@ export default function Features() {
               <ul className="space-y-6">
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>Real-time global collaboration</span>
+                  <span>
+                    Questions are dynamically created and updated by AI to
+                    perfectly match the latest exam syllabus
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>Fully customizable & scalable</span>
+                  <span>
+                    A single, low cost subscription gives you access to our
+                    entire library of certification exams.
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>Advanced sprint management</span>
+                  <span>
+                    Our platform analyses your performance and creates a study
+                    plan focusing on your specific knowledge gaps to ensure you
+                    learn efficiently
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>Built-in advanced analytics</span>
+                  <span>
+                    The AI continously monitors for syllabus changes from
+                    vendors like Google, Microsoft and AWS
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 pb-6">
                   <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
-                  <span>User-friendly interface</span>
+                  <span>
+                    Experience a different, realistic practice exam everytime.
+                    Our AI mimics the actual testing environment to build true
+                    confidence.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3 pb-6">
+                  <Check className="mt-0.5 h-6 w-6 flex-shrink-0" />
+                  <span>
+                    Get instant, detailed feedback on your performance, tracking
+                    your progress where you need to improve
+                  </span>
                 </li>
               </ul>
             </div>
@@ -70,23 +94,41 @@ export default function Features() {
               <ul className="space-y-6">
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>Delayed syncing or integrations</span>
+                  <span>
+                    Relies on a fixed pool of manually uploaded questions that
+                    are often outdated, irrelevant or inaccurate.
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>Limited customization</span>
+                  <span>
+                    Charges high fees (often $50+) for each individual exam dump
+                    you need
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>Lacks dedicated sprint tools</span>
+                  <span>
+                    Encourages simply memorizing answers without understanding
+                  </span>
                 </li>
                 <li className="flex items-start gap-3 border-b border-gray-800 pb-6">
                   <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>Requires external add-ons</span>
+                  <span>Content can be months or even years out of date</span>
                 </li>
                 <li className="flex items-start gap-3 pb-6">
                   <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
-                  <span>Complicated onboarding</span>
+                  <span>
+                    You can see the same limited set of questions over and over,
+                    leading to false confidence from memorization, not mastery
+                  </span>
+                </li>
+                <li className="flex items-start gap-3 pb-6">
+                  <X className="mt-0.5 h-6 w-6 flex-shrink-0 text-red-400" />
+                  <span>
+                    Provides a simple pass/fail score with no deep insights into
+                    your actual strengths and weaknesses
+                  </span>
                 </li>
               </ul>
             </div>
