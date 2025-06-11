@@ -91,7 +91,7 @@ export default function Features() {
               Other tools
             </h3>
             <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[rgba(255,255,255,0.08)] via-[rgba(255,255,255,0.02)] via-[45.63%] to-[rgba(255,255,255,0.08)] to-[103.45%] p-8">
-              <ul className="space-y-6">
+              <ul className="space-y-10 md:space-y-11">
                 <li className="flex items-start gap-4 border-b border-gray-800 pb-6 last:border-0 last:pb-0">
                   <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-400" />
                   <span className="text-sm leading-relaxed text-white opacity-80">
