@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { useSearchParams } from "next/navigation";
-import { sendGTMEvent } from "@next/third-parties/google";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const SigninGoogle = () => {
   const searchParams = useSearchParams();
@@ -16,11 +16,10 @@ const SigninGoogle = () => {
       <Button
         type="submit"
         onClick={() => {
-          sendGTMEvent({
-            event: "signin",
-            value: "google",
+          sendGAEvent("event", "button_click", {
+            value: "signin_with_google",
           });
-
+          console.log("successfully sent GA event");
           signIn("google", {
             callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
           });

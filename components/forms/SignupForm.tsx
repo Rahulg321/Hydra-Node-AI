@@ -1,6 +1,6 @@
 "use client";
 
-import { sendGTMEvent } from "@next/third-parties/google";
+import { sendGAEvent } from "@next/third-parties/google";
 
 import React, { Suspense, useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,6 @@ import {
   SignUpFormZodType,
 } from "@/hooks/lib/schemas/SignUpFormSchema";
 import { SignUpUser } from "@/actions/sign-up";
-import { useToast } from "@/components/ui/use-toast";
 import SigninGoogle from "../ComponentButtons/SigninGoogle";
 import { ErrorCard, SuccessCard } from "../FormInfoCards";
 import { PasswordInput } from "../ui/password-input";
@@ -40,10 +39,10 @@ const SignupForm = () => {
   });
   // 2. Define a submit handler.
   async function onSubmit(values: SignUpFormZodType) {
-    sendGTMEvent({
-      event: "signup",
-      value: values.email,
+    sendGAEvent("event", "button_click", {
+      value: "signup_with_email",
     });
+    console.log("successfully sent GA event");
 
     setError("");
     setSuccess("");
