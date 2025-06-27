@@ -5,9 +5,42 @@ import {
 import db from "@/hooks/lib/db";
 import { Prisma, QuizSession } from "@prisma/client";
 
-// interface QuizSessionWithDuration extends QuizSession {
-//   durationMs: number; // Add duration in milliseconds
-// }
+/**
+ * Get all user routes for the sitemap
+ * @returns All user routes
+ */
+export async function getAllUserRoutes() {
+  try {
+    const users = await db.user.findMany({
+      select: {
+        id: true,
+        updatedAt: true,
+      },
+    });
+    return users;
+  } catch (error) {
+    console.log("error occured while fetching all user routes", error);
+  }
+}
+
+/**
+ * Get all exams routes for the sitemap
+ * @returns All exams routes
+ */
+export async function getAllExamsRoutes() {
+  try {
+    const exams = await db.exam.findMany({
+      select: {
+        id: true,
+        name: true,
+        updatedAt: true,
+      },
+    });
+    return exams;
+  } catch (error) {
+    console.log("error occured while fetching all exams routes", error);
+  }
+}
 
 /**
  * Get the total average score for a user

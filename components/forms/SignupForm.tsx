@@ -1,5 +1,7 @@
 "use client";
 
+import { sendGTMEvent } from "@next/third-parties/google";
+
 import React, { Suspense, useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -38,8 +40,11 @@ const SignupForm = () => {
   });
   // 2. Define a submit handler.
   async function onSubmit(values: SignUpFormZodType) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    sendGTMEvent({
+      event: "signup",
+      value: values.email,
+    });
+
     setError("");
     setSuccess("");
 

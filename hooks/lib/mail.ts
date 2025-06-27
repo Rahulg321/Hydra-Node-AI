@@ -13,6 +13,7 @@ import LifetimeAccessEmail from "@/components/emails/LifetimeAccessEmail";
 import SubscriptionStartEmail from "@/components/emails/SubscriptionSuccessfulEmail";
 import ExamPurchaseEmail from "@/components/emails/ExamPurchaseEmail";
 import VendorExamPurchasedEmail from "@/components/emails/VendorExamPurchasedEmail";
+import NewUserSignupEmail from "@/components/emails/new-user-signup-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -20,6 +21,42 @@ const domain =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_PROD_URL
     : process.env.NEXT_PUBLIC_APP_URL;
+
+/**
+ * This email will be sent to the receiver when a new user signs up.
+ *
+ * @param receiverEmail - The email address of the receiver.
+ * @param name - The name of the new user.
+ * @param newUserEmail - The email address of the new user.
+ * @returns - The data and error of the email.
+ */
+export async function sendNewUserSignupEmail(
+  receiverEmail: string[],
+  name: string,
+  newUserEmail: string,
+) {
+  const { data, error } = await resend.emails.send({
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: receiverEmail,
+    subject: "Welcome to HydraNode",
+    react: React.createElement(NewUserSignupEmail, {
+      name,
+      dashboardLink: `${domain}/dashboard`,
+      newUserEmail: newUserEmail,
+    }),
+  });
+
+  console.log("new user signup email sent", data, error);
+
+  if (error) {
+    console.log("error sending email", error.name, error.message);
+    return {
+      error: `could not send email -> ${error.message}`,
+    };
+  }
+
+  return { data };
+}
 
 /**
  * This email will be sent to the vendor when one of their exams was purchased in the marketplace.
@@ -343,7 +380,7 @@ export const sendTwoFactorEmail = async (email: string, token: string) => {
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
     subject: "2 FA Verification",
-    react: TwoFactorEmail({
+    react: React.createElement(TwoFactorEmail, {
       token,
     }),
   });
@@ -365,7 +402,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
     subject: "Reset your Password",
-    react: ResetPasswordEmail({
+    react: React.createElement(ResetPasswordEmail, {
       resetPasswordLink: resetLink,
     }),
   });
@@ -390,7 +427,7 @@ export const sendVerificationTokenEmail = async (
     from: "Hydranode <Contact@hydranode.ai>",
     to: [email],
     subject: "Almost there! Please verify your email for HydraNode",
-    react: TokenVerificationEmail({
+    react: React.createElement(TokenVerificationEmail, {
       tokenConfirmLink: confirmLink,
     }),
   });

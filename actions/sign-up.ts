@@ -9,13 +9,17 @@ import bcrypt from "bcryptjs";
 import db from "@/hooks/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/hooks/lib/tokens";
-import { sendVerificationTokenEmail } from "@/hooks/lib/mail";
+import {
+  sendNewUserSignupEmail,
+  sendVerificationTokenEmail,
+} from "@/hooks/lib/mail";
 import { addDays } from "date-fns";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/hooks/lib/redis";
 import { headers } from "next/headers";
 import { extractClientIp } from "@/hooks/lib/utils";
+import { after } from "next/server";
 
 const signUpIpLimiter = new Ratelimit({
   redis,
@@ -119,6 +123,14 @@ export async function SignUpUser(values: SignUpFormZodType) {
         error: "Could not send email, please try again later",
       };
     }
+
+    after(async () => {
+      await sendNewUserSignupEmail(
+        ["contact@hydranode.ai", "support@hydranode.ai", "rg5353070@gmail.com"],
+        name,
+        email,
+      );
+    });
 
     return {
       success: "Confirmation Email Sent",

@@ -2,10 +2,10 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { BsGoogle } from "react-icons/bs";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { useSearchParams } from "next/navigation";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const SigninGoogle = () => {
   const searchParams = useSearchParams();
@@ -16,6 +16,11 @@ const SigninGoogle = () => {
       <Button
         type="submit"
         onClick={() => {
+          sendGTMEvent({
+            event: "signin",
+            value: "google",
+          });
+
           signIn("google", {
             callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
           });

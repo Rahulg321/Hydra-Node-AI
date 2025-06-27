@@ -15,8 +15,8 @@ import Head from "next/head";
 import { GeistSans } from "geist/font/sans";
 import localFont from "next/font/local";
 import { caveat } from "@/app/fonts";
+import { GoogleTagManager } from "@next/third-parties/google";
 
-// Font files can be colocated inside of `app`
 const transducerFont = localFont({
   src: "../fonts/extended-transducer.otf",
   variable: "--font-transducer",
@@ -85,7 +85,6 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          
           <SessionProvider>
             <div className="">
               <Navbar session={session} />
@@ -96,7 +95,7 @@ export default async function RootLayout({
           </SessionProvider>
         </ThemeProvider>
       </body>
-
+      <GoogleTagManager gtmId="GTM-NW46K7ZF" />
       <GoogleAnalytics gaId="G-TTB31XWF1N" />
     </html>
   );
